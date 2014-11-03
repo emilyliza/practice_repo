@@ -1,0 +1,59 @@
+
+.drop-zone {
+	display: none;
+}
+.drop-zone-graphic {
+	z-index: 9;
+	position: relative;
+	background-color: @myOrange;
+	padding: 10px;
+	font-size: 16px;
+	color: #fff;
+	border-radius: 4px;
+	color: darken(@myOrange, 12%);
+	.glyphicon { 
+		position: relative;
+		float: left;
+		font-size: 55px;
+		color: darken(@myOrange, 12%);
+		margin-right: 5px;
+	}
+	
+	.instruct {
+		position: relative;
+		color: darken(@myOrange, 12%);
+		padding: 0px 10px 0px 20px;
+		font-size: 18px;
+		display: block;
+		.clearfix();
+		text-align: center;
+		button {
+			font-size: 11px;
+			margin: 10px 0px 0px 0px;
+		}
+		
+	}
+
+	&.hovering {
+		border: solid 2px @myBlack;
+	}
+	
+
+}
+
+.drop-zone {
+	position: absolute;
+	z-index: 10;
+	width: 100%;
+	height: 110px;
+}
+
+
+/* Medium devices (desktops, 992px and up) */
+@media (min-width: @screen-md-min) {
+
+	.drop-zone {
+		display: block;
+	}
+
+}

@@ -1,0 +1,217 @@
+
+// http://www.colourlovers.com/palette/92095/Giant_Goldfish
+@cbBlue: #0d94c1;
+
+
+body {
+	-webkit-font-smoothing: antialiased;
+	-moz-font-smoothing: antialiased;
+	font-smoothing: antialiased;
+}
+
+
+@font-family-sans-serif: 'Open Sans', sans-serif; 	// override bootstrap font family
+
+
+
+
+
+// base classes for panel swapping
+.page { display: none !important; }
+.page.active { display: block !important; }
+
+
+.form-control {
+	&:focus {
+		-moz-box-shadow: none;
+		box-shadow: none !important;
+		outline: none !important;
+		border-color: #ccc;
+	}
+}
+.form-group {
+	.error-helper {
+		display: none;
+	}
+	// &.has-error {
+	// 	.error-helper {
+	// 		display: inline-block;
+	// 	}
+	// }	
+}
+
+
+
+.search, .filter {
+	.input-group-addon {
+		background-color: #fcfcfc;
+		border-color: #d2d2d2;
+	}
+	input {
+		border-color: #d2d2d2;
+	}
+}
+
+textarea {
+	// box-sizing properties below fix 100% with of inputs with padding problem
+	-moz-box-sizing: border-box;
+	-webkit-box-sizing: border-box;
+	box-sizing: border-box;
+}
+
+.twitter-typeahead {
+	width: 100%;	// makes typeaheads 100% to comply with other bootstrap input widths
+}
+.typeahead,
+.tt-query,
+.tt-hint {
+	
+}
+
+.tt-query {
+
+}
+
+.tt-hint {
+	color: #999;	
+}
+
+.tt-dropdown-menu {
+	width: 100%;
+	max-height: 170px;
+	overflow: scroll;
+	//margin-top: 6px;
+	padding: 0px 0;
+	background-color: #fff;
+	border: 1px solid #ccc;
+	border: 1px solid rgba(0, 0, 0, 0.2);
+	
+	.border-bottom-radius(6px);
+	.box-shadow(0 2px 7px 0 rgba(0,0,0,.15));
+
+}
+.tt-suggestion {
+  padding: 8px 20px;
+  font-size: 15px;
+	font-weight: 400;
+	color: #6e6e6e; 
+}
+.tt-suggestion.tt-is-under-cursor {
+  
+  background-color: #f8f8f8;
+
+}
+.tt-suggestion p {
+  margin: 0;
+}
+.placeholder {
+	.center-block();
+	.none {
+		font-size: 20px;
+		text-align: center;
+		padding-top: 80px;
+	}
+}
+
+
+
+
+
+.photos {
+	.clearfix();
+	.photo {
+		float: left;
+		margin: 0px 10px 20px 0px;
+		position: relative;
+		
+		.photo-holder {
+			float: left;
+			position: relative;
+			img {
+				width: 100%;
+				cursor: pointer;
+				border-radius: 3px;
+			}
+			.progress {
+				display: none;
+				position: absolute;
+				top: 15px;
+				width: 95%;
+				margin: 0px 5px;
+			}
+		}
+		&:hover {
+			.remove {
+				visibility: visible;
+			}
+		}
+		.filename {
+			text-align: center;
+			overflow: hidden;
+		}
+		.remove {
+			position: absolute;
+			z-index: 2000;
+			font-size: 28px;
+			visibility: hidden;
+			opacity: .6;
+			padding: 5px 5px;
+			right: 1px;
+			color: white;
+			&:hover {
+				cursor: pointer;
+				opacity: 1;
+
+			}
+		}
+	}
+}
+
+
+/*Fly-down Notifications*/
+.notification {
+	position:fixed;
+	left: 50%; 
+	top: 0;
+	width: 300px;
+	margin-left: -150px;
+	z-index:30000;
+
+	border-radius: 10px;
+
+	background: #FFF;
+	border: 6px solid #d4d4d4;
+	padding: 15px 25px;
+
+	cursor: pointer;
+
+	&.type_error {
+		h3 {
+			background: url(../images/error_icon.png) no-repeat 95px 0;
+			height: 30px;
+			line-height: 30px;
+		}
+	}
+
+	h3 {
+		text-align: center;
+		font-size: 16px;
+		padding: 0 0 10px;
+		margin: 0;
+		text-transform: uppercase;
+	}
+	p {
+		text-align: center;
+		padding: 0;
+		margin: 0;
+	}
+}
+
+
+.navbar-nav > li {
+	&.sm-menu-items {
+		display: none;
+	}
+}
+
+

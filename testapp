@@ -1,0 +1,5 @@
+#!/bin/bash
+
+echo "Starting local by default."
+env $(cat .env-local) mocha
+

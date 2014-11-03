@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="jgsApp" >
+<head>
+	<base href="/">
+
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	
+	<title><% if (env == "staging") { %>staging <% } %><% if (env == "development") { %>dev <% } %><% if (env == "local") { %>local <% } %>Chargeback.com</title>
+
+	<!-- Facebook Meta -->
+	<meta property="og:title" content="Chargeback.com" />
+	<meta property="og:type" content="company" />
+	<meta property="og:url" content="http://www.Chargeback.com/" />
+	<meta property="og:image" content="" />
+	<meta property="og:description" content="Chargeback.com" />
+
+	<!-- General Meta -->
+	<meta http-equiv="content-type" content="text/html; charset=utf8" />
+	<meta name="description" content="Chargeback.com" />
+	<meta name="keywords" content="" />
+	<meta name="author" content="www.Chargeback.com.com" />
+	<meta name="robots" content="index, follow" />
+	<meta name="revisit-after" content="1 Week" />
+	<meta name="language" content="EN" />
+	<meta name="copyright" content='2014' />
+	<meta name="env" content="<%= env %>" />
+	<meta name="host" content="<%= host %>" />
+
+	<!-- Favicon -->
+	<!-- For IE -->
+	<!--[if IE]><link rel="shortcut icon" href="<%= cdn %>/images/favicon.ico"><![endif]-->
+	<!-- For Modern Browsers with PNG Support -->
+	<link href="<%= cdn %>/images/favicon.png" rel="icon" type="image/x-ico" />
+	<link rel="shortcut icon" href="<%= cdn %>/images/favicon.png" type="image/x-icon" /> 
+	<link href="<%= cdn %>/images/favicon.ico" rel="apple-touch-icon-precomposed" />
+	<link href='http://fonts.googleapis.com/css?family=Open+Sans:400,300,600,700' rel='stylesheet' type='text/css'>
+
+
+	<script type="text/javascript">
+		var JGS = {
+			'AJAX_URL': "",
+			'ENV': '<%=env %>',
+			'APP': '<%=app %>',
+			'CDN': '<%=cdn %>'
+		};
+	</script>
+
+	
+	<% if (bugger) { %>
+		
+		<% for(var i=0, len=cssFiles.length; i<len; i++) { %>
+			<link rel="stylesheet/less" type="text/css" href="<%=cssFiles[i] %>">
+		<% } %>
+		
+	<% } else { %>
+		<link rel="stylesheet" type="text/css" href="<%= cdn %>/assets/<%=asset_name %>_<%=version %>.css">
+	<% } %>
+
+
+	<% if (bugger) { %>
+		<script type="text/javascript" src="/bower_components/less/dist/less.min.js"></script>
+	<% } %>
+
+	
+
+	<!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+		<script src="/vendor/html5shiv.js"></script>
+		<script src="/vendor/respond.min.js"></script>
+		<link href="<%= cdn %>/respond-proxy.html" id="respond-proxy" rel="respond-proxy" />
+		<link href="/images/respond.proxy.gif" id="respond-redirect" rel="respond-redirect" />
+		<script src="/vendor/respond.proxy.js"></script>
+	<![endif]-->
+
+
+
+	<% if (bugger) { %>
+		<% for(var i=0, len=jsFiles.length; i<len; i++) { %>
+			<script type="text/javascript" src="<%=jsFiles[i] %>"></script>
+		<% } %>
+	<% } else { %>
+		<script type="text/javascript" src="<%= cdn %>/assets/<%=asset_name %>_<%=version %>.js"></script>
+	<% } %>
+
+
+	
+</head>
+<body ng-controller="ApplicationController">
+
+	<nav></nav>
+	<div id="pages" class="container" ui-view ></div>
+	<footer></footer>
+
+
+<!-- Prompt IE 6 users to install Chrome Frame. Remove this if you support IE 6. chromium.org/developers/how-tos/chrome-frame-getting-started -->
+<!--[if lt IE 7]><p class=chromeframe>Your browser is <em>ancient!</em> <a href="http://browsehappy.com/">Upgrade to a different browser</a> or <a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to experience this site.</p><![endif] -->
+
+
+	
+<% if (env == "production") { %>
+
+	
+
+<% } else { %>
+
+	<script type="text/javascript">
+		/* function to poo out ga stuff to console log */
+		var ga = function(action, pageview, obj) {
+			var tracking_debug = action + " -- " +  pageview + " -- " + obj.page;
+			if (obj.title) {
+				tracking_debug += " -- " + obj.title;
+			}
+			console.log(tracking_debug);
+		};
+	</script>
+
+<% } %>
+
+</body>
+</html>

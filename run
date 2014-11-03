@@ -1,0 +1,19 @@
+#!/bin/bash
+
+echo -n "Pick an app to run (prod, local): "
+read -e APP
+
+
+case "$APP" in
+	local)
+		foreman start -e .env-local -f Procfile_dev
+		;;
+
+	prod)
+		foreman start -e .env -f Procfile
+		;;
+
+	*)
+		echo "Starting Dev by default."
+		foreman start -e .env-local -f Procfile_dev
+esac

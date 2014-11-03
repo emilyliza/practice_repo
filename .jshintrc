@@ -1,0 +1,20 @@
+{
+    "curly": true,
+    "eqeqeq": false,
+    "immed": true,
+    "latedef": true,
+    "newcap": true,
+    "noarg": true,
+    "sub": true,
+    "undef": false,
+    "boss": true,
+    "eqnull": true,
+    "node": true,
+    "es5": true,
+    "strict": false,
+    "browser": true,
+    "maxerr": 5,
+    "maxdepth": 2,
+    "maxstatements": 25,
+    "maxcomplexity": 5
+}
