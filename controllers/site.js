@@ -16,7 +16,7 @@ module.exports = function(app){
 	});
 
 	// this handles pretty much all pages. routing is done client side.
-	app.get(/^\/(.*)$/, function (req, res) {
+	app.get(/^\/((?!api|public).*)$/, function (req, res) {
 
 		var user = {};
 		// if (req.session.user) {
