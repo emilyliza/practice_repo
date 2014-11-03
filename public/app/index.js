@@ -18,7 +18,7 @@
 		guest: 'guest'
 	})
 
-	.config(function( $locationProvider, $urlRouterProvider ) {
+	.config(function( $locationProvider, $urlRouterProvider) {
 		$locationProvider.html5Mode(true).hashPrefix('!');
 	})
 
@@ -26,6 +26,7 @@
 		return {
 			restrict: 'E',
 			controller: 'ApplicationController',
+			controllerAs: 'appCtrl',
 			templateUrl: '/app/templates/nav.html'
 		};
 	})
@@ -59,6 +60,7 @@
 
 	.controller('ApplicationController', function ($scope, $rootScope, USER_ROLES, AUTH_EVENTS, AuthService, $state) {
 		$scope.currentUser = null;
+		$scope.authChecked = false;
 		$scope.userRoles = USER_ROLES;
 		$scope.isAuthorized = AuthService.isAuthorized;
 		$scope.$state = $state;	// for navigation active to work
@@ -67,10 +69,13 @@
 			$scope.currentUser = user;
 		}
 
-		$scope.logout = function() {
-			// simply send broadcash, Login module will clear session and logout
-			$rootScope.$broadcast(AUTH_EVENTS.notAuthenticated);
-        };
+		AuthService.check().then(function (user) {
+			$scope.setCurrentUser(user);
+			$scope.authChecked = true;
+		}, function(res) {
+			console.log('Not logged in.');
+		});
+
     });
 
 	

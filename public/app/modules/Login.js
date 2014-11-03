@@ -8,7 +8,19 @@
 			url: '/login',
 			controller: 'LoginController',
 			templateUrl: '/app/templates/login.html'
-			
+		});
+
+		$stateProvider.state('logout', {
+			url: '/logout',
+			resolve: {
+				data:  function($http){
+					// $http returns a promise for the url data
+					return $http({method: 'GET', url: '/api/v1/logout'});
+				}
+			},
+			controller: function($state) {
+				$rootScope.$broadcast(AUTH_EVENTS.notAuthenticated);
+			}
 		});
 
 	})
@@ -44,6 +56,7 @@
 				});
 			}
 		};
+
 	})
 
 	.factory('AuthService', function ($http, Session) {
@@ -58,12 +71,20 @@
 			});
 		};
 
+		authService.check = function() {
+			return $http.get('/api/v1/user')
+			.then(function(res) {
+				Session.create(res.data);
+				return res.data;
+			});
+		};
+
 		authService.isAuthenticated = function () {
 			if (Session && Session.user && Session.user._id) {
 				return true;
 			}
-			return false;
-		};
+			return false;	
+    	};
 
 		authService.isAuthorized = function (authorizedRoles) {
 			if (!angular.isArray(authorizedRoles)) {
@@ -88,7 +109,7 @@
 
 
 	// check routes every time they change for authorized state
-	.run(function ($rootScope, AUTH_EVENTS, AuthService, Session, $state) {
+	.run(function ($rootScope, AUTH_EVENTS, AuthService, Session, $state, $http) {
 		
 		$rootScope.$on('$stateChangeStart', function (event, next) {
 			console.log('Is authenticated: ' + AuthService.isAuthenticated())
@@ -99,12 +120,19 @@
 			}
 		});
 		
-
 		// listen for logout or session expirations and send to login page.
 		$rootScope.$on(AUTH_EVENTS.notAuthenticated, function() {
 			//@TODO: could include login in popup to prevent abrupt redirect
 			Session.destroy();
-			$state.go('login');
+
+			if ($rootScope.authChecked) {
+				return $http
+				.get('/api/v1/logout')
+				.then(function (res) {
+					$state.go('login');
+				});
+			}
+
 		});
 		$rootScope.$on(AUTH_EVENTS.sessionTimeout, function() {
 			//@TODO: could include login in popup to prevent abrupt redirect
