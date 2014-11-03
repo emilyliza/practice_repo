@@ -140,6 +140,7 @@ console.log('HEAD is ' + process.env.VERSION);
 // User Routes
 require('./controllers/site')(app);
 require('./controllers/login')(app);
+require('./controllers/list')(app);
 
 
 // error handler
