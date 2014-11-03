@@ -1,1 +1,27 @@
-<h3>List View</h3>
+
+<div class="row search" style="margin-bottom: 20px;">
+	<div class="col-md-6">
+		<h2>My Chargebacks</h2>
+	</div>
+	<div class="col-md-6">
+		<div class="input-group pull-right" style="margin-left: 5px; float: right;">
+			<input ng-model="q" type="text" class="form-control" name="query" autocomplete="off" placeholder="Search">
+			<span class="input-group-addon" style="cursor: pointer;"><span class="glyphicon glyphicon-search"></span></span>
+		</div>
+	</div>
+</div>
+
+
+<div class="animated-grid">
+	<div class="row" ng-repeat="cb in data | filter:q as results">
+		<div class="col-sm-2">{{cb.id}}</div>
+		<div class="col-sm-2">{{cb.date}}</div>
+		<div class="col-sm-2">{{cb.amount}}</div>
+		<div class="col-sm-2">{{cb.customer}}</div>
+		<div class="col-sm-2">{{cb.status}}</div>
+		<div class="col-sm-2"></div>
+	</div>
+	<div class="row" ng-if="results.length == 0">
+		<div class="col-sm-12"><strong>No results found...</strong></div>
+	</div>	
+</div>

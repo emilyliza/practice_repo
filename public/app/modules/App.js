@@ -6,14 +6,14 @@
 		
 		$stateProvider.state('/', {
 			url: '/',
-			controller: 'appCtrl',
+			controller: function() {
+
+			},
 			templateUrl: '/app/templates/app.html'
+			
 		});
 
-	})
-
-	.controller('appCtrl', function() {
-
 	});
+
 
 })();
