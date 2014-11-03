@@ -71,37 +71,34 @@ process.on('uncaughtException', function(err) {
 
 
 
-// var redisStore = require('connect-redis')(session),
-// 	rtg   = require("url").parse(process.env.REDISTOGO_URL),
-// 	redis = require("redis").createClient(rtg.port, rtg.hostname),
-// 	rStore = new redisStore({client: redis}),
-// 	day = 3600000 * 24;
+var redisStore = require('connect-redis')(session),
+	rtg   = require("url").parse(process.env.REDISTOGO_URL),
+	redis = require("redis").createClient(rtg.port, rtg.hostname),
+	rStore = new redisStore({client: redis}),
+	day = 3600000 * 24;
 
-// if (process.env.REDISTOGO_URL.match(/@/)) {
-// 	redis.auth(rtg.auth.split(":")[1]);
-// }
+if (process.env.REDISTOGO_URL.match(/@/)) {
+	redis.auth(rtg.auth.split(":")[1]);
+}
 
+app.use( cookieParser() );
 
-//var cookie_key = new Keygrip(["realnexus1", "nexusreal2"]);
-//app.use( Cookies.express( cookie_key ) );
-//app.use( cookieParser() );
+app.use(session({
+	client: redis,
+	store: rStore,
+	secret: 'big2FatSecret',
+	cookie: { maxAge: 60 * 60 * 24 * 30 * 1000 }
+}));
 
-// app.use(session({
-// 	client: redis,
-// 	store: rStore,
-// 	secret: 'big2FatSecret',
-// 	cookie: { maxAge: 60 * 60 * 24 * 30 * 1000 }
-// }));
+redis.on('error', function(err) {console.log(err); console.log('error connecting to redis'); });
+redis.on('connect', function() {
+	var r = process.env.REDISTOGO_URL.split(/@/);
+	console.log('REDISTOGO CONNECTED - ' + r[1]);
+});
 
-// redis.on('error', function(err) {console.log(err); console.log('error connecting to redis'); });
-// redis.on('connect', function() {
-// 	var r = process.env.REDISTOGO_URL.split(/@/);
-// 	console.log('REDISTOGO CONNECTED - ' + r[1]);
-// });
-
-// // save them both to app
-// app.set('redis', redis);
-// app.set('redisStore', rStore);
+// save them both to app
+app.set('redis', redis);
+app.set('redisStore', rStore);
 
 
 
@@ -141,6 +138,7 @@ console.log('HEAD is ' + process.env.VERSION);
 require('./controllers/site')(app);
 require('./controllers/login')(app);
 require('./controllers/list')(app);
+require('./controllers/user')(app);
 
 
 // error handler
