@@ -1,6 +1,6 @@
 (function() {
 
-	angular.module('listView', ['ui.router', 'animate'])
+	angular.module('listView', ['ui.router', 'ngAnimate'])
 	
 	.config(function( $stateProvider ) {
 		

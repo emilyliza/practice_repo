@@ -22,34 +22,34 @@ footer {
 
 
 .animated-grid {
-	background:white;
-    border:1px solid black;
-    list-style:none;
-    margin:0;
-    padding:0 10px;
-  
-	.row {
-		&.ng-move,
-		&.ng-enter,
-		&.ng-leave {
-			-webkit-transition:all linear 0.5s;
-			transition:all linear 0.5s;
-		}
-
-		&.ng-leave.ng-leave-active,
-		&.ng-move,
-		&.ng-enter {
-			opacity:0;
-			max-height:0;
-		}
-
-		&.ng-leave,
-		&.ng-move.ng-move-active,
-		&.ng-enter.ng-enter-active {
-			opacity:1;
-			max-height:40px;
-		}
+	
+	.row.ng-move,
+	.row.ng-enter,
+	.row.ng-leave {
+		-webkit-transition:all linear 0.25s;
+		transition:all linear 0.25s;
 	}
+
+	.row.ng-leave.ng-leave-active,
+	.row.ng-move,
+	.row.ng-enter {
+		opacity:0;
+		max-height:0;
+	}
+
+	.row.ng-leave,
+	.row.ng-move.ng-move-active,
+	.row.ng-enter.ng-enter-active {
+		opacity:1;
+		max-height:40px;
+	}
+
+	.row {
+		border-bottom: solid 1px #efefef;
+		padding-top: 10px;
+		padding-bottom: 10px;
+	}
+	
 }
 
 /* small devices (tablets, 420px and up) */
