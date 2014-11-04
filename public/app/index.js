@@ -1,6 +1,6 @@
 (function() {
 
-	var app = angular.module('jgsApp', [ "ui.router", "ui.bootstrap", "ui.bootstrap.showErrors", "app", "login", 'forgot', 'listView' ])
+	var app = angular.module('jgsApp', [ "ui.router", "ui.bootstrap", "ui.bootstrap.showErrors", "app", "login", 'forgot', 'listView', 'account' ])
 
 	.constant('AUTH_EVENTS', {
 		loginSuccess: 'auth-login-success',

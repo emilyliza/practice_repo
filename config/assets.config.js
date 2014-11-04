@@ -24,7 +24,7 @@ module.exports = function() {
 					"/bower_components/angular-animate/angular-animate.min.js",
 					"/bower_components/angular-bootstrap/ui-bootstrap-tpls.js",
 					//"/bower_components/autofill-event/src/autofill-event.js",
-					//"/bower_components/underscore/underscore-min.js",
+					"/bower_components/underscore/underscore-min.js",
 					"/bower_components/angular-bootstrap-show-errors/src/showErrors.js",
 
 					//"/vendor/typeahead.js",
@@ -34,7 +34,8 @@ module.exports = function() {
 					"/app/modules/App.js",
 					"/app/modules/Login.js",
 					"/app/modules/Forgot.js",
-					"/app/modules/ListView.js"
+					"/app/modules/ListView.js",
+					"/app/modules/Account.js"
 					
 				]
 			}

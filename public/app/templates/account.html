@@ -1,0 +1,59 @@
+
+
+<div class="row">
+	<div class="col-md-12">
+		<h2 style="margin-top: 0px;">My Account</h2>
+	</div>
+</div>
+
+<div class="row">
+	
+	<div class="col-sm-4 col-sm-push-8 form-sidebar">
+
+	</div>
+	<div class="col-sm-8 col-sm-pull-4">
+
+		<form name="acctForm" 
+				role="form" 
+				class="jgs-form" 
+				ng-submit="save(currentUser)" novalidate >
+		
+			<div class="row">
+				<div class="col-md-6">
+					<div class="form-group" show-errors>
+						<label>First Name</label>
+						<input name="fname" type="text" required class="form-control" popover="{{errors.fname}}" pop-placement="right" ng-model="currentUser.fname" popover-append-to-body>
+					</div>
+				</div>
+				<div class="col-md-6">
+					<div class="form-group" show-errors>
+						<label>Last Name</label>
+						<input name="lname" type="text" required class="form-control" pop-show="{{errors.lname}}" pop="{{errors.lname}}" pop-placement="right" ng-model="currentUser.lname" pop-append-to-body>
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-md-12">
+					<div class="form-group" show-errors>
+						<label>Email</label>
+						<input name="email" type="email" required class="form-control" pop-show="{{errors.email}}" pop="{{errors.email}}" pop-placement="right" ng-model="currentUser.email" pop-append-to-body>
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-md-12">
+					<div class="form-group" show-errors>
+						<label>Password</label>
+						<input type="password" name="pass" class="form-control" pop-show="{{errors.password}}" pop="{{errors.password}}" placeholder="Only enter to change." pop-placement="right" ng-model="currentUser.password" />
+					</div>
+				</div>
+			</div>
+
+			<div class="form-group btns">
+				<button type="submit" class="btn btn-success pull-right">Save</button>
+			</div>
+		
+		</form>
+	</div>
+
+</div>
