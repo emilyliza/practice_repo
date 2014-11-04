@@ -10,14 +10,22 @@
 
 
 <div class="animated-grid">
-	<div class="row" ng-repeat="cb in data | filter:q as results">
-		<div class="col-sm-1">{{cb._id}}</div>
-		<div class="col-sm-3">{{cb.date | date:'medium'}}</div>
-		<div class="col-sm-2">{{cb.amount}}</div>
-		<div class="col-sm-3">{{cb.customer}}</div>
-		<div class="col-sm-3">{{cb.status}}</div>
-		
+	<div class="row head">
+		<div class="col-sm-1">ID</div>
+		<div class="col-sm-3">Date</div>
+		<div class="col-sm-2">Amount</div>
+		<div class="col-sm-3">Customer</div>
+		<div class="col-sm-3">Status</div>
 	</div>
+
+	<div class="row" ng-repeat="cb in data | filter:q as results">
+		<div class="col-sm-1"><a href="/chargeback/{{cb._id}}">{{cb._id}}</a></div>
+		<div class="col-sm-3">{{cb.date | date:'medium'}}</div>
+		<div class="col-sm-2">{{cb.amount | currency}}</div>
+		<div class="col-sm-3">{{cb.customer}}</div>
+		<div class="col-sm-3" style="color: {{cb.status.color}}">{{cb.status.name}}</div>
+	</div>
+	
 	<div class="row" ng-if="results.length == 0">
 		<div class="col-sm-12"><strong>No results found...</strong></div>
 	</div>	
