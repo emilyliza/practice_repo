@@ -5,7 +5,6 @@ module.exports = function(app){
 		_ = require('underscore'),
 		fs = require('fs'),
 		path = require('path'),
-		moment = require('moment'),
 		assets = require('../config/assets.config')();
 
 	app.get(/^\/sink$/, function (req, res) {

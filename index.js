@@ -22,7 +22,7 @@ app.engine('.ejs', require('ejs').__express);
 app.set('view engine', 'ejs');
 app.set('root_dir', __dirname);
 app.set('views', __dirname + '/views/');
-app.set('db', require('mongoose'));
+//app.set('db', require('mongoose'));
 
 var favicon = require('serve-favicon');
 app.use(favicon(path.join(__dirname,'public','images','favicon.ico')));
@@ -51,8 +51,7 @@ app.use(methodOverride());
 if(process.env.NODE_ENV == 'production') {
 	app.use(express.static('./public', { maxAge: 31557600000 }));
 } else {
-	app.use('/', express.static('./public', { maxAge: 10 }));
-	app.use('/bower_components', express.static('./bower_components', { maxAge: 10 }));
+	app.use('/', express.static('./public', { maxAge: 10 }));	
 }
 
 app.use(logger());
@@ -167,56 +166,6 @@ if (process.env.NODE_ENV == 'production' || process.env.NODE_ENV == 'staging') {
 	});
 
 } else {
-
-	// if we're in dev mode, start up the watcher for handlebars changes.
-	var Handlebars = require('handlebars');
-	var watcher = require('watch-tree-maintained');
-	var path = require('path');
-	var exec = require('child_process').exec;
-	var dirs = ['public/app', 'public/css'];
-	dirs.forEach(function(dir) {
-		
-		// Initialize watchTree utility
-		var watch = watcher.watchTree(dir, {
-			'sample-rate' : 30
-		});
-
-		// Listen for a file modified event
-		watch.on('fileModified', recompile);
-		watch.on('fileCreated', recompile);
-		watch.on('fileDeleted', recompile);
-		function recompile(file) {
-
-			if (process.env.DEBUG) {
-
-				// Exit if it's not a "template" file
-				if (! _(['.handlebars', '.hbs']).include(path.extname(file))) {
-					return;
-				}
-				var templates = dir + '/templates';
-				exec('handlebars --output ./' + dir + '/templates.js ' + templates + '/*', function(err, stdout, stderr) {
-					if (err) { throw err; }
-					console.log('compiled all templates');
-				});
-
-			} else {
-
-				// Exit if it's not a "template" file
-				if (_(['templates.js']).include(path.basename(file)) || !_(['.js', '.less', '.handlebars']).include(path.extname(file))) {
-					return;
-				}
-				console.log(file + ' modified');
-
-				exec( '"' + process.execPath + '" package.js loose', function(err, stdout, stderr) {
-					if (err) { throw err; }
-					console.log(stdout);
-				});
-
-			}
-
-			
-		}
-	});
 
 	var port = process.env.PORT || 5000;
 	app.listen(port, function() {

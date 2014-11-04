@@ -12,13 +12,8 @@
 
 		$stateProvider.state('logout', {
 			url: '/logout',
-			resolve: {
-				data:  function($http){
-					// $http returns a promise for the url data
-					return $http({method: 'GET', url: '/api/v1/logout'});
-				}
-			},
-			controller: function($state) {
+			controller: function($state, $rootScope, AUTH_EVENTS) {
+				console.log('logging out.');
 				$rootScope.$broadcast(AUTH_EVENTS.notAuthenticated);
 			}
 		});
@@ -28,7 +23,7 @@
 	.controller('LoginController', function ($scope, $rootScope, AuthService, AUTH_EVENTS, Session, AuthService, $state, $timeout) {
 		
 		if (AuthService.isAuthenticated()) {
-			$state.go('listView');
+			$state.go('chargebacks');
 		}
 
 		$scope.credentials = {};
@@ -50,7 +45,7 @@
 					$scope.setCurrentUser(user);
 					$rootScope.$broadcast(AUTH_EVENTS.loginSuccess);
 					$scope.credentials = {};
-					$state.go('listView');
+					$state.go('chargebacks');
 				}, function (res) {
 					$rootScope.$broadcast(AUTH_EVENTS.loginFailed);
 					if (res.data.errors) {
@@ -130,6 +125,7 @@
 				return $http
 				.get('/api/v1/logout')
 				.then(function (res) {
+					$rootScope.setCurrentUser(null);
 					$state.go('login');
 				});
 			}

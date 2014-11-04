@@ -7,7 +7,7 @@ module.exports = function() {
 			{
 				name: 'app',
 				files: [
-					"/css/app.less"
+					"/less/app.less"
 				]
 			}
 		],
@@ -32,6 +32,7 @@ module.exports = function() {
 					
 					"/app/index.js",
 					"/app/modules/App.js",
+					"/app/modules/Home.js",
 					"/app/modules/Login.js",
 					"/app/modules/Forgot.js",
 					"/app/modules/ListView.js",

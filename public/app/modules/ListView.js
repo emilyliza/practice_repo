@@ -4,9 +4,9 @@
 	
 	.config(function( $stateProvider ) {
 		
-		$stateProvider.state('listView', {
-			url: '/listView',
-			templateUrl: '/app/templates/listView.html',
+		$stateProvider.state('chargebacks', {
+			url: '/chargebacks',
+			templateUrl: '/app/templates/chargebacks.html',
 			data: {
 				auth: true	// check for authentication
 			},
