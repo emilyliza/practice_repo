@@ -112,9 +112,7 @@
 	.run(function ($rootScope, AUTH_EVENTS, AuthService, Session, $state, $http) {
 		
 		$rootScope.$on('$stateChangeStart', function (event, next) {
-			console.log('Is authenticated: ' + AuthService.isAuthenticated())
-			if (next.data && next.data.auth && !AuthService.isAuthenticated()) {
-				console.log('Should be authed.')
+			if ($rootScope.authChecked && next.data && next.data.auth && !AuthService.isAuthenticated()) {
 				event.preventDefault();
 				$rootScope.$broadcast(AUTH_EVENTS.notAuthenticated);
 			}
