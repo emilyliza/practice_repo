@@ -1,6 +1,6 @@
 (function() {
 
-	angular.module('listView', ['ui.router', 'ngAnimate'])
+	angular.module('chargebacks', ['ui.router', 'ngAnimate'])
 	
 	.config(function( $stateProvider ) {
 		

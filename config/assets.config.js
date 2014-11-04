@@ -35,7 +35,7 @@ module.exports = function() {
 					"/app/modules/Home.js",
 					"/app/modules/Login.js",
 					"/app/modules/Forgot.js",
-					"/app/modules/ListView.js",
+					"/app/modules/Chargebacks.js",
 					"/app/modules/Account.js"
 					
 				]

@@ -8,7 +8,7 @@
 		"home", 
 		"login", 
 		"forgot", 
-		"listView", 
+		"chargebacks", 
 		"account"
 	])
 
