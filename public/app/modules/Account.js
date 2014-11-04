@@ -15,7 +15,8 @@
 	.controller('AccountController', function ($scope, $rootScope, $state, AccountService) {
 		
 		$scope.errors = {};
-
+		$scope.saved = false;
+		
 		// watch for changes to clear out errors
 		$scope.$watch("currentUser", function(newValue, oldValue){
 			$scope.errors = null;
@@ -33,6 +34,8 @@
 
 				AccountService.save(data).then(function (user) {
 					$scope.setCurrentUser(user);
+					$scope.saved = true;
+					console.log($scope.data);
 				}, function (res) {
 					if (res.data.errors) {
 						$scope.errors = res.data.errors;

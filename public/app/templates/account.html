@@ -13,6 +13,14 @@
 	</div>
 	<div class="col-sm-8 col-sm-pull-4">
 
+		
+		<div class="alert alert-success alert-dismissable" ng-show="saved">
+			<button type="button" class="close" ng-click="saved=false" data-dismiss="alert" aria-hidden="true">&times;</button>
+			<strong>Success!</strong> Your changes have been saved.
+		</div>
+		
+
+		
 		<form name="acctForm" 
 				role="form" 
 				class="jgs-form" 
