@@ -139,6 +139,7 @@ require('./controllers/site')(app);
 require('./controllers/login')(app);
 require('./controllers/list')(app);
 require('./controllers/user')(app);
+require('./controllers/forgot')(app);
 
 
 // error handler
