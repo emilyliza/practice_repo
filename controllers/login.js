@@ -1,7 +1,8 @@
 module.exports = function(app) {
 
 	var _ = require('underscore'),
-		$ = require('seq');
+		$ = require('seq'),
+		chance = require('chance');
 		
 
 	// login
