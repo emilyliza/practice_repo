@@ -37,6 +37,9 @@
 		// watch for changes to clear out errors
 		$scope.$watch("credentials", function(newValue, oldValue){
 			$scope.errors = {};
+			$scope.$broadcast('show-errors-reset');	
+			var popups = document.querySelectorAll('.popover');
+			_.each(popups, function(p) { p.remove(); });
 		},true);
 		
 		var _this = this;
