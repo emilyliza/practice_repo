@@ -1,4 +1,4 @@
-'use strict';
+
 
 describe('account module', function() {
 

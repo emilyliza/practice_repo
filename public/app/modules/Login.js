@@ -36,7 +36,7 @@
 
 	})
 
-	.controller('LoginController', function ($scope, $rootScope, AuthService, AUTH_EVENTS, Session, AuthService, $state, $timeout) {
+	.controller('LoginController', function ($scope, $rootScope, AUTH_EVENTS, Session, AuthService, $state, $timeout) {
 		
 		if (AuthService.isAuthenticated()) {
 			$state.go('chargebacks');

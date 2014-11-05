@@ -20,7 +20,7 @@
 
 		$scope.setCurrentUser = function (user) {
 			$scope.currentUser = user;
-		}
+		};
 
 		AuthService.check().then(function (user) {
 			$scope.setCurrentUser(user);
