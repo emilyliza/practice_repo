@@ -1,13 +1,13 @@
 (function() {
 
-	angular.module('account', ['ui.router'])
+	angular.module('account', ['ui.router', 'login'])
 	
 	.config(function( $stateProvider ) {
 		
 		$stateProvider.state('account', {
 			url: '/account',
 			controller: 'AccountController',
-			templateUrl: '/app/templates/account.html'
+			templateUrl: '/app/Account/account.html'
 		});
 
 	})

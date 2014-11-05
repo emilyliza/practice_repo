@@ -6,8 +6,13 @@
 		
 		$stateProvider.state('/', {
 			url: '/',
+			controller: 'HomeController',
 			templateUrl: '/app/templates/home.html'
 		});
+
+	})
+
+	.controller('HomeController', function() {
 
 	});
 

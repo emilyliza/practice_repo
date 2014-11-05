@@ -1,32 +1,62 @@
 // karma.conf.js
 module.exports = function(config) {
-  config.set({
-    preprocessors: {
-      '**/*.html': ['ng-html2js']
-    },
+	config.set({
 
-    files: [
-      'public/app/modules/*.js',
-      'public/app/templates/*.html',
-      // if you wanna load template files in nested directories, you must use this
-      '**/*.html'
-    ],
+		basePath : './public/',
 
-    ngHtml2JsPreprocessor: {
-      // strip this from the file path
-      stripPrefix: 'public/',
-      stripSufix: '.ext',
-      // prepend this to the
-      prependPrefix: 'served/',
+		preprocessors: {
+			'app/templates/*.html': ['ng-html2js']
+		},
 
-      // or define a custom transform function
-      // cacheIdFromPath: function(filepath) {
-      //   return cacheId;
-      // },
+		files: [
+			"bower_components/html5-boilerplate/js/vendor/modernizr-2.6.2.min.js",
+			"bower_components/angular/angular.min.js",
+			"bower_components/angular-mocks/angular-mocks.js",
+			"bower_components/angular-resource/angular-resource.min.js",
+			"bower_components/angular-ui-router/release/angular-ui-router.js",
+			"bower_components/angular-animate/angular-animate.min.js",
+			"bower_components/angular-bootstrap/ui-bootstrap-tpls.js",
+			"bower_components/underscore/underscore-min.js",
+			"bower_components/angular-bootstrap-show-errors/src/showErrors.js",
+			"app/index.js",
+			"app/modules/App.js",
+			"app/modules/Home.js",
+			"app/modules/Login.js",
+			"app/modules/Forgot.js",
+			"app/modules/Chargebacks.js",
+			"app/modules/Account.js",
+			"app/templates/*.html",
+			"app/index.js",
+			"app/tests/*.js"
+			
+		],
 
-      // setting this option will create only a single module that contains templates
-      // from all the files, so you can load them all with module('foo')
-      moduleName: 'foo'
-    }
-  });
+		ngHtml2JsPreprocessor: {
+			stripPrefix: 'public/',  // <-- change as needed for the project
+  			moduleName: 'templates'
+		},
+
+		autoWatch : true,
+		colors: true,
+
+		frameworks: ['jasmine'],
+
+		browsers : ['PhantomJS'],
+
+		plugins : [
+			'karma-chrome-launcher',
+			'karma-firefox-launcher',
+			'karma-jasmine',
+			'karma-junit-reporter',
+			'karma-phantomjs-launcher',
+			'karma-ng-html2js-preprocessor'
+		],
+
+		junitReporter : {
+			outputFile: 'test_out/unit.xml',
+			suite: 'unit'
+		}
+
+
+	});
 };
