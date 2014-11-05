@@ -1,45 +1,35 @@
 module.exports = function(grunt) {
 
+	var lessCreateConfig = function (context, block) {
+		var cfg = {files: []},
+		outfile = path.join(context.outDir, block.dest),
+		filesDef = {};
+
+		filesDef.dest = outfile;
+		filesDef.src = [];
+
+		context.inFiles.forEach(function (inFile) {
+			filesDef.src.push(path.join(context.inDir, inFile));
+		});
+
+		cfg.files.push(filesDef);
+		context.outFiles = [block.dest];
+		return cfg;
+	};
+
+	require('load-grunt-tasks')(grunt);
+
 	grunt.initConfig({
 		pkg: grunt.file.readJSON('package.json'),
-		concat: {
-			dist: {
-				src: [
-					"public/bower_components/html5-boilerplate/js/vendor/modernizr-2.6.2.min.js",
-					"public/bower_components/angular/angular.min.js",
-					"public/bower_components/angular-resource/angular-resource.min.js",
-					"public/bower_components/angular-ui-router/release/angular-ui-router.js",
-					"public/bower_components/angular-animate/angular-animate.min.js",
-					"public/bower_components/angular-bootstrap/ui-bootstrap-tpls.js",
-					//"/bower_components/autofill-event/src/autofill-event.js",
-					"public/bower_components/underscore/underscore-min.js",
-					"public/bower_components/angular-bootstrap-show-errors/src/showErrors.js",
-
-					//"/vendor/typeahead.js",
-					//"/vendor/bootstrap-datepicker.js",
-
-					"dist/templates.js",	// the generated template cache file
-					
-					"public/app/index.js",
-					"public/app/modules/Home.js",
-					"public/app/modules/Login.js",
-					"public/app/modules/Forgot.js",
-					"public/app/modules/Chargebacks.js",
-					"public/app/modules/Account.js",
-					"public/app/modules/Reporting.js"
-				],
-				dest: 'public/dist/<%= pkg.name %>.js'
-			}
+		
+		clean: {
+			old: ["public/dist"],
+			concat: ["public/dist/concat"]
 		},
 
-		uglify: {
-			options: {
-				banner: '/*! <%= pkg.name %> <%= grunt.template.today("dd-mm-yyyy") %> */\n'
-			},
-			dist: {
-				files: {
-					'public/dist/<%= pkg.name %>.min.js': ['<%= concat.dist.dest %>']
-				}
+		copy: {
+			html: {
+				src: 'public/index.html', dest: 'public/dist/index.html'
 			}
 		},
 
@@ -58,17 +48,50 @@ module.exports = function(grunt) {
 			}
 		},
 
-		ngtemplates:  {
-			app: {
-				src: 'public/app/templates/*.html',
-				dest: 'public/dist/templates.js'
+		useminPrepare: {
+			html: 'public/index.html',
+			options: {
+				dest: 'public/dist',
+				staging: 'public/dist'
+				// ,
+				// flow: {
+				// 	steps: {
+				// 		'js': ['concat', 'uglifyjs'],
+				// 		'less': [{
+				// 			name: 'less',
+				// 			createConfig: lessCreateConfig
+				// 		}]
+				// 	},
+				// 	post: {}
+				// }
 			}
 		},
 
-		watch: {
-			files: ['<%= jshint.files %>', 'public/app/modules/*.js', 'public/app/templates/*.html'],
-			tasks: ['jshint','ngtemplates', 'concat', 'less', 'karma']
+		usemin: {
+			html: [ 'public/dist/index.html' ]
+
+			// 	blockReplacements: {
+			// 		less: function (block) {
+			// 			return '<link rel="stylesheet" href="' + block.dest + '">';
+			// 		}
+			// 	}
+			// }
 		},
+
+		ngtemplates:  {
+			app: {
+				src: 'public/app/templates/*.html',
+				dest: 'public/dest/templates.js',
+    			options:  {
+					usemin: 'chargeback.js' // <~~ This came from the <!-- build:js --> block
+				}
+			}
+		},
+
+		// watch: {
+		// 	files: ['<%= jshint.files %>', 'public/app/modules/*.js', 'public/app/templates/*.html'],
+		// 	tasks: ['jshint','ngtemplates', 'concat', 'less', 'karma']
+		// },
 
 		less: {
 			development: {
@@ -97,18 +120,38 @@ module.exports = function(grunt) {
 			removeComments:                 true, // Only if you don't use comment directives!
 			removeEmptyAttributes:          true,
 			removeRedundantAttributes:      true
+		},
+
+		filerev: {
+			options: {
+				algorithm: 'md5',
+				length: 8
+			},
+			files: {
+				src: [ 'public/dist/*.js' ]
+			}
+			// images: {
+			// 	src: 'img/**/*.{jpg,jpeg,gif,png,webp}'
+			// }
 		}
 	});
-
-	grunt.loadNpmTasks('grunt-angular-templates');
-	grunt.loadNpmTasks('grunt-contrib-uglify');
-	grunt.loadNpmTasks('grunt-contrib-jshint');
-	grunt.loadNpmTasks('grunt-contrib-watch');
-	grunt.loadNpmTasks('grunt-contrib-concat');
-	grunt.loadNpmTasks('grunt-contrib-less');
-	grunt.loadNpmTasks('grunt-karma');
-
+	
+	
 	grunt.registerTask('test', ['jshint', 'karma']);
-	grunt.registerTask('default', ['jshint', 'ngtemplates', 'concat', 'less', 'karma']);
+	grunt.registerTask('build', [
+		'clean:old',
+		//'jshint',
+		
+		'copy:html',
+		'useminPrepare',
+		'concat:generated',
+		'uglify',
+		'ngtemplates',
+		'less',
+		'filerev',
+		'usemin',
+		'clean:concat',
+		//'karma',
+	]);
 
 };
