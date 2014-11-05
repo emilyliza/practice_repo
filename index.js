@@ -25,7 +25,7 @@ app.set('views', __dirname + '/views/');
 //app.set('db', require('mongoose'));
 
 var favicon = require('serve-favicon');
-app.use(favicon(path.join(__dirname,'public','images','favicon.ico')));
+app.use(favicon(path.join(__dirname,'public','images','chargeback-shield.png')));
 
 var compression = require('compression');
 app.use(compression());
@@ -134,7 +134,6 @@ console.log('HEAD is ' + process.env.VERSION);
 //require('./lib/appExtensions')(app);
 
 // User Routes
-require('./controllers/site')(app);
 require('./controllers/login')(app);
 require('./controllers/chargebacks')(app);
 require('./controllers/user')(app);
