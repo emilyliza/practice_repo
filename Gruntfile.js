@@ -81,7 +81,7 @@ module.exports = function(grunt) {
 		ngtemplates:  {
 			app: {
 				src: 'public/app/templates/*.html',
-				dest: 'public/dest/templates.js',
+				dest: 'public/dist/templates.js',
     			options:  {
 					usemin: 'chargeback.js' // <~~ This came from the <!-- build:js --> block
 				}
