@@ -5,7 +5,7 @@ module.exports = function(app) {
 		Chance = require('chance');
 		
 
-	app.get('/api/v1/list', function(req, res, next) {
+	app.get('/api/v1/chargebacks', function(req, res, next) {
 
 		var chance = new Chance(),
 			status = [{

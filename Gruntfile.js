@@ -25,7 +25,8 @@ module.exports = function(grunt) {
 					"public/app/modules/Login.js",
 					"public/app/modules/Forgot.js",
 					"public/app/modules/Chargebacks.js",
-					"public/app/modules/Account.js"
+					"public/app/modules/Account.js",
+					"public/app/modules/Reporting.js"
 				],
 				dest: 'public/dist/<%= pkg.name %>.js'
 			}
@@ -109,5 +110,5 @@ module.exports = function(grunt) {
 
 	grunt.registerTask('test', ['jshint', 'karma']);
 	grunt.registerTask('default', ['jshint', 'ngtemplates', 'concat', 'less', 'karma']);
-	
+
 };

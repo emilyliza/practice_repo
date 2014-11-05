@@ -8,7 +8,8 @@
 		"login", 
 		"forgot", 
 		"chargebacks", 
-		"account"
+		"account",
+		"reporting"
 	])
 
 	.config(function( $locationProvider, $urlRouterProvider) {

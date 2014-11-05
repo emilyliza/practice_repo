@@ -4,8 +4,7 @@ module.exports = function(app){
 		$ = require('seq'),
 		_ = require('underscore'),
 		fs = require('fs'),
-		path = require('path'),
-		assets = require('../config/assets.config')();
+		path = require('path');
 
 	app.get(/^\/sink$/, function (req, res) {
 		return res.json({'success': true});
@@ -49,8 +48,6 @@ module.exports = function(app){
 			asset_name: 'app',
 			user: user,
 			cdn: (process.env.CDN || ''),
-			jsFiles: assets.js[0].files,
-			cssFiles: assets.css[0].files,
 			version: version,
 			bugger: d
 		});

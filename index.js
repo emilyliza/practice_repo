@@ -136,10 +136,10 @@ console.log('HEAD is ' + process.env.VERSION);
 // User Routes
 require('./controllers/site')(app);
 require('./controllers/login')(app);
-require('./controllers/list')(app);
+require('./controllers/chargebacks')(app);
 require('./controllers/user')(app);
 require('./controllers/forgot')(app);
-
+require('./controllers/reporting')(app);
 
 // error handler
 app.use(function(err, req, res, next) {

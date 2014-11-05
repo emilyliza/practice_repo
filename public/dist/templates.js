@@ -245,7 +245,7 @@ angular.module('app').run(['$templateCache', function($templateCache) {
     "\t\t\t</ul>\n" +
     "\t\t\t<ul class=\"nav navbar-nav\" ng-if=\"currentUser\">\n" +
     "\t\t\t\t<li ng-class=\"{active: $state.includes('chargebacks')}\"><a href=\"/chargebacks\">My Chargebacks</a></li>\n" +
-    "\t\t\t\t<li ng-class=\"{active: $state.includes('reports')}\"><a href=\"/reports\">Reports</a></li>\n" +
+    "\t\t\t\t<li ng-class=\"{active: $state.includes('reports')}\"><a href=\"/reporting\">Reporting</a></li>\n" +
     "\t\t\t\t<li ng-class=\"{active: $state.includes('account')}\"><a href=\"/account\">Account</a></li>\n" +
     "\t\t\t\t<li><a href=\"/logout\">Log Out</a></li>\n" +
     "\t\t\t</ul>\n" +
@@ -253,6 +253,18 @@ angular.module('app').run(['$templateCache', function($templateCache) {
     "\t</div>\n" +
     "</div>\n" +
     "\t"
+  );
+
+
+  $templateCache.put('public/app/templates/reporting.html',
+    "\n" +
+    "<div class=\"row search\" style=\"margin-bottom: 20px;\">\n" +
+    "\t<div class=\"col-md-12\">\n" +
+    "\t\t<h2>Reporting</h2>\n" +
+    "\t</div>\n" +
+    "\t\n" +
+    "</div>\n" +
+    "\n"
   );
 
 }]);

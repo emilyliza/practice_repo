@@ -8239,7 +8239,8 @@ angular.module("template/typeahead/typeahead-popup.html", []).run(["$templateCac
 		"login", 
 		"forgot", 
 		"chargebacks", 
-		"account"
+		"account",
+		"reporting"
 	])
 
 	.config(function( $locationProvider, $urlRouterProvider) {
@@ -8576,7 +8577,7 @@ angular.module("template/typeahead/typeahead-popup.html", []).run(["$templateCac
 			resolve: {
 				data:  function($http){
 					// $http returns a promise for the url data
-					return $http({method: 'GET', url: '/api/v1/list'});
+					return $http({method: 'GET', url: '/api/v1/chargebacks'});
 				}
 			},
 			controller: function($scope, data) {
@@ -8649,6 +8650,33 @@ angular.module("template/typeahead/typeahead-popup.html", []).run(["$templateCac
 		};
 
 		return acctService;
+	});
+
+})();
+(function() {
+
+	angular.module('reporting', ['ui.router', 'ngAnimate'])
+	
+	.config(function( $stateProvider ) {
+		
+		$stateProvider.state('reporting', {
+			url: '/reporting',
+			templateUrl: '/app/templates/reporting.html',
+			data: {
+				auth: true	// check for authentication
+			},
+			resolve: {
+				data:  function($http){
+					// $http returns a promise for the url data
+					return $http({method: 'GET', url: '/api/v1/reporting'});
+				}
+			},
+			controller: function($scope, data) {
+				console.log(data);
+				$scope.data = data.data;
+			}
+		});
+
 	});
 
 })();

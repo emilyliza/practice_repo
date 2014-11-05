@@ -1,19 +1,19 @@
 (function() {
 
-	angular.module('chargebacks', ['ui.router', 'ngAnimate'])
+	angular.module('reporting', ['ui.router', 'ngAnimate'])
 	
 	.config(function( $stateProvider ) {
 		
-		$stateProvider.state('chargebacks', {
-			url: '/chargebacks',
-			templateUrl: '/app/templates/chargebacks.html',
+		$stateProvider.state('reporting', {
+			url: '/reporting',
+			templateUrl: '/app/templates/reporting.html',
 			data: {
 				auth: true	// check for authentication
 			},
 			resolve: {
 				data:  function($http){
 					// $http returns a promise for the url data
-					return $http({method: 'GET', url: '/api/v1/chargebacks'});
+					return $http({method: 'GET', url: '/api/v1/reporting'});
 				}
 			},
 			controller: function($scope, data) {
