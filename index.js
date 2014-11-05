@@ -54,7 +54,7 @@ if(process.env.NODE_ENV == 'production') {
 	app.use('/', express.static('./public', { maxAge: 10 }));	
 }
 
-app.use(logger());
+app.use(logger('combined'));
 
 
 process.on('uncaughtException', function(err) {

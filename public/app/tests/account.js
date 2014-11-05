@@ -2,7 +2,10 @@
 
 describe('account module', function() {
 
-	beforeEach(module('account'));
+	beforeEach(function(){
+	    module('account');
+	    module('login');
+	});
 
 	describe('account controller', function(){
 

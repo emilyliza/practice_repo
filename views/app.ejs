@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" ng-app="jgsApp" >
+<html lang="en" ng-app="app" >
 <head>
 	<base href="/">
 
@@ -48,23 +48,10 @@
 	</script>
 
 	
-	<% if (bugger) { %>
-		
-		<% for(var i=0, len=cssFiles.length; i<len; i++) { %>
-			<link rel="stylesheet/less" type="text/css" href="<%=cssFiles[i] %>">
-		<% } %>
-		
-	<% } else { %>
-		<link rel="stylesheet" type="text/css" href="<%= cdn %>/assets/<%=asset_name %>_<%=version %>.css">
-	<% } %>
-
-
-	<% if (bugger) { %>
-		<script type="text/javascript" src="/bower_components/less/dist/less.min.js"></script>
-	<% } %>
+	<link rel="stylesheet" type="text/css" href="<%= cdn %>/dist/app.css">
+	<script type="text/javascript" src="<%= cdn %>/dist/chargeback.js"></script>
 
 	
-
 	<!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
     <!--[if lt IE 9]>
@@ -74,17 +61,6 @@
 		<link href="/images/respond.proxy.gif" id="respond-redirect" rel="respond-redirect" />
 		<script src="/vendor/respond.proxy.js"></script>
 	<![endif]-->
-
-
-
-	<% if (bugger) { %>
-		<% for(var i=0, len=jsFiles.length; i<len; i++) { %>
-			<script type="text/javascript" src="<%=jsFiles[i] %>"></script>
-		<% } %>
-	<% } else { %>
-		<script type="text/javascript" src="<%= cdn %>/assets/<%=asset_name %>_<%=version %>.js"></script>
-	<% } %>
-
 
 	
 </head>
