@@ -1,5 +1,7 @@
 module.exports = function(grunt) {
 
+	var path = require('path');
+
 	var lessCreateConfig = function (context, block) {
 		var cfg = {files: []},
 		outfile = path.join(context.outDir, block.dest),
@@ -52,30 +54,30 @@ module.exports = function(grunt) {
 			html: 'public/index.html',
 			options: {
 				dest: 'public/dist',
-				staging: 'public/dist'
-				// ,
-				// flow: {
-				// 	steps: {
-				// 		'js': ['concat', 'uglifyjs'],
-				// 		'less': [{
-				// 			name: 'less',
-				// 			createConfig: lessCreateConfig
-				// 		}]
-				// 	},
-				// 	post: {}
-				// }
+				staging: 'public/dist',
+				flow: {
+					steps: {
+						'js': ['concat', 'uglifyjs'],
+						'css': ['concat', 'cssmin'],
+						'less': [{
+							name: 'less',
+							createConfig: lessCreateConfig
+						}]
+					},
+					post: {}
+				}
 			}
 		},
 
 		usemin: {
-			html: [ 'public/dist/index.html' ]
-
-			// 	blockReplacements: {
-			// 		less: function (block) {
-			// 			return '<link rel="stylesheet" href="' + block.dest + '">';
-			// 		}
-			// 	}
-			// }
+			html: [ 'public/dist/index.html' ],
+			options: {
+				blockReplacements: {
+					less: function (block) {
+						return '<link rel="stylesheet" href="' + block.dest + '">';
+					}
+				}
+			}
 		},
 
 		ngtemplates:  {
@@ -93,26 +95,6 @@ module.exports = function(grunt) {
 		// 	tasks: ['jshint','ngtemplates', 'concat', 'less', 'karma']
 		// },
 
-		less: {
-			development: {
-				files: {
-					"public/dist/app.css": "public/less/app.less"
-				}
-			},
-			production: {
-				options: {
-					cleancss: true,
-					modifyVars: {
-						imgPath: '"http://mycdn.com/path/to/images"',
-						bgColor: 'red'
-					}
-				},
-				files: {
-					"public/dist/app.css": "public/less/app.less"
-				}
-			}
-		},
-
 		htmlmin: {
 			collapseBooleanAttributes:      true,
 			collapseWhitespace:             true,
@@ -128,7 +110,10 @@ module.exports = function(grunt) {
 				length: 8
 			},
 			files: {
-				src: [ 'public/dist/*.js' ]
+				src: [ 
+					'public/dist/chargeback*.js',
+					'public/dist/chargeback*.css'
+				]
 			}
 			// images: {
 			// 	src: 'img/**/*.{jpg,jpeg,gif,png,webp}'
@@ -147,7 +132,7 @@ module.exports = function(grunt) {
 		'concat:generated',
 		'uglify',
 		'ngtemplates',
-		'less',
+		'less:generated',
 		'filerev',
 		'usemin',
 		'clean:concat',
