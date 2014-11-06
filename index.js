@@ -22,7 +22,7 @@ app.engine('.ejs', require('ejs').__express);
 app.set('view engine', 'ejs');
 app.set('root_dir', __dirname);
 app.set('views', __dirname + '/views/');
-//app.set('db', require('mongoose'));
+app.set('db', require('mongoose'));
 
 var favicon = require('serve-favicon');
 app.use(favicon(path.join(__dirname,'public','images','chargeback-shield.png')));
@@ -120,18 +120,18 @@ if (process.env.NODE_ENV == "local") {
 
 
 
-// app.settings.db.connect(process.env.MONGOLAB_URI, function(err,db) {
-// 	if (err) { throw err; }
-// 	var mongo = process.env.MONGOLAB_URI.split(/@/);
-// 	console.log('MONGODB CONNECTED - ' + mongo[1]);
-// });
+app.settings.db.connect(process.env.MONGOLAB_URI, function(err,db) {
+	if (err) { throw err; }
+	var mongo = process.env.MONGOLAB_URI.split(/@/);
+	console.log('MONGODB CONNECTED - ' + mongo[1]);
+});
 
 
 
 console.log('HEAD is ' + process.env.VERSION);
 
 
-//require('./lib/appExtensions')(app);
+require('./lib/appExtensions')(app);
 
 // User Routes
 require('./controllers/login')(app);

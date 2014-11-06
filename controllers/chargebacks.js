@@ -2,85 +2,44 @@ module.exports = function(app) {
 
 	var _ = require('underscore'),
 		$ = require('seq'),
-		Chance = require('chance');
+		Chargeback = app.Models.get('Chargeback');
 		
 
 	app.get('/api/v1/chargebacks', function(req, res, next) {
 
-		var chance = new Chance(),
-			status = [{
-				name: 'Open',
-				color: 'green'
-			},{
-				name: 'Pending',
-				color: '#0d94c1'
-			},{
-				name: 'In-Progress',
-				color: 'orange'
-			},{
-				name: 'Complete',
-				color: '#ccc'
-			}],
-			rand = 1,
-			data = [];
+		$()
+		.seq(function() {
+			Chargeback.find(this);	
+		})
+		.seq(function(data) {
 
-		function randomIntFromInterval(min,max) {
-			return Math.floor(Math.random()*(max-min+1)+min);
-		}
+			// cache busting on static api end point
+			res.header('Content-Type', 'application/json');
+			res.header('Cache-Control', 'no-cache, private, no-store, must-revalidate, max-stale=0, post-check=0, pre-check=0');
+				
+			return res.json(data);
 
-		for(var i = 0; i < 10; i++) {
-			data.push({
-				_id: chance.natural({min: 1, max: 100000}),
-				customer: chance.name(),
-				date: chance.date({year: 2014}),
-				amount: chance.floating({min: 10, max: 10000, fixed: 2}), // chance.dollar(),
-				status: status[ randomIntFromInterval(0,status.length-1) ]
-			});
-		}
-
-		// cache busting on static api end point
-		res.header('Content-Type', 'application/json');
-		res.header('Cache-Control', 'no-cache, private, no-store, must-revalidate, max-stale=0, post-check=0, pre-check=0');
-			
-		return res.json(data);
+		})
+		.catch(next);
 
 	});
 
 	app.get('/api/v1/chargeback/:_id', function(req, res, next) {
 
-		var chance = new Chance(),
-			status = [{
-				name: 'Open',
-				color: 'green'
-			},{
-				name: 'Pending',
-				color: '#0d94c1'
-			},{
-				name: 'In-Progress',
-				color: 'orange'
-			},{
-				name: 'Complete',
-				color: '#ccc'
-			}],
-			rand = 1,
-			data = [];
+		$()
+		.seq(function() {
+			Chargeback.findOne({'derived_data.uuid': req.params._id}, this);	
+		})
+		.seq(function(data) {
 
-		function randomIntFromInterval(min,max) {
-			return Math.floor(Math.random()*(max-min+1)+min);
-		}
+			// cache busting on static api end point
+			res.header('Content-Type', 'application/json');
+			res.header('Cache-Control', 'no-cache, private, no-store, must-revalidate, max-stale=0, post-check=0, pre-check=0');
+				
+			return res.json(data);
 
-		var out = {
-			_id: chance.natural({min: 1, max: 100000}),
-			customer: chance.name(),
-			date: chance.date({year: 2014}),
-			amount: chance.floating({min: 10, max: 10000, fixed: 2}), // chance.dollar(),
-			status: status[ randomIntFromInterval(0,status.length-1) ]
-		};
-
-		// cache busting on static api end point
-		res.header('Content-Type', 'application/json');
-		res.header('Cache-Control', 'no-cache, private, no-store, must-revalidate, max-stale=0, post-check=0, pre-check=0');
-		return res.json(out);
+		})
+		.catch(next);
 
 
 	});

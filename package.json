@@ -16,6 +16,7 @@
 		"underscore": "1.5.2",
 		"redis": "0.12.1",
 		"connect-redis": "2.0.0",
+		"mongoose": "3.8.18",
 		"request": "2.34.0",
 		"express-device": "0.3.6",
 		"express-validator": "2.6.0",
@@ -50,7 +51,8 @@
 	    "grunt-filerev": "2.1.1",
 	    "load-grunt-tasks": "1.0.0",
 	    "grunt-contrib-clean": "0.6.0",
-	    "karma": "0.12.24"
+	    "karma": "0.12.24",
+	    "commander": "1.0.x"
 	  },
 	  "scripts": {
 	    "postinstall": "bower install",

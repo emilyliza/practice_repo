@@ -82,6 +82,8 @@ Gruntfile.js            --> build recipes to create production files, run via "n
 e2e-tests/              --> end-to-end tests
   protractor-conf.js    --> Protractor config file
   scenarios.js          --> end-to-end scenarios to be run by Protractor
+lib/                    --> nodejs lib, for testing only
+models/                 --> nodejs mongoose model definitions - for test data only
 controllers/            --> nodejs files for servering fake REST API
 ```
 
