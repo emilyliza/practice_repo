@@ -11,19 +11,19 @@
 			<div class="col-md-4">
 				<div class="form-group" show-errors>
 					<label>First Name</label>
-					<input name="FirstName" type="text" required class="form-control" pop-show="{{errors.FirstName}}" pop="{{errors.FirstName}}" pop-placement="right" ng-model="data.FirstName" placeholder="">
+					<input name="FirstName" type="text" class="form-control" pop-show="{{errors.FirstName}}" pop="{{errors.FirstName}}" pop-placement="right" ng-model="data.gateway_data.FirstName" placeholder="">
 				</div>
 			</div>
 			<div class="col-md-4">	
 				<div class="form-group" show-errors>
 					<label>Middle Name</label>
-					<input name="MiddleName" type="text" required class="form-control" pop-show="{{errors.MiddleName}}" pop="{{errors.MiddleName}}" pop-placement="right" ng-model="data.MiddleName" placeholder="">
+					<input name="MiddleName" type="text" class="form-control" pop-show="{{errors.MiddleName}}" pop="{{errors.MiddleName}}" pop-placement="right" ng-model="data.gateway_data.MiddleName" placeholder="">
 				</div>
 			</div>
 			<div class="col-md-4">
 				<div class="form-group" show-errors>
 					<label>Last Name</label>
-					<input name="LastName" type="text" required class="form-control" pop-show="{{errors.LastName}}" pop="{{errors.LastName}}" pop-placement="right" ng-model="data.LastName" placeholder="">
+					<input name="LastName" type="text" class="form-control" pop-show="{{errors.LastName}}" pop="{{errors.LastName}}" pop-placement="right" ng-model="data.gateway_data.LastName" placeholder="">
 				</div>
 			</div>
 		</div>
@@ -32,7 +32,7 @@
 			<div class="col-md-12">
 				<div class="form-group" show-errors>
 					<label>Billing Address One</label>
-					<input name="BillingAddr1" type="text" required class="form-control" pop-show="{{errors.BillingAddr1}}" pop="{{errors.BillingAddr1}}" pop-placement="right" ng-model="data.BillingAddr1" placeholder="">
+					<input name="BillingAddr1" type="text" class="form-control" pop-show="{{errors.BillingAddr1}}" pop="{{errors.BillingAddr1}}" pop-placement="right" ng-model="data.gateway_data.BillingAddr1" placeholder="">
 				</div>
 			</div>
 		</div>
@@ -40,7 +40,7 @@
 			<div class="col-md-12">
 				<div class="form-group" show-errors>
 					<label>Billing Address Two</label>
-					<input name="BillingAddr2" type="text" required class="form-control" pop-show="{{errors.BillingAddr2}}" pop="{{errors.BillingAddr2}}" pop-placement="right" ng-model="data.BillingAddr2" placeholder="optional">
+					<input name="BillingAddr2" type="text" class="form-control" pop-show="{{errors.BillingAddr2}}" pop="{{errors.BillingAddr2}}" pop-placement="right" ng-model="data.gateway_data.BillingAddr2" placeholder="">
 				</div>
 			</div>
 		</div>
@@ -48,19 +48,19 @@
 			<div class="col-md-4">
 				<div class="form-group" show-errors>
 					<label>Billing City</label>
-					<input name="BillingCity" type="text" required class="form-control" pop-show="{{errors.BillingCity}}" pop="{{errors.BillingCity}}" pop-placement="right" ng-model="data.BillingCity" placeholder="">
+					<input name="BillingCity" type="text" class="form-control" pop-show="{{errors.BillingCity}}" pop="{{errors.BillingCity}}" pop-placement="right" ng-model="data.gateway_data.BillingCity" placeholder="">
 				</div>
 			</div>
 			<div class="col-md-4">
 				<div class="form-group" show-errors>
 					<label>Billing State</label>
-					<input name="BillingState" type="text" required class="form-control" pop-show="{{errors.BillingState}}" pop="{{errors.BillingState}}" pop-placement="right" ng-model="data.BillingState" placeholder="">
+					<input name="BillingState" type="text" class="form-control" pop-show="{{errors.BillingState}}" pop="{{errors.BillingState}}" pop-placement="right" ng-model="data.gateway_data.BillingState" placeholder="">
 				</div>
 			</div>
 			<div class="col-md-4">
 				<div class="form-group" show-errors>
 					<label>Billing Postal</label>
-					<input name="BillingPostal" type="text" required class="form-control" pop-show="{{errors.BillingPostal}}" pop="{{errors.BillingPostal}}" pop-placement="right" ng-model="data.BillingPostal" placeholder="">
+					<input name="BillingPostal" type="text" class="form-control" pop-show="{{errors.BillingPostal}}" pop="{{errors.BillingPostal}}" pop-placement="right" ng-model="data.gateway_data.BillingPostal" placeholder="">
 				</div>
 			</div>
 		</div>
@@ -68,13 +68,13 @@
 			<div class="col-md-8">
 				<div class="form-group" show-errors>
 					<label>Billing Country</label>
-					<input name="BillingCountry" type="text" required class="form-control" pop-show="{{errors.BillingCountry}}" pop="{{errors.BillingCountry}}" pop-placement="right" ng-model="data.BillingCountry" placeholder="">
+					<input name="BillingCountry" type="text" class="form-control" pop-show="{{errors.BillingCountry}}" pop="{{errors.BillingCountry}}" pop-placement="right" ng-model="data.gateway_data.BillingCountry" placeholder="">
 				</div>
 			</div>
 			<div class="col-md-4">
 				<div class="form-group" show-errors>
 					<label>Phone</label>
-					<input name="Phone" type="text" required class="form-control" pop-show="{{errors.Phone}}" pop="{{errors.Phone}}" pop-placement="right" ng-model="data.Phone" placeholder="">
+					<input name="Phone" type="text" class="form-control" pop-show="{{errors.Phone}}" pop="{{errors.Phone}}" pop-placement="right" ng-model="data.gateway_data.Phone" placeholder="">
 				</div>
 			</div>
 		</div>
@@ -84,13 +84,13 @@
 			<div class="col-md-6">
 				<div class="form-group" show-errors>
 					<label>Auth Code</label>
-					<input name="AuthCode" type="text" required class="form-control" pop-show="{{errors.AuthCode}}" pop="{{errors.AuthCode}}" pop-placement="right" ng-model="data.AuthCode" placeholder="">
+					<input name="AuthCode" type="text" class="form-control" pop-show="{{errors.AuthCode}}" pop="{{errors.AuthCode}}" pop-placement="right" ng-model="data.gateway_data.AuthCode" placeholder="">
 				</div>
 			</div>
 			<div class="col-md-6">
 				<div class="form-group" show-errors>
 					<label>Avs Status</label>
-					<input name="AvsStatus" type="text" required class="form-control" pop-show="{{errors.AvsStatus}}" pop="{{errors.AvsStatus}}" pop-placement="right" ng-model="data.AvsStatus" placeholder="">
+					<input name="AvsStatus" type="text" class="form-control" pop-show="{{errors.AvsStatus}}" pop="{{errors.AvsStatus}}" pop-placement="right" ng-model="data.gateway_data.AvsStatus" placeholder="">
 				</div>
 			</div>
 		</div>
@@ -98,25 +98,25 @@
 			<div class="col-md-3">
 				<div class="form-group" show-errors>
 					<label>Cc Type</label>
-					<input name="CcType" type="text" required class="form-control" pop-show="{{errors.CcType}}" pop="{{errors.CcType}}" pop-placement="right" ng-model="data.CcType" placeholder="">
+					<input name="CcType" type="text" class="form-control" pop-show="{{errors.CcType}}" pop="{{errors.CcType}}" pop-placement="right" ng-model="data.gateway_data.CcType" placeholder="">
 				</div>
 			</div>
 			<div class="col-md-3">
 				<div class="form-group" show-errors>
 					<label>Cc Expire</label>
-					<input name="CcExpire" type="text" required class="form-control" pop-show="{{errors.CcExpire}}" pop="{{errors.CcExpire}}" pop-placement="right" ng-model="data.CcExpire" placeholder="">
+					<input name="CcExpire" type="text" class="form-control" pop-show="{{errors.CcExpire}}" pop="{{errors.CcExpire}}" pop-placement="right" ng-model="data.gateway_data.CcExpire" placeholder="">
 				</div>
 			</div>
 			<div class="col-md-3">
 				<div class="form-group" show-errors>
 					<label>Cvv Status</label>
-					<input name="CvvStatus" type="text" required class="form-control" pop-show="{{errors.CvvStatus}}" pop="{{errors.CvvStatus}}" pop-placement="right" ng-model="data.CvvStatus" placeholder="">
+					<input name="CvvStatus" type="text" class="form-control" pop-show="{{errors.CvvStatus}}" pop="{{errors.CvvStatus}}" pop-placement="right" ng-model="data.gateway_data.CvvStatus" placeholder="">
 				</div>
 			</div>
 			<div class="col-md-3">
 				<div class="form-group" show-errors>
 					<label>Currency</label>
-					<input name="Currency" type="text" required class="form-control" pop-show="{{errors.Currency}}" pop="{{errors.Currency}}" pop-placement="right" ng-model="data.Currency" placeholder="">
+					<input name="Currency" type="text" class="form-control" pop-show="{{errors.Currency}}" pop="{{errors.Currency}}" pop-placement="right" ng-model="data.gateway_data.Currency" placeholder="">
 				</div>
 			</div>
 		</div>
@@ -126,19 +126,19 @@
 			<div class="col-md-4">
 				<div class="form-group" show-errors>
 					<label>Order Id</label>
-					<input name="OrderId" type="text" required class="form-control" pop-show="{{errors.OrderId}}" pop="{{errors.OrderId}}" pop-placement="right" ng-model="data.OrderId" placeholder="">
+					<input name="OrderId" type="text" class="form-control" pop-show="{{errors.OrderId}}" pop="{{errors.OrderId}}" pop-placement="right" ng-model="data.gateway_data.OrderId" placeholder="">
 				</div>
 			</div>
 			<div class="col-md-4">
 				<div class="form-group" show-errors>
 					<label>Transaction Id</label>
-					<input name="TransId" type="text" required class="form-control" pop-show="{{errors.TransId}}" pop="{{errors.TransId}}" pop-placement="right" ng-model="data.TransId" placeholder="">
+					<input name="TransId" type="text" class="form-control" pop-show="{{errors.TransId}}" pop="{{errors.TransId}}" pop-placement="right" ng-model="data.gateway_data.TransId" placeholder="">
 				</div>
 			</div>
 			<div class="col-md-4">
 				<div class="form-group" show-errors>
 					<label>Transaction Status</label>
-					<input name="TransStatus" type="text" required class="form-control" pop-show="{{errors.TransStatus}}" pop="{{errors.TransStatus}}" pop-placement="right" ng-model="data.TransStatus" placeholder="">
+					<input name="TransStatus" type="text" class="form-control" pop-show="{{errors.TransStatus}}" pop="{{errors.TransStatus}}" pop-placement="right" ng-model="data.gateway_data.TransStatus" placeholder="">
 				</div>
 			</div>
 		</div>
@@ -146,25 +146,25 @@
 			<div class="col-md-4">
 				<div class="form-group" show-errors>
 					<label>Transaction Date</label>
-					<input name="TransDate" type="text" required class="form-control" pop-show="{{errors.TransDate}}" pop="{{errors.TransDate}}" pop-placement="right" ng-model="data.TransDate" placeholder="">
+					<input name="TransDate" type="text" class="form-control" pop-show="{{errors.TransDate}}" pop="{{errors.TransDate}}" pop-placement="right" ng-model="data.gateway_data.TransDate" placeholder="">
 				</div>
 			</div>
 			<div class="col-md-4">
 				<div class="form-group" show-errors>
 					<label>Transaction Type</label>
-					<input name="TransType" type="text" required class="form-control" pop-show="{{errors.TransType}}" pop="{{errors.TransType}}" pop-placement="right" ng-model="data.TransType" placeholder="">
+					<input name="TransType" type="text" class="form-control" pop-show="{{errors.TransType}}" pop="{{errors.TransType}}" pop-placement="right" ng-model="data.gateway_data.TransType" placeholder="">
 				</div>
 			</div>
 			<div class="col-md-4">
 				<div class="form-group" show-errors>
 					<label>Transaction History</label>
-					<input name="TransHistory" type="text" required class="form-control" pop-show="{{errors.TransHistory}}" pop="{{errors.TransHistory}}" pop-placement="right" ng-model="data.TransHistory" placeholder="">
+					<input name="TransHistory" type="text" class="form-control" pop-show="{{errors.TransHistory}}" pop="{{errors.TransHistory}}" pop-placement="right" ng-model="data.gateway_data.TransHistory" placeholder="">
 				</div>
 			</div>
 		</div>
 
 		<div class="form-group btns">
-			<a ui-sref="chargeback.crm" class="btn btn-success pull-right">Next</a>
+			<a ui-sref="chargeback.crm" class="btn btn-success pull-right">Continue to CRM</a>
 		</div>
 
 	</div>

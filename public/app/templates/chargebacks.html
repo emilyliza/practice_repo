@@ -19,11 +19,11 @@
 	</div>
 
 	<div class="row" ng-repeat="cb in data | filter:q as results">
-		<div class="col-sm-1"><a href="/chargeback/{{cb._id}}/portal">{{cb._id}}</a></div>
-		<div class="col-sm-3">{{cb.date | date:'medium'}}</div>
-		<div class="col-sm-2">{{cb.amount | currency}}</div>
-		<div class="col-sm-3">{{cb.customer}}</div>
-		<div class="col-sm-3" style="color: {{cb.status.color}}">{{cb.status.name}}</div>
+		<div class="col-sm-1"><a href="/chargeback/{{cb.derived_data.uuid}}/portal">{{cb.derived_data.uuid}}</a></div>
+		<div class="col-sm-3">{{cb.gateway_data.TransDate | date:'medium'}}</div>
+		<div class="col-sm-2">{{cb.portal_data.ChargebackAmt | currency}}</div>
+		<div class="col-sm-3">{{cb.gateway_data.FirstName}} {{cb.gateway_data.LastName}}</div>
+		<div class="col-sm-3" style="color: {{cb.derived_data.status.color}}">{{cb.derived_data.status.name}}</div>
 	</div>
 	
 	<div class="row" ng-if="results.length == 0">

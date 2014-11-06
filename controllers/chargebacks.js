@@ -46,11 +46,31 @@ module.exports = function(app) {
 
 	app.put('/api/v1/chargeback/:_id', function(req, res, next) {
 
-		// cache busting on static api end point
-		res.header('Content-Type', 'application/json');
-		res.header('Cache-Control', 'no-cache, private, no-store, must-revalidate, max-stale=0, post-check=0, pre-check=0');
-			
-		return res.json(req.body);	
+		console.log('stingk')
+
+		$()
+		.seq(function() {
+			Chargeback.findById( req.params._id , this);	
+		})
+		.seq(function(data) {
+
+			data.set('shipping_data', req.body.shipping_data);
+			data.set('crm_data', req.body.crm_data);
+			data.set('gateway_data', req.body.gateway_data);
+			data.set('portal_data', req.body.portal_data);
+			data.save(this);
+
+		})
+		.seq(function(data) {
+
+			// cache busting on static api end point
+			res.header('Content-Type', 'application/json');
+			res.header('Cache-Control', 'no-cache, private, no-store, must-revalidate, max-stale=0, post-check=0, pre-check=0');
+				
+			return res.json(data);
+
+		})
+		.catch(next);
 
 	});
 

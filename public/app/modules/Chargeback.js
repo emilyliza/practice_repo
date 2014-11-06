@@ -40,7 +40,7 @@
 
 	})
 
-	.controller('ChargebackController', function ($scope, $rootScope, AUTH_EVENTS, Session, AuthService, $state, $timeout, $stateParams, res) {
+	.controller('ChargebackController', function ($scope, $rootScope, AUTH_EVENTS, Session, ChargebackService, $state, $timeout, $stateParams, res) {
 		
 		$scope.data = res.data;
 		$scope.errors = {};
@@ -57,7 +57,9 @@
 		var _this = this;
 		$scope.save = function(data) {
 			$scope.$broadcast('show-errors-check-validity');
+			console.log('saving')
 			if ($scope.cbForm.$valid) {
+				console.log('valid')
 				ChargebackService.save(data).then(function (user) {
 					$state.go('chargebacks');
 				}, function (res) {
@@ -75,7 +77,7 @@
 
 		cbService.save = function(data) {
 			return $http
-			.put('/api/v1/chargeback', data)
+			.put('/api/v1/chargeback/' + data._id, data)
 			.then(function (res) {
 				return res.data;
 			});
