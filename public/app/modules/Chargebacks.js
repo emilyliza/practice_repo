@@ -1,6 +1,6 @@
 (function() {
 
-	angular.module('chargebacks', ['ui.router', 'ngAnimate'])
+	angular.module('chargebacks', ['ui.router', 'ngAnimate', 'infinite-scroll'])
 	
 	.config(function( $stateProvider ) {
 		
@@ -10,17 +10,48 @@
 			data: {
 				auth: true	// check for authentication
 			},
-			resolve: {
-				data:  function($http){
-					// $http returns a promise for the url data
-					return $http({method: 'GET', url: '/api/v1/chargebacks'});
-				}
-			},
-			controller: function($scope, data) {
-				console.log(data);
-				$scope.data = data.data;
-			}
+			controller: 'ChargebacksController'
+			// ,
+			// resolve: {
+			// 	res:  function($http){
+			// 		// $http returns a promise for the url data
+			// 		return $http({method: 'GET', url: '/api/v1/chargebacks'});
+			// 	}
+			// }
 		});
+	
+	})
+
+	.controller('ChargebacksController', function($scope, ChargebacksService) {
+		$scope.cbs = new ChargebacksService();
+	})
+
+	.factory('ChargebacksService', function ($http) {
+			
+		var ChargebacksService = function() {
+			this.data = [];
+			this.busy = false;
+			this.page = 1;
+		};
+
+		ChargebacksService.prototype.nextPage = function() {
+			if (this.busy) return;
+    		this.busy = true;
+    		var _this = this;
+
+    		$http.get('/api/v1/chargebacks?page=' + this.page)
+			.success(function (rows) {
+				var new_data = rows;
+				console.log(new_data)
+				_.each(new_data, function(d) {
+					_this.data.push(d);
+				});
+				_this.page++;
+				_this.busy = false;
+			});
+		};
+
+		return ChargebacksService;
 
 	});
 

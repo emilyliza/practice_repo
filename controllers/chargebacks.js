@@ -5,11 +5,24 @@ module.exports = function(app) {
 		Chargeback = app.Models.get('Chargeback');
 		
 
-	app.get('/api/v1/chargebacks', function(req, res, next) {
+	app.get('/api/v1/chargebacks?', function(req, res, next) {
+
+		var params = req.query;
+
+		if (!params.limit) { params.limit = 30; }
+		console.log(params.page);
 
 		$()
 		.seq(function() {
-			Chargeback.find(this);	
+			var query = Chargeback.find();
+			query.skip( (params.page ? ((+params.page - 1) * params.limit) : 0) );
+			query.limit((params.limit ? params.limit : 30));
+
+			console.log('Chargeback Query...');
+			console.log(query._conditions);
+			console.log(query.options);
+
+			query.exec(this);
 		})
 		.seq(function(data) {
 

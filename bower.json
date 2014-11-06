@@ -27,6 +27,7 @@
     "underscore": "1.7.0",
     "angular-bootstrap-show-errors": "2.0.0",
     "autofill-event": "1.0.0",
-    "angular-ui-router": "0.2.11"
+    "angular-ui-router": "0.2.11",
+    "ngInfiniteScroll": "1.0.0"
   }
 }
