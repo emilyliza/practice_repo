@@ -5,4 +5,4 @@ npm-debug.log
 tmp/
 mongo/
 bower_components
-public/dist/
+dist/

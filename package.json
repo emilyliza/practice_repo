@@ -59,6 +59,7 @@
 	    "prestart": "npm install",
 
 	    "start": "foreman start -e .env-local -f Procfile_dev",
+	    "build": "grunt build",
 	    
 	    "pretest": "npm install",
 	    "test": "karma start karma.conf.js",

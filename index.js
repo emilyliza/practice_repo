@@ -49,9 +49,9 @@ app.use(methodOverride());
 
 
 if(process.env.NODE_ENV == 'production') {
-	app.use(express.static('./public', { maxAge: 31557600000 }));
+	app.use(express.static('./dist', { maxAge: 31557600000 }));
 } else {
-	app.use('/', express.static('./public', { maxAge: 10 }));	
+	app.use('/', express.static('./public', { maxAge: 10 }));
 }
 
 app.use(logger('combined'));

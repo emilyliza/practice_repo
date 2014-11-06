@@ -25,13 +25,13 @@ module.exports = function(grunt) {
 		pkg: grunt.file.readJSON('package.json'),
 		
 		clean: {
-			old: ["public/dist"],
-			concat: ["public/dist/concat"]
+			old: ["dist"],
+			concat: ["dist/concat"]
 		},
 
 		copy: {
 			html: {
-				src: 'public/index.html', dest: 'public/dist/index.html'
+				src: 'public/index.html', dest: 'dist/index.html'
 			}
 		},
 
@@ -53,8 +53,8 @@ module.exports = function(grunt) {
 		useminPrepare: {
 			html: 'public/index.html',
 			options: {
-				dest: 'public/dist',
-				staging: 'public/dist',
+				dest: 'dist',
+				staging: 'dist',
 				flow: {
 					steps: {
 						'js': ['concat', 'uglifyjs'],
@@ -70,7 +70,7 @@ module.exports = function(grunt) {
 		},
 
 		usemin: {
-			html: [ 'public/dist/index.html' ],
+			html: [ 'dist/index.html' ],
 			options: {
 				blockReplacements: {
 					less: function (block) {
@@ -83,7 +83,7 @@ module.exports = function(grunt) {
 		ngtemplates:  {
 			app: {
 				src: 'public/app/templates/*.html',
-				dest: 'public/dist/templates.js',
+				dest: 'dist/templates.js',
     			options:  {
 					usemin: 'chargeback.js' // <~~ This came from the <!-- build:js --> block
 				}
@@ -111,8 +111,8 @@ module.exports = function(grunt) {
 			},
 			files: {
 				src: [ 
-					'public/dist/chargeback*.js',
-					'public/dist/chargeback*.css'
+					'dist/chargeback*.js',
+					'dist/chargeback*.css'
 				]
 			}
 			// images: {
