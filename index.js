@@ -140,6 +140,11 @@ require('./controllers/user')(app);
 require('./controllers/forgot')(app);
 require('./controllers/reporting')(app);
 
+
+app.use(function(req, res){
+	res.sendfile('./public/index.html'); 
+});
+
 // error handler
 app.use(function(err, req, res, next) {
 	// don't log user errors
