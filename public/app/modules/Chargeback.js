@@ -22,15 +22,30 @@
 		})
 		.state('chargeback.gateway', {
 			url: '/gateway',
-			templateUrl: '/app/templates/chargeback.gateway.html'
+			templateUrl: '/app/templates/chargeback.gateway.html',
+			resolve: {
+				scroll:  function() {
+					$("html, body").animate({ scrollTop: 0 }, 200);
+				}
+			}
 		})
 		.state('chargeback.crm', {
 			url: '/crm',
-			templateUrl: '/app/templates/chargeback.crm.html'
+			templateUrl: '/app/templates/chargeback.crm.html',
+			resolve: {
+				scroll:  function() {
+					$("html, body").animate({ scrollTop: 0 }, 200);
+				}
+			}
 		})
 		.state('chargeback.shipping', {
 			url: '/shipping',
-			templateUrl: '/app/templates/chargeback.shipping.html'
+			templateUrl: '/app/templates/chargeback.shipping.html',
+			resolve: {
+				scroll:  function() {
+					$("html, body").animate({ scrollTop: 0 }, 200);
+				}
+			}
 		})
 		.state('chargeback.review', {
 			url: '/review',
