@@ -90,11 +90,7 @@ module.exports = function(grunt) {
 			}
 		},
 
-		// watch: {
-		// 	files: ['<%= jshint.files %>', 'public/app/modules/*.js', 'public/app/templates/*.html'],
-		// 	tasks: ['jshint','ngtemplates', 'concat', 'less', 'karma']
-		// },
-
+		
 		htmlmin: {
 			collapseBooleanAttributes:      true,
 			collapseWhitespace:             true,
@@ -124,9 +120,9 @@ module.exports = function(grunt) {
 	
 	grunt.registerTask('test', ['jshint', 'karma']);
 	grunt.registerTask('build', [
+		'jshint',
+		'karma',
 		'clean:old',
-		//'jshint',
-		
 		'copy:html',
 		'useminPrepare',
 		'concat:generated',
@@ -135,8 +131,7 @@ module.exports = function(grunt) {
 		'less:generated',
 		'filerev',
 		'usemin',
-		'clean:concat',
-		//'karma',
+		'clean:concat'
 	]);
 
 };
