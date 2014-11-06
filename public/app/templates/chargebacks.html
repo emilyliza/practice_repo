@@ -19,7 +19,7 @@
 	</div>
 
 	<div class="row" ng-repeat="cb in data | filter:q as results">
-		<div class="col-sm-1"><a href="/chargeback/{{cb._id}}">{{cb._id}}</a></div>
+		<div class="col-sm-1"><a href="/chargeback/{{cb._id}}/portal">{{cb._id}}</a></div>
 		<div class="col-sm-3">{{cb.date | date:'medium'}}</div>
 		<div class="col-sm-2">{{cb.amount | currency}}</div>
 		<div class="col-sm-3">{{cb.customer}}</div>

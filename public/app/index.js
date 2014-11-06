@@ -7,7 +7,8 @@
 		"home", 
 		"login", 
 		"forgot", 
-		"chargebacks", 
+		"chargebacks",
+		 "chargeback",
 		"account",
 		"reporting"
 	])

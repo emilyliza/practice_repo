@@ -1,0 +1,82 @@
+
+<div class="row">
+	
+	<div class="col-sm-4 col-sm-push-8 form-sidebar">
+		<div class="side-main-head">PORTAL INFORMATION HELP</div>
+		<div>Details on where to find and enter portal stuff and what a protal does, etc. Maybe a video?</div>
+	</div>
+	<div class="col-sm-8 col-sm-pull-4 jgs-form">
+
+
+		<div class="row bt">
+			<div class="col-md-12">
+				<div class="form-group" show-errors>
+					<label>Portal</label>
+					<input name="Portal" type="text" required class="form-control" pop-show="{{errors.Portal}}" pop="{{errors.Portal}}" pop-placement="right" ng-model="data.Portal" placeholder="">
+				</div>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-md-6">
+				<div class="form-group" show-errors>
+					<label>Case Number</label>
+					<input name="CaseNumber" type="text" required class="form-control" pop-show="{{errors.CaseNumber}}" pop="{{errors.CaseNumber}}" pop-placement="right" ng-model="data.CaseNumber" placeholder="">
+				</div>
+			</div>
+			<div class="col-md-6">
+				<div class="form-group" show-errors>
+					<label>Reference Number</label>
+					<input name="Reference Number" type="text" required class="form-control" pop-show="{{errors.RefNumber}}" pop="{{errors.RefNumber}}" pop-placement="right" ng-model="data.RefNumber" placeholder="">
+				</div>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-md-6">
+				<div class="form-group" show-errors>
+					<label>CC Prefix</label>
+					<input name="CcPrefix" type="text" required class="form-control" pop-show="{{errors.CcPrefix}}" pop="{{errors.CcPrefix}}" pop-placement="right" ng-model="data.CcPrefix" placeholder="">
+				</div>
+			</div>
+			<div class="col-md-6">
+				<div class="form-group" show-errors>
+					<label>CC Suffix</label>
+					<input name="CcSuffix" type="text" required class="form-control" pop-show="{{errors.CcSuffix}}" pop="{{errors.CcSuffix}}" pop-placement="right" ng-model="data.CcSuffix" placeholder="">
+				</div>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-md-6">
+				<div class="form-group" show-errors>
+					<label>Chargeback Amount</label>
+					<input name="ChargebackAmt" type="text" required class="form-control" pop-show="{{errors.ChargebackAmt}}" pop="{{errors.ChargebackAmt}}" pop-placement="right" ng-model="data.ChargebackAmt" placeholder="">
+				</div>
+			</div>
+			<div class="col-md-6">
+				<div class="form-group" show-errors>
+					<label>Mid Number</label>
+					<input name="MidNumber" type="text" required class="form-control" pop-show="{{errors.MidNumber}}" pop="{{errors.MidNumber}}" pop-placement="right" ng-model="data.MidNumber" placeholder="">
+				</div>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-md-6">
+				<div class="form-group" show-errors>
+					<label>Reason Code</label>
+					<input name="ReasonCode" type="text" required class="form-control" pop-show="{{errors.ReasonCode}}" pop="{{errors.ReasonCode}}" pop-placement="right" ng-model="data.ReasonCode" placeholder="">
+				</div>
+			</div>
+			<div class="col-md-6">
+				<div class="form-group" show-errors>
+					<label>Reason Text</label>
+					<input name="ReasonText" type="text" required class="form-control" pop-show="{{errors.ReasonText}}" pop="{{errors.ReasonText}}" pop-placement="right" ng-model="data.ReasonText" placeholder="">
+				</div>
+			</div>
+		</div>
+
+		<div class="form-group btns">
+			<a ui-sref="chargeback.gateway" class="btn btn-success pull-right">Next</a>
+		</div>
+
+	</div>
+
+</div>

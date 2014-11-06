@@ -1,0 +1,53 @@
+
+<div class="row">
+	
+	<div class="col-sm-4 col-sm-push-8 form-sidebar">
+		<div class="side-main-head">SHIPPING INFORMATION HELP</div>
+		<div>Details on where to find and enter shipping stuff. Maybe a video?</div>
+	</div>
+	<div class="col-sm-8 col-sm-pull-4 jgs-form">
+
+		<div class="row">
+			<div class="col-md-12">
+				<div class="form-group" show-errors>
+					<label>Shipping Date</label>
+					<input name="ShippingDate" type="text" required class="form-control" pop-show="{{errors.ShippingDate}}" pop="{{errors.ShippingDate}}" pop-placement="right" ng-model="data.ShippingDate" placeholder="">
+				</div>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-md-4">
+				<div class="form-group" show-errors>
+					<label>Has Tracking?</label>
+					<input name="has_tracking" type="text" required class="form-control" pop-show="{{errors.has_tracking}}" pop="{{errors.has_tracking}}" pop-placement="right" ng-model="data.has_tracking" placeholder="">
+				</div>
+			</div>
+			<div class="col-md-4">
+				<div class="form-group" show-errors>
+					<label>Tracking Number</label>
+					<input name="TrackingNum" type="text" required class="form-control" pop-show="{{errors.TrackingNum}}" pop="{{errors.TrackingNum}}" pop-placement="right" ng-model="data.TrackingNum" placeholder="">
+				</div>
+			</div>
+			<div class="col-md-4">
+				<div class="form-group" show-errors>
+					<label>Tracking Summary</label>
+					<input name="TrackingSum" type="text" required class="form-control" pop-show="{{errors.TrackingSum}}" pop="{{errors.TrackingSum}}" pop-placement="right" ng-model="data.TrackingSum" placeholder="">
+				</div>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-md-12">
+				<div class="form-group" show-errors>
+					<label>Delivery Date</label>
+					<input name="DeliveryDate" type="text" required class="form-control" pop-show="{{errors.DeliveryDate}}" pop="{{errors.DeliveryDate}}" pop-placement="right" ng-model="data.DeliveryDate" placeholder="">
+				</div>
+			</div>
+		</div>
+
+		<div class="form-group btns">
+			<a ui-sref="chargeback.review" class="btn btn-success pull-right">Next</a>
+		</div>
+
+	</div>
+
+</div>
