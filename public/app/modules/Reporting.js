@@ -2,7 +2,7 @@
 
 	angular.module('reporting', ['ui.router', 'ngAnimate'])
 	
-	.config(function( $stateProvider ) {
+	.config(['$stateProvider', function( $stateProvider ) {
 		
 		$stateProvider.state('reporting', {
 			url: '/reporting',
@@ -17,11 +17,11 @@
 				}
 			},
 			controller: function($scope, data) {
-				console.log(data);
+				$inject = ['$scope'];
 				$scope.data = data.data;
 			}
 		});
 
-	});
+	}]);
 
 })();

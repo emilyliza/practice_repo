@@ -18,7 +18,7 @@
 		guest: 'guest'
 	})
 	
-	.config(function( $stateProvider ) {
+	.config(['$stateProvider', function( $stateProvider ) {
 		
 		$stateProvider.state('login', {
 			url: '/login',
@@ -34,10 +34,12 @@
 			}
 		});
 
-	})
+	}])
 
 	.controller('LoginController', function ($scope, $rootScope, AUTH_EVENTS, Session, AuthService, $state, $timeout) {
 		
+		this.$inject = [ '$scope', '$rootScope', '$state', '$timeout' ];
+
 		if (AuthService.isAuthenticated()) {
 			$state.go('chargebacks');
 		}
@@ -73,7 +75,7 @@
 
 	})
 
-	.factory('AuthService', function ($http, Session) {
+	.factory('AuthService', ['$http', 'Session', function ($http, Session) {
 		var authService = {};
 
 		authService.login = function(credentials) {
@@ -108,7 +110,7 @@
 		};
 
 		return authService;
-	})
+	}])
 
 	.service('Session', function () {
 		this.user = {};
@@ -157,15 +159,16 @@
 
 
 	// look for any API requests that return 401, 403, 419, or 440 and broadcast appropriately
-	.config(function ($httpProvider) {
+	.config(['$httpProvider', function ($httpProvider) {
 		$httpProvider.interceptors.push([
 			'$injector',
 			function ($injector) {
 				return $injector.get('AuthInterceptor');
 			}
 		]);
-	})
-	.factory('AuthInterceptor', function ($rootScope, $q, AUTH_EVENTS) {
+	}])
+	
+	.factory('AuthInterceptor', ['$rootScope', '$q', 'AUTH_EVENTS', function ($rootScope, $q, AUTH_EVENTS) {
 		return {
 			responseError: function (response) { 
 				$rootScope.$broadcast({
@@ -177,6 +180,6 @@
 				return $q.reject(response);
 			}
 		};
-	});
+	}]);
 
 })();

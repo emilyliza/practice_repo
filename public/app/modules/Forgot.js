@@ -2,7 +2,7 @@
 
 	angular.module('forgot', ['ui.router'])
 	
-	.config(function( $stateProvider ) {
+	.config(['$stateProvider', function( $stateProvider ) {
 		
 		$stateProvider.state('/forgot', {
 			url: '/forgot',
@@ -11,10 +11,12 @@
 			
 		});
 
-	})
+	}])
 
 	.controller('ForgotController', function($scope, $state, ForgotService) {
 
+		this.$inject = ['$scope', '$state'];
+		
 		$scope.data = {};
 		$scope.errors = {};
 
@@ -40,7 +42,7 @@
 
 	})
 
-	.factory('ForgotService', function ($http, Session) {
+	.factory('ForgotService', ['$http', function ($http) {
 		var forgotService = {};
 
 		forgotService.forgot = function(data) {
@@ -52,6 +54,6 @@
 		};
 
 		return forgotService;
-	});
+	}]);
 
 })();

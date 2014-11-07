@@ -2,7 +2,7 @@
 
 	angular.module('chargebacks', ['ui.router', 'ngAnimate', 'infinite-scroll'])
 	
-	.config(function( $stateProvider ) {
+	.config(['$stateProvider', function( $stateProvider ) {
 		
 		$stateProvider.state('chargebacks', {
 			url: '/chargebacks',
@@ -20,13 +20,16 @@
 			// }
 		});
 	
-	})
+	}])
 
 	.controller('ChargebacksController', function($scope, ChargebacksService) {
+			
+		this.$inject = ['$scope'];	
 		$scope.cbs = new ChargebacksService();
+
 	})
 
-	.factory('ChargebacksService', function ($http) {
+	.factory('ChargebacksService', ['$http', function ($http) {
 			
 		var ChargebacksService = function() {
 			this.data = [];
@@ -53,6 +56,6 @@
 
 		return ChargebacksService;
 
-	});
+	}]);
 
 })();

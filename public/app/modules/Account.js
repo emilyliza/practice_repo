@@ -2,7 +2,7 @@
 
 	angular.module('account', ['ui.router'])
 	
-	.config(function( $stateProvider ) {
+	.config(['$stateProvider', function( $stateProvider ) {
 		
 		$stateProvider.state('account', {
 			url: '/account',
@@ -10,12 +10,15 @@
 			templateUrl: '/app/templates/account.html'
 		});
 
-	})
+	}])
 
 	.controller('AccountController', function ($scope, $rootScope, $state, AccountService) {
 		
+		this.$inject = ['$scope', '$rootScope', '$state'];
+		
 		$scope.errors = {};
 		$scope.saved = false;
+
 		
 		// watch for changes to clear out errors
 		$scope.$watch("currentUser", function(newValue, oldValue){
@@ -47,8 +50,10 @@
 
 	})
 
-	.factory('AccountService', function ($http, Session) {
+	.factory('AccountService', ['$http', function ($http) {
 		var acctService = {};
+
+		$inject = [$http];
 
 		acctService.save = function(data) {
 			return $http
@@ -59,6 +64,6 @@
 		};
 
 		return acctService;
-	});
+	}]);
 
 })();

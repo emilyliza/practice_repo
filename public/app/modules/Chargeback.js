@@ -2,7 +2,7 @@
 
 	angular.module('chargeback', ['ui.router'])
 	
-	.config(function( $stateProvider, $urlRouterProvider ) {
+	.config(['$stateProvider', '$urlRouterProvider', function( $stateProvider, $urlRouterProvider ) {
 		
 		$stateProvider
 		.state('chargeback', {
@@ -53,10 +53,13 @@
 		});
 		//$urlRouterProvider.otherwise('/chargeback/');
 
-	})
+	}])
 
-	.controller('ChargebackController', function ($scope, $rootScope, AUTH_EVENTS, Session, ChargebackService, $state, $timeout, $stateParams, res) {
+	.controller('ChargebackController', 
+			function ($scope, $rootScope, AUTH_EVENTS, Session, ChargebackService, $state, res) {
 		
+		this.$inject = ['$scope', '$rootScope', '$state', 'AUTH_EVENTS', 'Session'];
+
 		$scope.data = res.data;
 		$scope.errors = {};
 
@@ -85,7 +88,7 @@
 
 	})
 
-	.factory('ChargebackService', function ($http, Session) {
+	.factory('ChargebackService', ['$http', function ($http) {
 		var cbService = {};
 
 		cbService.save = function(data) {
@@ -97,6 +100,6 @@
 		};
 
 		return cbService;
-	});
+	}]);
 
 })();
