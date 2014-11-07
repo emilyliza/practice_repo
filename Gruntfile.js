@@ -108,6 +108,7 @@ module.exports = function(grunt) {
 				dest: '.tmp/templates.js',
 				options:  {
 					usemin: 'assets/chargeback.js', // <~~ This came from the <!-- build:js --> block
+					prefix: '/',
 					htmlmin:  {
 						collapseBooleanAttributes:      true,
 						collapseWhitespace:             true,

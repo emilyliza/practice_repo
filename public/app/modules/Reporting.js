@@ -23,6 +23,6 @@
 
 	.controller('ReportingController', [ '$scope', 'data', function($scope, data) {
 		$scope.data = data.data;
-	}])
+	}]);
 
 })();
