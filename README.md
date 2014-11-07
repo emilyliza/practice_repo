@@ -156,5 +156,21 @@ This script will execute the end-to-end tests against the application being host
 development server.
 
 
+### Production Build Process
 
+The buidl process requires Grunt `~0.4.1` which is installed via npm install (no need to install separately).
+
+If you haven't used [Grunt](http://gruntjs.com/) before, be sure to check out the [Getting Started](http://gruntjs.com/getting-started) guide, as it explains how to create a [Gruntfile](http://gruntjs.com/sample-gruntfile) as well as install and use Grunt plugins. 
+
+Gruntfile.js contains a full configuration to concat, compress, version-ify, less->css, and templatize the chargeback.com angular app into one chargeback.css file, one chargeback.js file and a optimized index.html. The output of the grunt process is found in ./dist. To run the build process...
+
+```
+grunt build
+```
+
+or run with --verbose for more information. Then check ./dist for the results. You can run the following to boot up the nodejs app using the production files for testing. Production mode basically uses ./dist versus ./public as the root web folder.
+
+```
+npm start --production
+```
 

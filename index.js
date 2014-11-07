@@ -47,9 +47,8 @@ app.use(device.capture());
 app.use(methodOverride());
 
 
-
 if(process.env.NODE_ENV == 'production') {
-	app.use(express.static('./dist', { maxAge: 31557600000 }));
+	app.use('/', express.static('./dist', { maxAge: 10 }));
 } else {
 	app.use('/', express.static('./public', { maxAge: 10 }));
 }
@@ -141,9 +140,15 @@ require('./controllers/forgot')(app);
 require('./controllers/reporting')(app);
 
 
-app.use(function(req, res){
-	res.sendfile('./public/index.html'); 
-});
+if(process.env.NODE_ENV == 'production') {
+	app.use(function(req, res){
+		res.sendfile('./dist/index.html'); 
+	});
+} else {
+	app.use(function(req, res){
+		res.sendfile('./public/index.html'); 
+	});
+}
 
 // error handler
 app.use(function(err, req, res, next) {

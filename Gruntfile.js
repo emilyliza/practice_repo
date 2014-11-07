@@ -26,12 +26,28 @@ module.exports = function(grunt) {
 		
 		clean: {
 			old: ["dist"],
-			concat: ["dist/concat"]
+			tmp: [
+				".tmp",
+				"dist/assets/chargeback.js",
+				"dist/assets/chargeback.css",
+				"dist/assets/chargeback.min.css",
+			],
+			origcss: [
+				"dist/assets/chargeback.css"
+			]
 		},
 
 		copy: {
 			html: {
 				src: 'public/index.html', dest: 'dist/index.html'
+			},
+			images: {
+				expand: true,
+				cwd: 'public/images',
+				src: '*', dest: 'dist/images/'
+			},
+			cssmin: {
+				src: 'dist/assets/chargeback.min.css', dest: 'dist/assets/chargeback.css'
 			}
 		},
 
@@ -53,12 +69,9 @@ module.exports = function(grunt) {
 		useminPrepare: {
 			html: 'public/index.html',
 			options: {
-				dest: 'dist',
-				staging: 'dist',
 				flow: {
 					steps: {
 						'js': ['concat', 'uglifyjs'],
-						'css': ['concat', 'cssmin'],
 						'less': [{
 							name: 'less',
 							createConfig: lessCreateConfig
@@ -71,33 +84,52 @@ module.exports = function(grunt) {
 
 		usemin: {
 			html: [ 'dist/index.html' ],
+			js: [ 'dist/assets/*.*.js' ],
 			options: {
+				assetsDirs: ['dist', 'dist/assets'],
 				blockReplacements: {
 					less: function (block) {
 						return '<link rel="stylesheet" href="' + block.dest + '">';
 					}
+				},
+				patterns: {
+					// FIXME While usemin won't have full support for revved files we have to put all references manually here
+					js: [
+						[/(images\/.*?\.(?:gif|jpeg|jpg|png|webp|svg))/gm, 'Update the JS to reference our revved images']
+					]
 				}
 			}
 		},
 
 		ngtemplates:  {
 			app: {
-				src: 'public/app/templates/*.html',
-				dest: 'dist/templates.js',
-    			options:  {
-					usemin: 'chargeback.js' // <~~ This came from the <!-- build:js --> block
+				cwd: 'public',
+				src: 'app/templates/*.html',
+				dest: '.tmp/templates.js',
+				options:  {
+					usemin: 'assets/chargeback.js', // <~~ This came from the <!-- build:js --> block
+					htmlmin:  {
+						collapseBooleanAttributes:      true,
+						collapseWhitespace:             true,
+						removeAttributeQuotes:          true,
+						removeComments:                 true, // Only if you don't use comment directives!
+						removeEmptyAttributes:          true,
+						removeRedundantAttributes:      true
+					}
 				}
 			}
 		},
 
-		
-		htmlmin: {
-			collapseBooleanAttributes:      true,
-			collapseWhitespace:             true,
-			removeAttributeQuotes:          true,
-			removeComments:                 true, // Only if you don't use comment directives!
-			removeEmptyAttributes:          true,
-			removeRedundantAttributes:      true
+		// uglify: {
+		//  options: { sourceMap: false } }
+
+		cssmin: {
+			target: {
+				files: [{
+					src: "dist/assets/chargeback.css",
+					dest: "dist/assets/chargeback.min.css"
+				}]	
+			}
 		},
 
 		filerev: {
@@ -105,33 +137,40 @@ module.exports = function(grunt) {
 				algorithm: 'md5',
 				length: 8
 			},
+			images: {
+				src: 'dist/images/*'
+			},
 			files: {
 				src: [ 
-					'dist/chargeback*.js',
-					'dist/chargeback*.css'
-				]
+					'dist/assets/chargeback.js',	// uglify runs first and puts file here.
+					'dist/assets/chargeback.css'
+				],
+				dest: 'dist/assets/'
 			}
-			// images: {
-			// 	src: 'img/**/*.{jpg,jpeg,gif,png,webp}'
-			// }
 		}
 	});
 	
 	
 	grunt.registerTask('test', ['jshint', 'karma']);
+
 	grunt.registerTask('build', [
-		'jshint',
-		'karma',
-		'clean:old',
-		'copy:html',
-		'useminPrepare',
-		'concat:generated',
-		'uglify',
-		'ngtemplates',
-		'less:generated',
-		'filerev',
-		'usemin',
-		'clean:concat'
+		'jshint',			// double check jshint
+		'clean:old',		// clean out old dist or reset build 
+		'copy:html',		// copy public/index.html to dist/index.html
+		'copy:images',		// copy public/images to dist/images
+		'useminPrepare',	// 
+		'ngtemplates',		// ngtemplates must come before concat!
+		'concat:generated',	// concat all js files into one
+		'less:generated',	// less to css
+		'uglify',			// compress concated js
+		'cssmin',			// cssmin won't replace file, so instead gen .min.csss (convoluted file swapping)
+		'clean:origcss',	// then remove original chargeback.css
+		'copy:cssmin',		// move chargeback.min.css to chargeback.css
+		'filerev',			// after files are moved and generated, do the versioning
+		'usemin',			// usemin swaps out code from index.html to index.html with new settings from above scripts
+		'clean:tmp'			// clean up all the generated garbage
+
+		// maybe run karma tests here?
 	]);
 
 };
