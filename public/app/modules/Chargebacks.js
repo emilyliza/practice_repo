@@ -22,12 +22,11 @@
 	
 	}])
 
-	.controller('ChargebacksController', function($scope, ChargebacksService) {
+	.controller('ChargebacksController', ['$scope', 'ChargebacksService', function($scope, ChargebacksService) {
 			
-		this.$inject = ['$scope'];	
 		$scope.cbs = new ChargebacksService();
 
-	})
+	}])
 
 	.factory('ChargebacksService', ['$http', function ($http) {
 			

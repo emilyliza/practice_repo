@@ -11,35 +11,30 @@
 		notAuthorized: 'auth-not-authorized'
 	})
 
-	.constant('USER_ROLES', {
-		all: '*',
-		admin: 'admin',
-		editor: 'editor',
-		guest: 'guest'
-	})
-	
 	.config(['$stateProvider', function( $stateProvider ) {
 		
-		$stateProvider.state('login', {
+		$stateProvider
+		.state('login', {
 			url: '/login',
 			controller: 'LoginController',
 			templateUrl: '/app/templates/login.html'
-		});
-
-		$stateProvider.state('logout', {
+		})
+		.state('logout', {
 			url: '/logout',
-			controller: function($state, $rootScope, AUTH_EVENTS) {
-				console.log('logging out.');
-				$rootScope.$broadcast(AUTH_EVENTS.notAuthenticated);
-			}
+			controller: 'LogoutController'
 		});
 
 	}])
+	
+	.controller('LogoutController', ['$state', '$rootScope', 'AUTH_EVENTS', function($state, $rootScope, AUTH_EVENTS) {
+		console.log('logging out.');
+		$rootScope.$broadcast(AUTH_EVENTS.notAuthenticated);
+	}])
 
-	.controller('LoginController', function ($scope, $rootScope, AUTH_EVENTS, Session, AuthService, $state, $timeout) {
+	.controller('LoginController', 
+		[ '$scope', '$rootScope', 'AUTH_EVENTS', 'Session', 'AuthService', '$state', 
+		function ($scope, $rootScope, AUTH_EVENTS, Session, AuthService, $state) {
 		
-		this.$inject = [ '$scope', '$rootScope', '$state', '$timeout' ];
-
 		if (AuthService.isAuthenticated()) {
 			$state.go('chargebacks');
 		}
@@ -55,7 +50,6 @@
 			_.each(popups, function(p) { p.remove(); });
 		},true);
 		
-		var _this = this;
 		$scope.login = function(credentials) {
 			$scope.$broadcast('show-errors-check-validity');
 			if ($scope.loginForm.$valid) {
@@ -73,7 +67,7 @@
 			}
 		};
 
-	})
+	}])
 
 	.factory('AuthService', ['$http', 'Session', function ($http, Session) {
 		var authService = {};
@@ -125,7 +119,11 @@
 
 
 	// check routes every time they change for authorized state
-	.run(function ($rootScope, AUTH_EVENTS, AuthService, Session, $state, $http) {
+	.run(
+		['$rootScope', 'AUTH_EVENTS', 'AuthService', 'Session', '$state', '$http',
+		function ($rootScope, AUTH_EVENTS, AuthService, Session, $state, $http) {
+		
+		console.log('Running LoginController');
 		
 		$rootScope.$on('$stateChangeStart', function (event, next) {
 			if ($rootScope.authChecked && next.data && next.data.auth && !AuthService.isAuthenticated()) {
@@ -149,13 +147,14 @@
 			}
 
 		});
+
 		$rootScope.$on(AUTH_EVENTS.sessionTimeout, function() {
 			//@TODO: could include login in popup to prevent abrupt redirect
 			Session.destroy();
 			$state.go('login');
 		});
 
-	})
+	}])
 
 
 	// look for any API requests that return 401, 403, 419, or 440 and broadcast appropriately

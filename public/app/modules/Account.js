@@ -12,9 +12,7 @@
 
 	}])
 
-	.controller('AccountController', function ($scope, $rootScope, $state, AccountService) {
-		
-		this.$inject = ['$scope', '$rootScope', '$state'];
+	.controller('AccountController', ['$scope', '$rootScope', '$state', 'AccountService', function ($scope, $rootScope, $state, AccountService) {
 		
 		$scope.errors = {};
 		$scope.saved = false;
@@ -38,7 +36,6 @@
 				AccountService.save(data).then(function (user) {
 					$scope.setCurrentUser(user);
 					$scope.saved = true;
-					console.log($scope.data);
 				}, function (res) {
 					if (res.data.errors) {
 						$scope.errors = res.data.errors;
@@ -48,7 +45,7 @@
 			}
 		};
 
-	})
+	}])
 
 	.factory('AccountService', ['$http', function ($http) {
 		var acctService = {};

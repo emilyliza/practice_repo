@@ -13,10 +13,8 @@
 
 	}])
 
-	.controller('ForgotController', function($scope, $state, ForgotService) {
+	.controller('ForgotController', ['$scope', '$state', 'ForgotService', function($scope, $state, ForgotService) {
 
-		this.$inject = ['$scope', '$state'];
-		
 		$scope.data = {};
 		$scope.errors = {};
 
@@ -40,7 +38,7 @@
 			}
 		};
 
-	})
+	}])
 
 	.factory('ForgotService', ['$http', function ($http) {
 		var forgotService = {};

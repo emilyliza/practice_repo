@@ -56,10 +56,9 @@
 	}])
 
 	.controller('ChargebackController', 
+			['$scope', '$rootScope', 'AUTH_EVENTS', 'Session', 'ChargebackService', '$state', 'res',
 			function ($scope, $rootScope, AUTH_EVENTS, Session, ChargebackService, $state, res) {
 		
-		this.$inject = ['$scope', '$rootScope', '$state', 'AUTH_EVENTS', 'Session'];
-
 		$scope.data = res.data;
 		$scope.errors = {};
 
@@ -86,7 +85,7 @@
 			}
 		};
 
-	})
+	}])
 
 	.factory('ChargebackService', ['$http', function ($http) {
 		var cbService = {};

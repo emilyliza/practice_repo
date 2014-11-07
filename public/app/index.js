@@ -4,8 +4,8 @@
 		"ui.router", 
 		"ui.bootstrap", 
 		"ui.bootstrap.showErrors", 
-		"home", 
 		"login", 
+		"home", 
 		"forgot", 
 		"chargebacks",
 		 "chargeback",
@@ -26,10 +26,9 @@
 		};
 	})
 
-	.controller('ApplicationController', function ($scope, $rootScope, USER_ROLES, AUTH_EVENTS, AuthService, $state) {
+	.controller('ApplicationController', function ($scope, $rootScope, AUTH_EVENTS, AuthService, $state) {
 		$scope.currentUser = null;
 		$scope.authChecked = false;
-		$scope.userRoles = USER_ROLES;
 		$scope.isAuthorized = AuthService.isAuthorized;
 		$scope.$state = $state;	// for navigation active to work
 
@@ -45,7 +44,7 @@
 		});
     })
 
-	.directive( 'popPopup', function () {
+    .directive( 'popPopup', function () {
 		return {
 			restrict: 'EA',
 			replace: true,

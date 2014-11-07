@@ -13,10 +13,10 @@
 	<div class="col-sm-8 col-sm-pull-4">
 
 		<!-- sink is hack to get browsers to prompt for password saving in keychain -->
-		<iframe src="sink" name="sink" style="display:none"></iframe>
+		<iframe src="sink.html" name="sink" style="display:none"></iframe>
 
 		<form name="loginForm" 
-				action="sink" target="sink" method="post"
+				action="sink.html" target="sink" method="post"
 				role="form" 
 				class="jgs-form" 
 				ng-submit="login(credentials)" novalidate >
@@ -25,7 +25,7 @@
 				<div class="col-md-12">
 					<div class="form-group" show-errors>
 						<label>Email</label>
-						<input name="email" type="email" required class="form-control" pop-show="{{errors.email}}" pop="{{errors.email}}" pop-placement="right" ng-model="credentials.email" pop-append-to-body>
+						<input name="email" type="email" required class="form-control" pop-show="{{errors.email}}" pop="{{errors.email}}" pop-placement="right" ng-model="credentials.email">
 					</div>
 				</div>
 			</div>
