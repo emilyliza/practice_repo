@@ -2,7 +2,7 @@ node_modules/
 npm-debug.log
 .DS_Store
 .env*
-tmp/
+.tmp/
 mongo/
 bower_components
 dist/

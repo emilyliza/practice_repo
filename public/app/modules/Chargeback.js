@@ -50,7 +50,7 @@
 		.state('chargeback.review', {
 			url: '/review',
 			templateUrl: '/app/templates/chargeback.review.html'
-		})
+		});
 		//$urlRouterProvider.otherwise('/chargeback/');
 
 	})
@@ -72,9 +72,7 @@
 		var _this = this;
 		$scope.save = function(data) {
 			$scope.$broadcast('show-errors-check-validity');
-			console.log('saving')
 			if ($scope.cbForm.$valid) {
-				console.log('valid')
 				ChargebackService.save(data).then(function (user) {
 					$state.go('chargebacks');
 				}, function (res) {

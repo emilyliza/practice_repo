@@ -35,14 +35,14 @@
 		};
 
 		ChargebacksService.prototype.nextPage = function() {
-			if (this.busy) return;
+			if (this.busy) { return; }
     		this.busy = true;
     		var _this = this;
 
     		$http.get('/api/v1/chargebacks?page=' + this.page)
 			.success(function (rows) {
 				var new_data = rows;
-				console.log(new_data)
+				
 				_.each(new_data, function(d) {
 					_this.data.push(d);
 				});
