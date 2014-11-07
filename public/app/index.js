@@ -4,18 +4,18 @@
 		"ui.router", 
 		"ui.bootstrap", 
 		"ui.bootstrap.showErrors", 
-		"login", 
-		"home", 
+		"login",
+		"home",
 		"forgot", 
 		"chargebacks",
-		 "chargeback",
+		"chargeback",
 		"account",
 		"reporting"
 	])
 
-	.config(function( $locationProvider, $urlRouterProvider) {
+	.config(['$locationProvider', '$urlRouterProvider', function( $locationProvider, $urlRouterProvider) {
 		$locationProvider.html5Mode(true).hashPrefix('!');
-	})
+	}])
 
 	.directive('nav', function() {
 		return {
@@ -26,7 +26,10 @@
 		};
 	})
 
-	.controller('ApplicationController', function ($scope, $rootScope, AUTH_EVENTS, AuthService, $state) {
+	.controller('ApplicationController', 
+		['$scope', '$rootScope', 'AUTH_EVENTS', 'AuthService', '$state', 
+		function ($scope, $rootScope, AUTH_EVENTS, AuthService, $state) {
+		
 		$scope.currentUser = null;
 		$scope.authChecked = false;
 		$scope.isAuthorized = AuthService.isAuthorized;
@@ -42,7 +45,7 @@
 		}, function(res) {
 			console.log('Not logged in.');
 		});
-    })
+    }])
 
     .directive( 'popPopup', function () {
 		return {
@@ -53,7 +56,7 @@
 		};
 	})
 
-	.directive('pop', function pop ($tooltip, $timeout) {
+	.directive('pop', ['$tooltip', '$timeout', function pop($tooltip, $timeout) {
 		var tooltip = $tooltip('pop', 'pop', 'event');
 		var compile = angular.copy(tooltip.compile);
 		tooltip.compile = function (element, attrs) {      
@@ -69,7 +72,7 @@
 			return compile(element, attrs);
 		};
 		return tooltip;
-	});
+	}]);
 
 	
 })();

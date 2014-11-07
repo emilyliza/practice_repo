@@ -16,12 +16,13 @@
 					return $http({method: 'GET', url: '/api/v1/reporting'});
 				}
 			},
-			controller: function($scope, data) {
-				$inject = ['$scope'];
-				$scope.data = data.data;
-			}
+			controller: 'ReportingController'
 		});
 
-	}]);
+	}])
+
+	.controller('ReportingController', [ '$scope', 'data', function($scope, data) {
+		$scope.data = data.data;
+	}])
 
 })();
