@@ -4,6 +4,7 @@
 		"ui.router", 
 		"ui.bootstrap", 
 		"ui.bootstrap.showErrors", 
+		"utils",
 		"login",
 		"home",
 		"forgot", 

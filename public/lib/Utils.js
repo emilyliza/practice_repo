@@ -10,10 +10,25 @@
 					if (ctrl.$isEmpty(modelValue)) {
 						return true;
 					}
+					
+
+					if (_.isString(viewValue)) {
+						if (viewValue == undefined) {
+							return false;
+						}
+						var dateTime = Date.parse(viewValue);
+						if (isNaN(dateTime)) {
+							return false;
+						}
+						return true;
+					}
+
 					if (_.isDate(viewValue)) {
 						return true;
 					}
+					
 					return false;
+
 				};
 			}
 		};
