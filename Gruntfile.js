@@ -166,6 +166,17 @@ module.exports = function(grunt) {
 			}
 		},
 
+		replace: {
+			jsimg: {
+				src: ['dist/assets/*.js'],
+				overwrite: true,
+				replacements: [{
+					from: /src=\/images/g,
+					to: "src=<%= aws.cloudfront %>/images"
+				}]
+			}
+		},
+
 		s3: {
 			options: {
 				accessKeyId: "<%= aws.accessKeyId %>",
@@ -202,6 +213,7 @@ module.exports = function(grunt) {
 		'usemin',			// usemin swaps out code from index.html to index.html with new settings from above scripts
 		'clean:tmp',		// clean up all the generated garbage
 		'cdn',				// swaps in CDN info
+		'replace',			// replace /images in JS files with CDN/images (cdn doesn't do this :( )
 		's3'				// moves files to S3
 		// maybe run karma tests here?
 	]);

@@ -52,6 +52,7 @@
 	    "load-grunt-tasks": "1.0.0",
 	    "grunt-contrib-clean": "0.6.0",
 	    "grunt-contrib-cssmin": "0.10.0",
+	    "grunt-text-replace": "0.3.12",
 	    "grunt-cdn": "0.6.1",
 	    "grunt-aws": "0.4.0",
 	    "karma": "0.12.24",
