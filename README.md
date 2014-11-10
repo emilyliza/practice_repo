@@ -73,6 +73,7 @@ public/                 --> all of the source files for the client side applicat
   fonts/                --> font assets files
   images/               --> image asset files
   less/                 --> less css files (does not include bootstrap libs installed via bower)  
+  lib/                  --> js utilities (directives and services)
   index.html            --> app layout file (the main html template file of the app)
 dist/                   --> dir created by running npm build, stores compiled production files
 node_modules/           --> dir created by runnnig npm install, stores npm modules
