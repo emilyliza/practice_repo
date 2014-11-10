@@ -58,11 +58,14 @@
 	    "commander": "1.0.x"
 	  },
 	  "scripts": {
-	    
 	    "prestart": "npm install && bower install",
 
+	    // start is only run in dev mode, heroku runs Procfile first by default
+	    // this start command is for dev. in prod it'll be just "node index.js"
 	    "start": "foreman start -e .env-local -f Procfile_dev",
-	    "build": "grunt build",
+	    
+	    // build production assets and send to S3
+	    "build": "grunt build --verbose",
 	    
 	    "pretest": "npm install",
 	    "test": "karma start karma.conf.js",

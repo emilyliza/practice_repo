@@ -18,8 +18,8 @@ var fs = require('fs'),
 
 
 // Config
-app.engine('.ejs', require('ejs').__express);
-app.set('view engine', 'ejs');
+//app.engine('.ejs', require('ejs').__express);
+//app.set('view engine', 'ejs');
 app.set('root_dir', __dirname);
 app.set('views', __dirname + '/views/');
 app.set('db', require('mongoose'));
