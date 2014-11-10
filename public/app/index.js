@@ -13,8 +13,10 @@
 		"reporting"
 	])
 
-	.config(['$locationProvider', '$urlRouterProvider', function( $locationProvider, $urlRouterProvider) {
+	.config(['$locationProvider', '$urlRouterProvider', 'datepickerPopupConfig', function( $locationProvider, $urlRouterProvider, $datepickerPopupConfig) {
 		$locationProvider.html5Mode(true).hashPrefix('!');
+
+		$datepickerPopupConfig.appendToBody = true;
 	}])
 
 	.directive('nav', function() {
@@ -45,34 +47,7 @@
 		}, function(res) {
 			console.log('Not logged in.');
 		});
-    }])
-
-    .directive( 'popPopup', function () {
-		return {
-			restrict: 'EA',
-			replace: true,
-			scope: { title: '@', content: '@', placement: '@', animation: '&', isOpen: '&' },
-			templateUrl: 'template/popover/popover.html'
-		};
-	})
-
-	.directive('pop', ['$tooltip', '$timeout', function pop($tooltip, $timeout) {
-		var tooltip = $tooltip('pop', 'pop', 'event');
-		var compile = angular.copy(tooltip.compile);
-		tooltip.compile = function (element, attrs) {      
-			var first = true;
-			attrs.$observe('popShow', function (val) {
-				if (JSON.parse(!first || val || false)) {
-					$timeout(function () {
-						element.triggerHandler('event');
-					});
-				}
-				first = false;
-			});
-			return compile(element, attrs);
-		};
-		return tooltip;
-	}]);
+    }]);
 
 	
 })();

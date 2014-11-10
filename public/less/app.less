@@ -21,6 +21,9 @@
 @navbar-inverse-link-hover-color:   #fff;
 
 
+#pages {
+	margin-bottom: 250px;
+}
 
 footer {
 	margin-top: 40px;
@@ -39,6 +42,33 @@ footer {
     padding-bottom: 5px;
 	img {
 		height: 100%;
+	}
+}
+
+.dropdown-menu {
+	li {
+		div {
+			table {
+				&:focus {
+					outline: 0 none;
+				}
+			}
+		}
+	}
+	button {
+		outline: none;
+		border: 0px;
+	}
+	tbody {
+		height: 180px;
+	}
+	tbody button {
+		padding: 6px;
+	}
+	&.datepicker-mode-1, &.datepicker-mode-2 {
+		tbody button {
+			height: 65px;
+		}
 	}
 }
 

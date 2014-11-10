@@ -12,7 +12,7 @@
 			<div class="col-md-4">
 				<div class="form-group" show-errors>
 					<label>Order Date</label>
-					<input name="OrderDate" type="text" class="form-control" pop-show="{{errors.OrderDate}}" pop="{{errors.OrderDate}}" pop-placement="right" ng-model="data.crm_data.OrderDate" placeholder="">
+					<input class="form-control" name="OrderDate" type="text" class="form-control" datepicker-popup="MM/dd/yyyy" ng-model="data.crm_data.OrderDate" is-open="opened1" ng-click="opened1=true" isdate >
 				</div>
 			</div>
 			<div class="col-md-4">
@@ -115,19 +115,19 @@
 			<div class="col-md-4">
 				<div class="form-group" show-errors>
 					<label>Date Cancelled in System</label>
-					<input name="CancelDateSystem" type="text" class="form-control" pop-show="{{errors.CancelDateSystem}}" pop="{{errors.CancelDateSystem}}" pop-placement="right" ng-model="data.crm_data.CancelDateSystem" placeholder="">
+					<input class="form-control" name="CancelDateSystem" type="text" class="form-control" datepicker-popup="MM/dd/yyyy" ng-model="data.crm_data.CancelDateSystem" is-open="opened2" ng-click="opened2=true" isdate>
 				</div>
 			</div>
 			<div class="col-md-4">
 				<div class="form-group" show-errors>
 					<label>Full Refund Date</label>
-					<input name="RefundDateFull" type="text" class="form-control" pop-show="{{errors.RefundDateFull}}" pop="{{errors.RefundDateFull}}" pop-placement="right" ng-model="data.crm_data.RefundDateFull" placeholder="">
+					<input class="form-control" name="RefundDateFull" type="text" class="form-control" datepicker-popup="MM/dd/yyyy" ng-model="data.crm_data.RefundDateFull" is-open="opened3" ng-click="opened3=true" >
 				</div>
 			</div>
 			<div class="col-md-4">
 				<div class="form-group" show-errors>
 					<label>Partial Refund Date</label>
-					<input name="RefundDatePartial" type="text" class="form-control" pop-show="{{errors.RefundDatePartial}}" pop="{{errors.RefundDatePartial}}" pop-placement="right" ng-model="data.crm_data.RefundDatePartial" placeholder="">
+					<input class="form-control" name="RefundDatePartial" type="text" class="form-control" datepicker-popup="MM/dd/yyyy" ng-model="data.crm_data.RefundDatePartial" is-open="opened4" ng-click="opened4=true" >
 				</div>
 			</div>
 		</div>

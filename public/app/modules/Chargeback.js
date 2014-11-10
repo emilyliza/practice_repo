@@ -70,7 +70,6 @@
 			_.each(popups, function(p) { p.remove(); });
 		},true);
 		
-
 		var _this = this;
 		$scope.save = function(data) {
 			$scope.$broadcast('show-errors-check-validity');
