@@ -78,6 +78,7 @@ dist/                   --> dir created by running npm build, stores compiled pr
 node_modules/           --> dir created by runnnig npm install, stores npm modules
 karma.conf.js           --> config file for running unit tests with Karma
 bower.json              --> bower install configuration, or all required libs
+aws.json                --> AWS credentials for deployments, json format (should not be in repo!!!)
 Gruntfile.js            --> build recipes to create production files, run via "npm build"
 e2e-tests/              --> end-to-end tests
   protractor-conf.js    --> Protractor config file

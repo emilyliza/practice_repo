@@ -52,13 +52,14 @@
 	    "load-grunt-tasks": "1.0.0",
 	    "grunt-contrib-clean": "0.6.0",
 	    "grunt-contrib-cssmin": "0.10.0",
+	    "grunt-cdn": "0.6.1",
+	    "grunt-aws": "0.4.0",
 	    "karma": "0.12.24",
 	    "commander": "1.0.x"
 	  },
 	  "scripts": {
-	    "postinstall": "bower install",
-
-	    "prestart": "npm install",
+	    
+	    "prestart": "npm install && bower install",
 
 	    "start": "foreman start -e .env-local -f Procfile_dev",
 	    "build": "grunt build",

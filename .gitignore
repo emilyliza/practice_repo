@@ -6,3 +6,4 @@ npm-debug.log
 mongo/
 bower_components
 dist/
+aws.json

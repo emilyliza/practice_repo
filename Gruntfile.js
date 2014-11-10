@@ -23,7 +23,7 @@ module.exports = function(grunt) {
 
 	grunt.initConfig({
 		pkg: grunt.file.readJSON('package.json'),
-		
+		aws: grunt.file.readJSON("aws.json"),
 		clean: {
 			old: ["dist"],
 			tmp: [
@@ -45,6 +45,11 @@ module.exports = function(grunt) {
 				expand: true,
 				cwd: 'public/images',
 				src: '*', dest: 'dist/images/'
+			},
+			fonts: {
+				expand: true,
+				cwd: 'public/fonts',
+				src: '*', dest: 'dist/fonts/'
 			},
 			cssmin: {
 				src: 'dist/assets/chargeback.min.css', dest: 'dist/assets/chargeback.css'
@@ -148,7 +153,32 @@ module.exports = function(grunt) {
 				],
 				dest: 'dist/assets/'
 			}
+		},
+
+		cdn: {
+			options: {
+				/** @required - root URL of your CDN (may contains sub-paths as shown below) */
+				cdn: '<%= aws.cloudfront %>'
+			},
+			dist: {
+				/** @required  - string (or array of) including grunt glob variables */
+				src: ['./dist/index.html', './dist/assets/*.css', './dist/assets/*.js']
+			}
+		},
+
+		s3: {
+			options: {
+				accessKeyId: "<%= aws.accessKeyId %>",
+				secretAccessKey: "<%= aws.secretAccessKey %>",
+				bucket: "<%= aws.bucket %>",
+				region: "<%= aws.region %>"
+			},
+			build: {
+				cwd: "dist/",
+				src: "**"
+			}
 		}
+
 	});
 	
 	
@@ -159,6 +189,7 @@ module.exports = function(grunt) {
 		'clean:old',		// clean out old dist or reset build 
 		'copy:html',		// copy public/index.html to dist/index.html
 		'copy:images',		// copy public/images to dist/images
+		'copy:fonts',		// copy public/fonts to dist/fonts
 		'useminPrepare',	// 
 		'ngtemplates',		// ngtemplates must come before concat!
 		'concat:generated',	// concat all js files into one
@@ -169,8 +200,9 @@ module.exports = function(grunt) {
 		'copy:cssmin',		// move chargeback.min.css to chargeback.css
 		'filerev',			// after files are moved and generated, do the versioning
 		'usemin',			// usemin swaps out code from index.html to index.html with new settings from above scripts
-		'clean:tmp'			// clean up all the generated garbage
-
+		'clean:tmp',		// clean up all the generated garbage
+		'cdn',				// swaps in CDN info
+		's3'				// moves files to S3
 		// maybe run karma tests here?
 	]);
 
