@@ -1,9 +1,257 @@
-<div class="row">
-	<div class="col-md-12">
-		<h3>Review</h3>
-	</div>
-</div>
 
-<div class="form-group btns">
-	<button type="submit" class="btn btn-success pull-right">Submit</button>
+<div class="row">
+	
+	<div class="col-md-12 review">
+
+		<div class="row">
+			<div class="col-md-3 details">
+				<h4 style="text-align: center;">Portal</h4>
+
+				<div class="row">
+					<div class="col-sm-5">Portal:</div>
+					<div class="col-sm-7">{{data.portal_data.Portal}}</div>
+				</div>
+				<div class="row">
+					<div class="col-sm-5">Case #:</div>
+					<div class="col-sm-7">{{data.portal_data.CaseNumber}}</div>
+				</div>
+				<div class="row">
+					<div class="col-sm-5">Referenece #:</div>
+					<div class="col-sm-7">{{data.portal_data.RefNumber}}</div>
+				</div>
+				<div class="row">
+					<div class="col-sm-5">CC Prefix:</div>
+					<div class="col-sm-7">{{data.portal_data.CcPrefix}}</div>
+				</div>
+				<div class="row">
+					<div class="col-sm-5">CC Suffix:</div>
+					<div class="col-sm-7">{{data.portal_data.CcSuffix}}</div>
+				</div>
+				<div class="row">
+					<div class="col-sm-5">Amount:</div>
+					<div class="col-sm-7">{{data.portal_data.ChargebackAmt}}</div>
+				</div>
+				<div class="row">
+					<div class="col-sm-5">Mid #:</div>
+					<div class="col-sm-7">{{data.portal_data.MidNumber}}</div>
+				</div>
+				<div class="row">
+					<div class="col-sm-5">Reason Code:</div>
+					<div class="col-sm-7">{{data.portal_data.ReasonCode}}</div>
+				</div>
+				<div class="row">
+					<div class="col-sm-5">Reason Text:</div>
+					<div class="col-sm-7">{{data.portal_data.ReasonText}}</div>
+				</div>
+
+			</div>
+			<div class="col-md-3 details gateway">
+				<h4 style="text-align: center;">Gateway</h4>
+
+				<div class="row">
+					<div class="col-sm-5">Auth Code:</div>
+					<div class="col-sm-7">{{data.gateway_data.AuthCode}}</div>
+				</div>
+				<div class="row">
+					<div class="col-sm-5">AVS Status:</div>
+					<div class="col-sm-7">{{data.gateway_data.AvsStatus}}</div>
+				</div>
+				<div class="row">
+					<div class="col-sm-5">First Name:</div>
+					<div class="col-sm-7">{{data.gateway_data.FirstName}}</div>
+				</div>
+				<div class="row">
+					<div class="col-sm-5">Middle Name:</div>
+					<div class="col-sm-7">{{data.gateway_data.MiddleName}}</div>
+				</div>
+				<div class="row">
+					<div class="col-sm-5">Last Name:</div>
+					<div class="col-sm-7">{{data.gateway_data.LastName}}</div>
+				</div>
+				<div class="row">
+					<div class="col-sm-5">Address One:</div>
+					<div class="col-sm-7">{{data.gateway_data.BillingAddr1}}</div>
+				</div>
+				<div class="row">
+					<div class="col-sm-5">Address Two:</div>
+					<div class="col-sm-7">{{data.gateway_data.BillingAddr2}}</div>
+				</div>
+				<div class="row">
+					<div class="col-sm-5">City:</div>
+					<div class="col-sm-7">{{data.gateway_data.BillingCity}}</div>
+				</div>
+				<div class="row">
+					<div class="col-sm-5">State:</div>
+					<div class="col-sm-7">{{data.gateway_data.BillingState}}</div>
+				</div>
+				<div class="row">
+					<div class="col-sm-5">Zip:</div>
+					<div class="col-sm-7">{{data.gateway_data.BillingPostal}}</div>
+				</div>
+				<div class="row">
+					<div class="col-sm-5">Country:</div>
+					<div class="col-sm-7">{{data.gateway_data.BillingCountry}}</div>
+				</div>
+				<div class="row">
+					<div class="col-sm-5">Phone:</div>
+					<div class="col-sm-7">{{data.gateway_data.Phone}}</div>
+				</div>
+				<div class="row">
+					<div class="col-sm-5">CC Expire:</div>
+					<div class="col-sm-7">{{data.gateway_data.CcExpire}}</div>
+				</div>
+				<div class="row">
+					<div class="col-sm-5">CC Type:</div>
+					<div class="col-sm-7">{{data.gateway_data.CcType}}</div>
+				</div>
+				<div class="row">
+					<div class="col-sm-5">Currency:</div>
+					<div class="col-sm-7">{{data.gateway_data.Currency}}</div>
+				</div>
+				<div class="row">
+					<div class="col-sm-5">CVV Status:</div>
+					<div class="col-sm-7">{{data.gateway_data.CvvStatus}}</div>
+				</div>
+				<div class="row">
+					<div class="col-sm-5">Order Id:</div>
+					<div class="col-sm-7">{{data.gateway_data.OrderId}}</div>
+				</div>
+				<div class="row">
+					<div class="col-sm-5">Tx History:</div>
+					<div class="col-sm-7">{{data.gateway_data.TransHistory}}</div>
+				</div>
+				<div class="row">
+					<div class="col-sm-5">Tx ID:</div>
+					<div class="col-sm-7">{{data.gateway_data.TransId}}</div>
+				</div>
+				<div class="row">
+					<div class="col-sm-5">Tx Status:</div>
+					<div class="col-sm-7">{{data.gateway_data.TransStatus}}</div>
+				</div>
+				<div class="row">
+					<div class="col-sm-5">Tx Type:</div>
+					<div class="col-sm-7">{{data.gateway_data.TransType}}</div>
+				</div>
+				<div class="row">
+					<div class="col-sm-5">Tx Date:</div>
+					<div class="col-sm-7">{{data.gateway_data.TransDate | date:'MM/dd/yy HH:mm a'}}</div>
+				</div>
+
+			</div>
+			<div class="col-md-3 details">
+				<h4 style="text-align: center;">CRM</h4>
+
+				<div class="row">
+					<div class="col-sm-5">Order Date:</div>
+					<div class="col-sm-7">{{data.crm_data.OrderDate | date:'MM/dd/yy HH:mm a'}}</div>
+				</div>
+				<div class="row">
+					<div class="col-sm-5">Address One:</div>
+					<div class="col-sm-7">{{data.crm_data.DeliveryAddr1}}</div>
+				</div>
+				<div class="row">
+					<div class="col-sm-5">Address Two:</div>
+					<div class="col-sm-7">{{data.crm_data.DeliveryAddr2}}</div>
+				</div>
+				<div class="row">
+					<div class="col-sm-5">City:</div>
+					<div class="col-sm-7">{{data.crm_data.DeliveryCity}}</div>
+				</div>
+				<div class="row">
+					<div class="col-sm-5">State:</div>
+					<div class="col-sm-7">{{data.crm_data.DeliveryState}}</div>
+				</div>
+				<div class="row">
+					<div class="col-sm-5">Zip:</div>
+					<div class="col-sm-7">{{data.crm_data.DeliveryPostal}}</div>
+				</div>
+				<div class="row">
+					<div class="col-sm-5">Country:</div>
+					<div class="col-sm-7">{{data.crm_data.DeliveryCountry}}</div>
+				</div>
+				<div class="row">
+					<div class="col-sm-5">Email:</div>
+					<div class="col-sm-7">{{data.crm_data.email}}</div>
+				</div>
+				<div class="row">
+					<div class="col-sm-5">IP Address:</div>
+					<div class="col-sm-7">{{data.crm_data.IpAddress}}</div>
+				</div>
+				<div class="row">
+					<div class="col-sm-5">Price Point:</div>
+					<div class="col-sm-7">{{data.crm_data.PricePoint}}</div>
+				</div>
+				<div class="row">
+					<div class="col-sm-5">Prod Crm Name:</div>
+					<div class="col-sm-7">{{data.crm_data.ProductCrmName}}</div>
+				</div>
+				<div class="row">
+					<div class="col-sm-5">Product Name:</div>
+					<div class="col-sm-7">{{data.crm_data.ProductName}}</div>
+				</div>
+				<div class="row">
+					<div class="col-sm-5">Is Fraud:</div>
+					<div class="col-sm-7">{{data.crm_data.IsFraud}}</div>
+				</div>
+				<div class="row">
+					<div class="col-sm-5">Is Recurring:</div>
+					<div class="col-sm-7">{{data.crm_data.IsRecurring}}</div>
+				</div>
+				<div class="row">
+					<div class="col-sm-5">Cancel Date Sys:</div>
+					<div class="col-sm-7">{{data.crm_data.CancelDateSystem | date:'MM/dd/yy HH:mm a'}}</div>
+				</div>
+				<div class="row">
+					<div class="col-sm-5">Full Refund Date:</div>
+					<div class="col-sm-7">{{data.crm_data.RefundDateFull | date:'MM/dd/yy HH:mm a'}}</div>
+				</div>
+				<div class="row">
+					<div class="col-sm-5">Partial Refund Date:</div>
+					<div class="col-sm-7">{{data.crm_data.RefundDatePartial | date:'MM/dd/yy HH:mm a'}}</div>
+				</div>
+				<div class="row">
+					<div class="col-sm-5">Refund Amount:</div>
+					<div class="col-sm-7">{{data.crm_data.RefundAmount}}</div>
+				</div>
+				<div class="row">
+					<div class="col-sm-5">RMA:</div>
+					<div class="col-sm-7">{{data.crm_data.Rma}}</div>
+				</div>
+				
+				
+			</div>
+			<div class="col-md-3 details shipping">
+				<h4 style="text-align: center;">Shipping</h4>
+
+				<div class="row">
+					<div class="col-sm-5">Has Tracking:</div>
+					<div class="col-sm-7">{{data.shipping_data.has_tracking}}</div>
+				</div>
+				<div class="row">
+					<div class="col-sm-5">ShippingDate:</div>
+					<div class="col-sm-7">{{data.shipping_data.ShippingDate | date:'MM/dd/yy HH:mm a'}}</div>
+				</div>
+				<div class="row">
+					<div class="col-sm-5">TrackingNum:</div>
+					<div class="col-sm-7">{{data.shipping_data.TrackingNum}}</div>
+				</div>
+				<div class="row">
+					<div class="col-sm-5">TrackingSum:</div>
+					<div class="col-sm-7">{{data.shipping_data.TrackingSum}}</div>
+				</div>
+				<div class="row">
+					<div class="col-sm-5">Delivery Date:</div>
+					<div class="col-sm-7">{{data.shipping_data.DeliveryDate | date:'MM/dd/yy HH:mm a'}}</div>
+				</div>
+
+			</div>
+		</div>
+		
+
+		<div class="form-group btns" style="text-align: center; margin-top: 40px;">
+			<button type="submit" class="btn btn-success">Save Chargeback</button>
+		</div>
+
+	</div>
+
 </div>
