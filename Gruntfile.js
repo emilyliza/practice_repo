@@ -205,7 +205,9 @@ module.exports = function(grunt) {
 			css: {
 				options: {
 					headers: {
-						CacheControl: 12960000
+						CacheControl: 12960000,
+						ContentType: 'text/css',
+						ContentEncoding: 'gzip'
       				}
       			},
 				cwd: "dist/",
@@ -215,6 +217,7 @@ module.exports = function(grunt) {
 				options: {
 					headers: {
 						CacheControl: 12960000,
+						ContentType: 'application/javascript',
 						ContentEncoding: 'gzip'
       				}
       			},

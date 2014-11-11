@@ -42,6 +42,10 @@
 			$scope.currentUser = user;
 		};
 
+		$scope.soSomething = function () {
+			
+		};
+
 		AuthService.check().then(function (user) {
 			$scope.setCurrentUser(user);
 			$scope.authChecked = true;
