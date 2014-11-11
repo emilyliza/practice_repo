@@ -10,10 +10,9 @@
 			controller: 'ChargebackController',
 			templateUrl: '/app/templates/chargeback.html',
 			resolve: {
-				res:  function($http, $stateParams){
-					// $http returns a promise for the url data
-					return $http({method: 'GET', url: '/api/v1/chargeback/' + $stateParams._id });
-				}
+				res: ['$http', '$stateParams', 'ChargebackService', function($http, $stateParams, ChargebackService){
+					return ChargebackService.get($stateParams._id);
+				}]
 			}
 		})
 		.state('chargeback.portal', {
@@ -88,6 +87,10 @@
 
 	.factory('ChargebackService', ['$http', function ($http) {
 		var cbService = {};
+
+		cbService.get = function(_id) {
+			return $http.get('/api/v1/chargeback/' + _id);
+		};
 
 		cbService.save = function(data) {
 			return $http
