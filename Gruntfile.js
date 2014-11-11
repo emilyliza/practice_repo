@@ -141,7 +141,7 @@ module.exports = function(grunt) {
 		filerev: {
 			options: {
 				algorithm: 'md5',
-				length: 8
+				length: 6
 			},
 			images: {
 				src: 'dist/images/*'
@@ -184,9 +184,42 @@ module.exports = function(grunt) {
 				bucket: "<%= aws.bucket %>",
 				region: "<%= aws.region %>"
 			},
-			build: {
+			images: {
 				cwd: "dist/",
-				src: "**"
+				src: "images/*",
+				options: {
+					headers: {
+						CacheControl: 12960000
+	      			}
+	      		}
+			},
+			fonts: {
+				cwd: "dist/",
+				src: "fonts/*",
+				options: {
+					headers: {
+						CacheControl: 12960000
+	      			}
+	      		}
+			},
+			css: {
+				options: {
+					headers: {
+						CacheControl: 12960000
+      				}
+      			},
+				cwd: "dist/",
+				src: "assets/*.css"
+			},
+			js: {
+				options: {
+					headers: {
+						CacheControl: 12960000,
+						ContentEncoding: 'gzip'
+      				}
+      			},
+				cwd: "dist/",
+				src: "assets/*.js"
 			}
 		}
 
