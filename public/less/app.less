@@ -105,19 +105,42 @@ footer {
 		text-align: center;
 		margin-bottom: 10px;
 		margin-top	: 20px;
+		padding: 10px 0px;
+		img {
+			max-width: 200px;
+			padding-left: 24px;	// counter measure to remove width
+			margin: 0px auto;
+		}
 		canvas {
 			width: auto;
 			padding-left: 24px;	// counter measure to remove width
 			margin: 0px auto;
 		}
-	}
-	.remove {
-		cursor: pointer;
-		width: auto;
-		font-size: 24px;
-		color: #999;
+		&:hover {
+			background-color: #efefef;
+		}
+	
+		.remove {
+			cursor: pointer;
+			width: auto;
+			font-size: 24px;
+			color: #999;
+			margin-right: 10px;
+		}
 	}
 }
+.review-uploaded {
+	> div {
+		float: left; 
+		width: auto;
+	}
+	img {
+		border-radius: 5px;
+		max-width: 150px;
+		margin-right: 20px;
+	}
+}
+
 
 
 .animated-grid {

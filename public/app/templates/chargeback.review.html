@@ -3,6 +3,23 @@
 	
 	<div class="col-md-12 review">
 
+		<div class="row" style="margin-bottom: 40px;">
+			<div class="col-sm-6 review-uploaded">
+				<h4>Copies of Terms of Service</h4>
+				<div ng-repeat="saved_item in data.uploads.terms">
+					<img src="{{saved_item.url}}">
+				</div>
+			</div>
+			<div class="col-sm-6 review-uploaded">
+				<h4>Sreenshots of Product</h4>
+				<div ng-repeat="saved_item in data.uploads.screens">
+					<img src="{{saved_item.url}}">
+				</div>
+			</div>
+		</div>
+
+
+		<h4>Data Review</h4>
 		<div class="row">
 			<div class="col-md-3 details">
 				<h4 style="text-align: center;">Portal</h4>

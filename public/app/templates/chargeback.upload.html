@@ -19,7 +19,7 @@
 	<div class="col-sm-8 col-sm-pull-4"  style="padding-top: 30px;" >
 
 		<div class="row">
-			<div class="col-md-6">
+			<div class="col-md-6" style="margin-bottom: 60px;">
 
 				<div ng-show="uploaderScreen.isHTML5">
 					<div nv-file-drop="" uploader="uploaderScreen">
@@ -32,6 +32,37 @@
 				</div>
 				<div ng-hide="uploaderScreen.isHTML5" class="ddzone">
 					Upload Product Screenshot<br/><input id="screenFile" type="file" nv-file-select="" uploader="uploaderScreen"  />
+				</div>
+
+
+				<div class="uploaded">
+
+					<div ng-repeat="saved_item in data.uploads.screens">
+						<div class="img">
+							<div class="remove pull-right" ng-click="removeSavedItem(saved_item, 'screens')">
+								<span class="glyphicon glyphicon-remove-circle"></span>
+							</div>
+							<img src="{{saved_item.url}}">
+						</div>
+						<div style="font-weight: bold; text-align: center;">{{ saved_item.filename }}</div>
+					</div>
+
+					<div ng-repeat="item in uploaderScreen.queue">
+						<div class="img" ng-show="uploaderScreen.isHTML5">
+							<div class="remove pull-right" ng-click="removeItem(item, '#screenFile')">
+								<span class="glyphicon glyphicon-remove-circle"></span>
+							</div>
+							<div ng-thumb="{ file: item._file, width: 200 }"></div>
+						</div>
+						<div style="font-weight: bold; text-align: center;">{{ item.file.name }}</div>
+						<div ng-show="uploaderScreen.isHTML5" style="text-align: center;">
+							<div nowrap>{{ item.file.size/1024/1024|number:2 }} MB</div>
+							<div class="progress" style="margin-bottom: 0;">
+								<div class="progress-bar" role="progressbar" ng-style="{ 'width': item.progress + '%' }"></div>
+							</div>
+						</div>
+					</div>
+
 				</div>
 
 			</div>
@@ -51,37 +82,25 @@
 					Upload Terms of Service<br/><input id="termsFile" type="file" nv-file-select="" uploader="uploaderTerms"  />
 				</div>
 
-			</div>
-		</div>
+				<div class="uploaded">
 
-		
-			<div class="row">
-
-				<div class="col-md-6 uploaded">
-
-					<div ng-repeat="item in uploaderScreen.queue">
-						<div class="remove pull-right" ng-click="removeItem(item, '#screenFile')">
-							<span class="glyphicon glyphicon-remove-circle"></span>
-						</div>
-						<div class="img" ng-show="uploaderScreen.isHTML5" ng-thumb="{ file: item._file, width: 200 }"></div>
-						<div style="font-weight: bold; text-align: center;">{{ item.file.name }}</div>
-						<div ng-show="uploaderScreen.isHTML5" style="text-align: center;">
-							<div nowrap>{{ item.file.size/1024/1024|number:2 }} MB</div>
-							<div class="progress" style="margin-bottom: 0;">
-								<div class="progress-bar" role="progressbar" ng-style="{ 'width': item.progress + '%' }"></div>
+					<div ng-repeat="saved_item in data.uploads.terms">
+						<div class="img">
+							<div class="remove pull-right" ng-click="removeSavedItem(saved_item, 'terms')">
+								<span class="glyphicon glyphicon-remove-circle"></span>
 							</div>
+							<img src="{{saved_item.url}}">
 						</div>
+						<div style="font-weight: bold; text-align: center;">{{ saved_item.filename }}</div>
 					</div>
 
-				</div>
-
-				<div class="col-md-6 uploaded">
-
 					<div ng-repeat="item in uploaderTerms.queue">
-						<div class="remove pull-right" ng-click="removeItem(item, '#termsFile')">
-							<span class="glyphicon glyphicon-remove-circle"></span>
+						<div class="img" ng-show="uploaderTerms.isHTML5">
+							<div class="remove pull-right" ng-click="removeItem(item, '#termsFile')">
+								<span class="glyphicon glyphicon-remove-circle"></span>
+							</div>
+							<div ng-thumb="{ file: item._file, width: 200 }"></div>
 						</div>
-						<div class="img" ng-show="uploaderTerms.isHTML5" ng-thumb="{ file: item._file, width: 200 }"></div>
 						<div style="font-weight: bold; text-align: center;">{{ item.file.name }}</div>
 						<div ng-show="uploaderTerms.isHTML5" style="text-align: center;">
 							<div nowrap>{{ item.file.size/1024/1024|number:2 }} MB</div>
@@ -94,8 +113,10 @@
 				</div>
 
 			</div>
-		
 
+		</div>
+
+		
 		<div class="form-group btns" style="margin-top: 40px;">
 			<a ui-sref="chargeback.portal" class="btn btn-success pull-right">Continue to Portal Data</a>
 		</div>

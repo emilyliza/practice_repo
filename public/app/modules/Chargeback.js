@@ -103,6 +103,7 @@
 					}
 				};
 				item.data = response.data.photo;
+				item.removeAfterUpload = true;	// remove from upload queue becausae it'll show in data.uploads now
 				item.upload();	// start upload
 			}, function (response) {
 				console.log('Error getting signagure.');
@@ -150,6 +151,7 @@
 					}
 				};
 				item.data = response.data.photo;
+				item.removeAfterUpload = true;	// remove from upload queue becausae it'll show in data.uploads now
 				item.upload();	// start upload
 			}, function (response) {
 				console.log('Error getting signagure.');
@@ -187,11 +189,17 @@
 			item.remove();
 		};
 
-// 		if ($scope.data.uploads && $scope.data.uploads.terms && $scope.data.uploads.terms.length) {
-// 			_.each($scope.data.uploads.terms, function(file) {
-// 				var input = document.createElement('input');
-// 				input.type = "password";
-// document.getElementById('someForm').appendChild(input);
+		$scope.removeSavedItem = function(item, coll) {
+			var i = 0;
+			_.each($scope.data.uploads[coll], function(s) {
+				if (s._id == item._id) {
+					// remove from data store.
+					$scope.data.uploads[coll].splice(i,1);
+				}
+				i++;
+			});
+		};
+
 
 		
 		// watch for changes to underlying model clear out errors
