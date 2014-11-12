@@ -75,6 +75,38 @@ footer {
 	}
 }
 
+.ddzone {
+	background-color: @cbBlue;
+	color: white;
+	padding: 10px;
+	font-size: 18px;
+	border-radius: 5px;
+	text-align: center;
+	line-height: 50px;
+	border: solid 4px @cbBlue;
+	&:hover, &.ddhover {
+		background-color: darken(@cbBlue, 12%);
+	}
+	&.ddhover {
+		border: solid 4px green;
+	}
+	.glyphicon {
+		font-size: 60px;
+	}
+}
+
+.uploaded {
+	.img {
+		text-align: center;
+		margin-bottom: 10px;
+		margin-top: 20px;
+		canvas {
+			width: auto;
+			margin: 0px auto;
+		}
+	}	
+}
+
 
 .animated-grid {
 	

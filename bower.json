@@ -28,6 +28,7 @@
     "angular-bootstrap-show-errors": "2.0.0",
     "autofill-event": "1.0.0",
     "angular-ui-router": "0.2.11",
-    "ngInfiniteScroll": "1.0.0"
+    "ngInfiniteScroll": "1.0.0",
+    "angular-file-upload": "1.1.5"
   }
 }
