@@ -69,7 +69,7 @@
 		// Terms of Service Uploader
 		// =============================
 		var uploaderTerms = $scope.uploaderTerms = new FileUploader({
-            autoUpload: true
+            queueLimit: 5
         });
 		uploaderTerms.filters.push({
             name: 'imageFilter',
@@ -82,7 +82,32 @@
 			// set UploadError to true to display error message in side bar
 			$scope.uploadError = true;
 		};
-		
+		uploaderTerms.onAfterAddingFile = function(item) {
+			// first get signature from server.
+			ChargebackService.getS3Signature(item.file.name, item.file.type).then(function (response) {
+				// add form data for S3 authorization to upload directly
+				item.formData = [
+					{ 'key': response.data.key },
+					{ 'Content-Type': response.data.contentType },
+					{ 'AWSAccessKeyId': response.data.AWSAccessKeyId },
+					{ 'acl': response.data.acl },
+					{ 'policy': response.data.policy },
+					{ 'signature': response.data.signature }
+				];
+				item.url = response.data.path;	// get path from server as well
+				item.onSuccess = function() {
+					if ($scope.data.uploads && $scope.data.uploads.terms) {
+						$scope.data.uploads.terms.push(response.data.photo);
+					} else {
+						$scope.data.uploads.terms = [ response.data.photo ];
+					}
+				};
+				item.data = response.data.photo;
+				item.upload();	// start upload
+			}, function (response) {
+				console.log('Error getting signagure.');
+			});
+		};
 
 
 
@@ -106,30 +131,30 @@
 		};
 		uploaderScreen.onAfterAddingFile = function(item) {
 			// first get signature from server.
-			ChargebackService.getS3Signature(item.file.name, item.file.type).then(function (res) {
+			ChargebackService.getS3Signature(item.file.name, item.file.type).then(function (response) {
 				// add form data for S3 authorization to upload directly
 				item.formData = [
-					{ 'key': res.data.key },
-					{ 'Content-Type': res.data.contentType },
-					{ 'AWSAccessKeyId': res.data.AWSAccessKeyId },
-					{ 'acl': res.data.acl },
-					{ 'policy': res.data.policy },
-					{ 'signature': res.data.signature }
+					{ 'key': response.data.key },
+					{ 'Content-Type': response.data.contentType },
+					{ 'AWSAccessKeyId': response.data.AWSAccessKeyId },
+					{ 'acl': response.data.acl },
+					{ 'policy': response.data.policy },
+					{ 'signature': response.data.signature }
 				];
-				item.url = res.data.path;	// get path from server as well
+				item.url = response.data.path;	// get path from server as well
 				item.onSuccess = function() {
 					if ($scope.data.uploads && $scope.data.uploads.screens) {
-						$scope.data.uploads.screens.push(res.data.photo);
+						$scope.data.uploads.screens.push(response.data.photo);
 					} else {
-						$scope.data.uploads.screens = [ res.data.photo ];
+						$scope.data.uploads.screens = [ response.data.photo ];
 					}
-					console.log($scope.data);
 				};
+				item.data = response.data.photo;
 				item.upload();	// start upload
-			}, function (res) {
+			}, function (response) {
 				console.log('Error getting signagure.');
 			});
-		}
+		};
 		
 
 
@@ -140,8 +165,33 @@
 
 		$scope.removeItem = function(item, el) {
 			angular.element(el).val('');	// have to clear out element value
+			if (item.data && $scope.data.uploads && $scope.data.uploads.screens && $scope.data.uploads.screens.length) {
+				var i = 0;
+				_.each($scope.data.uploads.screens, function(s) {
+					if (s._id == item.data._id) {
+						// remove from data store.
+						$scope.data.uploads.screens.splice(i,1);
+					}	
+					i++;
+				});
+			}
+			if (item.data && $scope.data.uploads && $scope.data.uploads.terms && $scope.data.uploads.terms.length) {
+				_.each($scope.data.uploads.terms, function(s) {
+					if (s._id == item.data._id) {
+						// remove from data store.
+						$scope.data.uploads.terms.splice(i,1);
+					}	
+					i++;
+				});
+			}
 			item.remove();
 		};
+
+// 		if ($scope.data.uploads && $scope.data.uploads.terms && $scope.data.uploads.terms.length) {
+// 			_.each($scope.data.uploads.terms, function(file) {
+// 				var input = document.createElement('input');
+// 				input.type = "password";
+// document.getElementById('someForm').appendChild(input);
 
 		
 		// watch for changes to underlying model clear out errors

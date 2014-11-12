@@ -71,6 +71,7 @@ module.exports = function(app) {
 			data.set('crm_data', req.body.crm_data);
 			data.set('gateway_data', req.body.gateway_data);
 			data.set('portal_data', req.body.portal_data);
+			data.set('uploads', req.body.uploads);
 			data.save(this);
 
 		})

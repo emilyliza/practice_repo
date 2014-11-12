@@ -10,7 +10,11 @@
 		</div>
 
 
-		<div>What to upload? Examples?</div>
+		<div>
+			In order to fight chargebacks you'll need to provide a screenshot of the product related to the chargeback, as well as a copy of your terms of service.<br/>&nbsp;
+			<p>Acceptable formats: jpg, png, bmp, gif </p>
+			<p>Wondering <a href="http://www.take-a-screenshot.org/" target="new">how to take a screenshot</a>?</p>
+		</div>
 	</div>
 	<div class="col-sm-8 col-sm-pull-4"  style="padding-top: 30px;" >
 
@@ -60,9 +64,9 @@
 							<span class="glyphicon glyphicon-remove-circle"></span>
 						</div>
 						<div class="img" ng-show="uploaderScreen.isHTML5" ng-thumb="{ file: item._file, width: 200 }"></div>
-						<strong>{{ item.file.name }}</strong>
-						<div ng-show="uploaderScreen.isHTML5" nowrap>{{ item.file.size/1024/1024|number:2 }} MB</div>
-						<div ng-show="uploaderScreen.isHTML5">
+						<div style="font-weight: bold; text-align: center;">{{ item.file.name }}</div>
+						<div ng-show="uploaderScreen.isHTML5" style="text-align: center;">
+							<div nowrap>{{ item.file.size/1024/1024|number:2 }} MB</div>
 							<div class="progress" style="margin-bottom: 0;">
 								<div class="progress-bar" role="progressbar" ng-style="{ 'width': item.progress + '%' }"></div>
 							</div>
@@ -78,9 +82,9 @@
 							<span class="glyphicon glyphicon-remove-circle"></span>
 						</div>
 						<div class="img" ng-show="uploaderTerms.isHTML5" ng-thumb="{ file: item._file, width: 200 }"></div>
-						<strong>{{ item.file.name }}</strong>
-						<div ng-show="uploaderTerms.isHTML5" nowrap>{{ item.file.size/1024/1024|number:2 }} MB</div>
-						<div ng-show="uploaderTerms.isHTML5">
+						<div style="font-weight: bold; text-align: center;">{{ item.file.name }}</div>
+						<div ng-show="uploaderTerms.isHTML5" style="text-align: center;">
+							<div nowrap>{{ item.file.size/1024/1024|number:2 }} MB</div>
 							<div class="progress" style="margin-bottom: 0;">
 								<div class="progress-bar" role="progressbar" ng-style="{ 'width': item.progress + '%' }"></div>
 							</div>
