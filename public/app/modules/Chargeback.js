@@ -1,6 +1,6 @@
 (function() {
 
-	angular.module('chargeback', ['ui.router', 'angularFileUpload'])
+	angular.module('chargeback', ['ui.router', 'angularFileUpload', 'ngAnimate'])
 	
 	.config(['$stateProvider', '$urlRouterProvider', function( $stateProvider, $urlRouterProvider ) {
 		
@@ -54,8 +54,7 @@
 			url: '/review',
 			templateUrl: '/app/templates/chargeback.review.html'
 		});
-		//$urlRouterProvider.otherwise('/chargeback/');
-
+		
 	}])
 
 	.controller('ChargebackController', 
@@ -65,17 +64,95 @@
 		$scope.data = res.data;
 		$scope.errors = {};
 
-		var uploader = $scope.uploader = new FileUploader({
-            url: 'upload.php'
-        });
 
-		// watch for changes to clear out errors
+		// =============================
+		// Terms of Service Uploader
+		// =============================
+		var uploaderTerms = $scope.uploaderTerms = new FileUploader({
+            autoUpload: true
+        });
+		uploaderTerms.filters.push({
+            name: 'imageFilter',
+            fn: function(item /*{File|FileLikeObject}*/, options) {
+                var type = '|' + item.type.slice(item.type.lastIndexOf('/') + 1).toLowerCase() + '|';
+                return '|jpg|png|jpeg|bmp|gif|'.indexOf(type) !== -1;
+            }
+        });
+		uploaderTerms.onWhenAddingFileFailed = function() {
+			// set UploadError to true to display error message in side bar
+			$scope.uploadError = true;
+		};
+		
+
+
+
+
+		// =============================
+		// Screen shot uploader
+		// =============================
+		var uploaderScreen = $scope.uploaderScreen = new FileUploader({
+			queueLimit: 5
+		});
+		uploaderScreen.filters.push({
+            name: 'imageFilter',
+            fn: function(item /*{File|FileLikeObject}*/, options) {
+                var type = '|' + item.type.slice(item.type.lastIndexOf('/') + 1).toLowerCase() + '|';
+                return '|jpg|png|jpeg|bmp|gif|'.indexOf(type) !== -1;
+            }
+        });
+		uploaderScreen.onWhenAddingFileFailed = function() {
+			// set UploadError to true to display error message in side bar
+			$scope.uploadError = true;
+		};
+		uploaderScreen.onAfterAddingFile = function(item) {
+			// first get signature from server.
+			ChargebackService.getS3Signature(item.file.name, item.file.type).then(function (res) {
+				// add form data for S3 authorization to upload directly
+				item.formData = [
+					{ 'key': res.data.key },
+					{ 'Content-Type': res.data.contentType },
+					{ 'AWSAccessKeyId': res.data.AWSAccessKeyId },
+					{ 'acl': res.data.acl },
+					{ 'policy': res.data.policy },
+					{ 'signature': res.data.signature }
+				];
+				item.url = res.data.path;	// get path from server as well
+				item.onSuccess = function() {
+					if ($scope.data.uploads && $scope.data.uploads.screens) {
+						$scope.data.uploads.screens.push(res.data.photo);
+					} else {
+						$scope.data.uploads.screens = [ res.data.photo ];
+					}
+					console.log($scope.data);
+				};
+				item.upload();	// start upload
+			}, function (res) {
+				console.log('Error getting signagure.');
+			});
+		}
+		
+
+
+		// clicking drag-n-drop zones triggers old-school upload dialog
+		$scope.triggerUpload = function(el) {
+			angular.element(el).trigger('click');
+		};
+
+		$scope.removeItem = function(item, el) {
+			angular.element(el).val('');	// have to clear out element value
+			item.remove();
+		};
+
+		
+		// watch for changes to underlying model clear out errors
 		$scope.$watch("data", function(newValue, oldValue){
 			$scope.errors = {};
 			$scope.$broadcast('show-errors-reset');	
 			var popups = document.querySelectorAll('.popover');
 			_.each(popups, function(p) { p.remove(); });
 		},true);
+
+		
 		
 		var _this = this;
 		$scope.save = function(data) {
@@ -98,6 +175,12 @@
 
 		cbService.get = function(_id) {
 			return $http.get('/api/v1/chargeback/' + _id);
+		};
+
+		cbService.getS3Signature = function(filename,type) {
+			/* get signature block and key from server to securely upload file.
+			   returned signature block is attached to direct upload to S3 */
+			return $http.get('/api/v1/s3?filename=' + filename + "&contentType=" + type);
 		};
 
 		cbService.save = function(data) {
@@ -144,7 +227,6 @@
 				
 				var reader = new FileReader();
 				
-
 				reader.onload = onLoadFile;
 				reader.readAsDataURL(params.file);
 

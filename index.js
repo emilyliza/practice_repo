@@ -138,6 +138,7 @@ require('./controllers/chargebacks')(app);
 require('./controllers/user')(app);
 require('./controllers/forgot')(app);
 require('./controllers/reporting')(app);
+require('./controllers/s3')(app);
 
 
 if(process.env.NODE_ENV == 'production') {

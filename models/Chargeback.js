@@ -73,6 +73,22 @@ module.exports = function(app) {
 			'TrackingNum'      : Number,
 			'TrackingSum'      : String
 		},
+		'uploads': {
+			'terms': [{
+				'_id': String ,
+				'extension': String,
+				'filename': String,	// original file name, pre _id naming
+				'mimetype': String,
+				'url': String
+			}],
+			'screens': [{
+				'_id': String,
+				'extension': String,
+				'filename': String,	// original file name, pre _id naming
+				'mimetype': String,
+				'url': String
+			}],
+		},
 		'derived_data' : {
 			'uuid'             : Number,
 			'CcNum'            : String,
