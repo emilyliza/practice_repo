@@ -11,7 +11,8 @@
 		"chargebacks",
 		"chargeback",
 		"account",
-		"reporting"
+		"reporting",
+		"dashboard"
 	])
 
 	.config(['$locationProvider', '$urlRouterProvider', 'datepickerPopupConfig', function( $locationProvider, $urlRouterProvider, $datepickerPopupConfig) {

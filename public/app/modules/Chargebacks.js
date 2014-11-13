@@ -17,7 +17,7 @@
 
 	.controller('ChargebacksController', ['$scope', 'ChargebacksService', function($scope, ChargebacksService) {
 			
-		$scope.cbs = new ChargebacksService();
+		$scope.cbs = new ChargebacksService();	
 
 	}])
 
