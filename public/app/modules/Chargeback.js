@@ -336,10 +336,19 @@
 			restrict: 'A',
 			template: '<canvas/>',
 			link: function(scope, element, attributes) {
-				if (!helper.support) return;
+				if (!helper.support) { return; }
 
 				var params = scope.$eval(attributes.ngThumb);
 				var canvas = element.find('canvas');
+
+				function noPreview() {
+					var errImage = new Image();
+					errImage.onload = function() {
+						canvas.attr({ width: 200, height: 200 });
+						canvas[0].getContext('2d').drawImage(errImage, 0, 0, 200, 200);
+					};
+					errImage.src = "/images/document.png";
+				}
 
 				if (!helper.isFile(params.file)) {
 					noPreview();
@@ -352,18 +361,6 @@
 				
 				var reader = new FileReader();
 				
-				reader.onload = onLoadFile;
-				reader.readAsDataURL(params.file);
-
-				function noPreview() {
-					var errImage = new Image();
-					errImage.onload = function() {
-						canvas.attr({ width: 200, height: 200 });
-						canvas[0].getContext('2d').drawImage(errImage, 0, 0, 200, 200);
-					};
-					errImage.src = "/images/document.png";
-				}
-
 				function onLoadFile(event) {
 					var img = new Image();
 					img.onload = onLoadImage;
@@ -376,8 +373,11 @@
 					canvas.attr({ width: width, height: height });
 					canvas[0].getContext('2d').drawImage(this, 0, 0, width, height);
 				}
+
+				reader.onload = onLoadFile;
+				reader.readAsDataURL(params.file);
 			}
 		};
-	}])
+	}]);
 
 })();
