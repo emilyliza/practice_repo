@@ -15,6 +15,21 @@ module.exports = function(app) {
 		$()
 		.seq(function() {
 			var query = Chargeback.find();
+
+			if (params.query && params.query.match(/[0-9\.]/)) {
+				query.or([
+					{ 'portal_data.ChargebackAmt': params.query },
+					{ 'derived_data.uuid': params.query }
+				]);
+			} else if (params.query) {
+				var pattern = new RegExp('.*'+params.query+'.*', 'i');
+				query.or([
+					{ 'derived_data.status.name': pattern },
+					{ 'gateway_data.FirstName': pattern },
+					{ 'gateway_data.LastName': pattern }
+				]);
+			}
+
 			query.skip( (params.page ? ((+params.page - 1) * params.limit) : 0) );
 			query.limit((params.limit ? params.limit : 30));
 

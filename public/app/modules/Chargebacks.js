@@ -11,13 +11,6 @@
 				auth: true	// check for authentication
 			},
 			controller: 'ChargebacksController'
-			// ,
-			// resolve: {
-			// 	res:  function($http){
-			// 		// $http returns a promise for the url data
-			// 		return $http({method: 'GET', url: '/api/v1/chargebacks'});
-			// 	}
-			// }
 		});
 	
 	}])
@@ -28,20 +21,69 @@
 
 	}])
 
-	.factory('ChargebacksService', ['$http', function ($http) {
+	.factory('ChargebacksService', ['$http', '$timeout', function ($http, $timeout) {
 			
 		var ChargebacksService = function() {
 			this.data = [];
 			this.busy = false;
 			this.page = 1;
+			this.query = '';
+			this.lastQuery = '';
+			this.filterTextTimeout = false;
 		};
+
+		ChargebacksService.prototype.search = function(query) {
+			var _this = this;
+			
+			query = query.trim();
+			
+			// min query length is 2 chars
+			if (query.length <= 1) {
+				if (!this.lastQuery) { return; }	// we've already reset, don't do it again.
+				// reset
+				this.page = 1;
+    			this.data = [];
+    			this.query = "";
+    			this.lastQuery = this.query;
+				this.nextPage();
+				return;
+			}
+
+			// prevent dupes
+			if (this.lastQuery == query) {
+				return;
+			}
+
+			// throttle searches to 250ms
+    		if (this.filterTextTimeout) {
+    			$timeout.cancel(this.filterTextTimeout);
+    		}
+    		this.filterTextTimeout = $timeout(function() {
+    			_this.query = query;
+    			console.log('search, calling next: ' + query);
+    			_this.nextPage();
+    		}, 250);
+    	};
 
 		ChargebacksService.prototype.nextPage = function() {
 			if (this.busy) { return; }
     		this.busy = true;
     		var _this = this;
 
-    		$http.get('/api/v1/chargebacks?page=' + this.page)
+    		console.log('nextPage');
+    		console.log('\tQuery: ' + this.query);
+    		console.log('\tLast: ' + this.lastQuery);
+
+			if (this.query && this.lastQuery != this.query) {
+    			// new query, reset list
+    			this.page = 1;
+    			this.data = [];
+    			this.lastQuery = this.query;
+    		}
+
+    		if (this.data.length > 0 && this.data.length < 30) { return; }
+    		
+    		$http.get('/api/v1/chargebacks?query=' + this.query + '&page=' + this.page)
 			.success(function (rows) {
 				var new_data = rows;
 				
@@ -49,7 +91,9 @@
 					_this.data.push(d);
 				});
 				_this.page++;
-				_this.busy = false;
+				$timeout(function() {
+					_this.busy = false;
+				},50);
 			});
 		};
 

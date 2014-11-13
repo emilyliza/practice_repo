@@ -4,12 +4,12 @@
 		<h2>My Chargebacks</h2>
 	</div>
 	<div class="col-md-4" style="padding-top: 20px;">
-		<input ng-model="q" type="text" class="form-control pull-right" name="query" autocomplete="off" placeholder="Search">
+		<input ng-model="q" type="text" class="form-control pull-right" name="query" autocomplete="off" placeholder="Search" ng-keyup="cbs.search(q)">
 	</div>
 </div>
 
 
-<div class="animated-grid chargebacks" infinite-scroll="cbs.nextPage()" infinite-scroll-disabled="cbs.busy">
+<div class="animated-grid chargebacks" infinite-scroll="cbs.nextPage(q)" infinite-scroll-disabled="cbs.busy">
 	<div class="row head">
 		<div class="col-sm-1">ID</div>
 		<div class="col-sm-3">Date</div>
@@ -18,7 +18,7 @@
 		<div class="col-sm-3">Status</div>
 	</div>
 
-	<div class="row" ng-repeat="cb in cbs.data | filter:q as results">
+	<div class="row" ng-repeat="cb in cbs.data">
 		<div class="col-sm-1"><a href="/chargeback/{{cb.derived_data.uuid}}/upload">{{cb.derived_data.uuid}}</a></div>
 		<div class="col-sm-3">{{cb.gateway_data.TransDate | date:'medium'}}</div>
 		<div class="col-sm-2">{{cb.portal_data.ChargebackAmt | currency}}</div>
