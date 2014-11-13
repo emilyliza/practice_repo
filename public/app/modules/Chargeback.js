@@ -1,6 +1,6 @@
 (function() {
 
-	angular.module('chargeback', ['ui.router', 'angularFileUpload', 'ngAnimate', 'angularCharts'])
+	angular.module('chargeback', ['ui.router', 'angularFileUpload', 'ngAnimate'])
 	
 	.config(['$stateProvider', '$urlRouterProvider', function( $stateProvider, $urlRouterProvider ) {
 		
@@ -64,74 +64,7 @@
 		$scope.data = res.data;
 		$scope.errors = {};
 
-		$scope.piechart_config = {
-			title: 'Probability of Success', // chart title
-			tooltips: true,
-			labels: false,
-			mouseover: function() {},
-			mouseout: function() {},
-			click: function() {},
-			colors: ["#0d94c1","#096888",'#9d352f',"#999999","#333333"],
-			legend: {
-				display: true,
-				//could be 'left, right'
-				position: 'right'
-			}
-		};
-		$scope.piechart2_config = {
-			title: 'Speed of a Response', // chart title
-			tooltips: true,
-			labels: false,
-			mouseover: function() {},
-			mouseout: function() {},
-			click: function() {},
-			colors: ["#0d94c1","#096888",'#9d352f',"#999999","#333333"],
-			legend: {
-				display: true,
-				//could be 'left, right'
-				position: 'right'
-			}
-		};
-
-		$scope.piechart_data = {
-			series: ['Success'],
-			data: [{
-				x: "Success",
-				y: [85],
-				tooltip: "85% of Similar Chargebacks Succeeded"
-			}, {
-				x: "Failed",
-				y: [15],
-				tooltip: "15% of Similar Chargebacks Failed"
-			}]
-		};
-
-		$scope.piechart2_data = {
-			series: ['Success'],
-			data: [{
-				x: "1 Day",
-				y: [10],
-				tooltip: "10% respond in one day"
-			},{
-				x: "2 Days",
-				y: [12],
-				tooltip: "12% respond in two days"
-			},{
-				x: "3 Days",
-				y: [20],
-				tooltip: "20% respond in three days"
-			},{
-				x: "4 Days",
-				y: [40],
-				tooltip: "40% respond in four days"
-			},{
-				x: "5 Days",
-				y: [18],
-				tooltip: "18% respond in five days"
-			}]
-		};
-
-
+		
 		// =============================
 		// Terms of Service Uploader
 		// =============================
