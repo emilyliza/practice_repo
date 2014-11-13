@@ -18,6 +18,8 @@ module.exports = function(app) {
 			query.skip( (params.page ? ((+params.page - 1) * params.limit) : 0) );
 			query.limit((params.limit ? params.limit : 30));
 
+			query.sort('-gateway_data.TransDate');
+			
 			console.log('Chargeback Query...');
 			console.log(query._conditions);
 			console.log(query.options);
