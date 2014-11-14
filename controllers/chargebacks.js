@@ -2,10 +2,11 @@ module.exports = function(app) {
 
 	var _ = require('underscore'),
 		$ = require('seq'),
+		mw = require('./middleware'),
 		Chargeback = app.Models.get('Chargeback');
 		
 
-	app.get('/api/v1/chargebacks?', function(req, res, next) {
+	app.get('/api/v1/chargebacks?', mw.auth(), function(req, res, next) {
 
 		var params = req.query;
 
@@ -54,7 +55,7 @@ module.exports = function(app) {
 
 	});
 
-	app.get('/api/v1/chargeback/:_id', function(req, res, next) {
+	app.get('/api/v1/chargeback/:_id', mw.auth(), function(req, res, next) {
 
 		$()
 		.seq(function() {
@@ -74,7 +75,7 @@ module.exports = function(app) {
 
 	});
 
-	app.put('/api/v1/chargeback/:_id', function(req, res, next) {
+	app.put('/api/v1/chargeback/:_id', mw.auth(), function(req, res, next) {
 
 		console.log('stingk')
 

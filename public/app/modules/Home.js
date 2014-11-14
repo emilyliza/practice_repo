@@ -13,7 +13,8 @@
 	}])
 
 	.controller('HomeController', function() {
-
+		
+		
 	});
 
 })();

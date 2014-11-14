@@ -9,6 +9,7 @@
 			url: '/chargeback/{_id}',
 			controller: 'ChargebackController',
 			templateUrl: '/app/templates/chargeback.html',
+			requiresAuth: true,
 			resolve: {
 				res: ['$http', '$stateParams', 'ChargebackService', function($http, $stateParams, ChargebackService){
 					return ChargebackService.get($stateParams._id);
@@ -17,14 +18,17 @@
 		})
 		.state('chargeback.upload', {
 			url: '/upload',
+			requiresAuth: true,
 			templateUrl: '/app/templates/chargeback.upload.html'
 		})
 		.state('chargeback.portal', {
 			url: '/portal',
+			requiresAuth: true,
 			templateUrl: '/app/templates/chargeback.portal.html'
 		})
 		.state('chargeback.gateway', {
 			url: '/gateway',
+			requiresAuth: true,
 			templateUrl: '/app/templates/chargeback.gateway.html',
 			resolve: {
 				scroll:  function() {
@@ -34,6 +38,7 @@
 		})
 		.state('chargeback.crm', {
 			url: '/crm',
+			requiresAuth: true,
 			templateUrl: '/app/templates/chargeback.crm.html',
 			resolve: {
 				scroll:  function() {
@@ -43,6 +48,7 @@
 		})
 		.state('chargeback.shipping', {
 			url: '/shipping',
+			requiresAuth: true,
 			templateUrl: '/app/templates/chargeback.shipping.html',
 			resolve: {
 				scroll:  function() {
@@ -52,14 +58,15 @@
 		})
 		.state('chargeback.review', {
 			url: '/review',
+			requiresAuth: true,
 			templateUrl: '/app/templates/chargeback.review.html'
 		});
 		
 	}])
 
 	.controller('ChargebackController', 
-			['$scope', '$rootScope', 'AUTH_EVENTS', 'Session', 'ChargebackService', '$state', 'res', 'FileUploader',
-			function ($scope, $rootScope, AUTH_EVENTS, Session, ChargebackService, $state, res, FileUploader) {
+			['$scope', '$rootScope', 'AUTH_EVENTS', 'ChargebackService', '$state', 'res', 'FileUploader',
+			function ($scope, $rootScope, AUTH_EVENTS, ChargebackService, $state, res, FileUploader) {
 		
 		$scope.data = res.data;
 		$scope.errors = {};

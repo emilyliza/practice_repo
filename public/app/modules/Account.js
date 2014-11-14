@@ -7,12 +7,13 @@
 		$stateProvider.state('account', {
 			url: '/account',
 			controller: 'AccountController',
+			requiresAuth: true,
 			templateUrl: '/app/templates/account.html'
 		});
 
 	}])
 
-	.controller('AccountController', ['$scope', '$rootScope', '$state', 'AccountService', function ($scope, $rootScope, $state, AccountService) {
+	.controller('AccountController', ['$scope', '$rootScope', 'AccountService', function ($scope, $rootScope, AccountService) {
 		
 		$scope.errors = {};
 		$scope.saved = false;
@@ -44,7 +45,7 @@
 
 			}
 		};
-
+	
 	}])
 
 	.factory('AccountService', ['$http', function ($http) {

@@ -7,9 +7,7 @@
 		$stateProvider.state('reporting', {
 			url: '/reporting',
 			templateUrl: '/app/templates/reporting.html',
-			data: {
-				auth: true	// check for authentication
-			},
+			requiresAuth: true,
 			resolve: {
 				res: ['$http', function($http){
 					// $http returns a promise for the url data
@@ -24,7 +22,5 @@
 	.controller('ReportingController', [ '$scope', 'res', function($scope, res) {
 		$scope.data = res.data;
 	}]);
-
-
 
 })();

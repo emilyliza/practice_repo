@@ -5,12 +5,13 @@ module.exports = function(app) {
 		uuid = require('node-uuid'),
 		path = require('path'),
 		moment = require('moment'),
+		mw = require('./middleware'),
 		crypto = require( "crypto" );
 
 	
 
 
-	app.get('/api/v1/s3?', function(req, res, next) {
+	app.get('/api/v1/s3?', mw.auth(), function(req, res, next) {
 
 		var expires = moment().add('minutes', 10).toISOString();
 		//console.log(expires);

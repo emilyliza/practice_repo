@@ -14,7 +14,7 @@
 		
 	})
 
-	.directive('graphBar', ['$parse', '$window', function($parse, $window){
+	.directive('graphBar', ['$parse', '$window', '$http', function($parse, $window, $http){
 		return {
 			restrict:'EA',
 			template: "<div></div>",
@@ -36,7 +36,7 @@
 					.attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
 				
-				d3.json("/api/v1/" + attrs.graphEndpoint, function(data) {
+				$http.get('/api/v1/' + attrs.graphEndpoint).success(function(data) {
 					
 					// Width of bars, without padding. 
 					var barRawWidth = width / (data.length + 2),
@@ -64,10 +64,8 @@
 						.orient("left");
 
 					data.forEach(function(d) {
-						console.log(d);
 						d.date = parseDate(d.date);
 						d.total = +d.total;
-						console.log(d);
 					});
 
 					x.domain(d3.extent(data, function(d) { return d.date; }));

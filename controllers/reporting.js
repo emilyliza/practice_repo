@@ -2,10 +2,11 @@ module.exports = function(app) {
 
 	var _ = require('underscore'),
 		$ = require('seq'),
+		mw = require('./middleware'),
 		Chance = require('chance');
 		
 
-	app.get('/api/v1/reporting', function(req, res, next) {
+	app.get('/api/v1/reporting', mw.auth(), function(req, res, next) {
 
 		var chance = new Chance(),
 			status = [{

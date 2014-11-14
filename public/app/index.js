@@ -31,28 +31,27 @@
 	})
 
 	.controller('ApplicationController', 
-		['$scope', '$rootScope', 'AUTH_EVENTS', 'AuthService', '$state', 
-		function ($scope, $rootScope, AUTH_EVENTS, AuthService, $state) {
+		['$scope', '$rootScope', 'AUTH_EVENTS', 'AuthService', '$state', '$http',
+		function ($scope, $rootScope, AUTH_EVENTS, AuthService, $state, $http) {
 		
 		$scope.currentUser = null;
-		$scope.authChecked = false;
-		$scope.isAuthorized = AuthService.isAuthorized;
+		$scope.isAuthenticated = AuthService.isAuthenticated();
 		$scope.$state = $state;	// for navigation active to work
 
 		$scope.setCurrentUser = function (user) {
 			$scope.currentUser = user;
 		};
 
-		$scope.soSomething = function () {
-			
-		};
-
-		AuthService.check().then(function (user) {
-			$scope.setCurrentUser(user);
-			$scope.authChecked = true;
-		}, function(res) {
-			console.log('Not logged in.');
-		});
+		if ($scope.isAuthenticated) {
+			return $http
+			.get('/api/v1/user')
+			.success(function (data) {
+				$scope.setCurrentUser(data);
+			})
+			.error(function (res) {
+				AuthService.logout();
+			});
+		}
     }]);
 
 	

@@ -7,16 +7,14 @@
 		$stateProvider.state('chargebacks', {
 			url: '/chargebacks',
 			templateUrl: '/app/templates/chargebacks.html',
-			data: {
-				auth: true	// check for authentication
-			},
+			requiresAuth: true,
 			controller: 'ChargebacksController'
 		});
 	
 	}])
 
 	.controller('ChargebacksController', ['$scope', 'ChargebacksService', function($scope, ChargebacksService) {
-			
+		
 		$scope.cbs = new ChargebacksService();	
 
 	}])

@@ -5,15 +5,12 @@ var fs = require('fs'),
 	device = require('express-device'),
 	path = require('path'),
 	_ = require('underscore'),
-	Cookies = require('cookies'),
-	Keygrip = require('keygrip'),
 	expressValidator = require('express-validator'),
 	logger = require('morgan'),
 	bodyParser = require('body-parser'),
-	cookieParser = require('cookie-parser'),
-	session = require('express-session'),
 	methodOverride = require('method-override'),
 	app = module.exports = express();
+	
 
 
 
@@ -29,7 +26,8 @@ app.use(favicon(path.join(__dirname,'public','images','chargeback-shield.png')))
 
 var compression = require('compression');
 app.use(compression());
-	
+
+
 // parse application/x-www-form-urlencoded
 app.use(bodyParser.urlencoded());
 
@@ -64,44 +62,6 @@ process.on('uncaughtException', function(err) {
 		
 	}
 });
-
-
-
-
-
-var redisStore = require('connect-redis')(session),
-	rtg   = require("url").parse(process.env.REDISTOGO_URL),
-	redis = require("redis").createClient(rtg.port, rtg.hostname),
-	rStore = new redisStore({client: redis}),
-	day = 3600000 * 24;
-
-if (process.env.REDISTOGO_URL.match(/@/)) {
-	redis.auth(rtg.auth.split(":")[1]);
-}
-
-app.use( cookieParser() );
-
-app.use(session({
-	client: redis,
-	store: rStore,
-	secret: 'big2FatSecret',
-	cookie: { maxAge: 60 * 60 * 24 * 30 * 1000 }
-}));
-
-redis.on('error', function(err) {console.log(err); console.log('error connecting to redis'); });
-redis.on('connect', function() {
-	var r = process.env.REDISTOGO_URL.split(/@/);
-	console.log('REDISTOGO CONNECTED - ' + r[1]);
-});
-
-// save them both to app
-app.set('redis', redis);
-app.set('redisStore', rStore);
-
-
-
-
-
 
 
 

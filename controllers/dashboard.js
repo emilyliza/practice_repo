@@ -2,10 +2,11 @@ module.exports = function(app) {
 
 	var _ = require('underscore'),
 		$ = require('seq'),
+		mw = require('./middleware'),
 		Chargeback = app.Models.get('Chargeback');
 		
 
-	app.get('/api/v1/dashboard', function(req, res, next) {
+	app.get('/api/v1/dashboard', mw.auth(), function(req, res, next) {
 
 		$()
 		.par('open', function() {

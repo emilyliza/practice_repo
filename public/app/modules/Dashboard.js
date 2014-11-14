@@ -7,9 +7,7 @@
 		$stateProvider.state('dashboard', {
 			url: '/dashboard',
 			templateUrl: '/app/templates/dashboard.html',
-			data: {
-				auth: true	// check for authentication
-			},
+			requiresAuth: true,
 			resolve: {
 				res: ['$http', function($http){
 					// $http returns a promise for the url data
@@ -23,6 +21,7 @@
 
 	.controller('DashboardController', [ '$scope', 'res', function($scope, res) {
 		$scope.data = res.data;
+
 	}]);
 
 

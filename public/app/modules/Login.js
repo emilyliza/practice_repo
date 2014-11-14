@@ -29,16 +29,13 @@
 	.controller('LogoutController', ['$state', '$rootScope', 'AUTH_EVENTS', function($state, $rootScope, AUTH_EVENTS) {
 		console.log('logging out.');
 		$rootScope.$broadcast(AUTH_EVENTS.notAuthenticated);
+		$state.go('login');
 	}])
 
 	.controller('LoginController', 
-		[ '$scope', '$rootScope', 'AUTH_EVENTS', 'Session', 'AuthService', '$state', 
-		function ($scope, $rootScope, AUTH_EVENTS, Session, AuthService, $state) {
+		[ '$scope', '$rootScope', 'AUTH_EVENTS', 'AuthService', '$state', 
+		function ($scope, $rootScope, AUTH_EVENTS, AuthService, $state) {
 		
-		if (AuthService.isAuthenticated()) {
-			$state.go('chargebacks');
-		}
-
 		$scope.credentials = {};
 		$scope.errors = {};
 
@@ -57,9 +54,10 @@
 					$scope.setCurrentUser(user);
 					$rootScope.$broadcast(AUTH_EVENTS.loginSuccess);
 					$scope.credentials = {};
-					$state.go('chargebacks');
+					$state.go('dashboard');
 				}, function (res) {
 					$rootScope.$broadcast(AUTH_EVENTS.loginFailed);
+					delete $window.sessionStorage.token;
 					if (res.data.errors) {
 						$scope.errors = res.data.errors;
 					}
@@ -67,66 +65,50 @@
 			}
 		};
 
+		if (AuthService.isAuthenticated()) {
+			return $state.go('dashboard');
+		}
+
 	}])
 
-	.factory('AuthService', ['$http', 'Session', function ($http, Session) {
+	.factory('AuthService', ['$http', '$window', function ($http, $window) {
 		var authService = {};
 
 		authService.login = function(credentials) {
 			return $http
 			.post('/api/v1/login', credentials)
 			.then(function (res) {
-				Session.create(res.data);
+				$window.sessionStorage.token = res.data.token;	// save auth token in sessionStorage
+				delete res.data.token;	// don't have token in current user
 				return res.data;
 			});
 		};
 
-		authService.check = function() {
-			return $http.get('/api/v1/user')
-			.then(function(res) {
-				Session.create(res.data);
-				return res.data;
-			});
+		authService.logout = function() {
+			delete $window.sessionStorage.token;
+			return;
 		};
 
 		authService.isAuthenticated = function () {
-			if (Session && Session.user && Session.user._id) {
+			if ($window.sessionStorage.token) {
 				return true;
 			}
-			return false;	
+			return false;
     	};
-
-		authService.isAuthorized = function (authorizedRoles) {
-			if (!angular.isArray(authorizedRoles)) {
-				authorizedRoles = [authorizedRoles];
-			}
-			return (authService.isAuthenticated() && authorizedRoles.indexOf(Session.userRole) !== -1);
-		};
 
 		return authService;
 	}])
 
-	.service('Session', function () {
-		this.user = {};
-		this.create = function (data) {
-			this.user = data;
-		};
-		this.destroy = function () {
-			this.user = null;
-		};
-		return this;
-	})
-
-
+	
 	// check routes every time they change for authorized state
 	.run(
-		['$rootScope', 'AUTH_EVENTS', 'AuthService', 'Session', '$state', '$http',
-		function ($rootScope, AUTH_EVENTS, AuthService, Session, $state, $http) {
+		['$rootScope', 'AUTH_EVENTS', 'AuthService', '$state', '$http',
+		function ($rootScope, AUTH_EVENTS, AuthService, $state, $http) {
 		
 		console.log('Running LoginController');
 		
 		$rootScope.$on('$stateChangeStart', function (event, next) {
-			if ($rootScope.authChecked && next.data && next.data.auth && !AuthService.isAuthenticated()) {
+			if (next.requiresAuth && !AuthService.isAuthenticated()) {
 				event.preventDefault();
 				$rootScope.$broadcast(AUTH_EVENTS.notAuthenticated);
 			}
@@ -135,22 +117,14 @@
 		// listen for logout or session expirations and send to login page.
 		$rootScope.$on(AUTH_EVENTS.notAuthenticated, function() {
 			//@TODO: could include login in popup to prevent abrupt redirect
-			Session.destroy();
-
-			if ($rootScope.authChecked) {
-				return $http
-				.get('/api/v1/logout')
-				.then(function (res) {
-					$rootScope.setCurrentUser(null);
-					$state.go('login');
-				});
-			}
-
+			AuthService.logout();
+			$rootScope.currentUser = null;	// get rid of user state (navigation)
+			$state.go('login');
 		});
 
 		$rootScope.$on(AUTH_EVENTS.sessionTimeout, function() {
 			//@TODO: could include login in popup to prevent abrupt redirect
-			Session.destroy();
+			AuthService.logout();
 			$state.go('login');
 		});
 
@@ -167,9 +141,17 @@
 		]);
 	}])
 	
-	.factory('AuthInterceptor', ['$rootScope', '$q', 'AUTH_EVENTS', function ($rootScope, $q, AUTH_EVENTS) {
+	.factory('AuthInterceptor', ['$rootScope', '$window', '$q', 'AUTH_EVENTS', function ($rootScope, $window, $q, AUTH_EVENTS) {
 		return {
+			request: function (config) {
+				config.headers = config.headers || {};
+				if ($window.sessionStorage.token) {
+					config.headers.Authorization = $window.sessionStorage.token;
+				}
+				return config;
+			},
 			responseError: function (response) { 
+				console.log(response);
 				$rootScope.$broadcast({
 					401: AUTH_EVENTS.notAuthenticated,
 					403: AUTH_EVENTS.notAuthorized,
