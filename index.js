@@ -140,6 +140,7 @@ require('./controllers/forgot')(app);
 require('./controllers/reporting')(app);
 require('./controllers/s3')(app);
 require('./controllers/dashboard')(app);
+require('./controllers/graphing')(app);
 
 if(process.env.NODE_ENV == 'production') {
 	app.use(function(req, res){
