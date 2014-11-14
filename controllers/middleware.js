@@ -23,15 +23,16 @@ middleware.auth = function() {
 
 		console.log(token);
 		console.log(process.env.TOKEN_SECRET);
-		
+
 		jwt.verify(token, process.env.TOKEN_SECRET, function(err, decoded) {
 			if (err) {
 				console.log(err);
 				return res.send(401);
 			}
 
-
+			console.log(decoded);
 			req.user = decoded;
+			
 			return next();
 		});
 		
