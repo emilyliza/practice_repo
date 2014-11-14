@@ -14,7 +14,7 @@
 		
 	})
 
-	.directive('graphArea', ['$parse', '$window', function($parse, $window){
+	.directive('graphBar', ['$parse', '$window', function($parse, $window){
 		return {
 			restrict:'EA',
 			template: "<div></div>",
@@ -28,25 +28,7 @@
 				
 				var parseDate = d3.time.format("%Y-%m-%d").parse;
 
-				var x = d3.time.scale()
-					.range([0, width]);
-
-				var y = d3.scale.linear()
-					.range([height, 0]);
-
-				var xAxis = d3.svg.axis()
-					.scale(x)
-					.orient("bottom");
-
-				var yAxis = d3.svg.axis()
-					.scale(y)
-					.orient("left");
-
-				var area = d3.svg.area()
-					.x(function(d) { return x(d.date); })
-					.y0(height)
-					.y1(function(d) { return y(d.total); });
-
+				
 				var svg = d3.select(container[0]).append("svg")
 					.attr("width", width + margin.left + margin.right)
 					.attr("height", height + margin.top + margin.bottom)
@@ -56,6 +38,31 @@
 				
 				d3.json("/api/v1/" + attrs.graphEndpoint, function(data) {
 					
+					// Width of bars, without padding. 
+					var barRawWidth = width / (data.length + 2),
+						barPadding = 10,
+						xStart = barPadding + (barRawWidth/2),
+						barWidth = barRawWidth - (barPadding*2);
+
+					var x = d3.time.scale().range([xStart, width-xStart]);
+
+					var y = d3.scale.linear()
+						.range([height, 0]);
+
+					var xAxis = d3.svg.axis()
+						.scale(x)
+						.orient("bottom")
+						.ticks(d3.time.month, 1)
+						.tickFormat(d3.time.format('%b %Y'));
+						
+					svg.append("g")
+						.attr("class", "x axis")
+						.attr("transform", "translate(0," + height + ")")
+
+					var yAxis = d3.svg.axis()
+						.scale(y)
+						.orient("left");
+
 					data.forEach(function(d) {
 						console.log(d);
 						d.date = parseDate(d.date);
@@ -66,10 +73,34 @@
 					x.domain(d3.extent(data, function(d) { return d.date; }));
 					y.domain([0, d3.max(data, function(d) { return d.total; })]);
 
-					svg.append("path")
-						.datum(data)
-						.attr("class", "area")
-						.attr("d", area);
+					// Call x-axis. 
+					d3.select(".x.axis")
+						.transition().duration(1000)
+						.call(xAxis);
+					
+					var bars = svg.selectAll(".bar")
+						.data(data, function(d) { return d.date; });
+
+					bars.exit().remove();
+    
+					bars.transition().duration(1000)
+						.attr("x", function(d) { return x(d.date) - (barWidth/2); })
+						.attr("width", barWidth)
+						.attr("y", function(d) { return y(d.air_used); })
+						.attr("height", function(d) { return height - y(d.air_used);});
+
+
+					bars.enter().append("rect")
+						.attr("class", "bar")
+						//.attr("x", function(d) { return x(d.date); })
+						.attr("x", function(d) { return x(d.date) - (barWidth/2); })
+    					.attr("width", barWidth)
+    					.attr("y", height)
+						.attr("height", 0)
+						.transition().duration(1000)
+						.attr("y", function(d) { return y(d.total); })
+						.attr("height", function(d) { return height - y(d.total); });
+
 
 					svg.append("g")
 						.attr("class", "x axis")
@@ -84,7 +115,7 @@
 						.attr("y", 6)
 						.attr("dy", ".71em")
 						.style("text-anchor", "end")
-						.text("Total Chargebacks ($)");
+						.text("Total Monthly Chargebacks ($)");
 					
 				});
 				

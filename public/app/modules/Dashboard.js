@@ -1,6 +1,6 @@
 (function() {
 
-	angular.module('dashboard', ['ui.router', 'ngAnimate'])
+	angular.module('dashboard', ['ui.router', 'ngAnimate', 'graphing'])
 	
 	.config(['$stateProvider', function( $stateProvider ) {
 		
