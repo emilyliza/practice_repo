@@ -16,8 +16,10 @@ middleware.auth = function() {
 			return res.send(401);
 		}		
 
+		console.log(req.headers);
 		var token = req.headers.authorization;
 		if (!token) {
+			console.log('no auth header');
 			return res.send(401);
 		}
 
@@ -26,13 +28,14 @@ middleware.auth = function() {
 
 		jwt.verify(token, process.env.TOKEN_SECRET, function(err, decoded) {
 			if (err) {
+				console.log('jwt.verify error!!!');
 				console.log(err);
 				return res.send(401);
 			}
 
 			console.log(decoded);
 			req.user = decoded;
-			
+
 			return next();
 		});
 		
