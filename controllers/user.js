@@ -7,6 +7,8 @@ module.exports = function(app) {
 
 	app.get('/api/v1/user', mw.auth(), function(req, res, next) {
 
+		console.log('inside /api/v1/user');
+		console.log(req.user);
 		return res.json(req.user);	
 	
 	});
