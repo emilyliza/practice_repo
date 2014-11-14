@@ -57,7 +57,7 @@
 						
 					svg.append("g")
 						.attr("class", "x axis")
-						.attr("transform", "translate(0," + height + ")")
+						.attr("transform", "translate(0," + height + ")");
 
 					var yAxis = d3.svg.axis()
 						.scale(y)
