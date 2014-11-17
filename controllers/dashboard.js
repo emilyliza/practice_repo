@@ -14,6 +14,21 @@ module.exports = function(app) {
 			query.where('derived_data.status.name').equals('Open');
 			query.exec(this);
 		})
+		.par('amount', function() {
+			
+			Chargeback.aggregate([
+				{ $project: {
+					_id: 0,
+					status: '$derived_data.status.name',
+					amt: '$portal_data.ChargebackAmt' 
+				}},
+				{ $group: {
+					_id: "$status", 
+					total: { $sum: '$amt' }
+				}}
+				], this);
+
+		})
 		.par('progress', function() {
 			var query = Chargeback.count();
 			query.where('derived_data.status.name').equals('In-Progress');
@@ -35,9 +50,16 @@ module.exports = function(app) {
 			// cache busting on static api end point
 			res.header('Content-Type', 'application/json');
 			res.header('Cache-Control', 'no-cache, private, no-store, must-revalidate, max-stale=0, post-check=0, pre-check=0');
-				
+			
+			var amounts = {};
+			_.each(this.vars.amount, function(d) {
+				amounts[d._id] = d.total;
+			});
+			
+
 			return res.json({
 				open: this.vars.open,
+				amount: amounts,
 				pending: this.vars.pending,
 				progress: this.vars.progress,
 				complete: this.vars.complete
