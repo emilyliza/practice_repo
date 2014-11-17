@@ -90,6 +90,7 @@ module.exports = function(app) {
 			data.set('gateway_data', req.body.gateway_data);
 			data.set('portal_data', req.body.portal_data);
 			data.set('uploads', req.body.uploads);
+			data.set('additional_comments', req.body.additional_comments);
 			data.save(this);
 
 		})

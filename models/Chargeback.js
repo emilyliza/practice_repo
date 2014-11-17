@@ -89,6 +89,7 @@ module.exports = function(app) {
 				'url': String
 			}],
 		},
+		'additional_comments': String,
 		'derived_data' : {
 			'uuid'             : Number,
 			'CcNum'            : String,

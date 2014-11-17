@@ -56,6 +56,16 @@
 				}
 			}
 		})
+		.state('chargeback.comments', {
+			url: '/comments',
+			requiresAuth: true,
+			templateUrl: '/app/templates/chargeback.comments.html',
+			resolve: {
+				scroll:  function() {
+					$("html, body").animate({ scrollTop: 0 }, 200);
+				}
+			}
+		})
 		.state('chargeback.review', {
 			url: '/review',
 			requiresAuth: true,
