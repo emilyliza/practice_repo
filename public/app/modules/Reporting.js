@@ -1,6 +1,6 @@
 (function() {
 
-	angular.module('reporting', ['ui.router', 'ngAnimate'])
+	angular.module('reporting', ['ui.router', 'ngAnimate', 'graphing'])
 	
 	.config(['$stateProvider', function( $stateProvider ) {
 		
@@ -11,7 +11,7 @@
 			resolve: {
 				res: ['$http', function($http){
 					// $http returns a promise for the url data
-					return $http({method: 'GET', url: '/api/v1/reporting'});
+					return $http({method: 'GET', url: '/api/v1/dashboard'});
 				}]
 			},
 			controller: 'ReportingController'

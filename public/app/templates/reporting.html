@@ -8,25 +8,38 @@
 
 <div class="row reporting-status">
 		
-	<div class="col-sm-4">
+	<div class="col-sm-3">
 		<div class="img-circle" style="background-color: green;">
-			<div>10</div>
-			New
+			<div>{{data.open}}</div>
+			Open
 		</div>
 	</div>
 
-	<div class="col-sm-4">
+	<div class="col-sm-3">
 		<div class="img-circle">
-			<div>10</div>
-			Pending	
+			<div>{{data.progress}}</div>
+			In-Progress	
 		</div>
 	</div>
 		
-	<div class="col-sm-4">
+	<div class="col-sm-3">
+		<div class="img-circle" style="background-color: #ffcc00; color: #333;">
+			<div>{{data.pending}}</div>
+			Pending
+		</div>
+	</div>
+
+	<div class="col-sm-3">
 		<div class="img-circle" style="background-color: #333; color: white;">
-			<div>3</div>
+			<div>{{data.complete}}</div>
 			Completed
 		</div>
 	</div>
 
+</div>
+
+<div class="row" style="margin-top: 40px;">
+	<div class="col-md-12">
+		<div graph-bar graph-endpoint="history" graph-width="1140" graph-height="500"></div>
+	</div>
 </div>
