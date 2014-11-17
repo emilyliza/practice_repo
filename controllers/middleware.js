@@ -22,12 +22,29 @@ middleware.auth = function() {
 			return res.send(401);
 		}
 
+		if (req.method === 'OPTIONS' && req.headers.hasOwnProperty('access-control-request-headers')) {
+			var hasAuthInAccessControl = !!~req.headers['access-control-request-headers']
+				.split(',').map(function (header) {
+					return header.trim();
+				}).indexOf('authorization');
+
+			if (hasAuthInAccessControl) {
+				return next();
+			}
+		}
+
+		console.log('Checking...');
+		console.log(token);
+
 		jwt.verify(token, process.env.TOKEN_SECRET, function(err, decoded) {
 			if (err) {
 				console.log('jwt.verify error!!!');
 				console.log(err);
 				return res.send(401);
 			}
+
+			console.log('found in token:');
+			console.log(decoded);
 
 			req.user = decoded;
 
