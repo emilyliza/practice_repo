@@ -75,8 +75,8 @@
 	}])
 
 	.controller('ChargebackController', 
-			['$scope', '$rootScope', 'AUTH_EVENTS', 'ChargebackService', '$state', 'res', 'FileUploader',
-			function ($scope, $rootScope, AUTH_EVENTS, ChargebackService, $state, res, FileUploader) {
+			['$scope', '$rootScope', 'AUTH_EVENTS', 'ChargebackService', '$state', 'res', 'FileUploader', '$timeout',
+			function ($scope, $rootScope, AUTH_EVENTS, ChargebackService, $state, res, FileUploader, $timeout) {
 		
 		$scope.data = res.data;
 		$scope.errors = {};
@@ -218,6 +218,7 @@
 		};
 
 
+		$scope.timeout = null;
 		
 		// watch for changes to underlying model clear out errors
 		$scope.$watch("data", function(newValue, oldValue){
@@ -225,6 +226,15 @@
 			$scope.$broadcast('show-errors-reset');	
 			var popups = document.querySelectorAll('.popover');
 			_.each(popups, function(p) { p.remove(); });
+			if ($scope.data.derived_data.uuid && JSON.stringify(newValue) != JSON.stringify(oldValue)) {
+				if ($scope.timeout) {
+					$timeout.cancel($scope.timeout);
+				}
+				$scope.timeout = $timeout(function() {
+					console.log('saving');
+					$scope.save(newValue);
+				}, 2000);
+			}
 		},true);
 
 		
@@ -234,7 +244,7 @@
 			$scope.$broadcast('show-errors-check-validity');
 			if ($scope.cbForm.$valid) {
 				ChargebackService.save(data).then(function (user) {
-					$state.go('chargebacks');
+					// $state.go('chargebacks');
 				}, function (res) {
 					if (res.data.errors) {
 						$scope.errors = res.data.errors;
