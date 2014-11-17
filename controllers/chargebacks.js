@@ -29,6 +29,8 @@ module.exports = function(app) {
 					{ 'gateway_data.FirstName': pattern },
 					{ 'gateway_data.LastName': pattern }
 				]);
+			} else if (params.status) {
+				query.where('derived_data.status.name').equals(params.status);
 			}
 
 			query.skip( (params.page ? ((+params.page - 1) * params.limit) : 0) );
