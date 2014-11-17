@@ -31,6 +31,7 @@ module.exports = function(app) {
 				]);
 			} else if (params.status) {
 				query.where('derived_data.status.name').equals(params.status);
+				query.where('gateway_data.TransDate').lte(new Date());
 			}
 
 			query.skip( (params.page ? ((+params.page - 1) * params.limit) : 0) );

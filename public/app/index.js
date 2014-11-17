@@ -42,7 +42,7 @@
 			$scope.currentUser = user;
 		};
 
-		if ($scope.isAuthenticated) {
+		if ($scope.isAuthenticated && !$scope.currentUser) {
 			return $http
 			.get('/api/v1/user')
 			.success(function (data) {
