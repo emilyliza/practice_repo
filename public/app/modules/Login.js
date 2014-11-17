@@ -33,8 +33,8 @@
 	}])
 
 	.controller('LoginController', 
-		[ '$scope', '$rootScope', 'AUTH_EVENTS', 'AuthService', '$state', 
-		function ($scope, $rootScope, AUTH_EVENTS, AuthService, $state) {
+		[ '$scope', '$rootScope', 'AUTH_EVENTS', 'AuthService', '$state', '$window', 
+		function ($scope, $rootScope, AUTH_EVENTS, AuthService, $state, $window) {
 		
 		$scope.credentials = {};
 		$scope.errors = {};
