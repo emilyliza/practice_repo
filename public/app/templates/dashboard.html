@@ -1,0 +1,91 @@
+
+
+<div class="row dashboard-status">
+		
+	<div class="col-sm-3">
+		<div class="img-circle" style="background-color: #5cb85c;">
+			<div>{{data.open}}</div>
+			New Chargebacks
+		</div>
+
+		<div style="margin-top: 40px; text-align: center;">
+			<a class="btn btn-default" href="/chargebacks">View All Chargebacks</a>
+		</div>
+	</div>
+
+	<div class="col-sm-9">
+		
+		<h3 style="margin-top: 0px;">Five Most Recent Chargebacks</h3>
+		<div class="animated-grid chargebacks">
+			<div class="row head">
+				<div class="col-sm-1">ID</div>
+				<div class="col-sm-3">Date</div>
+				<div class="col-sm-2">Amount</div>
+				<div class="col-sm-3">Customer</div>
+				<div class="col-sm-3">&nbsp;</div>
+			</div>
+
+			<div class="row" ng-repeat="cb in dbs.data">
+				<div class="col-sm-1">{{cb.derived_data.uuid}}</div>
+				<div class="col-sm-3"><span am-time-ago="cb.gateway_data.TransDate"></span></div>
+				<div class="col-sm-2">{{cb.portal_data.ChargebackAmt | currency}}</div>
+				<div class="col-sm-3">{{cb.gateway_data.FirstName}} {{cb.gateway_data.LastName}}</div>
+				<div class="col-sm-3">
+					<a class="btn btn-sm btn-success" href="/chargeback/{{cb.derived_data.uuid}}/upload">Get Started <span class="glyphicon glyphicon-chevron-right"></span></a>
+				</div>
+			</div>
+			
+			<div class="row" ng-if="results.length == 0">
+				<div class="col-sm-12"><strong>No chargebacks results found...</strong></div>
+			</div>	
+		</div>
+
+	</div>
+
+</div>
+
+<!-- START THE FEATURETTES -->
+<hr class="featurette-divider" style="margin-top: 70px;">
+
+<h2 style="margin-top: 40px;">The Chargeback.com Process</h2>
+<div class="row dashboard-process">
+	<div class="col-sm-2">
+		<h4><span class="num">1</span>Upload</h4>
+		Upload screen shots of the products and terms of service.
+	</div>
+	<div class="col-sm-2">
+		<h4><span class="num">2</span>Portal</h4>
+		Portal information includes reference numbers, case numbers, amounts, and reasons.
+	</div>
+	<div class="col-sm-2">
+		<h4><span class="num">3</span>Gateway</h4>
+		Add gateway information including order #s, billing address, product information, and payment details.
+	</div>
+	<div class="col-sm-2">
+		<h4><span class="num">4</span>CRM</h4>
+		Include CRM data about the customer, product, address, etc.
+	</div>
+	<div class="col-sm-2">
+		<h4><span class="num">5</span>Shipping</h4>
+		Provide detailed shipping information concerning the chargeback.
+	</div>
+	<div class="col-sm-2">
+		<h4><span class="num">6</span>Comments</h4>
+		Add additional comments or information that will help win the chargeback.
+	</div>
+</div>
+
+<!-- START THE FEATURETTES -->
+<hr class="featurette-divider" style="margin-top: 60px;">
+
+<div class="row" style="margin-top: 60px;">
+	<div class="col-md-4">
+		<h3>Need to know more?</h3>
+		Watch our video to learn more about the chargeback process.
+	</div>
+	<div class="col-md-8" style="text-align: center;">
+		<iframe width="560" height="315" src="//www.youtube.com/embed/7YiTGVYrR-Y" frameborder="0" allowfullscreen></iframe>
+	</div>
+</div>
+
+
