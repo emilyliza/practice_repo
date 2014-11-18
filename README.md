@@ -202,6 +202,9 @@ grunt build
 
 or run with --verbose for more information. Then check ./dist for the results. You can run the following to boot up the nodejs app using the production files for testing. Production mode basically uses ./dist directory versus ./public directory as the root web folder.
 
+*NOTE: AWS credentials need to be in both .env-local and aws.json. .env-local will use them on the server (getting s3 key for uploading) and aws.json will be used in the grunt build process.*
+
+
 ```
 npm start --production
 ```
