@@ -3,7 +3,11 @@
 	"description": "chargeback",
 	"version" : "0.0.1",
 	"homepage": "",
-	"author": "",
+	"author": "Justin Shreve",
+	"repository": {
+		"type": "git",
+		"url": "https://justinshreve@bitbucket.org/chargebackcomdev/merchantportal.git"
+  	},
 	"main": "index.js",
 	"engines": {
 		"node": "0.10.26",
@@ -53,22 +57,16 @@
 	    "grunt-cdn": "0.6.1",
 	    "grunt-aws": "0.4.0",
 	    "karma": "0.12.24",
-	    "commander": "1.0.x"
+	    "commander": "1.0.x",
+	    "nodemon": "1.2.1"
 	  },
 	  "scripts": {
-	    "prestart": "npm install && bower install",
-
-	    "start": "foreman start -e .env-local -f Procfile_dev",
-	    
-	    "build": "grunt build --verbose",
-	    
-	    "pretest": "npm install",
+	    "postinstall": "node node_modules/bower/bin/bower install",
+	    "start": "env $(cat .env-local) node_modules/nodemon/bin/nodemon.js index.js",
 	    "test": "karma start karma.conf.js",
 	    "test-single-run": "karma start karma.conf.js  --single-run",
-
 	    "preupdate-webdriver": "npm install",
 	    "update-webdriver": "webdriver-manager update",
-
 	    "preprotractor": "npm run update-webdriver",
 	    "protractor": "protractor e2e-tests/protractor.conf.js"
 	  }
