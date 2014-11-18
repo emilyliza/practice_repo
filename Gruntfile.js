@@ -174,6 +174,14 @@ module.exports = function(grunt) {
 					from: /src=\/images/g,
 					to: "src=<%= aws.cloudfront %>/images"
 				}]
+			},
+			meta: {
+				src: ['dist/index.html'],
+				overwrite: true,
+				replacements: [{
+					from: /content="\/images/g,
+					to: 'content="<%= aws.cloudfront %>/images'
+				}]
 			}
 		},
 
