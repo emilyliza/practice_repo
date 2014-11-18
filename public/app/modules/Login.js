@@ -105,8 +105,6 @@
 		['$rootScope', 'AUTH_EVENTS', 'AuthService', '$state', '$http',
 		function ($rootScope, AUTH_EVENTS, AuthService, $state, $http) {
 		
-		console.log('Running LoginController');
-		
 		$rootScope.$on('$stateChangeStart', function (event, next) {
 			if (next.requiresAuth && !AuthService.isAuthenticated()) {
 				event.preventDefault();

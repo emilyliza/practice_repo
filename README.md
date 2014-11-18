@@ -184,15 +184,16 @@ Gruntfile.js contains a full configuration to fully build the app for production
 8. concat:generated - concat all js files into a single js file
 9. less:generated - take less files and make single css file
 10. uglify - compress and minify js file
-11. cssmin - minify newly created css file into new css file
-12. clean:origcss - remove original chargeback.css
-13. copy:cssmin - move chargeback.min.css to chargeback.css
-14. filerev - get md5 versions for all asset files for cache-busting
-15. usemin - usemin swaps out code from index.html to index.html with new settings from above scripts, renames stuff like versioned files
-16. clean:tmp - clean up all the generated garbage
-17. cdn - swaps in CDN URLs where needed (vs local refs)
-18. replace - replace /images in JS files with CDN/images (cdn doesn't do this :( )
-19. s3 - copy all dist files to S3
+11. karma - run karam unit tests on production code (single)
+12. cssmin - minify newly created css file into new css file
+13. clean:origcss - remove original chargeback.css
+14. copy:cssmin - move chargeback.min.css to chargeback.css
+15. filerev - get md5 versions for all asset files for cache-busting
+16. usemin - usemin swaps out code from index.html to index.html with new settings from above scripts, renames stuff like versioned files
+17. clean:tmp - clean up all the generated garbage
+18. cdn - swaps in CDN URLs where needed (vs local refs)
+19. replace - replace /images in JS files with CDN/images (cdn doesn't do this :( )
+20. s3 - copy all dist files to S3
 
 The output of the grunt process is found in ./dist. To run the build process...
 

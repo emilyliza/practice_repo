@@ -1,14 +1,13 @@
-// karma.conf.js
+// production karma.conf.js - should be on compiled code, not individual dev files
 module.exports = function(config) {
 	config.set({
 
-		basePath : './public/',
+		basePath : './',
 
 		files: [
-			"dist/chargeback.js",
-			"bower_components/angular-mocks/angular-mocks.js",
-			"app/tests/*.js"
-			
+			"dist/assets/*.js",
+			"public/bower_components/angular-mocks/angular-mocks.js",
+			"public/app/tests/*.js"
 		],
 
 		autoWatch : true,
