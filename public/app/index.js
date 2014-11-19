@@ -17,7 +17,6 @@
 
 	.config(['$locationProvider', '$urlRouterProvider', 'datepickerPopupConfig', function( $locationProvider, $urlRouterProvider, $datepickerPopupConfig) {
 		$locationProvider.html5Mode(true).hashPrefix('!');
-
 		$datepickerPopupConfig.appendToBody = true;
 	}])
 

@@ -74,9 +74,10 @@
 	.factory('AuthService', ['$http', '$window', function ($http, $window) {
 		var authService = {};
 
-		authService.login = function(credentials) {
+		authService.login = function(creds) {
+			console.log('loggin in')
 			return $http
-			.post('/api/v1/login', credentials)
+			.post('/api/v1/login', creds)
 			.then(function (res) {
 				$window.sessionStorage.token = res.data.token;	// save auth token in sessionStorage
 				delete res.data.token;	// don't have token in current user
@@ -86,7 +87,7 @@
 
 		authService.logout = function() {
 			delete $window.sessionStorage.token;
-			return;
+			return true;
 		};
 
 		authService.isAuthenticated = function () {
@@ -115,6 +116,7 @@
 		// listen for logout or session expirations and send to login page.
 		$rootScope.$on(AUTH_EVENTS.notAuthenticated, function() {
 			//@TODO: could include login in popup to prevent abrupt redirect
+			console.log('Logging out');
 			AuthService.logout();
 			$rootScope.currentUser = null;	// get rid of user state (navigation)
 			$state.go('login');

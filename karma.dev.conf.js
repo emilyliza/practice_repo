@@ -2,38 +2,46 @@
 module.exports = function(config) {
 	config.set({
 
-		basePath : './public/',
+		preprocessors: {
+			"public/app/templates/*.html": ["ng-html2js"]
+		},
+
+		ngHtml2JsPreprocessor: {
+			// the name of the Angular module to create
+			stripPrefix: 'public', 
+			moduleName: "my.templates"
+		},
 
 		files: [
-			"bower_components/html5-boilerplate/js/vendor/modernizr-2.6.2.min.js",
-			"bower_components/jquery/dist/jquery.min.js",
-			"bower_components/angular/angular.min.js",
-			"bower_components/angular-resource/angular-resource.min.js",
-			"bower_components/angular-ui-router/release/angular-ui-router.js",
-			"bower_components/angular-animate/angular-animate.min.js",
-			"bower_components/angular-bootstrap/ui-bootstrap-tpls.js",
-			"bower_components/underscore/underscore-min.js",
-			"bower_components/angular-bootstrap-show-errors/src/showErrors.js",
-			"bower_components/ngInfiniteScroll/build/ng-infinite-scroll.min.js",
-			"bower_components/angular-file-upload/angular-file-upload.js",
-			"bower_components/d3/d3.min.js",
-			"bower_components/moment/min/moment.min.js",
-			"bower_components/angular-moment/angular-moment.min.js",
-			"lib/Utils.js",
-			"lib/console-sham.js",
-			"app/modules/Home.js",
-			"app/modules/Login.js",
-			"app/modules/Forgot.js",
-			"app/modules/Chargebacks.js",
-			"app/modules/Chargeback.js",
-			"app/modules/Account.js",
-			"app/modules/Reporting.js",
-			"app/modules/Dashboard.js",
-			"app/modules/Graphing.js",
-			"app/index.js",
+			"public/bower_components/html5-boilerplate/js/vendor/modernizr-2.6.2.min.js",
+			"public/bower_components/jquery/dist/jquery.min.js",
+			"public/bower_components/angular/angular.min.js",
+			"public/bower_components/angular-ui-router/release/angular-ui-router.js",
+			"public/bower_components/angular-animate/angular-animate.min.js",
+			"public/bower_components/angular-bootstrap/ui-bootstrap-tpls.js",
+			"public/bower_components/underscore/underscore-min.js",
+			"public/bower_components/angular-bootstrap-show-errors/src/showErrors.js",
+			"public/bower_components/ngInfiniteScroll/build/ng-infinite-scroll.min.js",
+			"public/bower_components/angular-file-upload/angular-file-upload.js",
+			"public/bower_components/d3/d3.min.js",
+			"public/bower_components/moment/min/moment.min.js",
+			"public/bower_components/angular-moment/angular-moment.min.js",
+			"public/lib/Utils.js",
+			"public/lib/console-sham.js",
+			"public/app/modules/Home.js",
+			"public/app/modules/Login.js",
+			"public/app/modules/Forgot.js",
+			"public/app/modules/Chargebacks.js",
+			"public/app/modules/Chargeback.js",
+			"public/app/modules/Account.js",
+			"public/app/modules/Reporting.js",
+			"public/app/modules/Dashboard.js",
+			"public/app/modules/Graphing.js",
+			"public/app/index.js",
 
-			"bower_components/angular-mocks/angular-mocks.js",
-			"app/tests/*.js"	
+			"public/app/templates/*.html",
+			"public/bower_components/angular-mocks/angular-mocks.js",
+			"public/app/tests/*.js"	
 		],
 
 		autoWatch : true,
@@ -45,7 +53,8 @@ module.exports = function(config) {
 		plugins : [
 			'karma-jasmine',
 			'karma-junit-reporter',
-			'karma-phantomjs-launcher'
+			'karma-phantomjs-launcher',
+			'karma-ng-html2js-preprocessor'
 		],
 
 		junitReporter : {

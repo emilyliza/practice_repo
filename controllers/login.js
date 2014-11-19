@@ -15,7 +15,7 @@ module.exports = function(app) {
 		
 		var errors = req.validationErrors();
 		if (errors) {
-			return res.json(400, errors );
+			return res.json(401, errors );
 		}
 
 		if (!process.env.TOKEN_SECRET) {
@@ -50,11 +50,11 @@ module.exports = function(app) {
 			
 		} else if (req.body.email == "test@chargeback.com" && req.body.password != "test") {
 			
-			return res.json(400, { 'errors': { 'password': 'invalid password' }});
+			return res.json(401, { 'errors': { 'password': 'invalid password' }});
 		
 		} else {
 
-			return res.json(400, { 'errors': { 'email': 'invalid email or password' }});
+			return res.json(401, { 'errors': { 'email': 'invalid email or password' }});
 
 		}
 
