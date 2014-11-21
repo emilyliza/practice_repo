@@ -51,6 +51,7 @@
 			$scope.$broadcast('show-errors-check-validity');
 			if ($scope.loginForm.$valid) {
 				AuthService.login(credentials).then(function (user) {
+					delete user.authtoken;	// don't have token in current user
 					$scope.setCurrentUser(user);
 					$rootScope.$broadcast(AUTH_EVENTS.loginSuccess);
 					$scope.credentials = {};
@@ -79,8 +80,7 @@
 			return $http
 			.post('/api/v1/login', creds)
 			.then(function (res) {
-				$window.sessionStorage.token = res.data.token;	// save auth token in sessionStorage
-				delete res.data.token;	// don't have token in current user
+				$window.sessionStorage.token = res.data.authtoken;	// save auth token in sessionStorage	
 				return res.data;
 			});
 		};
@@ -96,6 +96,14 @@
 			}
 			return false;
     	};
+
+    	authService.getUser = function() {
+    		return $http
+			.get('/api/v1/user')
+			.then(function (res) {
+				return res.data;
+			});
+		};
 
 		return authService;
 	}])

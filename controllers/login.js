@@ -42,7 +42,7 @@ module.exports = function(app) {
 			console.log(token);
 			
 			// add token to user data response.
-			user.token = token;
+			user.authtoken = token;
 
 			setTimeout(function() {
 				return res.json(user);

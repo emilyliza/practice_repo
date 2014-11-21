@@ -2,7 +2,7 @@
 
 describe('login module', function() {
 
-	var AuthService, AUTH_EVENTS, window, locationProvider, scope, $httpBackend, authRequestHandler;
+	var AuthService, AUTH_EVENTS, $window, locationProvider, scope, $httpBackend, authRequestHandler;
 
 	beforeEach(module("my.templates")); 
 
@@ -60,6 +60,7 @@ describe('login module', function() {
 
 
 	describe('AuthService', function() {
+		
 		describe('instantiate', function() {
 			it('should have login function', function() {
 				expect(AuthService.login).toBeDefined();
@@ -74,51 +75,62 @@ describe('login module', function() {
 				expect(angular.isFunction(AuthService.logout)).toEqual(true);
 			});
 		});
-		describe('isAuthenticated', function() {
-			it('should be false', function() {
+		
+		describe('AuthService bad login', function() {
+			it('should return 401', function() {
+				$httpBackend.expectPOST('/api/v1/login')
+					.respond(401, {});
+				AuthService.login().then(function(data) {
+					expect(err.status).toEqual(401);
+				},function(err, status) {
+					expect(err.status).toEqual(401);
+				});
+				$httpBackend.flush();
+			});
+
+			it('isAuthenticated should be false', function() {
 				expect(AuthService.isAuthenticated()).toEqual(false);
 			});
-			it('should be true', function() {
-				$window.sessionStorage.token = "test";
-				expect(AuthService.isAuthenticated()).toEqual(true);
-			});
 		});
-		describe('logout', function() {
-			it('should be true', function() {
-				expect(AuthService.logout()).toEqual(true);
-			});
-		});
-		describe('login', function() {
 			
+		describe('AuthService valid login', function() {
 			it('should login', function() {
-				
 				$httpBackend.expectPOST('/api/v1/login')
 					.respond(200, { '_id': 1234567890, fname: 'Larry', lname: 'Jounce', authtoken: 'abcdefghi123456789'}, {});
-				
 				AuthService.login().then(function(data) {
 					expect(data._id).toEqual(1234567890);
 					expect(data.authtoken).toEqual('abcdefghi123456789');
 				},function(err) {
 					expect(data._id).toEqual(1234567890);
 				});
-
-				$httpBackend.flush();
-			});
-			it('should login', function() {
-				
-				$httpBackend.expectPOST('/api/v1/login')
-					.respond(401, {});
-				
-				AuthService.login().then(function(data) {
-					expect(err.status).toEqual(401);
-				},function(err, status) {
-					expect(err.status).toEqual(401);
-				});
-
 				$httpBackend.flush();
 			});
 
+			it('should be true', function() {
+				$window.sessionStorage.token = "valid";
+				expect(AuthService.isAuthenticated()).toEqual(true);
+			});
 		});
+			
+	});
+
+	describe('Token Header Injection', function() {
+		it('should have Authorization token in hearder', function() {
+			var token = "token_to_pass_in_header";
+			$window.sessionStorage.token = token;
+
+			$httpBackend.when('GET', '/api/v1/user', null, function(headers) {
+				expect(headers.Authorization).toBe(token);
+	        }).respond(200, {});
+		});
+
+		it('should NOT have Authorization token in hearder', function() {
+			delete $window.sessionStorage.token;
+			$httpBackend.when('GET', '/api/v1/user', null, function(headers) {
+				expect(config.headers['Authorization']).toBe(undefined);
+	        }).respond(200, {});
+		});
+
 	});
 
 	
