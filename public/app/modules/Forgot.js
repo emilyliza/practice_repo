@@ -4,11 +4,10 @@
 	
 	.config(['$stateProvider', function( $stateProvider ) {
 		
-		$stateProvider.state('/forgot', {
+		$stateProvider.state('forgot', {
 			url: '/forgot',
 			controller: 'ForgotController',
 			templateUrl: '/app/templates/forgot.html'
-			
 		});
 
 	}])
