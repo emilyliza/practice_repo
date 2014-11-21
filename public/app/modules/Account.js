@@ -18,7 +18,6 @@
 		$scope.errors = {};
 		$scope.saved = false;
 
-		
 		// watch for changes to clear out errors
 		$scope.$watch("currentUser", function(newValue, oldValue){
 			$scope.errors = null;
@@ -50,8 +49,6 @@
 
 	.factory('AccountService', ['$http', function ($http) {
 		var acctService = {};
-
-		$inject = [$http];
 
 		acctService.save = function(data) {
 			return $http
