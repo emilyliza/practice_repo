@@ -2,7 +2,7 @@
 
 describe('account module', function() {
 
-	var AuthService, AUTH_EVENTS, AccountService, $window, locationProvider, scope, $httpBackend;
+	var UserService, AUTH_EVENTS, AccountService, $window, locationProvider, scope, $httpBackend;
 
 	beforeEach(module("my.templates")); 
 
@@ -18,10 +18,12 @@ describe('account module', function() {
 	beforeEach(inject(function($injector, _$window_) {
 		
 		$window = _$window_;
-		delete $window.sessionStorage.token;	// have to clear this out, oddly stays persistent
-
+		
 		$httpBackend = $injector.get('$httpBackend'); 
-		AuthService = $injector.get('AuthService');
+		
+		UserService = $injector.get('UserService');
+		UserService.logout();
+
 		AUTH_EVENTS = $injector.get('AUTH_EVENTS');
 
 		AccountService = $injector.get('AccountService');

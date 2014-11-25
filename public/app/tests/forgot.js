@@ -19,7 +19,8 @@ describe('forgot module', function() {
 		delete $window.sessionStorage.token;	// have to clear this out, oddly stays persistent
 
 		$httpBackend = $injector.get('$httpBackend'); 
-		ForgotService = $injector.get('ForgotService');
+		var Service = $injector.get('ForgotService');
+		ForgotService = new Service();
 		
 		
 	}));
@@ -47,20 +48,20 @@ describe('forgot module', function() {
 	describe('ForgotService', function() {
 		
 		describe('instantiate', function() {
-			it('should have login function', function() {
-				expect(ForgotService.forgot).toBeDefined();
-				expect(angular.isFunction(ForgotService.forgot)).toEqual(true);
+			it('should have post function', function() {
+				expect(ForgotService.post).toBeDefined();
+				expect(angular.isFunction(ForgotService.post)).toEqual(true);
 			});
 		});
 		
 		describe('ForgotService call forgot', function() {
-			it('should login', function() {
+			it('should post', function() {
 				$httpBackend.expectPOST('/api/v1/forgot')
 					.respond(200, { 'success': true }, {});
-				ForgotService.forgot().then(function(data) {
-					expect(data.success).toBe(true);
+				ForgotService.post().then(function(data) {
+					expect(ForgotService.success).toBe(true);
 				},function(err) {
-					expect(data.success).toBe(true);
+					expect(ForgotService.success).toBe(true);
 				});
 				$httpBackend.flush();
 			});

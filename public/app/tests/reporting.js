@@ -2,7 +2,7 @@
 
 describe('reporting module', function() {
 
-	var ReportingService, AuthService, AUTH_EVENTS, $window, locationProvider, scope, $httpBackend;
+	var ReportingService, UserService, AUTH_EVENTS, $window, locationProvider, scope, $httpBackend;
 
 	beforeEach(module("my.templates")); 
 
@@ -21,8 +21,10 @@ describe('reporting module', function() {
 		delete $window.sessionStorage.token;	// have to clear this out, oddly stays persistent
 
 		$httpBackend = $injector.get('$httpBackend'); 
-		AuthService = $injector.get('AuthService');
 		AUTH_EVENTS = $injector.get('AUTH_EVENTS');
+
+		UserService = $injector.get('UserService');
+		UserService.logout();
 
 		ReportingService = $injector.get('ReportingService');
 		
@@ -59,7 +61,7 @@ describe('reporting module', function() {
 		describe('ReportingService call get', function() {
 			it('should get', function() {
 				var token = 'authed';
-				$window.sessionStorage.token = token;
+				UserService.setToken(token);
 				
 				// double check auth headers are set
 				$httpBackend.when('GET', '/api/v1/dashboard', null, function(headers) {

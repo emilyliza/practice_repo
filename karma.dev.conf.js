@@ -28,6 +28,7 @@ module.exports = function(config) {
 			"public/bower_components/angular-moment/angular-moment.min.js",
 			"public/lib/Utils.js",
 			"public/lib/console-sham.js",
+			"public/app/modules/User.js",
 			"public/app/modules/Home.js",
 			"public/app/modules/Login.js",
 			"public/app/modules/Forgot.js",

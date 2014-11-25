@@ -14,43 +14,57 @@
 
 	.controller('ForgotController', ['$scope', '$state', 'ForgotService', function($scope, $state, ForgotService) {
 
-		$scope.data = {};
+		$scope.data = new ForgotService();
 		$scope.errors = {};
 
 		// watch for changes to clear out errors
 		$scope.$watch("data", function(newValue, oldValue){
 			$scope.errors = {};
+			$scope.$broadcast('show-errors-reset');	
+			var popups = document.querySelectorAll('.popover');
+			_.each(popups, function(p) { p.remove(); });
 		},true);
 
-		var _this = this;
+
 		$scope.forgot = function(data) {
 			$scope.$broadcast('show-errors-check-validity');
 			if ($scope.forgotForm.$valid) {
-				ForgotService.forgot(data).then(function (user) {
-					$scope.data.sent = true;
-					
-				}, function (res) {
-					if (res.data.errors) {
-						$scope.errors = res.data.errors;
-					}
-				});
+				$scope.data.post();
 			}
 		};
 
 	}])
 
 	.factory('ForgotService', ['$http', function ($http) {
-		var forgotService = {};
+		
+		var ForgotService = function() {
+			
+			this.initialize = function() {
+				this.sent = false;
+			};
 
-		forgotService.forgot = function(data) {
-			return $http
-			.post('/api/v1/forgot', data)
-			.then(function (res) {
-				return res.data;
-			});
+			this.post = function(d) {
+				var self = this;
+				return $http
+					.post('/api/v1/forgot', d)
+					.then(function (res) {
+						angular.extend(self, res.data);
+						self.sent = true;
+						return true;
+					},function(res) {
+						// errors
+						if (res.data.errors) {
+							self.data.errors = res.data.errors;
+						}
+						return true;
+					});
+			};
+
+			this.initialize();
 		};
+ 
+		return (ForgotService);
 
-		return forgotService;
 	}]);
 
 })();

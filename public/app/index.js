@@ -5,6 +5,7 @@
 		"ui.bootstrap", 
 		"ui.bootstrap.showErrors", 
 		"utils",
+		"user",
 		"login",
 		"home",
 		"forgot", 
@@ -30,28 +31,26 @@
 	})
 
 	.controller('ApplicationController', 
-		['$scope', '$rootScope', 'AUTH_EVENTS', 'AuthService', '$state', '$http',
-		function ($scope, $rootScope, AUTH_EVENTS, AuthService, $state, $http) {
-		
-		$scope.currentUser = null;
-		$scope.isAuthenticated = AuthService.isAuthenticated();
-		$scope.$state = $state;	// for navigation active to work
+		['$scope', '$rootScope', 'UserService',
+		function ($scope, $rootScope, UserService) {
+			
+			$scope.$state = $state;	// for navigation active to work
 
-		$scope.setCurrentUser = function (user) {
-			$scope.currentUser = user;
-		};
-
-		if ($scope.isAuthenticated && !$scope.currentUser) {
-			return $http
-			.get('/api/v1/user')
-			.success(function (data) {
-				$scope.setCurrentUser(data);
-			})
-			.error(function (res) {
+			var user = UserService.getUser();
+			
+			// immediate auth error
+			if (!user) {
+				AuthService.logout();
+			}
+			
+			// potential api callback promise error
+			user.error(function (res) {
 				AuthService.logout();
 			});
-		}
-    }]);
 
+			// set scope.currentUser for use within nav
+			$scope.currentUser = user;
+		
+    }]);
 	
 })();

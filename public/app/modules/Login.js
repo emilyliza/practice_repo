@@ -1,6 +1,6 @@
 (function() {
 
-	angular.module('login', ['ui.router'])
+	angular.module('login', ['ui.router', 'user'])
 	
 	.constant('AUTH_EVENTS', {
 		loginSuccess: 'auth-login-success',
@@ -32,8 +32,8 @@
 	}])
 
 	.controller('LoginController', 
-		[ '$scope', '$rootScope', 'AUTH_EVENTS', 'AuthService', '$state', '$window', 
-		function ($scope, $rootScope, AUTH_EVENTS, AuthService, $state, $window) {
+		[ '$scope', '$rootScope', 'AUTH_EVENTS', 'UserService', '$state', '$window', 
+		function ($scope, $rootScope, AUTH_EVENTS, UserService, $state, $window) {
 		
 		$scope.credentials = {};
 		$scope.errors = {};
@@ -49,71 +49,35 @@
 		$scope.login = function(credentials) {
 			$scope.$broadcast('show-errors-check-validity');
 			if ($scope.loginForm.$valid) {
-				AuthService.login(credentials).then(function (user) {
-					delete user.authtoken;	// don't have token in current user
-					$scope.setCurrentUser(user);
+				
+				UserService.login(credentials).then(function (user) {
 					$rootScope.$broadcast(AUTH_EVENTS.loginSuccess);
 					$scope.credentials = {};
 					$state.go('dashboard');
 				}, function (res) {
 					$rootScope.$broadcast(AUTH_EVENTS.loginFailed);
-					delete $window.sessionStorage.token;
 					if (res.data.errors) {
 						$scope.errors = res.data.errors;
 					}
 				});
+
 			}
 		};
 
-		if (AuthService.isAuthenticated()) {
+		if (UserService.isAuthenticated()) {
 			return $state.go('dashboard');
 		}
 
 	}])
 
-	.factory('AuthService', ['$http', '$window', function ($http, $window) {
-		var authService = {};
-
-		authService.login = function(creds) {
-			return $http
-			.post('/api/v1/login', creds)
-			.then(function (res) {
-				$window.sessionStorage.token = res.data.authtoken;	// save auth token in sessionStorage	
-				return res.data;
-			});
-		};
-
-		authService.logout = function() {
-			delete $window.sessionStorage.token;
-			return true;
-		};
-
-		authService.isAuthenticated = function () {
-			if ($window.sessionStorage.token) {
-				return true;
-			}
-			return false;
-    	};
-
-    	authService.getUser = function() {
-    		return $http
-			.get('/api/v1/user')
-			.then(function (res) {
-				return res.data;
-			});
-		};
-
-		return authService;
-	}])
-
 	
 	// check routes every time they change for authorized state
 	.run(
-		['$rootScope', 'AUTH_EVENTS', 'AuthService', '$state', '$http',
-		function ($rootScope, AUTH_EVENTS, AuthService, $state, $http) {
+		['$rootScope', 'AUTH_EVENTS', 'UserService', '$state', '$http',
+		function ($rootScope, AUTH_EVENTS, UserService, $state, $http) {
 		
 		$rootScope.$on('$stateChangeStart', function (event, next) {
-			if (next.requiresAuth && !AuthService.isAuthenticated()) {
+			if (next.requiresAuth && !UserService.isAuthenticated()) {
 				event.preventDefault();
 				$rootScope.$broadcast(AUTH_EVENTS.notAuthenticated);
 			}
@@ -122,14 +86,14 @@
 		// listen for logout or session expirations and send to login page.
 		$rootScope.$on(AUTH_EVENTS.notAuthenticated, function() {
 			//@TODO: could include login in popup to prevent abrupt redirect
-			AuthService.logout();
+			UserService.logout();
 			$rootScope.currentUser = null;	// get rid of user state (navigation)
 			$state.go('login');
 		});
 
 		$rootScope.$on(AUTH_EVENTS.sessionTimeout, function() {
 			//@TODO: could include login in popup to prevent abrupt redirect
-			AuthService.logout();
+			UserService.logout();
 			$state.go('login');
 		});
 
