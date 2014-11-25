@@ -9,12 +9,24 @@
 				<div ng-repeat="saved_item in data.uploads.terms">
 					<img src="{{saved_item.url}}">
 				</div>
+				<div ng-if="data.uploads.terms.length == 0">
+					<div class="missing-upload">
+						<span class="glyphicon glyphicon-exclamation-sign"></span><br/>
+						Uploaded Terms Missing
+					</div>	
+				</div>
 			</div>
 			<div class="col-sm-6 review-uploaded">
 				<h4>Sreenshots of Product</h4>
 				<div ng-repeat="saved_item in data.uploads.screens">
 					<img src="{{saved_item.url}}">
 				</div>
+				<div ng-if="data.uploads.screens.length == 0">
+					<div class="missing-upload">
+						<span class="glyphicon glyphicon-exclamation-sign"></span><br/>
+						Uploaded Screen Shots Missing
+					</div>
+				</div>	
 			</div>
 		</div>
 
