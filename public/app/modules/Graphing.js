@@ -21,10 +21,11 @@
 			link: function(scope, elem, attrs) {
 				
 				var	margin = {top: 20, right: 20, bottom: 30, left: 50},
-					width = attrs.graphWidth - margin.left - margin.right,
+					container = elem.find('div')
+					width = container.width() - margin.left - margin.right,
 					height = attrs.graphHeight - margin.top - margin.bottom,
-					d3 = $window.d3,
-					container = elem.find('div');
+					d3 = $window.d3;
+					
 				
 				var parseDate = d3.time.format("%Y-%m-%d").parse;
 
