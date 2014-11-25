@@ -2,21 +2,37 @@
 
 	angular.module('reporting', ['ui.router', 'ngAnimate', 'graphing'])
 	
-	.config(['$stateProvider', function( $stateProvider ) {
+	.config(['$stateProvider', '$urlRouterProvider', function( $stateProvider, $urlRouterProvider ) {
 		
-		$stateProvider.state('reporting', {
+		$stateProvider
+		.state('reporting', {
 			url: '/reporting',
+			controller: 'ReportingController',
 			templateUrl: '/app/templates/reporting.html',
+			requiresAuth: true
+		})
+		.state('reporting.overview', {
+			url: '/overview',
 			requiresAuth: true,
-			// resolve: {
-			// 	res: ['$http', function($http){
-			// 		// $http returns a promise for the url data
-			// 		return $http({method: 'GET', url: '/api/v1/dashboard'});
-			// 	}]
-			// },
-			controller: 'ReportingController'
+			templateUrl: '/app/templates/reporting.overview.html'
+		})
+		.state('reporting.merchant', {
+			url: '/merchant',
+			requiresAuth: true,
+			templateUrl: '/app/templates/reporting.merchant.html'
+		})
+		.state('reporting.mids', {
+			url: '/mids',
+			requiresAuth: true,
+			templateUrl: '/app/templates/reporting.mids.html'
+		})
+		.state('reporting.billing', {
+			url: '/billing',
+			requiresAuth: true,
+			templateUrl: '/app/templates/reporting.billing.html'
 		});
 
+	
 	}])
 
 	.controller('ReportingController', [ '$scope', 'ReportingService', function($scope, ReportingService) {

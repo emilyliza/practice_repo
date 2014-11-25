@@ -1,45 +1,20 @@
 
-<div class="row search" style="margin-bottom: 20px;">
-	<div class="col-md-12">
-		<h2>Reporting</h2>
-	</div>
-</div>
 
-
-<div class="row reporting-status">
+<div class="row">
+	<div class="col-sm-3 col-md-2 sidebar">
+		<ul class="nav nav-sidebar">
+			<li ui-sref-active="active"><a ui-sref=".overview">Overview</a></li>
+			<li ui-sref-active="active"><a ui-sref=".merchant">Merchant</a></li>
+			<li ui-sref-active="active"><a ui-sref=".mids">MIDs</a></li>
+			<li ui-sref-active="active"><a ui-sref=".billing">Billing</a></li>
+		</ul>
 		
-	<div class="col-sm-3">
-		<div class="img-circle" style="background-color: #5cb85c;">
-			<div>{{data.open}}</div>
-			Open
-		</div>
-	</div>
-
-	<div class="col-sm-3">
-		<div class="img-circle">
-			<div>{{data.progress}}</div>
-			In-Progress	
-		</div>
-	</div>
 		
-	<div class="col-sm-3">
-		<div class="img-circle" style="background-color: #ffcc00; color: #333;">
-			<div>{{data.pending}}</div>
-			Pending
-		</div>
 	</div>
+	<div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main" ui-view id="reporting-views">
+		
+	
 
-	<div class="col-sm-3">
-		<div class="img-circle" style="background-color: #333; color: white;">
-			<div>{{data.complete}}</div>
-			Completed
-		</div>
-	</div>
-
-</div>
-
-<div class="row" style="margin-top: 40px;">
-	<div class="col-md-12">
-		<div graph-bar graph-endpoint="history" graph-width="1140" graph-height="500"></div>
 	</div>
 </div>
+
