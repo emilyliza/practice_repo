@@ -6,6 +6,7 @@
 		"ui.bootstrap.showErrors", 
 		"utils",
 		"user",
+		"upload",
 		"login",
 		"home",
 		"forgot", 
@@ -31,23 +32,23 @@
 	})
 
 	.controller('ApplicationController', 
-		['$scope', '$rootScope', 'UserService',
-		function ($scope, $rootScope, UserService) {
+		['$scope', '$rootScope', '$state', 'AUTH_EVENTS', 'UserService',
+		function ($scope, $rootScope, $state, AUTH_EVENTS, UserService) {
 			
 			$scope.$state = $state;	// for navigation active to work
 
-			var user = UserService.getUser();
-			
-			// immediate auth error
-			if (!user) {
-				AuthService.logout();
+			if (UserService.isAuthenticated()) {
+				var user = UserService.getCurrentUser();
+				// immediate auth error
+				if (!user) {
+					return UserService.logout();
+				}
 			}
-			
-			// potential api callback promise error
-			user.error(function (res) {
-				AuthService.logout();
-			});
 
+			$rootScope.$on(AUTH_EVENTS.loginSuccess, function() {
+				$scope.currentUser = UserService.getCurrentUser();
+			});
+			
 			// set scope.currentUser for use within nav
 			$scope.currentUser = user;
 		

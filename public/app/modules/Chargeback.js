@@ -1,6 +1,6 @@
 (function() {
 
-	angular.module('chargeback', ['ui.router', 'angularFileUpload', 'ngAnimate'])
+	angular.module('chargeback', ['ui.router', 'upload', 'ngAnimate'])
 	
 	.config(['$stateProvider', '$urlRouterProvider', function( $stateProvider, $urlRouterProvider ) {
 		
@@ -13,8 +13,10 @@
 			resolve: {
 				res: ['$http', '$stateParams', 'ChargebackService', function($http, $stateParams, ChargebackService){
 					return ChargebackService.get($stateParams._id);
+						
 				}]
 			}
+			
 		})
 		.state('chargeback.upload', {
 			url: '/upload',
@@ -75,141 +77,50 @@
 	}])
 
 	.controller('ChargebackController', 
-			['$scope', '$rootScope', 'AUTH_EVENTS', 'ChargebackService', '$state', 'res', 'FileUploader', '$timeout',
-			function ($scope, $rootScope, AUTH_EVENTS, ChargebackService, $state, res, FileUploader, $timeout) {
+			['$scope', '$rootScope', 'ChargebackService', 'UploadService', '$timeout', 'res',
+			function ($scope, $rootScope, ChargebackService, UploadService, $timeout, res) {
 		
+		// data is retrieved in resolve within route
 		$scope.data = res.data;
-		$scope.errors = {};
-
 		
-		// =============================
-		// Terms of Service Uploader
-		// =============================
-		var uploaderTerms = $scope.uploaderTerms = new FileUploader({
-            queueLimit: 5
-        });
-		uploaderTerms.filters.push({
-            name: 'imageFilter',
-            fn: function(item /*{File|FileLikeObject}*/, options) {
-                var type = '|' + item.type.slice(item.type.lastIndexOf('/') + 1).toLowerCase() + '|';
-                return '|jpg|png|jpeg|bmp|gif|'.indexOf(type) !== -1;
-            }
-        });
-		uploaderTerms.onWhenAddingFileFailed = function() {
+
+		$scope.uploaderTerms = UploadService.create($scope.data.uploads.terms, 10);
+		$scope.uploaderTerms.onWhenAddingFileFailed = function() {
 			// set UploadError to true to display error message in side bar
 			$scope.uploadError = true;
 		};
-		uploaderTerms.onAfterAddingFile = function(item) {
-			// first get signature from server.
-			ChargebackService.getS3Signature(item.file.name, item.file.type).then(function (response) {
-				// add form data for S3 authorization to upload directly
-				item.formData = [
-					{ 'key': response.data.key },
-					{ 'Content-Type': response.data.contentType },
-					{ 'AWSAccessKeyId': response.data.AWSAccessKeyId },
-					{ 'acl': response.data.acl },
-					{ 'policy': response.data.policy },
-					{ 'signature': response.data.signature }
-				];
-				item.url = response.data.path;	// get path from server as well
-				item.onSuccess = function() {
-					if ($scope.data.uploads && $scope.data.uploads.terms) {
-						$scope.data.uploads.terms.push(response.data.photo);
-					} else {
-						$scope.data.uploads.terms = [ response.data.photo ];
-					}
-				};
-				item.data = response.data.photo;
-				item.removeAfterUpload = true;	// remove from upload queue becausae it'll show in data.uploads now
-				item.upload();	// start upload
-			}, function (response) {
-				console.log('Error getting signagure.');
-			});
-		};
 
-
-
-
-		// =============================
-		// Screen shot uploader
-		// =============================
-		var uploaderScreen = $scope.uploaderScreen = new FileUploader({
-			queueLimit: 5
-		});
-		uploaderScreen.filters.push({
-            name: 'imageFilter',
-            fn: function(item /*{File|FileLikeObject}*/, options) {
-                var type = '|' + item.type.slice(item.type.lastIndexOf('/') + 1).toLowerCase() + '|';
-                return '|jpg|png|jpeg|bmp|gif|'.indexOf(type) !== -1;
-            }
-        });
-		uploaderScreen.onWhenAddingFileFailed = function() {
+		$scope.uploaderScreen = UploadService.create($scope.data.uploads.screens, 10);
+		$scope.uploaderScreen.onWhenAddingFileFailed = function() {
 			// set UploadError to true to display error message in side bar
 			$scope.uploadError = true;
 		};
-		uploaderScreen.onAfterAddingFile = function(item) {
-			// first get signature from server.
-			ChargebackService.getS3Signature(item.file.name, item.file.type).then(function (response) {
-				// add form data for S3 authorization to upload directly
-				item.formData = [
-					{ 'key': response.data.key },
-					{ 'Content-Type': response.data.contentType },
-					{ 'AWSAccessKeyId': response.data.AWSAccessKeyId },
-					{ 'acl': response.data.acl },
-					{ 'policy': response.data.policy },
-					{ 'signature': response.data.signature }
-				];
-				item.url = response.data.path;	// get path from server as well
-				item.onSuccess = function() {
-					if ($scope.data.uploads && $scope.data.uploads.screens) {
-						$scope.data.uploads.screens.push(response.data.photo);
-					} else {
-						$scope.data.uploads.screens = [ response.data.photo ];
-					}
-				};
-				item.data = response.data.photo;
-				item.removeAfterUpload = true;	// remove from upload queue becausae it'll show in data.uploads now
-				item.upload();	// start upload
-			}, function (response) {
-				console.log('Error getting signagure.');
-			});
-		};
+			
+
+		$scope.$watch("data", function(newValue, oldValue){
+			
+			$scope.errors = {};
+			$scope.$broadcast('show-errors-reset');	
+			var popups = document.querySelectorAll('.popover');
+			_.each(popups, function(p) { p.remove(); });
+			
+			// if new value, save it.
+			if ($scope.data && $scope.data.derived_data && $scope.data.derived_data.uuid && JSON.stringify(newValue) != JSON.stringify(oldValue)) {
+				if ($scope.timeout) {
+					$timeout.cancel($scope.timeout);
+				}
+				$scope.timeout = $timeout(function() {
+					$scope.save(newValue);
+				}, 2000);
+			}
+
+		},true);
 		
-
-
-		// clicking drag-n-drop zones triggers old-school upload dialog
-		$scope.triggerUpload = function(el) {
-			angular.element(el).trigger('click');
-		};
-
-		$scope.removeItem = function(item, el) {
-			angular.element(el).val('');	// have to clear out element value
-			if (item.data && $scope.data.uploads && $scope.data.uploads.screens && $scope.data.uploads.screens.length) {
-				var i = 0;
-				_.each($scope.data.uploads.screens, function(s) {
-					if (s._id == item.data._id) {
-						// remove from data store.
-						$scope.data.uploads.screens.splice(i,1);
-					}	
-					i++;
-				});
-			}
-			if (item.data && $scope.data.uploads && $scope.data.uploads.terms && $scope.data.uploads.terms.length) {
-				_.each($scope.data.uploads.terms, function(s) {
-					if (s._id == item.data._id) {
-						// remove from data store.
-						$scope.data.uploads.terms.splice(i,1);
-					}	
-					i++;
-				});
-			}
-			item.remove();
-		};
 
 		$scope.removeSavedItem = function(item, coll) {
 			var i = 0;
 			_.each($scope.data.uploads[coll], function(s) {
-				if (s._id == item._id) {
+				if (s && s._id == item._id) {
 					// remove from data store.
 					$scope.data.uploads[coll].splice(i,1);
 				}
@@ -220,31 +131,11 @@
 
 		$scope.timeout = null;
 		
-		// watch for changes to underlying model clear out errors
-		$scope.$watch("data", function(newValue, oldValue){
-			$scope.errors = {};
-			$scope.$broadcast('show-errors-reset');	
-			var popups = document.querySelectorAll('.popover');
-			_.each(popups, function(p) { p.remove(); });
-			if ($scope.data.derived_data.uuid && JSON.stringify(newValue) != JSON.stringify(oldValue)) {
-				if ($scope.timeout) {
-					$timeout.cancel($scope.timeout);
-				}
-				$scope.timeout = $timeout(function() {
-					console.log('saving');
-					$scope.save(newValue);
-				}, 2000);
-			}
-		},true);
-
-		
-		
-		var _this = this;
 		$scope.save = function(data) {
 			$scope.$broadcast('show-errors-check-validity');
 			if ($scope.cbForm.$valid) {
 				ChargebackService.save(data).then(function (user) {
-					// $state.go('chargebacks');
+					
 				}, function (res) {
 					if (res.data.errors) {
 						$scope.errors = res.data.errors;
@@ -255,89 +146,19 @@
 
 	}])
 
-	.factory('ChargebackService', ['$http', function ($http) {
-		var cbService = {};
-
-		cbService.get = function(_id) {
+	.service('ChargebackService', ['$http', function ($http) {
+		
+		this.get = function(_id) {
 			return $http.get('/api/v1/chargeback/' + _id);
 		};
 
-		cbService.getS3Signature = function(filename,type) {
-			/* get signature block and key from server to securely upload file.
-			   returned signature block is attached to direct upload to S3 */
-			return $http.get('/api/v1/s3?filename=' + filename + "&contentType=" + type);
-		};
+		this.save = function(data) {
+			return $http.put('/api/v1/chargeback/' + data._id, data);
+		}
 
-		cbService.save = function(data) {
-			return $http
-			.put('/api/v1/chargeback/' + data._id, data)
-			.then(function (res) {
-				return res.data;
-			});
-		};
-
-		return cbService;
-	}])
-
-
-	.directive('ngThumb', ['$window', function($window) {
-		var helper = {
-			support: !!($window.FileReader && $window.CanvasRenderingContext2D),
-			isFile: function(item) {
-				return angular.isObject(item) && item instanceof $window.File;
-			},
-			isImage: function(file) {
-				var type =  '|' + file.type.slice(file.type.lastIndexOf('/') + 1) + '|';
-				return '|jpg|png|jpeg|bmp|gif|'.indexOf(type) !== -1;
-			}
-		};
-
-		return {
-			restrict: 'A',
-			template: '<canvas/>',
-			link: function(scope, element, attributes) {
-				if (!helper.support) { return; }
-
-				var params = scope.$eval(attributes.ngThumb);
-				var canvas = element.find('canvas');
-
-				function noPreview() {
-					var errImage = new Image();
-					errImage.onload = function() {
-						canvas.attr({ width: 200, height: 200 });
-						canvas[0].getContext('2d').drawImage(errImage, 0, 0, 200, 200);
-					};
-					errImage.src = "/images/document.png";
-				}
-
-				if (!helper.isFile(params.file)) {
-					noPreview();
-					return;
-				}
-				if (!helper.isImage(params.file)) {
-					noPreview();
-					return;
-				}
-				
-				var reader = new FileReader();
-				
-				function onLoadFile(event) {
-					var img = new Image();
-					img.onload = onLoadImage;
-					img.src = event.target.result;
-				}
-
-				function onLoadImage() {
-					var width = params.width || this.width / this.height * params.height;
-					var height = params.height || this.height / this.width * params.width;
-					canvas.attr({ width: width, height: height });
-					canvas[0].getContext('2d').drawImage(this, 0, 0, width, height);
-				}
-
-				reader.onload = onLoadFile;
-				reader.readAsDataURL(params.file);
-			}
-		};
 	}]);
+
+
+	
 
 })();

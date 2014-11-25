@@ -11,8 +11,6 @@
 
 	.service('UserService', ['$http', '$window', function ($http, $window) {
 		
-		var service = {};
-			
 		this.login = function(d) {
 			var self = this;
 			return $http
@@ -62,7 +60,7 @@
 		};
 
 		this.isAuthenticated = function () {
-			if (this.getToken()) {
+			if (this.getToken && this.getToken()) {
 				return true;
 			}
 			return false;
@@ -79,8 +77,7 @@
 			return true;	
 		};
 		
-		//return service;
-
+	
 	}]);	
 
 })();
