@@ -19,9 +19,10 @@
 				return false;
 			}
 
-			var uploader = new FileUploader({
-            	queueLimit: limit
-        	});
+			var _this = this,
+				uploader = new FileUploader({
+            		queueLimit: limit
+        		});
 
 			uploader.filters.push({
             	name: 'imageFilter',
@@ -69,27 +70,7 @@
 
 		}
 
-
-		// clicking drag-n-drop zones triggers old-school upload dialog
-		this.triggerUpload = function(el) {
-			angular.element(el).trigger('click');
-		};
-
-		this.removeItem = function(item, data, el) {
-			var _this = this;
-			angular.element(el).val('');	// have to clear out element value
-			if (item.data && this.upload_array.length) {
-				var i = 0;
-				_.each(this.upload_array, function(s) {
-					if (s._id == item.data._id) {
-						// remove from data store.
-						_this.upload_array.splice(i,1);
-					}	
-					i++;
-				});
-			}
-			item.remove();
-		};
+		
 
 
 	}])

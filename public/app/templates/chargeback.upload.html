@@ -39,7 +39,7 @@
 
 					<div ng-repeat="saved_item in data.uploads.screens">
 						<div class="img">
-							<div class="remove pull-right" ng-click="removeSavedItem(saved_item, 'screens')">
+							<div class="remove pull-right" ng-click="removeItem(saved_item, '#screenFile')">
 								<span class="glyphicon glyphicon-remove-circle"></span>
 							</div>
 							<img src="{{saved_item.url}}">
@@ -86,7 +86,7 @@
 
 					<div ng-repeat="saved_item in data.uploads.terms">
 						<div class="img">
-							<div class="remove pull-right" ng-click="removeSavedItem(saved_item, 'terms')">
+							<div class="remove pull-right" ng-click="removeItem(saved_item, '#termsFile')">
 								<span class="glyphicon glyphicon-remove-circle"></span>
 							</div>
 							<img src="{{saved_item.url}}">

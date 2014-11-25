@@ -82,7 +82,7 @@
 		
 		// data is retrieved in resolve within route
 		$scope.data = res.data;
-		
+		$scope.us = UploadService;
 
 		$scope.uploaderTerms = UploadService.create($scope.data.uploads.terms, 10);
 		$scope.uploaderTerms.onWhenAddingFileFailed = function() {
@@ -116,19 +116,12 @@
 
 		},true);
 		
-
-		$scope.removeSavedItem = function(item, coll) {
-			var i = 0;
-			_.each($scope.data.uploads[coll], function(s) {
-				if (s && s._id == item._id) {
-					// remove from data store.
-					$scope.data.uploads[coll].splice(i,1);
-				}
-				i++;
-			});
+		// clicking drag-n-drop zones triggers old-school upload dialog
+		$scope.triggerUpload = function(el) {
+			angular.element(el).trigger('click');
 		};
 
-
+		
 		$scope.timeout = null;
 		
 		$scope.save = function(data) {
@@ -142,6 +135,23 @@
 					}
 				});
 			}
+		};
+
+		$scope.removeItem = function(item, el) {
+			angular.element(el).val('');	// have to clear out element value
+			_.each([$scope.data.uploads.screens, $scope.data.uploads.terms], function(upload_array) {
+				var i = 0;
+				_.each(upload_array, function(s) {
+					if (s && s._id == item._id) {
+						// remove from data store.
+						upload_array.splice(i,1);
+					}
+					i++;
+				});
+				if (_.isFunction(item.remove)) {
+					item.remove();
+				}
+			});
 		};
 
 	}])
