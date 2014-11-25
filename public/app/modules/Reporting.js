@@ -38,9 +38,12 @@
 	.controller('ReportingController', [ '$scope', 'ReportingService', function($scope, ReportingService) {
 		//$scope.data = res.data;
 		$scope.data = null;
-		// ReportingService.getReports().then(function(data) {
-		// 	$scope.data = data;
-		// });
+		ReportingService.getReports().then(function(data) {
+			$scope.data = data;
+		});
+
+		angular.element('#pages').removeClass("container");
+
 		
 	}])
 
