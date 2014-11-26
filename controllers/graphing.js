@@ -60,30 +60,45 @@ module.exports = function(app) {
 		
 		res.header('Content-Type', 'application/json');
 		res.header('Cache-Control', 'no-cache, private, no-store, must-revalidate, max-stale=0, post-check=0, pre-check=0');
-			
-		return res.json([
-			{ name: 'Received', val: 0 },
-			{ name: 'Bundled', val: 824 },
-			{ name: 'Waiting', val: 1200 },
-			{ name: 'Responded', val: 17435.54 },
-			{ name: 'Accepted', val: 0 },
-			{ name: 'Late', val: 0 },
-			{ name: 'Won', val: 621.88 },
-			{ name: 'Pre-arb', val: 0 },
-			{ name: 'Presented', val: 0 },
-			{ name: 'Lost', val: 87.63 }
-		]);
+		
+		var out = {};
+		if (res.query.type == "byVolume") {	
+			out = {
+				label: 'Status By Volume',
+				data: [
+					{ name: 'Received', val: 0 },
+					{ name: 'Bundled', val: 824 },
+					{ name: 'Waiting', val: 1200 },
+					{ name: 'Responded', val: 17435.54 },
+					{ name: 'Accepted', val: 0 },
+					{ name: 'Late', val: 0 },
+					{ name: 'Won', val: 621.88 },
+					{ name: 'Pre-arb', val: 0 },
+					{ name: 'Presented', val: 0 },
+					{ name: 'Lost', val: 87.63 }
+				]
+			}
+		} else if (res.query.type == "byCount") {	
+			out = {
+				label: 'Status By Count',
+				data: [
+					{ name: 'Received', val: 40 },
+					{ name: 'Bundled', val: 29 },
+					{ name: 'Waiting', val: 10 },
+					{ name: 'Responded', val: 238 },
+					{ name: 'Accepted', val: 0 },
+					{ name: 'Late', val: 2 },
+					{ name: 'Won', val: 60 },
+					{ name: 'Pre-arb', val: 0 },
+					{ name: 'Presented', val: 0 },
+					{ name: 'Lost', val: 4 }
+				]
+			}
+		}
 
-		// { name: 'Received', val: 0 },
-		// 	{ name: 'Bundled', val: 824 },
-		// 	{ name: 'Waiting', val: 0 },
-		// 	{ name: 'Responded', val: 17435.54 },
-		// 	{ name: 'Accepted', val: 0 },
-		// 	{ name: 'Late', val: 0 },
-		// 	{ name: 'Won', val: 621.88 },
-		// 	{ name: 'Pre-arb', val: 0 },
-		// 	{ name: 'Presented', val: 0 },
-		// 	{ name: 'Lost', val: 87.63 }
+		return res.json(out);
+
+		
 
 	});
 

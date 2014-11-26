@@ -10,7 +10,7 @@
 	}])
 	
 
-	.directive('pie', ['$window', '$http', function($window, $http) {
+	.directive('pie', ['$window', '$http', '$filter', function($window, $http, $filter) {
 		return {
 			restrict:'EA',
 			template: "<div></div>",
@@ -48,6 +48,7 @@
 					.endAngle(function(d){ return d.endAngle; })
 					.innerRadius(ir)
 					.outerRadius(r);
+					
 
 					
 			
@@ -64,6 +65,7 @@
 				var arc_group = vis.append("svg:g")
 					.attr("class", "arc")
 					.attr("transform", "translate(" + (w/2) + "," + (h/2) + ")");
+
 
 				//GROUP FOR LABELS
 				var label_group = vis.append("svg:g")
@@ -113,36 +115,37 @@
 
 				function update() {
 
-					$http.get('/api/v1/' + attrs.graphEndpoint).success(function(data) {
+					$http.get('/api/v1/' + attrs.graphEndpoint).success(function(res) {
 
 						// arraySize = Math.ceil(Math.random()*10);
 						// streakerDataAdded = d3.range(arraySize).map(fillArray);
 
 						oldPieData = filteredPieData;
-						pieData = donut(data);
+						pieData = donut(res.data);
 
-						var totals = 0;
+						var sum = 0;
+						 _.each(res.data, function(d) { sum += d.val; });
+
 						filteredPieData = pieData.filter(filterData);
 						function filterData(element, index, array) {
-							element.name = data[index].name;
-							element.value = data[index].val;
-							totals += element.value;
+							element.name = res.data[index].name;
+							element.value = res.data[index].val;
+							element.pct = res.data[index].val / sum;
 							return (element.value > 0);
 						}
 
-						console.log(filteredPieData);
-						console.log(oldPieData)
 						if(filteredPieData.length > 0) {
 
 							//REMOVE PLACEHOLDER CIRCLE
 							arc_group.selectAll("circle").remove();
 
 							totalValue.text(function(){
-								return totals;
+								return $filter('currency')(sum, '$', 2);
 							});
 
-							//DRAW ARC PATHS
+								
 
+							//DRAW ARC PATHS
 							paths = arc_group.selectAll("path").data(filteredPieData);
 							paths.enter().append("svg:path")
 								.attr("stroke", "white")
@@ -151,6 +154,21 @@
 								.transition()
 								.duration(tweenDuration)
 								.attrTween("d", pieTween);
+							// add mouseover tooltip
+							paths.on("mouseover", function (d) {
+									console.log(d)
+									d3.select("#tooltip")
+										.style("left", (d3.event.pageX - 220) + "px")
+										.style("top", (d3.event.pageY - 100) + "px")
+										.style("opacity", 1)
+										.select('.content')
+										.html('<b>' + d.name + '</b><br/><div class="pull-left">' + Math.round( d.pct * 10000)/100 + '%</div><div class="pull-right">$' + d.value + '</div>');
+								})
+								.on("mouseout", function () {
+									// Hide the tooltip
+									d3.select("#tooltip")
+										.style("opacity", 0);;
+								});
 							paths
 								.transition()
 								.duration(tweenDuration)
@@ -179,10 +197,7 @@
 								});
 							lines.exit().remove();
 
-							label_group.selectAll("text.value").data(filteredPieData).enter().append("text").attr("class", "percent")
-								.attr("x",function(d){ return 0.6*r*Math.cos(0.5*(d.startAngle+d.endAngle));})
-								.attr("y",function(d){ return 0.6*r*Math.sin(0.5*(d.startAngle+d.endAngle));})
-								.text(function(d){ return d.val; });
+							
 
 							//DRAW LABELS WITH PERCENTAGE VALUES
 							valueLabels = label_group.selectAll("text.value").data(filteredPieData)
@@ -201,8 +216,12 @@
 									}
 								})
 								.text(function(d){
-									var percentage = (d.value/totals)*100;
-									return percentage.toFixed(1) + "%";
+									var percentage = Math.round((d.value/sum)*100);
+									if (percentage > 0) {
+										return percentage + "%";
+									} else {
+										return '';
+									}
 								});
 
 							valueLabels.enter().append("svg:text")
@@ -224,8 +243,12 @@
 										return "end";
 									}
 								}).text(function(d){
-									var percentage = (d.value/totals)*100;
-									return percentage.toFixed(1) + "%";
+									var percentage = Math.round((d.value/sum)*100);
+									if (percentage > 0) {
+										return percentage + "%";
+									} else {
+										return '';
+									}
 								});
 
 							valueLabels.transition().duration(tweenDuration).attrTween("transform", textTween);
@@ -251,6 +274,13 @@
 								}).text(function(d){
 									return d.name;
 								});
+
+							var sliceLabel = label_group.selectAll("text.val").data(filteredPieData);
+							sliceLabel.enter().append("svg:text")
+								.attr("class", "arcLabel")
+								.attr("transform", function(d) {return "translate(" + arc.centroid(d) + ")"; })
+								.attr("text-anchor", "middle")
+								.text(function(d, i) { if (d.value >= 100) { return $filter('currency')(d.value, '$', 0); } else { return ''; } });
 
 							nameLabels.enter().append("svg:text")
 								.attr("class", "units")
