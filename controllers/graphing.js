@@ -3,6 +3,7 @@ module.exports = function(app) {
 	var _ = require('underscore'),
 		$ = require('seq'),
 		mw = require('./middleware'),
+		csv = require('express-csv'),
 		Chargeback = app.Models.get('Chargeback');
 		
 
@@ -52,6 +53,37 @@ module.exports = function(app) {
 
 		})
 		.catch(next);
+
+	});
+
+	app.get('/api/v1/status-report?', mw.auth(), function(req, res, next) {
+		
+		res.header('Content-Type', 'application/json');
+		res.header('Cache-Control', 'no-cache, private, no-store, must-revalidate, max-stale=0, post-check=0, pre-check=0');
+			
+		return res.json([
+			{ name: 'Received', val: 0 },
+			{ name: 'Bundled', val: 824 },
+			{ name: 'Waiting', val: 1200 },
+			{ name: 'Responded', val: 17435.54 },
+			{ name: 'Accepted', val: 0 },
+			{ name: 'Late', val: 0 },
+			{ name: 'Won', val: 621.88 },
+			{ name: 'Pre-arb', val: 0 },
+			{ name: 'Presented', val: 0 },
+			{ name: 'Lost', val: 87.63 }
+		]);
+
+		// { name: 'Received', val: 0 },
+		// 	{ name: 'Bundled', val: 824 },
+		// 	{ name: 'Waiting', val: 0 },
+		// 	{ name: 'Responded', val: 17435.54 },
+		// 	{ name: 'Accepted', val: 0 },
+		// 	{ name: 'Late', val: 0 },
+		// 	{ name: 'Won', val: 621.88 },
+		// 	{ name: 'Pre-arb', val: 0 },
+		// 	{ name: 'Presented', val: 0 },
+		// 	{ name: 'Lost', val: 87.63 }
 
 	});
 
