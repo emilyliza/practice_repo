@@ -56,15 +56,16 @@ module.exports = function(app) {
 
 	});
 
-	app.get('/api/v1/status-report?', mw.auth(), function(req, res, next) {
+	app.get('/api/v1/report/:type?', mw.auth(), function(req, res, next) {
 		
 		res.header('Content-Type', 'application/json');
 		res.header('Cache-Control', 'no-cache, private, no-store, must-revalidate, max-stale=0, post-check=0, pre-check=0');
 		
 		var out = {};
-		if (res.query.type == "byVolume") {	
+		if (req.params.type == "byVolume") {	
 			out = {
 				label: 'Status By Volume',
+				data_type: 'currency',
 				data: [
 					{ name: 'Received', val: 0 },
 					{ name: 'Bundled', val: 824 },
@@ -78,9 +79,10 @@ module.exports = function(app) {
 					{ name: 'Lost', val: 87.63 }
 				]
 			}
-		} else if (res.query.type == "byCount") {	
+		} else if (req.params.type == "byCount") {	
 			out = {
 				label: 'Status By Count',
+				data_type: 'number',
 				data: [
 					{ name: 'Received', val: 40 },
 					{ name: 'Bundled', val: 29 },

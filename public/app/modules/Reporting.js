@@ -16,10 +16,10 @@
 			requiresAuth: true,
 			templateUrl: '/app/templates/reporting.overview.html'
 		})
-		.state('reporting.merchant', {
+		.state('reporting.status', {
 			url: '/merchant',
 			requiresAuth: true,
-			templateUrl: '/app/templates/reporting.merchant.html'
+			templateUrl: '/app/templates/reporting.status.html'
 		})
 		.state('reporting.mids', {
 			url: '/mids',
@@ -35,9 +35,22 @@
 	
 	}])
 
-	.controller('ReportingController', [ '$scope', 'ReportingService', function($scope, ReportingService) {
+	.controller('ReportingController', [ '$scope', '$rootScope', 'ReportingService', function($scope, $rootScope, ReportingService) {
 		//$scope.data = res.data;
 		$scope.data = null;
+
+		$scope.date = {
+			start: {
+				val: new Date(),
+				opened: false
+			},
+			end: {
+				val: new Date(),
+				opened: false
+			}
+		};
+		
+
 		ReportingService.getReports().then(function(data) {
 			$scope.data = data;
 		});

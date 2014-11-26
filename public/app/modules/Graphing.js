@@ -18,15 +18,12 @@
 				
 				var	container = elem.find('div')
 					d3 = $window.d3,
-					radius = 120,
-					padding = 10;
-
-				var w = 600;
-				var h = 500;
-				var r = 200;
-				var ir = 100;
-				var textOffset = 14;
-				var tweenDuration = 250;
+					w = container.width(),
+					h = container.width(),
+					r = container.width()/2 - 75,
+					ir = r - 50;
+					textOffset = 14;
+					tweenDuration = 250;
 
 				//OBJECTS TO BE POPULATED WITH DATA LATER
 				var lines, valueLabels, nameLabels;
@@ -91,17 +88,24 @@
 					.attr("fill", "white")
 					.attr("r", ir);
 
+				// "Report Type" LABEL
+				var reportTypeLabel = center_group.append("svg:text")
+					.attr("class", "report-type")
+					.attr("dy", -25)
+					.attr("text-anchor", "middle") // text-align: right
+					.text(" ");
+
 				// "TOTAL" LABEL
 				var totalLabel = center_group.append("svg:text")
 					.attr("class", "label")
-					.attr("dy", -15)
+					.attr("dy", 0)
 					.attr("text-anchor", "middle") // text-align: right
 					.text("TOTAL");
 
 				//TOTAL TRAFFIC VALUE
 				var totalValue = center_group.append("svg:text")
 					.attr("class", "total")
-					.attr("dy", 7)
+					.attr("dy", 20)
 					.attr("text-anchor", "middle") // text-align: right
 					.text("Waiting...");
 
@@ -140,9 +144,17 @@
 							arc_group.selectAll("circle").remove();
 
 							totalValue.text(function(){
-								return $filter('currency')(sum, '$', 2);
+								if (res.data_type == "currency") {
+									return $filter('currency')(sum, '$', 2);
+								} else {
+									return $filter('number')(sum, 2);
+								}
 							});
 
+
+							reportTypeLabel.text(function() {
+								return res.label;
+							});
 								
 
 							//DRAW ARC PATHS
@@ -156,13 +168,22 @@
 								.attrTween("d", pieTween);
 							// add mouseover tooltip
 							paths.on("mouseover", function (d) {
-									console.log(d)
+									
+									var tt = '<b>' + d.name + '</b><br/><div>';
+									if (res.data_type == "currency") {
+										tt += $filter('currency')(d.value, '$', 2);
+									} else {
+										tt += $filter('number')(d.value);
+									}
+									tt += ", or " + Math.round( d.pct * 10000)/100 + '%';
+									tt += '</div>'
+
 									d3.select("#tooltip")
 										.style("left", (d3.event.pageX - 220) + "px")
 										.style("top", (d3.event.pageY - 100) + "px")
 										.style("opacity", 1)
 										.select('.content')
-										.html('<b>' + d.name + '</b><br/><div class="pull-left">' + Math.round( d.pct * 10000)/100 + '%</div><div class="pull-right">$' + d.value + '</div>');
+										.html(tt);
 								})
 								.on("mouseout", function () {
 									// Hide the tooltip
@@ -216,8 +237,8 @@
 									}
 								})
 								.text(function(d){
-									var percentage = Math.round((d.value/sum)*100);
-									if (percentage > 0) {
+									var percentage = Math.round(d.pct*100);
+									if (percentage > 2) {
 										return percentage + "%";
 									} else {
 										return '';
@@ -243,8 +264,8 @@
 										return "end";
 									}
 								}).text(function(d){
-									var percentage = Math.round((d.value/sum)*100);
-									if (percentage > 0) {
+									var percentage = Math.round(d.pct*100);
+									if (percentage > 2) {
 										return percentage + "%";
 									} else {
 										return '';
@@ -272,7 +293,12 @@
 										return "end";
 									}
 								}).text(function(d){
-									return d.name;
+									var percentage = Math.round(d.pct*100);
+									if (percentage > 2) {
+										return d.name;
+									} else {
+										return '';
+									}
 								});
 
 							var sliceLabel = label_group.selectAll("text.val").data(filteredPieData);
@@ -280,7 +306,16 @@
 								.attr("class", "arcLabel")
 								.attr("transform", function(d) {return "translate(" + arc.centroid(d) + ")"; })
 								.attr("text-anchor", "middle")
-								.text(function(d, i) { if (d.value >= 100) { return $filter('currency')(d.value, '$', 0); } else { return ''; } });
+								.text(function(d, i) {
+									if (d.value >= 100) {
+										if (res.data_type == "currency") {
+											return $filter('currency')(d.value, '$', 0);
+										}
+										return $filter('number')(d.value, 0);
+									} else {
+										return '';
+									}
+								});
 
 							nameLabels.enter().append("svg:text")
 								.attr("class", "units")
@@ -301,7 +336,12 @@
 										return "end";
 									}
 								}).text(function(d){
-									return d.name;
+									var percentage = Math.round(d.pct*100);
+									if (percentage > 2) {
+										return d.name;
+									} else {
+										return '';
+									}
 								});
 
 							nameLabels.transition().duration(tweenDuration).attrTween("transform", textTween);
