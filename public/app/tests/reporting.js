@@ -68,9 +68,13 @@ describe('reporting module', function() {
 		
 		describe('ReportingService function calls', function() {
 			
-			it('getReports', function() {
+			beforeEach(function() {
 				var token = 'authed';
 				UserService.setToken(token);
+			});
+
+			it('getReports', function() {
+				
 				$httpBackend.expectGET('/api/v1/dashboard')
 					.respond(200, { '_id': 123456, name: 'test'});
 
@@ -82,8 +86,6 @@ describe('reporting module', function() {
 				$httpBackend.flush();
 			});
 			it('getStatusData', function() {
-				var token = 'authed';
-				UserService.setToken(token);
 				$httpBackend.expectGET('/api/v1/report/status')
 					.respond(200, { '_id': 123456, name: 'test'});
 
@@ -95,8 +97,6 @@ describe('reporting module', function() {
 				$httpBackend.flush();
 			});
 			it('getMidStatusData', function() {
-				var token = 'authed';
-				UserService.setToken(token);
 				$httpBackend.expectGET('/api/v1/report/midStatus')
 					.respond(200, { '_id': 123456, name: 'test'});
 
@@ -108,8 +108,6 @@ describe('reporting module', function() {
 				$httpBackend.flush();
 			});
 			it('getTypeData', function() {
-				var token = 'authed';
-				UserService.setToken(token);
 				$httpBackend.expectGET('/api/v1/report/cctypes')
 					.respond(200, { '_id': 123456, name: 'test'});
 
@@ -121,8 +119,6 @@ describe('reporting module', function() {
 				$httpBackend.flush();
 			});
 			it('getMidTypeData', function() {
-				var token = 'authed';
-				UserService.setToken(token);
 				$httpBackend.expectGET('/api/v1/report/midTypes')
 					.respond(200, { '_id': 123456, name: 'test'});
 
