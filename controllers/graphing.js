@@ -4,6 +4,7 @@ module.exports = function(app) {
 		$ = require('seq'),
 		mw = require('./middleware'),
 		csv = require('express-csv'),
+		Chance = require('chance'),
 		Chargeback = app.Models.get('Chargeback');
 		
 
@@ -56,14 +57,13 @@ module.exports = function(app) {
 
 	});
 
-	app.get('/api/v1/report/:type?', mw.auth(), function(req, res, next) {
+	app.get('/api/v1/report/status?', mw.auth(), function(req, res, next) {
 		
 		res.header('Content-Type', 'application/json');
 		res.header('Cache-Control', 'no-cache, private, no-store, must-revalidate, max-stale=0, post-check=0, pre-check=0');
 		
-		var out = {};
-		if (req.params.type == "byVolume") {	
-			out = {
+		var out = {
+			byVolume: {
 				label: 'Status By Volume',
 				data_type: 'currency',
 				data: [
@@ -78,9 +78,8 @@ module.exports = function(app) {
 					{ name: 'Presented', val: 0 },
 					{ name: 'Lost', val: 87.63 }
 				]
-			}
-		} else if (req.params.type == "byCount") {	
-			out = {
+			},
+			byCount: {
 				label: 'Status By Count',
 				data_type: 'number',
 				data: [
@@ -96,6 +95,42 @@ module.exports = function(app) {
 					{ name: 'Lost', val: 4 }
 				]
 			}
+		};
+
+		return res.json(out);
+
+		
+
+	});
+
+
+	app.get('/api/v1/report/midStatus?', mw.auth(), function(req, res, next) {
+		
+		res.header('Content-Type', 'application/json');
+		res.header('Cache-Control', 'no-cache, private, no-store, must-revalidate, max-stale=0, post-check=0, pre-check=0');
+		
+		var chance = new Chance();
+
+		var i = 0,
+			out = [];
+		while(i <= 15) {
+			out.push({
+				label: 'MID: ' + chance.natural({min: 1, max: 100000}),
+				data_type: 'number',
+				data: [
+					{ name: 'Received', val: chance.natural({min: 1, max: 500}) },
+					{ name: 'Bundled', val: chance.natural({min: 1, max: 500}) },
+					{ name: 'Waiting', val: chance.natural({min: 1, max: 500}) },
+					{ name: 'Responded', val: chance.natural({min: 1, max: 500}) },
+					{ name: 'Accepted', val: chance.natural({min: 1, max: 500}) },
+					{ name: 'Late', val: chance.natural({min: 1, max: 500}) },
+					{ name: 'Won', val: chance.natural({min: 1, max: 500}) },
+					{ name: 'Pre-arb', val: chance.natural({min: 1, max: 500}) },
+					{ name: 'Presented', val: chance.natural({min: 1, max: 500}) },
+					{ name: 'Lost', val: chance.natural({min: 1, max: 500}) }
+				]
+			});
+			i++;
 		}
 
 		return res.json(out);

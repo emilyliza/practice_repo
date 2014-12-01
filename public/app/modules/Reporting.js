@@ -19,12 +19,23 @@
 		.state('reporting.status', {
 			url: '/merchant',
 			requiresAuth: true,
-			templateUrl: '/app/templates/reporting.status.html'
+			templateUrl: '/app/templates/reporting.status.html',
+			controller: [ '$scope', '$rootScope', 'ReportingService', function($scope, $rootScope, ReportingService) {
+				ReportingService.getStatusData().then(function(res) {
+					$scope.graphStatus1.update(res.data.byCount);
+					$scope.graphStatus2.update(res.data.byVolume);
+				});
+			}]
 		})
 		.state('reporting.mids', {
 			url: '/mids',
 			requiresAuth: true,
-			templateUrl: '/app/templates/reporting.mids.html'
+			templateUrl: '/app/templates/reporting.mids.html',
+			controller: [ '$scope', '$rootScope', 'ReportingService', function($scope, $rootScope, ReportingService) {
+				ReportingService.getMidData().then(function(res) {
+					$scope.graphMIDs = res.data;
+				});
+			}]
 		})
 		.state('reporting.billing', {
 			url: '/billing',
@@ -39,6 +50,11 @@
 		//$scope.data = res.data;
 		$scope.data = null;
 
+		$scope.graphStatus1 = {};
+		$scope.graphStatus2 = {};
+		$scope.graphMIDs = {};
+
+		
 		$scope.date = {
 			start: {
 				val: new Date(),
@@ -49,8 +65,8 @@
 				opened: false
 			}
 		};
-		
 
+		
 		ReportingService.getReports().then(function(data) {
 			$scope.data = data;
 		});
@@ -69,6 +85,14 @@
 			.then(function (res) {
 				return res.data;
 			});
+		};
+
+		reportingService.getStatusData = function() {
+			return $http.get('/api/v1/report/status');
+		};
+
+		reportingService.getMidData = function() {
+			return $http.get('/api/v1/report/midStatus');
 		};
 
 		return reportingService;

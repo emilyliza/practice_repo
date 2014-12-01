@@ -1,6 +1,49 @@
 (function() {
 
 	angular.module('graphing', [])
+
+	 .constant('GRAPHING_COLORS', [
+	 	"#1f77b4",
+		"#aec7e8",
+		"#ff7f0e",
+		"#ffbb78",
+		"#2ca02c",
+		"#98df8a",
+		"#d62728",
+		"#ff9896",
+		"#9467bd",
+		"#c5b0d5",
+		"#8c564b",
+		"#c49c94",
+		"#e377c2",
+		"#f7b6d2",
+		"#7f7f7f",
+		"#c7c7c7",
+		"#bcbd22",
+		"#dbdb8d",
+		"#17becf",
+		"#9edae5",
+		"#1f77b4",
+		"#aec7e8",
+		"#ff7f0e",
+		"#ffbb78",
+		"#2ca02c",
+		"#98df8a",
+		"#d62728",
+		"#ff9896",
+		"#9467bd",
+		"#c5b0d5",
+		"#8c564b",
+		"#c49c94",
+		"#e377c2",
+		"#f7b6d2",
+		"#7f7f7f",
+		"#c7c7c7",
+		"#bcbd22",
+		"#dbdb8d",
+		"#17becf",
+		"#9edae5"
+	])
 	
 	.controller('GraphingController', ['$scope', '$rootScope', 'PieService', function ($scope, $rootScope) {
 
@@ -10,10 +53,13 @@
 	}])
 	
 
-	.directive('pie', ['$window', '$http', '$filter', function($window, $http, $filter) {
+	.directive('pie', ['$window', '$http', '$filter', 'GRAPHING_COLORS', function($window, $http, $filter, GRAPHING_COLORS) {
 		return {
 			restrict:'EA',
 			template: "<div></div>",
+			scope: {
+				control: '='
+			},
 			link: function(scope, elem, attrs) {
 				
 				var	container = elem.find('div')
@@ -36,8 +82,7 @@
 					return d.val;
 				});
 
-				//D3 helper function to create colors from an ordinal scale
-				var color = d3.scale.category20();
+				
 
 				//D3 helper function to draw arcs, populates parameter "d" in path object
 				var arc = d3.svg.arc()
@@ -55,8 +100,12 @@
 				///////////////////////////////////////////////////////////
 
 				var vis = d3.select(container[0]).append("svg:svg")
-					.attr("width", w)
-					.attr("height", h);
+					//.attr("width", w)
+					//.attr("height", h)
+					.attr("width", '100%')
+					.attr("height", '100%')
+					.attr('viewBox','0 0 '+Math.min(w,h)+' '+Math.min(w,h))
+					.attr('preserveAspectRatio','xMinYMin');
 
 				//GROUP FOR ARCS/PATHS
 				var arc_group = vis.append("svg:g")
@@ -116,10 +165,14 @@
 				// 	.attr("text-anchor", "middle") // text-align: right
 				// 	.text("kb");
 
+				scope.isLoading = false;
+				scope.control.update = function(res) {
 
-				function update() {
-
-					$http.get('/api/v1/' + attrs.graphEndpoint).success(function(res) {
+					//if (scope.isLoading) { return; }
+					
+					//scope.isLoading = true;
+					//if (!url) { url = '/api/v1/' + attrs.graphEndpoint; }
+					//$http.get(url).success(function(res) {
 
 						// arraySize = Math.ceil(Math.random()*10);
 						// streakerDataAdded = d3.range(arraySize).map(fillArray);
@@ -130,13 +183,15 @@
 						var sum = 0;
 						 _.each(res.data, function(d) { sum += d.val; });
 
-						filteredPieData = pieData.filter(filterData);
+
 						function filterData(element, index, array) {
 							element.name = res.data[index].name;
 							element.value = res.data[index].val;
 							element.pct = res.data[index].val / sum;
+							element.color = GRAPHING_COLORS[index];
 							return (element.value > 0);
 						}
+						filteredPieData = pieData.filter(filterData);
 
 						if(filteredPieData.length > 0) {
 
@@ -162,7 +217,7 @@
 							paths.enter().append("svg:path")
 								.attr("stroke", "white")
 								.attr("stroke-width", 0.5)
-								.attr("fill", function(d, i) { return color(i); })
+								.attr("fill", function(d, i) { return d.color; })
 								.transition()
 								.duration(tweenDuration)
 								.attrTween("d", pieTween);
@@ -193,6 +248,7 @@
 							paths
 								.transition()
 								.duration(tweenDuration)
+								.attr("fill", function(d, i) { return d.color; })
 								.attrTween("d", pieTween);
 							paths.exit()
 								.transition()
@@ -201,7 +257,12 @@
 								.remove();
 
 							//DRAW TICK MARK LINES FOR LABELS
-							lines = label_group.selectAll("line").data(filteredPieData);
+							lines = label_group.selectAll("line").data(filteredPieData.filter(function(d) {
+								var percentage = Math.round(d.pct*100);
+								if (percentage > 2) {
+									return d;
+								}
+							}));
 							lines.enter().append("svg:line")
 								.attr("x1", 0)
 								.attr("x2", 0)
@@ -277,6 +338,27 @@
 							valueLabels.exit().remove();
 
 
+							// var sliceLabel = label_group.selectAll("text.slice").data(filteredPieData);
+							// sliceLabel.enter().append("svg:text")
+							// 	.attr("class", "slice")
+							// 	.attr("transform", function(d) {return "translate(" + arc.centroid(d) + ")"; })
+							// 	.attr("text-anchor", "middle")
+							// 	.text(function(d, i) {
+							// 		console.log(d.value);
+							// 		if (res.data_type == "currency") {
+							// 			if (d.value >= 100) {
+							// 				return $filter('currency')(d.value, '$', 0);
+							// 			}
+							// 			return '';
+							// 		} else if (res.data_type == "number") {
+							// 			return $filter('number')(d.value, 0);
+							// 		}
+									
+							// 	});
+
+							// sliceLabel.exit().remove();
+
+
 							//DRAW LABELS WITH ENTITY NAMES
 							nameLabels = label_group.selectAll("text.units").data(filteredPieData)
 								.attr("dy", function(d){
@@ -296,22 +378,6 @@
 									var percentage = Math.round(d.pct*100);
 									if (percentage > 2) {
 										return d.name;
-									} else {
-										return '';
-									}
-								});
-
-							var sliceLabel = label_group.selectAll("text.val").data(filteredPieData);
-							sliceLabel.enter().append("svg:text")
-								.attr("class", "arcLabel")
-								.attr("transform", function(d) {return "translate(" + arc.centroid(d) + ")"; })
-								.attr("text-anchor", "middle")
-								.text(function(d, i) {
-									if (d.value >= 100) {
-										if (res.data_type == "currency") {
-											return $filter('currency')(d.value, '$', 0);
-										}
-										return $filter('number')(d.value, 0);
 									} else {
 										return '';
 									}
@@ -348,10 +414,16 @@
 
 							nameLabels.exit().remove();
 						}
-					});  
+
+						//scope.isLoading = false;
+					//}); 
+
+					//return url.split('/').pop(); 
 				}
 
-				update();
+				if (attrs.graphData) {
+					scope.control.update(JSON.parse(attrs.graphData));
+				}
 
 				///////////////////////////////////////////////////////////
 				// FUNCTIONS //////////////////////////////////////////////
