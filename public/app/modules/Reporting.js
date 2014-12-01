@@ -17,7 +17,7 @@
 			templateUrl: '/app/templates/reporting.overview.html'
 		})
 		.state('reporting.status', {
-			url: '/merchant',
+			url: '/status',
 			requiresAuth: true,
 			templateUrl: '/app/templates/reporting.status.html',
 			controller: [ '$scope', '$rootScope', 'ReportingService', function($scope, $rootScope, ReportingService) {
@@ -27,13 +27,34 @@
 				});
 			}]
 		})
-		.state('reporting.mids', {
-			url: '/mids',
+		.state('reporting.mids-status', {
+			url: '/mids-status',
 			requiresAuth: true,
-			templateUrl: '/app/templates/reporting.mids.html',
+			templateUrl: '/app/templates/reporting.mids-status.html',
 			controller: [ '$scope', '$rootScope', 'ReportingService', function($scope, $rootScope, ReportingService) {
-				ReportingService.getMidData().then(function(res) {
-					$scope.graphMIDs = res.data;
+				ReportingService.getMidStatusData().then(function(res) {
+					$scope.midStatusData = res.data;
+				});
+			}]
+		})
+		.state('reporting.cctype', {
+			url: '/cctype',
+			requiresAuth: true,
+			templateUrl: '/app/templates/reporting.cctype.html',
+			controller: [ '$scope', '$rootScope', 'ReportingService', function($scope, $rootScope, ReportingService) {
+				ReportingService.getTypeData().then(function(res) {
+					$scope.graphType1.update(res.data.byCount);
+					$scope.graphType2.update(res.data.byVolume);
+				});
+			}]
+		})
+		.state('reporting.mids-cctype', {
+			url: '/mids-cctype',
+			requiresAuth: true,
+			templateUrl: '/app/templates/reporting.mids-cctype.html',
+			controller: [ '$scope', '$rootScope', 'ReportingService', function($scope, $rootScope, ReportingService) {
+				ReportingService.getMidTypeData().then(function(res) {
+					$scope.midTypeData = res.data;
 				});
 			}]
 		})
@@ -52,7 +73,12 @@
 
 		$scope.graphStatus1 = {};
 		$scope.graphStatus2 = {};
-		$scope.graphMIDs = {};
+
+		$scope.graphType1 = {};
+		$scope.graphType2 = {};
+
+		$scope.midTypeData = {};
+		$scope.midStatusData = {};
 
 		
 		$scope.date = {
@@ -91,9 +117,18 @@
 			return $http.get('/api/v1/report/status');
 		};
 
-		reportingService.getMidData = function() {
+		reportingService.getMidStatusData = function() {
 			return $http.get('/api/v1/report/midStatus');
 		};
+
+		reportingService.getTypeData = function() {
+			return $http.get('/api/v1/report/cctypes');
+		};
+
+		reportingService.getMidTypeData = function() {
+			return $http.get('/api/v1/report/midTypes');
+		};
+
 
 		return reportingService;
 	}]);

@@ -134,9 +134,69 @@ module.exports = function(app) {
 		}
 
 		return res.json(out);
+	});
 
+	
+
+	app.get('/api/v1/report/cctypes?', mw.auth(), function(req, res, next) {
 		
+		res.header('Content-Type', 'application/json');
+		res.header('Cache-Control', 'no-cache, private, no-store, must-revalidate, max-stale=0, post-check=0, pre-check=0');
+		
+		var chance = new Chance();
 
+		var out = {
+			byVolume: {
+				label: 'Status By Volume',
+				data_type: 'currency',
+				data: [
+					{ name: 'Visa', val: chance.floating({min: 1, max: 100, fixed: 2}) },
+					{ name: 'Mastercard', val: chance.floating({min: 1, max: 100, fixed: 2}) },
+					{ name: 'Discover', val: chance.floating({min: 1, max: 100, fixed: 2}) },
+					{ name: 'Amex', val: chance.floating({min: 1, max: 100, fixed: 2}) },
+					{ name: 'Other', val: chance.floating({min: 1, max: 100, fixed: 2}) }
+				]
+			},
+			byCount: {
+				label: 'Status By Count',
+				data_type: 'number',
+				data: [
+					{ name: 'Visa', val: chance.natural({min: 1, max: 5000}) },
+					{ name: 'Mastercard', val: chance.natural({min: 1, max: 5000}) },
+					{ name: 'Discover', val: chance.natural({min: 1, max: 5000}) },
+					{ name: 'Amex', val: chance.natural({min: 1, max: 5000}) },
+					{ name: 'Other', val: chance.natural({min: 1, max: 5000}) }
+				]
+			}
+		};
+		return res.json(out);
+	});
+
+	app.get('/api/v1/report/midTypes?', mw.auth(), function(req, res, next) {
+		
+		res.header('Content-Type', 'application/json');
+		res.header('Cache-Control', 'no-cache, private, no-store, must-revalidate, max-stale=0, post-check=0, pre-check=0');
+		
+		var chance = new Chance();
+
+		var i = 0,
+			out = [];
+		while(i <= 15) {
+			out.push({
+				label: 'MID: ' + chance.natural({min: 1, max: 100000}),
+				data_type: 'number',
+				data: [
+					{ name: 'Visa', val: chance.natural({min: 1, max: 5000}) },
+					{ name: 'Mastercard', val: chance.natural({min: 1, max: 5000}) },
+					{ name: 'Discover', val: chance.natural({min: 1, max: 5000}) },
+					{ name: 'Amex', val: chance.natural({min: 1, max: 5000}) },
+					{ name: 'Other', val: chance.natural({min: 1, max: 5000}) }
+				]
+			});
+			i++;
+		}
+
+		return res.json(out);
 	});
 
 
