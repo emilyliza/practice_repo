@@ -36,16 +36,24 @@ describe('reporting module', function() {
 	});
 
 	describe('reporting router', function(){
-		it('test reporting url', inject(function ($state) {
-			expect($state.href("reporting")).toEqual("/reporting");
-		}));
+		
+		
 	});
 
 	describe('reporting controller', function(){
 		it('should instantiate', inject(function($rootScope, $controller) {
+			
+			var token = 'authed';
+			UserService.setToken(token);
+			
+			$httpBackend.expectGET('/api/v1/dashboard')
+					.respond(200, { '_id': 123456, name: 'test'});
+
 			scope = $rootScope.$new();
 			var ctrl = $controller('ReportingController', { $scope: scope });
 			expect(scope.data).toBeDefined();
+
+			$httpBackend.flush();
 		}));
 	});
 
@@ -58,24 +66,70 @@ describe('reporting module', function() {
 			});
 		});
 		
-		describe('ReportingService call get', function() {
-			it('should get', function() {
+		describe('ReportingService function calls', function() {
+			
+			it('getReports', function() {
 				var token = 'authed';
 				UserService.setToken(token);
-				
-				// double check auth headers are set
-				$httpBackend.when('GET', '/api/v1/dashboard', null, function(headers) {
-					expect(headers.Authorization).toBe(token);
-	        	}).respond(200, {});
-
-				// test PUT
 				$httpBackend.expectGET('/api/v1/dashboard')
-	        		.respond(200, { '_id': 123456, name: 'test'}, {});
+					.respond(200, { '_id': 123456, name: 'test'});
 
 				ReportingService.getReports().then(function(data) {
 					expect(data._id).toEqual(123456);
 				},function(err) {
 					expect(data._id).toEqual(123456);
+				});
+				$httpBackend.flush();
+			});
+			it('getStatusData', function() {
+				var token = 'authed';
+				UserService.setToken(token);
+				$httpBackend.expectGET('/api/v1/report/status')
+					.respond(200, { '_id': 123456, name: 'test'});
+
+				ReportingService.getStatusData().then(function(data) {
+					expect(data.data._id).toEqual(123456);
+				},function(err) {
+					expect(data.data._id).toEqual(123456);
+				});
+				$httpBackend.flush();
+			});
+			it('getMidStatusData', function() {
+				var token = 'authed';
+				UserService.setToken(token);
+				$httpBackend.expectGET('/api/v1/report/midStatus')
+					.respond(200, { '_id': 123456, name: 'test'});
+
+				ReportingService.getMidStatusData().then(function(data) {
+					expect(data.data._id).toEqual(123456);
+				},function(err) {
+					expect(data.data._id).toEqual(123456);
+				});
+				$httpBackend.flush();
+			});
+			it('getTypeData', function() {
+				var token = 'authed';
+				UserService.setToken(token);
+				$httpBackend.expectGET('/api/v1/report/cctypes')
+					.respond(200, { '_id': 123456, name: 'test'});
+
+				ReportingService.getTypeData().then(function(data) {
+					expect(data.data._id).toEqual(123456);
+				},function(err) {
+					expect(data.data._id).toEqual(123456);
+				});
+				$httpBackend.flush();
+			});
+			it('getMidTypeData', function() {
+				var token = 'authed';
+				UserService.setToken(token);
+				$httpBackend.expectGET('/api/v1/report/midTypes')
+					.respond(200, { '_id': 123456, name: 'test'});
+
+				ReportingService.getMidTypeData().then(function(data) {
+					expect(data.data._id).toEqual(123456);
+				},function(err) {
+					expect(data.data._id).toEqual(123456);
 				});
 				$httpBackend.flush();
 			});
