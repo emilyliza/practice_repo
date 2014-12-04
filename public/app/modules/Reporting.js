@@ -22,6 +22,7 @@
 			url: '/status',
 			requiresAuth: true,
 			templateUrl: '/app/templates/reporting.status.html'
+
 		})
 		.state('reporting.status.overview', {
 			url: '/overview',
@@ -131,6 +132,9 @@
 		$scope.data = null;
 		$scope.$state = $state;	// for navigation active to work		
 		
+		$scope.thing = {
+			active: false
+		};
 		$scope.graphstatus1 = {};
 		$scope.graphstatus2 = {};
 		$scope.graphtype1 = {};
