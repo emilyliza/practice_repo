@@ -183,7 +183,7 @@ module.exports = function(app) {
 			out = [];
 		while(i <= 15) {
 			out.push({
-				label: 'MID: ' + chance.natural({min: 1, max: 100000}),
+				label: chance.first() + ' Inc.',
 				data_type: 'number',
 				data: [
 					{ name: 'Visa', val: chance.natural({min: 1, max: 5000}) },
@@ -199,6 +199,64 @@ module.exports = function(app) {
 		return res.json(out);
 	});
 
+	app.get('/api/v1/report/processorStatus?', mw.auth(), function(req, res, next) {
+		
+		res.header('Content-Type', 'application/json');
+		res.header('Cache-Control', 'no-cache, private, no-store, must-revalidate, max-stale=0, post-check=0, pre-check=0');
+		
+		var chance = new Chance();
+
+		var i = 0,
+			out = [];
+		while(i <= 15) {
+			out.push({
+				label: chance.first() + ' Inc.',
+				data_type: 'number',
+				data: [
+					{ name: 'Received', val: chance.natural({min: 1, max: 500}) },
+					{ name: 'Bundled', val: chance.natural({min: 1, max: 500}) },
+					{ name: 'Waiting', val: chance.natural({min: 1, max: 500}) },
+					{ name: 'Responded', val: chance.natural({min: 1, max: 500}) },
+					{ name: 'Accepted', val: chance.natural({min: 1, max: 500}) },
+					{ name: 'Late', val: chance.natural({min: 1, max: 500}) },
+					{ name: 'Won', val: chance.natural({min: 1, max: 500}) },
+					{ name: 'Pre-arb', val: chance.natural({min: 1, max: 500}) },
+					{ name: 'Presented', val: chance.natural({min: 1, max: 500}) },
+					{ name: 'Lost', val: chance.natural({min: 1, max: 500}) }
+				]
+			});
+			i++;
+		}
+
+		return res.json(out);
+	});
+
+	app.get('/api/v1/report/processorTypes?', mw.auth(), function(req, res, next) {
+		
+		res.header('Content-Type', 'application/json');
+		res.header('Cache-Control', 'no-cache, private, no-store, must-revalidate, max-stale=0, post-check=0, pre-check=0');
+		
+		var chance = new Chance();
+
+		var i = 0,
+			out = [];
+		while(i <= 15) {
+			out.push({
+				label: 'MID: ' + chance.natural({min: 1, max: 100000}),
+				data_type: 'number',
+				data: [
+					{ name: 'Visa', val: chance.natural({min: 1, max: 5000}) },
+					{ name: 'Mastercard', val: chance.natural({min: 1, max: 5000}) },
+					{ name: 'Discover', val: chance.natural({min: 1, max: 5000}) },
+					{ name: 'Amex', val: chance.natural({min: 1, max: 5000}) },
+					{ name: 'Other', val: chance.natural({min: 1, max: 5000}) }
+				]
+			});
+			i++;
+		}
+
+		return res.json(out);
+	});
 
 };
 
