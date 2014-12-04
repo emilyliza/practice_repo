@@ -1,9 +1,9 @@
 <div class="row search">
-	<div class="col-md-4">
-		<h2 style="margin-top: 0px;">MID Card Types</h2>
+	<div class="col-md-3">
+		<h2 style="margin-top: 0px;">by Processor</h2>
 	</div>
-	<div class="col-md-2">
-		<input type="text" class="form-control pull-right" autocomplete="off" placeholder="Search By MID" ng-model="search">
+	<div class="col-md-3">
+		<input type="text" class="form-control pull-right" autocomplete="off" placeholder="Search By Processor" ng-model="search">
 	</div>
 
 	<div class="col-md-6" style="font-size: 24px; text-align: right;">
@@ -12,8 +12,7 @@
 	</div>
 </div>
 
-
-<div class="row" ng-repeat="gg in midTypeData | searchField: 'label' | filter: search | groupBy: 2">
+<div class="row" ng-repeat="gg in processorData | searchField: 'label' | filter: search | groupBy: 2">
 	<div class="col-md-6" ng-repeat="g in gg" style="text-align: center;">
 		<div class="pie" pie  graph-data="{{g}}" ></div>
 	</div>

@@ -1,25 +1,13 @@
+<tabset>
+	<tab ui-sref=".overview" ui-sref-active="active">
+		<tab-heading>Card Type Overview</tab-heading>
+    </tab>
+    <tab ui-sref=".byProcessor" ui-sref-active="active">
+		<tab-heading>By Processor</tab-heading>
+    </tab>
+    <tab ui-sref=".byMid" ui-sref-active="active">
+		<tab-heading>By MID</tab-heading>
+    </tab>
+</tabset>
 
-<div class="row ">
-	<div class="col-md-6">
-		<h2 style="margin-top: 0px;">Credit Card Types</h2>
-	</div>
-	<div class="col-md-6" style="font-size: 24px; text-align: right;">
-		<a href="#" datepicker-popup="MM/dd/yyyy" ng-model="date.start.val" is-open="date.start.opened" ng-click="date.start.opened=true" isdate >{{date.start.val | date:'longDate'}}</a> thru
-		<a href="#" datepicker-popup="MM/dd/yyyy" ng-model="date.end.val" is-open="date.end.opened" ng-click="date.end.opened=true" isdate >{{date.end.val | date:'longDate'}}</a>
-	</div>
-</div>
-
-
-
-<div class="row">
-	<div class="col-md-6" style="text-align: center;">
-		<div class="pie" pie control="graphType1" ></div>
-	</div>
-	<div class="col-md-6">
-		<div class="pie" pie control="graphType2" ></div>
-	</div>
-</div>
-
-<div id="tooltip" style="opacity: 0;">
-    <div class="content"></div>
-</div>
+<div style="margin-top: 20px;" ui-view="typeViews"></div>

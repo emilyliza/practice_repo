@@ -1,8 +1,8 @@
 <div class="row search">
-	<div class="col-md-4">
-		<h2 style="margin-top: 0px;">MID Chargeback Status</h2>
+	<div class="col-md-3">
+		<h2 style="margin-top: 0px;">by MIDs</h2>
 	</div>
-	<div class="col-md-2">
+	<div class="col-md-3">
 		<input type="text" class="form-control pull-right" autocomplete="off" placeholder="Search By MID" ng-model="search">
 	</div>
 
@@ -13,7 +13,7 @@
 </div>
 
 
-<div class="row" ng-repeat="gg in midStatusData | searchField: 'label' | filter: search | groupBy: 2">
+<div class="row" ng-repeat="gg in midData | searchField: 'label' | filter: search | groupBy: 2">
 	<div class="col-md-6" ng-repeat="g in gg" style="text-align: center;">
 		<div class="pie" pie graph-data="{{g}}" ></div>
 	</div>

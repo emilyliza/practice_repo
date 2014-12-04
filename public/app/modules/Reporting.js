@@ -4,6 +4,8 @@
 	
 	.config(['$stateProvider', '$urlRouterProvider', function( $stateProvider, $urlRouterProvider ) {
 		
+		$urlRouterProvider.when('/reporting/status', '/reporting/status/overview');
+		$urlRouterProvider.when('/reporting/cctype', '/reporting/cctype/overview');
 		$stateProvider
 		.state('reporting', {
 			url: '/reporting',
@@ -19,68 +21,121 @@
 		.state('reporting.status', {
 			url: '/status',
 			requiresAuth: true,
-			templateUrl: '/app/templates/reporting.status.html',
-			controller: [ '$scope', '$rootScope', 'ReportingService', function($scope, $rootScope, ReportingService) {
-				ReportingService.getStatusData().then(function(res) {
-					$scope.graphStatus1.update(res.data.byCount);
-					$scope.graphStatus2.update(res.data.byVolume);
-				});
-			}]
+			templateUrl: '/app/templates/reporting.status.html'
 		})
-		.state('reporting.mids-status', {
-			url: '/mids-status',
+		.state('reporting.status.overview', {
+			url: '/overview',
 			requiresAuth: true,
-			templateUrl: '/app/templates/reporting.mids-status.html',
-			controller: [ '$scope', '$rootScope', 'ReportingService', function($scope, $rootScope, ReportingService) {
-				ReportingService.getMidStatusData().then(function(res) {
-					$scope.midStatusData = res.data;
-				});
-			}]
+			views: {
+				'statusViews': {	
+					templateUrl: '/app/templates/reporting.status.overview.html',
+					controller: [ '$scope', 'ReportingService', '$timeout', function($scope, ReportingService, $timeout) {
+						$timeout(function() {
+							ReportingService.getStatusData().then(function(res) {
+								$scope.graphstatus1.update(res.data.byCount);
+								$scope.graphstatus2.update(res.data.byVolume);
+							});
+						});
+					}]
+				}
+			}
+		})
+		.state('reporting.status.byProcessor', {
+			url: '/byProcessor',
+			requiresAuth: true,
+			parent: 'reporting.status',
+			views: {
+				'statusViews': {	
+					templateUrl: '/app/templates/reporting.byProcessor.html',
+					controller: [ '$scope', 'ReportingService', function($scope, ReportingService) {
+						$scope.processorData = {};
+						ReportingService.getProcessorStatusData().then(function(res) {
+							$scope.processorData = res.data;
+						});
+					}]
+				}
+			}
+		})
+		.state('reporting.status.byMid', {
+			url: '/byMid',
+			requiresAuth: true,
+			views: {
+				'statusViews': {
+					templateUrl: '/app/templates/reporting.byMid.html',
+					controller: [ '$scope', 'ReportingService', function($scope, ReportingService) {
+						ReportingService.getMidStatusData().then(function(res) {
+							$scope.midData = res.data;
+						});
+					}]
+				}
+			}
 		})
 		.state('reporting.cctype', {
 			url: '/cctype',
 			requiresAuth: true,
-			templateUrl: '/app/templates/reporting.cctype.html',
-			controller: [ '$scope', '$rootScope', 'ReportingService', function($scope, $rootScope, ReportingService) {
-				ReportingService.getTypeData().then(function(res) {
-					$scope.graphType1.update(res.data.byCount);
-					$scope.graphType2.update(res.data.byVolume);
-				});
-			}]
+			templateUrl: '/app/templates/reporting.cctype.html'
 		})
-		.state('reporting.mids-cctype', {
-			url: '/mids-cctype',
+		.state('reporting.cctype.overview', {
+			url: '/overview',
 			requiresAuth: true,
-			templateUrl: '/app/templates/reporting.mids-cctype.html',
-			controller: [ '$scope', '$rootScope', 'ReportingService', function($scope, $rootScope, ReportingService) {
-				ReportingService.getMidTypeData().then(function(res) {
-					$scope.midTypeData = res.data;
-				});
-			}]
+			views: {
+				'typeViews': {	
+					templateUrl: '/app/templates/reporting.cctype.overview.html',
+					controller: [ '$scope', 'ReportingService', '$timeout', function($scope, ReportingService, $timeout) {
+						$timeout(function() {
+							ReportingService.getTypeData().then(function(res) {
+								$scope.graphtype1.update(res.data.byCount);
+								$scope.graphtype2.update(res.data.byVolume);
+							});
+						});
+					}]
+				}
+			}	
 		})
-		.state('reporting.billing', {
-			url: '/billing',
+		.state('reporting.cctype.byProcessor', {
+			url: '/byProcessor',
 			requiresAuth: true,
-			templateUrl: '/app/templates/reporting.billing.html'
-		});
+			views: {
+				'typeViews': {	
+					templateUrl: '/app/templates/reporting.byProcessor.html',
+					controller: [ '$scope', 'ReportingService', function($scope, ReportingService) {
+						$scope.processorData = {};
+						ReportingService.getProcessorTypeData().then(function(res) {
+							$scope.processorData = res.data;
+						});
+					}]
+				}
+			}
+		})
+		.state('reporting.cctype.byMid', {
+			url: '/byMid',
+			requiresAuth: true,
+			views: {
+				'typeViews': {
+					templateUrl: '/app/templates/reporting.byMid.html',
+					controller: [ '$scope', 'ReportingService', function($scope, ReportingService) {
+						ReportingService.getMidTypeData().then(function(res) {
+							$scope.midData = res.data;
+						});
+					}]
+				}
+			}
+		})
 
 	
 	}])
 
-	.controller('ReportingController', [ '$scope', '$rootScope', 'ReportingService', function($scope, $rootScope, ReportingService) {
+	
+	.controller('ReportingController', [ '$scope', '$rootScope', 'ReportingService', '$state', function($scope, $rootScope, ReportingService, $state) {
 		//$scope.data = res.data;
 		$scope.data = null;
-
-		$scope.graphStatus1 = {};
-		$scope.graphStatus2 = {};
-
-		$scope.graphType1 = {};
-		$scope.graphType2 = {};
-
-		$scope.midTypeData = {};
-		$scope.midStatusData = {};
-
+		$scope.$state = $state;	// for navigation active to work		
 		
+		$scope.graphstatus1 = {};
+		$scope.graphstatus2 = {};
+		$scope.graphtype1 = {};
+		$scope.graphtype2 = {};
+
 		$scope.date = {
 			start: {
 				val: new Date(),
@@ -91,7 +146,6 @@
 				opened: false
 			}
 		};
-
 		
 		ReportingService.getReports().then(function(data) {
 			$scope.data = data;
@@ -102,6 +156,7 @@
 		
 	}])
 
+	
 	.factory('ReportingService', ['$http', function ($http) {
 		var reportingService = {};
 
@@ -127,6 +182,14 @@
 
 		reportingService.getMidTypeData = function() {
 			return $http.get('/api/v1/report/midTypes');
+		};
+
+		reportingService.getProcessorTypeData = function() {
+			return $http.get('/api/v1/report/processorTypes');
+		};
+
+		reportingService.getProcessorStatusData = function() {
+			return $http.get('/api/v1/report/processorStatus');
 		};
 
 
