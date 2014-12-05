@@ -1,10 +1,9 @@
 @import "../bower_components/bootstrap/less/bootstrap.less";
 @import "core.less";
-@import "loading.less";
-@import "jgsform.less";
-//@import "datepicker.less";
-//@import "dropzone.less";
-@import "popovers.less";
+@import "loading.less";		// loading widget
+@import "jgsform.less";		// general form styling
+@import "popovers.less";	// for form popover error handling
+@import "graphs.less";		// for d3 formatting
 
 @icon-font-path:          "../fonts/";
 @icon-font-name:          "glyphicons-halflings-regular";
@@ -12,14 +11,13 @@
 @import "bootstrap-glyphicons.less";
 
 
-
-@navbar-height:             65px;
-@navbar-inverse-color:      @gray-light;
-@navbar-inverse-bg:         @cbBlue;
+@navbar-height:             		65px;
+@navbar-inverse-color:      		@gray-light;
+@navbar-inverse-bg:         		@cbBlue;
 @navbar-inverse-border:     		darken(@navbar-inverse-bg, 10%);
 @navbar-inverse-link-color:         white;
 @navbar-inverse-link-hover-color:   #fff;
-
+@grid-float-breakpoint: 			@screen-md-min;
 
 #pages {
 	margin-bottom: 250px;
@@ -82,6 +80,7 @@ footer {
 	}
 }
 
+// drag and drop zones in chargeback input pages.
 .ddzone {
 	background-color: @cbBlue;
 	color: white;
@@ -107,6 +106,7 @@ footer {
 	}
 }
 
+// class for formatting uploaded images in chargeback input forms
 .uploaded {
 	.img {
 		text-align: center;
@@ -162,83 +162,14 @@ footer {
 	}
 }
 
-.axis {
-	path, line{
-		fill: none;
-		stroke:black;
-		shape-rendering:crispEdge;
-	}
 
-	text {
-		font-family: sans-serif;
-		font-size: 10px;
-	}
-}
-.area {
-	fill: @cbBlue;
-}
-.tick {
-	stroke-dasharray: 1, 2;
-}
-
-.bar {
-  fill: @cbBlue;
-}
-
-.bar:hover {
-  fill: darken(@cbBlue, 12%);
+.dateRange {
+	font-size: 18px;
+	text-align: right;
 }
 
 
-.pie {
-	font: 10px sans-serif;
-	text-shadow: none;
-	.report-type {
-		font-size: 16px;
-	}
-	.total{
-  		font-size: 18px;
-  		font-weight: bold;
-	}
-	.units{
-		fill: gray;
-		font-size: 12px;
-	}
-	.label{
-		fill: #CCC;
-		font-size: 12px;
-		font-weight: bold;
-	}
-	.value{
-		font-size: 12px;
-		font-weight: bold;
-	}
-}
-
-#tooltip {
-    position: absolute;
-    width: 200px;
-    height: auto;
-    padding: 10px;
-    z-index: 100;
-    background-color: white;
-    -webkit-border-radius: 10px;
-    -moz-border-radius: 10px;
-    border-radius: 10px;
-    -webkit-box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.4);
-    -mox-box-shadow: 4px 4px 4px 10px rgba(0, 0, 0, 0.4);
-    box-shadow: 4px 4px 10px rbga(0, 0, 0, 0.4);
-    pointer-events: none;
-    p {
-    	margin: 0;
-    	font-family: sans-serif;
-    	font-size: 16px;
-    	line-height: 20px;
-	}
-}
-
-
-
+// the chargeback list page, animations for paging, etc.
 .animated-grid {
 	.row {
 		&.ng-move,
@@ -319,6 +250,7 @@ footer {
 }
 
 
+// large circles in reporting
 .reporting-status {
 	.clearfix();
 	.col-sm-4, .col-sm-3 {
@@ -342,6 +274,7 @@ footer {
 }
 
 
+// large circles in dash
 .dashboard-status {
 	.clearfix();
 	div.img-circle { 
@@ -381,6 +314,7 @@ footer {
 }
 
 
+// final step in the chargeback process, review page
 .review {
 	.details {
 		.row {
@@ -463,10 +397,22 @@ footer {
 }
 
 
-/* small devices (tablets, 420px and up) */
-@media (min-width: @screen-xs-min) {
+/* small devices (tablets, 768px and up) */
+@media (min-width: @screen-sm-min) {
 
-	
+	.sidebar {
+		position: fixed;
+		top: 66px;
+		bottom: 0;
+		left: 0;
+		z-index: 1000;
+		display: block;
+		padding: 20px;
+		overflow-x: hidden;
+		overflow-y: auto; /* Scrollable contents if viewport is shorter than content. */
+		background-color: #f5f5f5;
+		border-right: 1px solid #eee;
+	}
 	
 
 }
@@ -497,5 +443,9 @@ footer {
 
 @media (min-width: @screen-lg-min) {
 
+	.dateRange {
+		font-size: 24px;
+		text-align: right;
+	}
 
 }

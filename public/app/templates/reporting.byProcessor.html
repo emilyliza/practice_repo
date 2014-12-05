@@ -6,7 +6,7 @@
 		<input type="text" class="form-control pull-right" autocomplete="off" placeholder="Search By Processor" ng-model="search">
 	</div>
 
-	<div class="col-md-6" style="font-size: 24px; text-align: right;">
+	<div class="col-md-6 dateRange">
 		<a href="#" datepicker-popup="MM/dd/yyyy" ng-model="date.start.val" is-open="date.start.opened" ng-click="date.start.opened=true" isdate >{{date.start.val | date:'longDate'}}</a> thru
 		<a href="#" datepicker-popup="MM/dd/yyyy" ng-model="date.end.val" is-open="date.end.opened" ng-click="date.end.opened=true" isdate >{{date.end.val | date:'longDate'}}</a>
 	</div>

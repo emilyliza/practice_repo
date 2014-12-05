@@ -37,6 +37,7 @@
 		function ($scope, $rootScope, $state, AUTH_EVENTS, UserService) {
 			
 			$scope.$state = $state;	// for navigation active to work
+			$scope.isCollapsed = true;
 
 			if (UserService.isAuthenticated()) {
 				var user = UserService.getCurrentUser();

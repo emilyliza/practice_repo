@@ -1,0 +1,75 @@
+
+.axis {
+	path, line{
+		fill: none;
+		stroke:black;
+		shape-rendering:crispEdge;
+	}
+
+	text {
+		font-family: sans-serif;
+		font-size: 10px;
+	}
+}
+.area {
+	fill: @cbBlue;
+}
+.tick {
+	stroke-dasharray: 1, 2;
+}
+
+.bar {
+  fill: @cbBlue;
+}
+
+.bar:hover {
+  fill: darken(@cbBlue, 12%);
+}
+
+
+.pie {
+	font: 10px sans-serif;
+	text-shadow: none;
+	.report-type {
+		font-size: 16px;
+	}
+	.total{
+  		font-size: 18px;
+  		font-weight: bold;
+	}
+	.units{
+		fill: gray;
+		font-size: 12px;
+	}
+	.label{
+		fill: #CCC;
+		font-size: 12px;
+		font-weight: bold;
+	}
+	.value{
+		font-size: 12px;
+		font-weight: bold;
+	}
+}
+
+#tooltip {
+    position: absolute;
+    width: 200px;
+    height: auto;
+    padding: 10px;
+    z-index: 100;
+    background-color: white;
+    -webkit-border-radius: 10px;
+    -moz-border-radius: 10px;
+    border-radius: 10px;
+    -webkit-box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.4);
+    -mox-box-shadow: 4px 4px 4px 10px rgba(0, 0, 0, 0.4);
+    box-shadow: 4px 4px 10px rbga(0, 0, 0, 0.4);
+    pointer-events: none;
+    p {
+    	margin: 0;
+    	font-family: sans-serif;
+    	font-size: 16px;
+    	line-height: 20px;
+	}
+}
