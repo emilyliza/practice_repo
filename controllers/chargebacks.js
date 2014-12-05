@@ -3,6 +3,7 @@ module.exports = function(app) {
 	var _ = require('underscore'),
 		$ = require('seq'),
 		mw = require('./middleware'),
+		moment = require('moment'),
 		Chargeback = app.Models.get('Chargeback');
 		
 
@@ -17,6 +18,13 @@ module.exports = function(app) {
 		.seq(function() {
 			var query = Chargeback.find();
 
+			if (params.start) {
+				query.where('gateway_data.TransDate').gte( moment(parseInt(params.start)).toDate() );
+			}
+			if (params.end) {
+				query.where('gateway_data.TransDate').lte( moment(parseInt(params.end)).toDate() );
+			}
+
 			if (params.query && params.query.match(/[0-9\.]/)) {
 				query.or([
 					{ 'portal_data.ChargebackAmt': params.query },
@@ -29,9 +37,6 @@ module.exports = function(app) {
 					{ 'gateway_data.FirstName': pattern },
 					{ 'gateway_data.LastName': pattern }
 				]);
-			} else if (params.status) {
-				query.where('derived_data.status.name').equals(params.status);
-				query.where('gateway_data.TransDate').lte(new Date());
 			}
 
 			query.skip( (params.page ? ((+params.page - 1) * params.limit) : 0) );

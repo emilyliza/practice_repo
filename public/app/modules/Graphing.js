@@ -1,6 +1,6 @@
 (function() {
 
-	angular.module('graphing', [])
+	angular.module('graphing', ['reporting'])
 
 	 .constant('GRAPHING_COLORS', [
 	 	"#1f77b4",
@@ -48,7 +48,11 @@
 	
 	
 
-	.directive('pie', ['$window', '$http', '$filter', 'GRAPHING_COLORS', '$timeout', function($window, $http, $filter, GRAPHING_COLORS, $timeout) {
+	.directive('pie',
+		[
+		'$window', '$http', '$filter', 'GRAPHING_COLORS', '$timeout', '$state', 'ReportingService',
+		function($window, $http, $filter, GRAPHING_COLORS, $timeout, $state, ReportingService) {
+
 		return {
 			restrict:'EA',
 			template: "<div></div>",
@@ -236,6 +240,14 @@
 									// Hide the tooltip
 									d3.select("#tooltip")
 										.style("opacity", 0);;
+								})
+								.on("click", function(d) {
+									var params = {},
+										dates = ReportingService.getDates();
+									params[res.filtertype] = d.name;
+									params['start'] = dates.start;
+									params['end'] = dates.end;
+									$state.go('chargebacks', params );
 								});
 							paths
 								.transition()

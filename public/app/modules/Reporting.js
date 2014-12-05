@@ -147,7 +147,7 @@
 
 		$scope.date = {
 			start: {
-				val: new Date(),
+				val: moment().date(1).toDate(),
 				opened: false
 			},
 			end: {
@@ -155,10 +155,29 @@
 				opened: false
 			}
 		};
+		ReportingService.setDates($scope.date);
+
+		$scope.$watch("date.start.val", function(newValue, oldValue){
+			ReportingService.setDates($scope.date);
+			//@TODO: rerun pie data
+		});
+		$scope.$watch("date.end.val", function(newValue, oldValue){
+			ReportingService.setDates($scope.date);
+			//@TODO: rerun pie data
+		});
 		
 		ReportingService.getReports().then(function(data) {
 			$scope.data = data;
 		});
+
+		$scope.merchants = [
+			{ name:'CozyThings LLC', shade:'dark'},
+			{ name:'MoneyMakers Inc', shade:'light'},
+			{ name:'Christmas Co', shade:'dark'},
+			{ name:'Holiday Inc', shade:'dark'},
+			{ name:'BigMerchant Corp', shade:'light'}
+		];
+		$scope.selectedMerchant = $scope.merchants[0];
 
 		angular.element('#pages').removeClass("container");
 
@@ -169,6 +188,19 @@
 	.factory('ReportingService', ['$http', function ($http) {
 		var reportingService = {};
 
+		var start, end;
+		reportingService.setDates = function(d){
+			start = moment(d.start.val).valueOf();
+			end = moment(d.end.val).valueOf();
+		};
+
+		reportingService.getDates = function(){
+			return {
+				start: start,
+				end: end
+			};
+		}
+
 		reportingService.getReports = function() {
 			return $http
 			.get('/api/v1/dashboard')
@@ -178,27 +210,27 @@
 		};
 
 		reportingService.getStatusData = function() {
-			return $http.get('/api/v1/report/status');
+			return $http.get('/api/v1/report/status?start=' + start + "&end=" + end);
 		};
 
 		reportingService.getMidStatusData = function() {
-			return $http.get('/api/v1/report/midStatus');
+			return $http.get('/api/v1/report/midStatus?start=' + start + "&end=" + end);
 		};
 
 		reportingService.getTypeData = function() {
-			return $http.get('/api/v1/report/cctypes');
+			return $http.get('/api/v1/report/cctypes?start=' + start + "&end=" + end);
 		};
 
 		reportingService.getMidTypeData = function() {
-			return $http.get('/api/v1/report/midTypes');
+			return $http.get('/api/v1/report/midTypes?start=' + start + "&end=" + end);
 		};
 
 		reportingService.getProcessorTypeData = function() {
-			return $http.get('/api/v1/report/processorTypes');
+			return $http.get('/api/v1/report/processorTypes?start=' + start + "&end=" + end);
 		};
 
 		reportingService.getProcessorStatusData = function() {
-			return $http.get('/api/v1/report/processorStatus');
+			return $http.get('/api/v1/report/processorStatus?start=' + start + "&end=" + end);
 		};
 
 

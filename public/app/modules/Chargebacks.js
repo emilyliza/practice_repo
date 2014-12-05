@@ -5,7 +5,7 @@
 	.config(['$stateProvider', function( $stateProvider ) {
 		
 		$stateProvider.state('chargebacks', {
-			url: '/chargebacks',
+			url: '/chargebacks?status&start&end&card_type',
 			templateUrl: '/app/templates/chargebacks.html',
 			requiresAuth: true,
 			controller: 'ChargebacksController'
@@ -19,8 +19,8 @@
 
 	}])
 
-	.factory('ChargebacksService', ['$http', '$timeout', function ($http, $timeout) {
-			
+	.factory('ChargebacksService', ['$http', '$timeout', '$state', function ($http, $timeout, $state) {
+		
 		var ChargebacksService = function() {
 			this.data = [];
 			this.busy = false;
@@ -71,6 +71,7 @@
     		console.log('nextPage');
     		console.log('\tQuery: ' + this.query);
     		console.log('\tLast: ' + this.lastQuery);
+    		console.log($state.params);
 
 			if (this.query && this.lastQuery != this.query) {
     			// new query, reset list
@@ -78,10 +79,24 @@
     			this.data = [];
     			this.lastQuery = this.query;
     		}
-
-    		if (this.data.length > 0 && this.data.length < 30) { return; }
     		
-    		$http.get('/api/v1/chargebacks?query=' + this.query + '&page=' + this.page)
+    		if (this.data.length > 0 && this.data.length < 30) { return; }
+
+    		var url = '/api/v1/chargebacks?page=' + this.page;
+    		if (this.query) {
+    			url + '&query=' + query;
+    		}
+    		
+    		if ($state.params) {
+    			_.each(_.keys($state.params), function(k) {
+    				console.log(k)
+    				if ($state.params[k]) {
+    					url += '&' + k + '=' + $state.params[k];
+    				}
+    			});
+    		}
+    		
+    		$http.get(url)
 			.success(function (rows) {
 				var new_data = rows;
 				

@@ -66,6 +66,7 @@ module.exports = function(app) {
 			byVolume: {
 				label: 'Status By Volume',
 				data_type: 'currency',
+				filtertype: 'status',
 				data: [
 					{ name: 'Received', val: 0 },
 					{ name: 'Bundled', val: 824 },
@@ -82,6 +83,7 @@ module.exports = function(app) {
 			byCount: {
 				label: 'Status By Count',
 				data_type: 'number',
+				filtertype: 'status',
 				data: [
 					{ name: 'Received', val: 40 },
 					{ name: 'Bundled', val: 29 },
@@ -117,6 +119,7 @@ module.exports = function(app) {
 			out.push({
 				label: 'MID: ' + chance.natural({min: 1, max: 100000}),
 				data_type: 'number',
+				filtertype: 'status',
 				data: [
 					{ name: 'Received', val: chance.natural({min: 1, max: 500}) },
 					{ name: 'Bundled', val: chance.natural({min: 1, max: 500}) },
@@ -149,6 +152,7 @@ module.exports = function(app) {
 			byVolume: {
 				label: 'Status By Volume',
 				data_type: 'currency',
+				filtertype: 'card_type',
 				data: [
 					{ name: 'Visa', val: chance.floating({min: 1, max: 100, fixed: 2}) },
 					{ name: 'Mastercard', val: chance.floating({min: 1, max: 100, fixed: 2}) },
@@ -160,6 +164,7 @@ module.exports = function(app) {
 			byCount: {
 				label: 'Status By Count',
 				data_type: 'number',
+				filtertype: 'card_type',
 				data: [
 					{ name: 'Visa', val: chance.natural({min: 1, max: 5000}) },
 					{ name: 'Mastercard', val: chance.natural({min: 1, max: 5000}) },
@@ -185,6 +190,7 @@ module.exports = function(app) {
 			out.push({
 				label: chance.first() + ' Inc.',
 				data_type: 'number',
+				filtertype: 'card_type',
 				data: [
 					{ name: 'Visa', val: chance.natural({min: 1, max: 5000}) },
 					{ name: 'Mastercard', val: chance.natural({min: 1, max: 5000}) },
@@ -212,6 +218,7 @@ module.exports = function(app) {
 			out.push({
 				label: chance.first() + ' Inc.',
 				data_type: 'number',
+				filtertype: 'staus',
 				data: [
 					{ name: 'Received', val: chance.natural({min: 1, max: 500}) },
 					{ name: 'Bundled', val: chance.natural({min: 1, max: 500}) },
@@ -244,6 +251,7 @@ module.exports = function(app) {
 			out.push({
 				label: 'MID: ' + chance.natural({min: 1, max: 100000}),
 				data_type: 'number',
+				filtertype: 'card_type',
 				data: [
 					{ name: 'Visa', val: chance.natural({min: 1, max: 5000}) },
 					{ name: 'Mastercard', val: chance.natural({min: 1, max: 5000}) },
