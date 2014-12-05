@@ -51,8 +51,7 @@
 				$scope.currentUser = UserService.getCurrentUser();
 			});
 			
-			// set scope.currentUser for use within nav
-			$scope.currentUser = user;
+			
 		
     }]);
 	

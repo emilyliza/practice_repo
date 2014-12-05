@@ -121,7 +121,7 @@
 					}]
 				}
 			}
-		})
+		});
 
 	
 	}])
@@ -137,7 +137,7 @@
 			setTimeout(function() {
 				angular.element(document.querySelectorAll('.nav-tabs li')[0]).removeClass('active');
 			},50);
-		};
+		}
 		
 
 		$scope.graphstatus1 = {};
@@ -199,7 +199,7 @@
 				start: start,
 				end: end
 			};
-		}
+		};
 
 		reportingService.getReports = function() {
 			return $http

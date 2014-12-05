@@ -164,7 +164,7 @@
 
 		this.save = function(data) {
 			return $http.put('/api/v1/chargeback/' + data._id, data);
-		}
+		};
 
 	}]);
 

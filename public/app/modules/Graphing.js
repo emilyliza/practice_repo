@@ -63,13 +63,13 @@
 				
 				$timeout(function() {
 					
-					var	container = elem.find('div')
+					var	container = elem.find('div'),
 						d3 = $window.d3,
 						w = container.width(),
 						h = container.width(),
 						r = container.width()/2 - 75,
-						ir = r - 50;
-						textOffset = 14;
+						ir = r - 50,
+						textOffset = 14,
 						tweenDuration = 250;
 
 					//OBJECTS TO BE POPULATED WITH DATA LATER
@@ -227,7 +227,7 @@
 										tt += $filter('number')(d.value);
 									}
 									tt += " or " + Math.round( d.pct * 10000)/100 + '%';
-									tt += '</div>'
+									tt += '</div>';
 
 									d3.select("#tooltip")
 										.style("left", (d3.event.pageX - 220) + "px")
@@ -239,7 +239,7 @@
 								.on("mouseout", function () {
 									// Hide the tooltip
 									d3.select("#tooltip")
-										.style("opacity", 0);;
+										.style("opacity", 0);
 								})
 								.on("click", function(d) {
 									var params = {},
@@ -420,7 +420,7 @@
 						}
 
 						
-					}
+					};
 
 					if (attrs.graphData) {
 						ctrl.update(JSON.parse(attrs.graphData));
@@ -447,7 +447,7 @@
 							s0 = 0;
 							e0 = 0;
 						}
-						var i = d3.interpolate({startAngle: s0, endAngle: e0}, {startAngle: d.startAngle, endAngle: d.endAngle});
+						i = d3.interpolate({startAngle: s0, endAngle: e0}, {startAngle: d.startAngle, endAngle: d.endAngle});
 						return function(t) {
 							var b = i(t);
 							return arc(b);
@@ -457,7 +457,7 @@
 					function removePieTween(d, i) {
 						s0 = 2 * Math.PI;
 						e0 = 2 * Math.PI;
-						var i = d3.interpolate({startAngle: d.startAngle, endAngle: d.endAngle}, {startAngle: s0, endAngle: e0});
+						i = d3.interpolate({startAngle: d.startAngle, endAngle: d.endAngle}, {startAngle: s0, endAngle: e0});
 						return function(t) {
 							var b = i(t);
 							return arc(b);
@@ -486,7 +486,7 @@
 
 				});
 			}
-		}
+		};
 	}])
 
 	.directive('graphBar', ['$parse', '$window', '$http', function($parse, $window, $http){
@@ -496,7 +496,7 @@
 			link: function(scope, elem, attrs) {
 				
 				var	margin = {top: 20, right: 20, bottom: 30, left: 50},
-					container = elem.find('div')
+					container = elem.find('div'),
 					width = container.width() - margin.left - margin.right,
 					height = attrs.graphHeight - margin.top - margin.bottom,
 					d3 = $window.d3;

@@ -83,13 +83,10 @@
     		if (this.data.length > 0 && this.data.length < 30) { return; }
 
     		var url = '/api/v1/chargebacks?page=' + this.page;
-    		if (this.query) {
-    			url + '&query=' + query;
-    		}
+    		url += '&query=' + query;
     		
     		if ($state.params) {
     			_.each(_.keys($state.params), function(k) {
-    				console.log(k)
     				if ($state.params[k]) {
     					url += '&' + k + '=' + $state.params[k];
     				}
