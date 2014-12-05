@@ -132,9 +132,14 @@
 		$scope.data = null;
 		$scope.$state = $state;	// for navigation active to work		
 		
-		$scope.thing = {
-			active: false
+		// hack to fix auto activation of first tab
+		if ($state.current.url != "/overview") {
+			setTimeout(function() {
+				angular.element(document.querySelectorAll('.nav-tabs li')[0]).removeClass('active');
+			},50);
 		};
+		
+
 		$scope.graphstatus1 = {};
 		$scope.graphstatus2 = {};
 		$scope.graphtype1 = {};
