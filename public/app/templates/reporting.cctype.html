@@ -8,6 +8,9 @@
     <tab ui-sref=".byMid" ui-sref-active="active">
 		<tab-heading>By MID</tab-heading>
     </tab>
+    <div class="pull-right" style="width: auto;">
+    	Merchant: <select ng-model="selectedMerchant" ng-options="merchant.name for merchant in merchants"></select>
+    </div>
 </tabset>
 
 <div style="margin-top: 20px;" ui-view="typeViews"></div>
