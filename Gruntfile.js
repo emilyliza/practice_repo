@@ -250,7 +250,7 @@ module.exports = function(grunt) {
 		'concat:generated',	// concat all js files into one
 		'less:generated',	// less to css
 		'uglify',			// compress concated js
-		'karma',			// run karam unit tests on production code
+		//'karma',			// run karam unit tests on production code
 		'cssmin',			// cssmin won't replace file, so instead gen .min.csss (convoluted file swapping)
 		'clean:origcss',	// then remove original chargeback.css
 		'copy:cssmin',		// move chargeback.min.css to chargeback.css

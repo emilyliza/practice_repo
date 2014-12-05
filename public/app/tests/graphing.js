@@ -13,8 +13,8 @@ describe('graphing directive', function() {
 	    });
 	});
 
-	beforeEach(module("graphing")); 
-
+	beforeEach(module("graphing"));
+	
 	beforeEach(inject(function($injector, _$window_) {
 		
 		$window = _$window_;
@@ -33,14 +33,17 @@ describe('graphing directive', function() {
 		$httpBackend.verifyNoOutstandingRequest();
 	});
 
+	
 	describe('directive: graphing', function() {
 		var element, scope;
 
-		beforeEach(inject(function($rootScope, $compile) {
+		beforeEach(inject(function($rootScope, $compile, $controller) {
 			scope = $rootScope.$new();
+			
+			var ctrl = $controller('LoginController', { $scope: scope });
 
-			scope.g = JSON.stringify({"label":"MID: 36501","data_type":"number","data":[{"name":"Received","val":346},{"name":"Bundled","val":200},{"name":"Waiting","val":479},{"name":"Responded","val":97},{"name":"Accepted","val":382},{"name":"Late","val":412},{"name":"Won","val":239},{"name":"Pre-arb","val":187},{"name":"Presented","val":278},{"name":"Lost","val":209}],"searchField":"MID: 36501"});
-			element = '<div class="pie" pie graph-data="{{g}}" ></div>';
+			scope.g = JSON.stringify({"label":"MID: 36501","filtertype":"status","data_type":"number","data":[{"name":"Received","val":346},{"name":"Bundled","val":200},{"name":"Waiting","val":479},{"name":"Responded","val":97},{"name":"Accepted","val":382},{"name":"Late","val":412},{"name":"Won","val":239},{"name":"Pre-arb","val":187},{"name":"Presented","val":278},{"name":"Lost","val":209}],"searchField":"MID: 36501"});
+			element = '<div class="pie" pie control="graphstatus1" ></div>';
 			
 			element = $compile(element)(scope);
 			scope.$digest();
