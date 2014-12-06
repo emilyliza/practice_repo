@@ -83,7 +83,7 @@
     		if (this.data.length > 0 && this.data.length < 30) { return; }
 
     		var url = '/api/v1/chargebacks?page=' + this.page;
-    		url += '&query=' + query;
+    		url += '&query=' + this.query;
     		
     		if ($state.params) {
     			_.each(_.keys($state.params), function(k) {
