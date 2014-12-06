@@ -45,6 +45,7 @@
 				if (!user) {
 					return UserService.logout();
 				}
+				$scope.currentUser = user;
 			}
 
 			$rootScope.$on(AUTH_EVENTS.loginSuccess, function() {
