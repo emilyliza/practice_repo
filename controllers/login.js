@@ -37,8 +37,6 @@ module.exports = function(app) {
 			// We are sending the profile inside the token
 			var token = jwt.sign(user, process.env.TOKEN_SECRET, { expiresInMinutes: 60*5 });
 
-			console.log('Generated Token:');
-			console.log(token);
 			
 			// add token to user data response.
 			user.authtoken = token;

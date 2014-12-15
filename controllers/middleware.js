@@ -33,18 +33,13 @@ middleware.auth = function() {
 			}
 		}
 
-		console.log('Supplied Token:');
-		console.log(token);
-
+		
 		jwt.verify(token, process.env.TOKEN_SECRET, function(err, decoded) {
 			if (err) {
 				console.log('jwt.verify error!!!');
 				console.log(err);
 				return res.send(401);
 			}
-
-			console.log('found in token:');
-			console.log(decoded);
 
 			req.user = decoded;
 
