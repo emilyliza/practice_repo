@@ -34,11 +34,10 @@ module.exports = function(app) {
 				'email': 'larry@jouncer.com'
 			};
 
-			console.log(process.env.TOKEN_SECRET);
-
 			// We are sending the profile inside the token
 			var token = jwt.sign(user, process.env.TOKEN_SECRET, { expiresInMinutes: 60*5 });
 
+			console.log('Generated Token:');
 			console.log(token);
 			
 			// add token to user data response.

@@ -33,7 +33,7 @@ middleware.auth = function() {
 			}
 		}
 
-		console.log('Checking...');
+		console.log('Supplied Token:');
 		console.log(token);
 
 		jwt.verify(token, process.env.TOKEN_SECRET, function(err, decoded) {
