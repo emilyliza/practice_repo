@@ -49,13 +49,14 @@
 		};
 		
 		this.setToken = function(token) {
-			console.log('setting token');
+			console.log('setting token: ' + token);
 			$window.sessionStorage.token = token;
 			return true;
 		};
 
-		this.getToken = function(token) {
+		this.getToken = function() {
 			if ($window.sessionStorage.token) {
+				console.log('getting token: ' + $window.sessionStorage.token);
 				return $window.sessionStorage.token;
 			}
 			return false;
