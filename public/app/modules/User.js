@@ -17,6 +17,7 @@
 				.post('/api/v1/login', d)
 				.then(function (res) {
 					
+					console.log('calling setToken');
 					self.setToken(res.data.authtoken);
 					delete res.data.authtoken;	// don't have token in current user
 					
@@ -48,6 +49,7 @@
 		};
 		
 		this.setToken = function(token) {
+			console.log('setting token');
 			$window.sessionStorage.token = token;
 			return true;
 		};
