@@ -16,7 +16,12 @@
 		.state('reporting.overview', {
 			url: '/overview',
 			requiresAuth: true,
-			templateUrl: '/app/templates/reporting.overview.html'
+			templateUrl: '/app/templates/reporting.overview.html',
+			controller: [ '$scope', '$timeout', function($scope, $timeout) {
+				$timeout(function() {
+					$scope.getReports();
+				});
+			}]
 		})
 		.state('reporting.status', {
 			url: '/status',
@@ -30,13 +35,9 @@
 			views: {
 				'statusViews': {	
 					templateUrl: '/app/templates/reporting.status.overview.html',
-					controller: [ '$scope', 'ReportingService', '$timeout', function($scope, ReportingService, $timeout) {
+					controller: [ '$scope', '$timeout', function($scope, $timeout) {
 						$timeout(function() {
-							$scope.setSelected( ReportingService.getMerchant() );
-							ReportingService.getStatusData().then(function(res) {
-								$scope.graphstatus1.update(res.data.byCount);
-								$scope.graphstatus2.update(res.data.byVolume);
-							});
+							$scope.getStatusData();
 						});
 					}]
 				}
@@ -49,12 +50,8 @@
 			views: {
 				'statusViews': {	
 					templateUrl: '/app/templates/reporting.byProcessor.html',
-					controller: [ '$scope', 'ReportingService', function($scope, ReportingService) {
-						$scope.setSelected( ReportingService.getMerchant() );
-						$scope.processorData = {};
-						ReportingService.getProcessorStatusData().then(function(res) {
-							$scope.processorData = res.data;
-						});
+					controller: [ '$scope', '$timeout', function($scope, $timeout) {
+						$scope.getProcessorStatusData();
 					}]
 				}
 			}
@@ -65,11 +62,8 @@
 			views: {
 				'statusViews': {
 					templateUrl: '/app/templates/reporting.byMid.html',
-					controller: [ '$scope', 'ReportingService', function($scope, ReportingService) {
-						$scope.setSelected( ReportingService.getMerchant() );
-						ReportingService.getMidStatusData().then(function(res) {
-							$scope.midData = res.data;
-						});
+					controller: [ '$scope', '$timeout', function($scope, $timeout) {
+						$scope.getMidStatusData();
 					}]
 				}
 			}
@@ -85,13 +79,9 @@
 			views: {
 				'typeViews': {	
 					templateUrl: '/app/templates/reporting.cctype.overview.html',
-					controller: [ '$scope', 'ReportingService', '$timeout', function($scope, ReportingService, $timeout) {
+					controller: [ '$scope', '$timeout', function($scope, $timeout) {
 						$timeout(function() {
-							$scope.setSelected( ReportingService.getMerchant() );
-							ReportingService.getTypeData().then(function(res) {
-								$scope.graphtype1.update(res.data.byCount);
-								$scope.graphtype2.update(res.data.byVolume);
-							});
+							$scope.getTypeData();
 						});
 					}]
 				}
@@ -103,11 +93,9 @@
 			views: {
 				'typeViews': {	
 					templateUrl: '/app/templates/reporting.byProcessor.html',
-					controller: [ '$scope', 'ReportingService', function($scope, ReportingService) {
-						$scope.processorData = {};
-						$scope.setSelected( ReportingService.getMerchant() );
-						ReportingService.getProcessorTypeData().then(function(res) {
-							$scope.processorData = res.data;
+					controller: [ '$scope', '$timeout', function($scope, $timeout) {
+						$timeout(function() {
+							$scope.getProcessorTypeData();
 						});
 					}]
 				}
@@ -119,10 +107,9 @@
 			views: {
 				'typeViews': {
 					templateUrl: '/app/templates/reporting.byMid.html',
-					controller: [ '$scope', 'ReportingService', function($scope, ReportingService) {
-						$scope.setSelected( ReportingService.getMerchant() );
-						ReportingService.getMidTypeData().then(function(res) {
-							$scope.midData = res.data;
+					controller: [ '$scope', '$timeout', function($scope, $timeout) {
+						$timeout(function() {
+							$scope.getMidTypeData();
 						});
 					}]
 				}
@@ -133,9 +120,10 @@
 	}])
 
 	
-	.controller('ReportingController', [ '$scope', '$rootScope', 'ReportingService', '$state', function($scope, $rootScope, ReportingService, $state) {
+	.controller('ReportingController', [ '$scope', '$rootScope', 'ReportingService', '$state', '$timeout', function($scope, $rootScope, ReportingService, $state, $timeout) {
 		//$scope.data = res.data;
 		$scope.data = null;
+		$scope.last = null;
 		$scope.$state = $state;	// for navigation active to work		
 		
 		// hack to fix auto activation of first tab
@@ -150,6 +138,9 @@
 		$scope.graphstatus2 = {};
 		$scope.graphtype1 = {};
 		$scope.graphtype2 = {};
+		$scope.list_data_types = [
+			'processorData', 'midData'
+		];
 
 		$scope.date = {
 			start: {
@@ -172,11 +163,10 @@
 			//@TODO: rerun pie data
 		});
 		
-		ReportingService.getReports().then(function(data) {
-			$scope.data = data;
-		});
+		// go full screen inside reporting
+		angular.element('#pages').removeClass("container");
 
-	
+		
 		//@TODO: the merchants array should come from initial user data
 		$scope.merchants = [
 			{ name:'CozyThings LLC', shade:'dark'},
@@ -188,10 +178,7 @@
 		ReportingService.setMerchants($scope.merchants);
 		
 		// default is first
-		if (!ReportingService.getMerchant()) {
-			ReportingService.setMerchant(0);
-		}
-		
+		ReportingService.setMerchant( (ReportingService.getMerchant() || 0) );
 		$scope.selectedMerchant = $scope.merchants[ ReportingService.getMerchant() ];
 
 		$scope.setSelected = function(i) {
@@ -204,10 +191,82 @@
 				return merch.name == m.name;
 			});
 			ReportingService.setMerchant(i);
+			$scope[$scope.last]();
 		};
 
-		angular.element('#pages').removeClass("container");
+		$scope.getReports = function() {
+			$scope.last = 'getReports';
+			$scope.clearOtherData($scope.last);
+			$scope.setSelected( ReportingService.getMerchant() );
+			ReportingService.getReports().then(function(data) {
+				$scope.data = data;
+			});
+		};
 
+		$scope.getStatusData = function() {
+			$scope.last = 'getStatusData';
+			$scope.clearOtherData($scope.last);
+			$scope.setSelected( ReportingService.getMerchant() );
+			ReportingService.getStatusData().then(function(res) {
+				$scope.graphstatus1.update(res.data.byCount);
+				$scope.graphstatus2.update(res.data.byVolume);
+			});
+		};
+
+		$scope.getProcessorStatusData = function() {
+			$scope.last = 'getProcessorStatusData';
+			$scope.clearOtherData($scope.last);
+			$scope.setSelected( ReportingService.getMerchant() );
+			ReportingService.getProcessorStatusData().then(function(res) {
+				$scope.processorData = res.data;
+			});
+		};
+
+		$scope.getMidStatusData = function() {
+			$scope.last = 'getMidStatusData';
+			$scope.clearOtherData($scope.last);
+			$scope.setSelected( ReportingService.getMerchant() );
+			ReportingService.getMidStatusData().then(function(res) {
+				$scope.midData = res.data;
+			});
+		};
+
+		$scope.getTypeData = function() {
+			$scope.last = 'getTypeData';
+			$scope.clearOtherData($scope.last);
+			$scope.setSelected( ReportingService.getMerchant() );
+			ReportingService.getTypeData().then(function(res) {
+				$scope.graphtype1.update(res.data.byCount);
+				$scope.graphtype2.update(res.data.byVolume);
+			});
+		};
+
+		$scope.getProcessorTypeData = function() {
+			$scope.last = 'getProcessorTypeData';
+			$scope.clearOtherData($scope.last);
+			$scope.setSelected( ReportingService.getMerchant() );
+			ReportingService.getProcessorTypeData().then(function(res) {
+				$scope.processorData = res.data;
+			});
+		};
+
+		$scope.getMidTypeData = function() {
+			$scope.last = 'getMidTypeData';
+			$scope.clearOtherData($scope.last);
+			$scope.setSelected( ReportingService.getMerchant() );
+			ReportingService.getMidTypeData().then(function(res) {
+				$scope.midData = res.data;
+			});
+		};
+
+		$scope.clearOtherData = function(not) {
+			_.each($scope.list_data_types, function(t) {
+				if (t != not) {
+					$scope[t] = [];
+				}
+			});
+		};
+		
 		
 	}])
 
@@ -260,23 +319,23 @@
 		};
 
 		reportingService.getStatusData = function() {
-			return $http.get('/api/v1/report/status?start=' + start + "&end=" + end + "&merchant=" + merchant);
+			return $http.get('/api/v1/report/status?start=' + start + "&end=" + end + "&merchant=" + merchants[merchant].name);
 		};
 
 		reportingService.getMidStatusData = function() {
-			return $http.get('/api/v1/report/midStatus?start=' + start + "&end=" + end + "&merchant=" + merchant);
+			return $http.get('/api/v1/report/midStatus?start=' + start + "&end=" + end + "&merchant=" + merchants[merchant].name);
 		};
 
 		reportingService.getTypeData = function() {
-			return $http.get('/api/v1/report/cctypes?start=' + start + "&end=" + end + "&merchant=" + merchant);
+			return $http.get('/api/v1/report/cctypes?start=' + start + "&end=" + end + "&merchant=" + merchants[merchant].name);
 		};
 
 		reportingService.getMidTypeData = function() {
-			return $http.get('/api/v1/report/midTypes?start=' + start + "&end=" + end + "&merchant=" + merchant);
+			return $http.get('/api/v1/report/midTypes?start=' + start + "&end=" + end + "&merchant=" + merchants[merchant].name);
 		};
 
 		reportingService.getProcessorTypeData = function() {
-			return $http.get('/api/v1/report/processorTypes?start=' + start + "&end=" + end + "&merchant=" + merchant);
+			return $http.get('/api/v1/report/processorTypes?start=' + start + "&end=" + end + "&merchant=" + merchants[merchant].name);
 		};
 
 		reportingService.getProcessorStatusData = function() {
