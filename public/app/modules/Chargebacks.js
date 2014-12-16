@@ -5,7 +5,7 @@
 	.config(['$stateProvider', function( $stateProvider ) {
 		
 		$stateProvider.state('chargebacks', {
-			url: '/chargebacks?status&start&end&card_type',
+			url: '/chargebacks?status&start&end&card_type&merchant',
 			templateUrl: '/app/templates/chargebacks.html',
 			requiresAuth: true,
 			controller: 'ChargebacksController'
@@ -85,6 +85,7 @@
     		var url = '/api/v1/chargebacks?page=' + this.page;
     		url += '&query=' + this.query;
     		
+    		// additional params such as start, end, card_type, merchanct, etc
     		if ($state.params) {
     			_.each(_.keys($state.params), function(k) {
     				if ($state.params[k]) {

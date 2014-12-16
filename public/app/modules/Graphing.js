@@ -243,10 +243,12 @@
 								})
 								.on("click", function(d) {
 									var params = {},
-										dates = ReportingService.getDates();
+										dates = ReportingService.getDates(),
+										merchant = ReportingService.getMerchants()[ ReportingService.getMerchant() ];
 									params[res.filtertype] = d.name;
 									params['start'] = dates.start;
 									params['end'] = dates.end;
+									params['merchant'] = merchant.name;
 									$state.go('chargebacks', params );
 								});
 							paths

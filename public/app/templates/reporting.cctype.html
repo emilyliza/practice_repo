@@ -9,7 +9,7 @@
 		<tab-heading>By MID</tab-heading>
     </tab>
     <div class="pull-right merchantSelect">
-    	Merchant: <select ng-model="selectedMerchant" ng-options="merchant.name for merchant in merchants"></select>
+        Merchant: <select ng-model="selectedMerchant" ng-change="setMerchant(selectedMerchant)" ng-options="merchant.name for merchant in merchants"></select>
     </div>
 </tabset>
 
