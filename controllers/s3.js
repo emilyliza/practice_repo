@@ -10,7 +10,10 @@ module.exports = function(app) {
 
 	
 
-
+	/*
+		The s3 route creates a data object that includes a signature allowing a web client to 
+		directly upload to S3. S3 will require all fields below in order to successfully upload directly.
+	*/
 	app.get('/api/v1/s3?', mw.auth(), function(req, res, next) {
 
 		var expires = moment().add('minutes', 10).toISOString();
