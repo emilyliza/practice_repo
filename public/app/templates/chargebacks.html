@@ -19,8 +19,8 @@
 	</div>
 
 	<div class="row" ng-repeat="cb in cbs.data">
-		<!-- <div class="col-sm-1"><a href="/chargeback/{{cb.derived_data.uuid}}/upload">{{cb.derived_data.uuid}}</a></div> -->
-		<div class="col-sm-1">{{cb.derived_data.uuid}}</div>
+		<div class="col-sm-1"><a href="/chargeback/{{cb.derived_data.uuid}}/upload">{{cb.derived_data.uuid}}</a></div>
+		<!-- <div class="col-sm-1">{{cb.derived_data.uuid}}</div> -->
 		<div class="col-sm-3">{{cb.gateway_data.TransDate | date:'medium'}}</div>
 		<div class="col-sm-2">{{cb.portal_data.ChargebackAmt | currency}}</div>
 		<div class="col-sm-3">{{cb.gateway_data.FirstName}} {{cb.gateway_data.LastName}}</div>
