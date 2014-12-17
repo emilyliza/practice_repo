@@ -495,51 +495,63 @@
 		return {
 			restrict:'EA',
 			template: "<div></div>",
+			scope: {
+				control: '='
+			},
 			link: function(scope, elem, attrs) {
 				
-				var	margin = {top: 20, right: 20, bottom: 30, left: 50},
-					container = elem.find('div'),
+				var	container = elem.find('div'),
+					outerWidth = container.width(),
+					outerHeight = container.width() * .67,
+					margin = {top: 20, right: 20, bottom: 30, left: 50},
 					width = container.width() - margin.left - margin.right,
-					height = attrs.graphHeight - margin.top - margin.bottom,
+					height = (container.width() * .67) - margin.top - margin.bottom,
 					d3 = $window.d3;
 					
-				
 				var parseDate = d3.time.format("%Y-%m-%d").parse;
 
+				// Width of bars, without padding. 
+				var barRawWidth = width / 14,
+					barPadding = 10,
+					xStart = barPadding + (barRawWidth/2),
+					barWidth = barRawWidth - (barPadding*2);
+
+				var x = d3.time.scale().range([xStart, width-xStart]);
+
+				var y = d3.scale.linear()
+					.range([height, 0]);
 				
-				var svg = d3.select(container[0]).append("svg")
-					.attr("width", width + margin.left + margin.right)
-					.attr("height", height + margin.top + margin.bottom)
-					.append("g")
-					.attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+				var xAxis = d3.svg.axis()
+					.scale(x)
+					.orient("bottom")
+					.ticks(d3.time.month, 1)
+					.tickFormat(d3.time.format('%b %Y'));
 
 				
-				$http.get('/api/v1/' + attrs.graphEndpoint).success(function(data) {
+				var yAxis = d3.svg.axis()
+					.scale(y)
+					.orient("left");
+
 					
-					// Width of bars, without padding. 
-					var barRawWidth = width / (data.length + 2),
-						barPadding = 10,
-						xStart = barPadding + (barRawWidth/2),
-						barWidth = barRawWidth - (barPadding*2);
+				var chart = d3.select(container[0]).append("svg")
+					.attr("width", outerWidth)
+					.attr("height", outerHeight)
+					.append("g")
+					.attr("transform", "translate(" + margin.left + "," + margin.top + ")")
 
-					var x = d3.time.scale().range([xStart, width-xStart]);
+				// x-axis
+				chart
+					.append("g")
+					.attr("class", "x axis")
+					.attr("transform", "translate(0," + height + ")") 
+					.call(xAxis);
 
-					var y = d3.scale.linear()
-						.range([height, 0]);
-
-					var xAxis = d3.svg.axis()
-						.scale(x)
-						.orient("bottom")
-						.ticks(d3.time.month, 1)
-						.tickFormat(d3.time.format('%b %Y'));
-						
-					svg.append("g")
-						.attr("class", "x axis")
-						.attr("transform", "translate(0," + height + ")");
-
-					var yAxis = d3.svg.axis()
-						.scale(y)
-						.orient("left");
+				
+				var ctrl = this;
+				if (scope.control) {
+					ctrl = scope.control;
+				}
+				ctrl.update = function(data) {
 
 					data.forEach(function(d) {
 						d.date = parseDate(d.date);
@@ -549,41 +561,9 @@
 					x.domain(d3.extent(data, function(d) { return d.date; }));
 					y.domain([0, d3.max(data, function(d) { return d.total; })]);
 
-					// Call x-axis. 
-					d3.select(".x.axis")
-						.transition().duration(1000)
-						.call(xAxis);
-					
-					var bars = svg.selectAll(".bar")
-						.data(data, function(d) { return d.date; });
-
-					bars.exit().remove();
-    
-					bars.transition().duration(1000)
-						.attr("x", function(d) { return x(d.date) - (barWidth/2); })
-						.attr("width", barWidth)
-						.attr("y", function(d) { return y(d.air_used); })
-						.attr("height", function(d) { return height - y(d.air_used);});
-
-
-					bars.enter().append("rect")
-						.attr("class", "bar")
-						//.attr("x", function(d) { return x(d.date); })
-						.attr("x", function(d) { return x(d.date) - (barWidth/2); })
-    					.attr("width", barWidth)
-    					.attr("y", height)
-						.attr("height", 0)
-						.transition().duration(1000)
-						.attr("y", function(d) { return y(d.total); })
-						.attr("height", function(d) { return height - y(d.total); });
-
-
-					svg.append("g")
-						.attr("class", "x axis")
-						.attr("transform", "translate(0," + height + ")")
-						.call(xAxis);
-
-					svg.append("g")
+					// y-axis
+					chart.select(".y.axis").remove();
+					chart.append("g")
 						.attr("class", "y axis")
 						.call(yAxis)
 						.append("text")
@@ -592,8 +572,102 @@
 						.attr("dy", ".71em")
 						.style("text-anchor", "end")
 						.text("Total Monthly Chargebacks ($)");
+
+					var bar = chart.selectAll(".bar")
+						.data(data, function(d) { return d.date; });
+
+					// new data:
+					bar.enter().append("rect")
+						.attr("class", "bar")
+						.attr("x", function(d) { return x(d.date); })
+						.attr("x", function(d) { return x(d.date) - (barWidth/2); })
+						.attr("width", barWidth)
+						.attr('y', height)
+						.attr("height", 0)
+						.transition().duration(1000)
+						.attr("y", function(d) { return y(d.total); })
+						.attr("height", function(d) { return height - y(d.total); });
+
+					// removed data:
+					bar.exit().remove();
 					
-				});
+					// updated data:
+					bar
+						.transition()
+						.duration(750)
+						.attr("y", function(d) { return y(d.total); })
+						.attr("height", function(d) { return height - y(d.total); });
+
+
+					chart.append("g")
+						.attr("class", "x axis")
+						.attr("transform", "translate(0," + height + ")")
+						.call(xAxis);
+
+					chart.append("g")
+						.attr("class", "y axis")
+						.call(yAxis)
+						.append("text")
+						.attr("transform", "rotate(-90)")
+						.attr("y", 6)
+						.attr("dy", ".71em")
+						.style("text-anchor", "end");
+
+
+					
+
+					// x.domain(d3.extent(data, function(d) { return d.date; }));
+					// y.domain([0, d3.max(data, function(d) { return d.total; })]);
+
+					// // Call x-axis. 
+					// d3.select(".x.axis")
+					// 	.transition().duration(1000)
+					// 	.call(xAxis);
+					
+					// var bars = svg.selectAll(".bar")
+					// 	.data(data, function(d) { return d.date; });
+
+					// bars.exit().remove();
+    
+					// bars.transition().duration(1000)
+					// 	.attr("x", function(d) { return x(d.date) - (barWidth/2); })
+					// 	.attr("width", barWidth)
+					// 	.attr("y", function(d) { return y(d.air_used); })
+					// 	.attr("height", function(d) { return height - y(d.air_used);});
+
+
+					// bars.enter().append("rect")
+					// 	.attr("class", "bar")
+					// 	//.attr("x", function(d) { return x(d.date); })
+					// 	.attr("x", function(d) { return x(d.date) - (barWidth/2); })
+    	// 				.attr("width", barWidth)
+    	// 				.attr("y", height)
+					// 	.attr("height", 0)
+					// 	.transition().duration(1000)
+					// 	.attr("y", function(d) { return y(d.total); })
+					// 	.attr("height", function(d) { return height - y(d.total); });
+
+
+					// svg.append("g")
+					// 	.attr("class", "x axis")
+					// 	.attr("transform", "translate(0," + height + ")")
+					// 	.call(xAxis);
+
+					// svg.append("g")
+					// 	.attr("class", "y axis")
+					// 	.call(yAxis)
+					// 	.append("text")
+					// 	.attr("transform", "rotate(-90)")
+					// 	.attr("y", 6)
+					// 	.attr("dy", ".71em")
+					// 	.style("text-anchor", "end")
+						
+					
+				};
+
+				if (attrs.graphData) {
+					ctrl.update(JSON.parse(attrs.graphData));
+				}
 				
 			}
 		};

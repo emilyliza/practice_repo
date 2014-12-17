@@ -138,6 +138,7 @@
 		$scope.graphstatus2 = {};
 		$scope.graphtype1 = {};
 		$scope.graphtype2 = {};
+		$scope.graphBarHistory = {};
 		$scope.list_data_types = [
 			'processorData', 'midData'
 		];
@@ -201,6 +202,11 @@
 			ReportingService.getReports().then(function(data) {
 				$scope.data = data;
 			});
+
+			ReportingService.getHistory().then(function(res) {
+				$scope.graphBarHistory.update(res.data);
+			});
+
 		};
 
 		$scope.getStatusData = function() {
@@ -316,6 +322,10 @@
 			.then(function (res) {
 				return res.data;
 			});
+		};
+
+		reportingService.getHistory = function() {
+			return $http.get('/api/v1/history?start=' + start + "&end=" + end + "&merchant=" + merchants[merchant].name);
 		};
 
 		reportingService.getStatusData = function() {
