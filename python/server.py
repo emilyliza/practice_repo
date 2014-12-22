@@ -281,12 +281,17 @@ class HistoryHandler(BaseHandler):
 def cleanData(cb):
 	# clean data a little
     clean = {}
+    
+    dt = datetime.datetime.strptime( str(cb['DocGenData']['portal_data']['RequestDate']), "%Y-%m-%d %H:%M:%S")
+
     clean['__id'] = str(cb['_id'])
     clean['shipping_data'] = cb['DocGenData']['shipping_data']
     clean['gateway_data'] = cb['DocGenData']['gateway_data']
     clean['crm_data'] = cb['DocGenData']['crm_data']
     clean['portal_data'] = cb['DocGenData']['portal_data']
     clean['derived_data'] = cb['DocGenData']['derived_data']
+    
+    clean['portal_data']['RequestDate'] = str(dt.isoformat())
     clean['shipping_data']['ShippingDate'] = str(cb['DocGenData']['shipping_data']['ShippingDate'])
     clean['gateway_data']['TransDate'] = str(cb['DocGenData']['gateway_data']['TransDate'])
     clean['crm_data']['OrderDate'] = str(cb['DocGenData']['crm_data']['OrderDate'])
@@ -304,6 +309,7 @@ def main():
     http_server.listen(options.port)
     
     print '\tnow listening on http://localhost:' + str(options.port)
+    print '\tmongo: ' + str( os.environ['MONGOLAB_URI'] )
     tornado.ioloop.IOLoop.instance().start()
 
 if __name__ == "__main__":

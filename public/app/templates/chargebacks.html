@@ -21,7 +21,7 @@
 	<div class="row" ng-repeat="cb in cbs.data">
 		<!-- <div class="col-sm-2"><a href="/chargeback/{{cb.derived_data.uuid}}/upload">{{cb.portal_data.CaseNumber}}</a></div> -->
 		<div class="col-sm-2">{{cb.portal_data.CaseNumber}}</div>
-		<div class="col-sm-3">{{cb.portal_data.RequestDate | date:'medium'}}</div>
+		<div class="col-sm-3">{{cb.portal_data.RequestDate | date:'MMMM d, yyyy'}}</div>
 		<div class="col-sm-2">{{cb.portal_data.ChargebackAmt | currency}}</div>
 		<div class="col-sm-3">{{cb.gateway_data.FirstName}} {{cb.gateway_data.LastName}}</div>
 		<div class="col-sm-2" style="color: {{cb.derived_data.status.color}}">{{cb.derived_data.status.name}}</div>
