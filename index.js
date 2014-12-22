@@ -93,14 +93,14 @@ console.log('HEAD is ' + process.env.VERSION);
 require('./lib/appExtensions')(app);
 
 // User Routes
-require('./controllers/login')(app);
-require('./controllers/chargebacks')(app);
-require('./controllers/user')(app);
-require('./controllers/forgot')(app);
-require('./controllers/reporting')(app);
-require('./controllers/s3')(app);
-require('./controllers/dashboard')(app);
-require('./controllers/graphing')(app);
+require('./node-controllers/login')(app);
+require('./node-controllers/chargebacks')(app);
+require('./node-controllers/user')(app);
+require('./node-controllers/forgot')(app);
+require('./node-controllers/reporting')(app);
+require('./node-controllers/s3')(app);
+require('./node-controllers/dashboard')(app);
+require('./node-controllers/graphing')(app);
 
 if(process.env.NODE_ENV == 'production') {
 	app.use(function(req, res){
