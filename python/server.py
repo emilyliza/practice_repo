@@ -51,16 +51,20 @@ def authenticated(method):
 
 class Application(tornado.web.Application):
     def __init__(self):
+
+        settings = {
+            "debug": True,
+            #"static_path": os.path.join(os.path.dirname(__file__), "public")
+        }
+
         handlers = [
             (r"/", HomeHandler),
             (r"/api/v1/login", LoginHandler),
             (r"/api/v1/chargebacks", ChargebacksHandler),
             (r"/api/v1/chargeback/([0-9-A-Za-z]+)", ChargebackHandler),
             (r"/api/v1/history", HistoryHandler),
+            (r"/(.*)", tornado.web.StaticFileHandler, {"path": os.path.join(os.path.dirname(__file__), "../public")}),
         ]
-        settings = dict(
-            debug=True
-        )
 
         enable_pretty_logging()
         tornado.web.Application.__init__(self, handlers, **settings)
@@ -77,8 +81,10 @@ class BaseHandler(tornado.web.RequestHandler):
 
 class HomeHandler(BaseHandler):
     def get(self):
-        # self.render("index.html", entries=entries)
-        self.write('hi')
+        if os.environ['ENV'] == "production":
+            self.render("../dist/index.html")
+        else:
+            self.render("../public/index.html")
 
 
 
