@@ -13,10 +13,20 @@ You need git to clone the chargeback repository. You can get git from
 [http://git-scm.com/](http://git-scm.com/).
 
 
+### Clone chargeback
+
+Clone the chargeback.com repository using [git][git]:
+
+```
+git clone https://justinshreve@bitbucket.org/chargebackcomdev/merchantportal.git
+cd merchantportal
+```
+
+
 ### Build it
 
 ```
-./build-env.sh
+./build-python-env.sh
 ```
 
 What does build-env.sh do?
@@ -30,7 +40,7 @@ What does build-env.sh do?
 ### Run the Application in Dev mode
 
 ```
-./run.sh
+./run-py-server.sh
 ```
 
 The run script pulls in env variables from .env (this file should NOT be in repo) then runs python server.py from within venv
@@ -41,7 +51,7 @@ Now browse to the app at `http://localhost:8888/`.
 ### Run the Application in Production mode
 
 ```
-. venv/bin/activate && python server.py
+. venv/bin/activate && python ./python/server.py
 ```
 
 The only differnece between production and dev is the assumption that the correct ENV variables are already set.
@@ -51,7 +61,7 @@ Now browse to the app at `http://localhost:8888/`.
 
 ## Testing
 ```
-. venv/bin/activate && python server.py
+. venv/bin/activate && python ./python/server.py
 ```
 then
 ```
