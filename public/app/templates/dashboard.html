@@ -22,19 +22,19 @@
 		<h3 style="margin-top: 0px;">Five Most Recent Chargebacks</h3>
 		<div class="animated-grid chargebacks">
 			<div class="row head">
-				<div class="col-sm-1">ID</div>
+				<div class="col-sm-2">Case Number</div>
 				<div class="col-sm-3">Date</div>
 				<div class="col-sm-2">Amount</div>
 				<div class="col-sm-3">Customer</div>
-				<div class="col-sm-3">&nbsp;</div>
+				<div class="col-sm-2">&nbsp;</div>
 			</div>
 
 			<div class="row" ng-repeat="cb in dbs.data">
-				<div class="col-sm-1">{{cb.derived_data.uuid}}</div>
+				<div class="col-sm-2">{{cb.portal_data.CaseNumber}}</div>
 				<div class="col-sm-3"><span am-time-ago="cb.gateway_data.TransDate"></span></div>
 				<div class="col-sm-2">{{cb.portal_data.ChargebackAmt | currency}}</div>
 				<div class="col-sm-3">{{cb.gateway_data.FirstName}} {{cb.gateway_data.LastName}}</div>
-				<div class="col-sm-3">
+				<div class="col-sm-2">
 					<!--
 					<a class="btn btn-sm btn-success" href="/chargeback/{{cb.derived_data.uuid}}/upload">Get Started <span class="glyphicon glyphicon-chevron-right"></span></a>
 					-->

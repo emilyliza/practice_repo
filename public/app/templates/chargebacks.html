@@ -11,20 +11,20 @@
 
 <div class="animated-grid chargebacks" infinite-scroll="cbs.nextPage(q)" infinite-scroll-disabled="cbs.busy">
 	<div class="row head">
-		<div class="col-sm-1">ID</div>
+		<div class="col-sm-2">ID</div>
 		<div class="col-sm-3">Date</div>
 		<div class="col-sm-2">Amount</div>
 		<div class="col-sm-3">Customer</div>
-		<div class="col-sm-3">Status</div>
+		<div class="col-sm-2">Status</div>
 	</div>
 
 	<div class="row" ng-repeat="cb in cbs.data">
-		<div class="col-sm-1"><a href="/chargeback/{{cb.derived_data.uuid}}/upload">{{cb.derived_data.uuid}}</a></div>
-		<!-- <div class="col-sm-1">{{cb.derived_data.uuid}}</div> -->
-		<div class="col-sm-3">{{cb.gateway_data.TransDate | date:'medium'}}</div>
+		<!-- <div class="col-sm-2"><a href="/chargeback/{{cb.derived_data.uuid}}/upload">{{cb.portal_data.CaseNumber}}</a></div> -->
+		<div class="col-sm-2">{{cb.portal_data.CaseNumber}}</div>
+		<div class="col-sm-3">{{cb.portal_data.RequestDate | date:'medium'}}</div>
 		<div class="col-sm-2">{{cb.portal_data.ChargebackAmt | currency}}</div>
 		<div class="col-sm-3">{{cb.gateway_data.FirstName}} {{cb.gateway_data.LastName}}</div>
-		<div class="col-sm-3" style="color: {{cb.derived_data.status.color}}">{{cb.derived_data.status.name}}</div>
+		<div class="col-sm-2" style="color: {{cb.derived_data.status.color}}">{{cb.derived_data.status.name}}</div>
 	</div>
 	
 	<div class="row" ng-if="results.length == 0">

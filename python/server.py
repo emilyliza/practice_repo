@@ -52,18 +52,24 @@ def authenticated(method):
 class Application(tornado.web.Application):
     def __init__(self):
 
+        root = os.path.dirname(__file__)
+
         settings = {
             "debug": True,
             #"static_path": os.path.join(os.path.dirname(__file__), "public")
         }
 
         handlers = [
+            (r"/dashboard", HomeHandler),
+            (r"/login", HomeHandler),
+            (r"/chargebacks", HomeHandler),
             (r"/", HomeHandler),
             (r"/api/v1/login", LoginHandler),
             (r"/api/v1/chargebacks", ChargebacksHandler),
             (r"/api/v1/chargeback/([0-9-A-Za-z]+)", ChargebackHandler),
             (r"/api/v1/history", HistoryHandler),
-            (r"/(.*)", tornado.web.StaticFileHandler, {"path": os.path.join(os.path.dirname(__file__), "../public")}),
+            (r"/api/v1/dashboard", DashboardHandler),
+            (r"/(.*)", tornado.web.StaticFileHandler, {"path": os.path.join(root, "../public")}),
         ]
 
         enable_pretty_logging()
@@ -89,19 +95,26 @@ class HomeHandler(BaseHandler):
 
 
 class LoginHandler(BaseHandler):
-    def get(self):
-        # We are sending the profile inside the token
-        user = {
-            'name': 'justin',
-            'exp': datetime.datetime.utcnow() + datetime.timedelta(seconds=3600)
-        }
-        token = jwt.encode(user, os.environ['TOKEN_SECRET'])
-        del user['exp']   # don't want to include this
-        user['token'] = token
+    def post(self):
+        
+        post = tornado.escape.json_decode(self.request.body)
+        
+        if post['email'] != "test@chargeback.com" and post['password'] != "test":
+            self.set_status(401)
+            self.finish({ 'errors': { 'password': 'invalid password' }})
+        else:
+            # We are sending the profile inside the token
+            user = {
+                'fullname': 'test merchant',
+                'exp': datetime.datetime.utcnow() + datetime.timedelta(seconds=3600)
+            }
+            token = jwt.encode(user, os.environ['TOKEN_SECRET'])
+            del user['exp']   # don't want to include this
+            user['authtoken'] = token
 
-        self.content_type = 'application/json'
-        self.write(dumps(user,default=json_util.default))
-        self.finish()
+            self.content_type = 'application/json'
+            self.write(dumps(user,default=json_util.default))
+            self.finish()
 
 
 class ChargebacksHandler(BaseHandler):
@@ -140,8 +153,8 @@ class ChargebacksHandler(BaseHandler):
             end_date = datetime.datetime.fromtimestamp(float(end))
             search['DocGenData.portal_data.ChargebackDate'] = { '$gte': end_date.strftime("%Y-%m-%d") }
 
-        if (status is not None): 
-            search['DocGenData.derived_data.Status'] = str(status)
+        #if (status is not None): 
+        #    search['DocGenData.derived_data.Status'] = str(status)
 
 
         if (card_type is not None): 
@@ -174,7 +187,7 @@ class ChargebacksHandler(BaseHandler):
         out = []
         data = yield cursor.to_list(int(limit))
         for cb in data:
-            cb = clean_data(cb)
+            cb = cleanData(cb)
             out.append(cb)
             
         self.content_type = 'application/json'
@@ -198,6 +211,28 @@ class ChargebackHandler(BaseHandler):
             self.finish("<html><body>Record not found.</body></html>")
 
 
+class DashboardHandler(BaseHandler):
+    @tornado.web.asynchronous
+    @gen.coroutine
+    @authenticated
+    def get(self):
+
+        out = {}
+        out['amount'] = {
+            "Open": 6750.369999999999,
+            "Pending": 5673.170000000001,
+            "Complete": 6757.269999999997,
+            "In-Progress:": 6867.540000000003
+        }
+
+        out['complete'] = 128
+        out['open'] = 134
+        out['pending'] = 108
+        out['progress'] = 130
+        
+        self.content_type = 'application/json'
+        self.write(dumps(out,default=json_util.default))
+        self.finish()
 
 
 class HistoryHandler(BaseHandler):
@@ -250,6 +285,7 @@ def cleanData(cb):
     clean['shipping_data'] = cb['DocGenData']['shipping_data']
     clean['gateway_data'] = cb['DocGenData']['gateway_data']
     clean['crm_data'] = cb['DocGenData']['crm_data']
+    clean['portal_data'] = cb['DocGenData']['portal_data']
     clean['derived_data'] = cb['DocGenData']['derived_data']
     clean['shipping_data']['ShippingDate'] = str(cb['DocGenData']['shipping_data']['ShippingDate'])
     clean['gateway_data']['TransDate'] = str(cb['DocGenData']['gateway_data']['TransDate'])
