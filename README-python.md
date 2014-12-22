@@ -43,7 +43,7 @@ What does build-env.sh do?
 ./run-py-server.sh
 ```
 
-The run script pulls in env variables from .env (this file should NOT be in repo) then runs python server.py from within venv
+The run script pulls in env variables then runs python ./python/server.py from within venv. It'll prompt user for dev or prod. Dev looks for local mongo (.env-local), prod looks for production mongo (.env). .env files should NOT be in repo.
 
 Now browse to the app at `http://localhost:8888/`.
 
