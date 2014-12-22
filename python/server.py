@@ -63,6 +63,16 @@ class Application(tornado.web.Application):
             (r"/dashboard", HomeHandler),
             (r"/login", HomeHandler),
             (r"/chargebacks", HomeHandler),
+            (r"/reporting", HomeHandler),
+            (r"/reporting/overview", HomeHandler),
+            (r"/reporting/status", HomeHandler),
+            (r"/reporting/status/overview", HomeHandler),
+            (r"/reporting/status/byMid", HomeHandler),
+            (r"/reporting/status/byProcessor", HomeHandler),
+            (r"/reporting/cctype", HomeHandler),
+            (r"/reporting/cctype/overview", HomeHandler),
+            (r"/reporting/cctype/byMid", HomeHandler),
+            (r"/reporting/cctype/byProcessor", HomeHandler),
             (r"/", HomeHandler),
             (r"/api/v1/login", LoginHandler),
             (r"/api/v1/chargebacks", ChargebacksHandler),
@@ -127,7 +137,7 @@ class ChargebacksHandler(BaseHandler):
 
         limit = self.get_argument('limit', 30)
         page = self.get_argument('page', 1)
-        sort = self.get_argument('sort', 'DocGenData.portal_data.ChargebackDate')
+        sort = self.get_argument('sort', 'DocGenData.portal_data.RequestDate')
         sort_dir = self.get_argument('sort_dir', -1)
         skip = (int(page) - 1) * int(limit)
         start = self.get_argument('start', None)
@@ -181,7 +191,7 @@ class ChargebacksHandler(BaseHandler):
 		
         # TODO: need index on sortable fields!!
         #self.db.dispute.ensure_index(sort)
-        #cursor = self.db.dispute.find(search).sort([(sort, sort_dir)])
+        #cursor = self.db.dispute.find(search).sort([(sort, sort_dir)]).skip(skip)
         cursor = self.db.dispute.find(search).skip(skip)
         
         out = []
@@ -242,13 +252,13 @@ class HistoryHandler(BaseHandler):
     def get(self):
         
         #sort = self.get_argument('sort', 'DocGenData.portal_data.ChargebackDate')
-        start_date = datetime.datetime.now() - datetime.timedelta(days=5*365)
+        start_date = datetime.datetime.now() - datetime.timedelta(days=1*365)
         search = [
-            { '$match': { 'DocGenData.portal_data.ChargebackDate': { '$gte': start_date.strftime("%Y-%m-%d") } }},
+            { '$match': { 'DocGenData.portal_data.RequestDate': { '$gte': start_date } }},
             { '$project': {
                 '_id': 0,
-                'month': { '$month': "$DocGenData.gateway_data.ChargebackDate" },
-                'year': { '$year' : "$DocGenData.gateway_data.ChargebackDate" },
+                'month': { '$month': "$DocGenData.portal_data.RequestDate" },
+                'year': { '$year' : "$DocGenData.portal_data.RequestDate" },
                 'amt': '$DocGenData.portal_data.ChargebackAmt' 
             }},
             { '$group': {
@@ -257,21 +267,20 @@ class HistoryHandler(BaseHandler):
             }},
             { '$sort' : { '_id': 1 } }
         ];
-        
+
         out = []
         cursor = yield self.db.dispute.aggregate(search)
-        while ( cursor.fetch_next):
-            row = cursor.next_object()
+        for row in cursor['result']: 
             pre = ''
-            if row._id.month < 9:
+            if row['_id']['month'] < 9:
                 pre = '0'
             out.append({
-                date: row._id.year + '-' + pre + row._id.month + '-01',
-                total: row.total
+                'date': str(row['_id']['year']) + '-' + pre + str(row['_id']['month']) + '-01',
+                'total': row['total']
             })
 
         self.content_type = 'application/json'
-        self.write(dumps(cursor,default=json_util.default))
+        self.write(dumps(out,default=json_util.default))
         self.finish()
 
 
