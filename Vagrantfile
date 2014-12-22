@@ -8,9 +8,13 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   config.vm.box = "ubuntu/trusty64"
   config.vm.hostname = "chargeback"
 
-  config.vm.network "forwarded_port", guest: 80, host: 8080
+  #config.vm.network "forwarded_port", guest: 80, host: 8888
   
-  config.vm.network "private_network", ip: "10.0.0.100", virtualbox__inet: true
+  config.vm.network "private_network", ip: "10.0.1.100", virtualbox__inet: true
+
+  config.vm.provider :virtualbox do |vb|
+    vb.customize ["modifyvm", :id, "--natdnshostresolver1", "on"]
+  end
 
   config.vm.provision "shell", path: "./build-python-env.sh"
 end

@@ -37,7 +37,7 @@ activate () {
 	echo "==> Starting server with 'python server.py"
 
 	# run server
-	python server.py
+	python ./python/server.py
 }
 activate
 
