@@ -91,8 +91,9 @@ e2e-tests/              --> end-to-end tests
   protractor-conf.js    --> Protractor config file
   scenarios.js          --> end-to-end scenarios to be run by Protractor
 lib/                    --> nodejs lib, for testing only
-models/                 --> nodejs mongoose model definitions - for test data only
-controllers/            --> nodejs files for servering fake REST API
+node-mongo-models/      --> nodejs mongoose model definitions - for test data only
+node-controllers/       --> nodejs files for servering fake REST API
+python                  --> python API server files (see README-python)
 ```
 
 
