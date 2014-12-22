@@ -12,5 +12,5 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   
   config.vm.network "private_network", ip: "10.0.0.100", virtualbox__inet: true
 
-  config.vm.provision "shell", path: "./build-env.sh"
+  config.vm.provision "shell", path: "./build-python-env.sh"
 end
