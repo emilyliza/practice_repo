@@ -33,6 +33,7 @@ activate () {
 	pip install motor
 	pip install json_util
 	pip install PyJWT
+	pip install requests
 
 	echo "==> Starting server with 'python server.py"
 
