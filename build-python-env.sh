@@ -9,10 +9,10 @@ apt-get install -y tar git curl nano wget dialog net-tools build-essential
 apt-get install -y python python-dev python-distribute python-pip
 
 # mongo
-apt-get install mongodb
+#apt-get install mongodb
 
 # start mongo
-/etc/init.d/mongodb start
+#/etc/init.d/mongodb start
 
 # install virtualenv
 pip install virtualenv
