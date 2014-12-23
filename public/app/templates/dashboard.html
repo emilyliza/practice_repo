@@ -4,12 +4,12 @@
 		
 	<div class="col-sm-3">
 		<div class="img-circle" style="background-color: #5cb85c; padding-top: 25px;">
-			<span style="color: #666">New</span>
-			<div>{{data.open}}</div>
+			<span style="color: #666;">&nbsp; <!--New--></span>
+			<div>{{data.total}}</div>
 			<span style="color: #666">Chargebacks</span>
 		</div>
 
-		<div class="img-circle" style="background-color: #5cb85c; padding-top: 25px; margin: 20px auto;">
+		<div class="img-circle" style="background-color: #5cb85c; padding-top: 25px; margin: 20px auto; display:none">
 			<span style="color: #666">Amount</span>
 			<div style="font-size: 30px;">{{data.amount.Open | currency}}</div>
 			<span style="color: #666">Charged Back</span>
