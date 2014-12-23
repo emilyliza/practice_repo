@@ -335,19 +335,46 @@ class DashboardHandler(BaseHandler):
     @authenticated
     def get(self):
 
-        out = {}
-        out['amount'] = {
-            "Open": 6750.369999999999,
-            "Pending": 5673.170000000001,
-            "Complete": 6757.269999999997,
-            "In-Progress:": 6867.540000000003
-        }
+        # out = {}
+        # out['amount'] = {
+        #     "Open": 6750.369999999999,
+        #     "Pending": 5673.170000000001,
+        #     "Complete": 6757.269999999997,
+        #     "In-Progress:": 6867.540000000003
+        # }
 
-        out['complete'] = 128
-        out['open'] = 134
-        out['pending'] = 108
-        out['progress'] = 130
+        # out['complete'] = 128
+        # out['open'] = 134
+        # out['pending'] = 108
+        # out['progress'] = 130
+
+        match = {}
         
+        merchants = ["272336"]
+        for k,merch in self.user['merchants'].iteritems():
+            for m in merch['mids']:
+                merchants.append( m['mid'] )
+
+        match['DocGenData.portal_data.MidNumber'] = { '$in': merchants }
+        
+        search = [
+            { '$match': match },
+            { '$project': {
+                '_id': 0,
+                'amt': '$DocGenData.portal_data.ChargebackAmt' 
+            }},
+            { '$group': {
+                '_id': 0,
+                'sum': { '$sum': '$amt' },
+                'count': { '$sum': 1 }
+            }}
+        ];
+
+        out = {}
+        cursor = yield self.db.dispute.aggregate(search)
+
+        out['total'] = cursor['result'][0]['count']
+
         self.content_type = 'application/json'
         self.write(dumps(out,default=json_util.default))
         self.finish()
