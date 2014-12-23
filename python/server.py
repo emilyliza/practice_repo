@@ -227,33 +227,13 @@ class ChargebacksHandler(BaseHandler):
 
         # if mid, then make sure it belongs to user
         if (mid is not None): 
-            p = 0
-            for k,merch in self.user['merchants'].iteritems():
-                for m in merch['mids']:
-                    if m['mid'] == str(mid):
-                        p = 1
-            
-            if p == 1:
+            if isValidMid(self, mid):
                 search['$and'].append( { 'DocGenData.portal_data.MidNumber': str(mid) })
             else:
-                # if it doesn't belong to user, just give them back all stuff they own
-                merchant_query = []
-                for k,merch in self.user['merchants'].iteritems():
-                    for m in merch['mids']:
-                        merchant_query.append( { 'DocGenData.portal_data.MidNumber': m['mid'] } )
-                search['$and'].append( { '$or': merchant_query } )
-
-        if mid is None: 
-            merchant_query = []
-            for k,merch in self.user['merchants'].iteritems():
-                for m in merch['mids']:
-                    merchant_query.append( { 'DocGenData.portal_data.MidNumber': m['mid'] } )
-
-            merchant_query.append( { 'DocGenData.portal_data.MidNumber': "272336" } )
-            search['$and'].append( { '$or': merchant_query } )
-
-
-        
+                search['$and'].append( { 'DocGenData.portal_data.MidNumber': { '$in': getMerchantArray(self) }} )
+        else:
+            search['$and'].append( { 'DocGenData.portal_data.MidNumber': { '$in': getMerchantArray(self) }} )
+            
 
         # if (merchant is not None): 
         #     search['$and'].append( { 'DocGenData.derived_data.Merchant'] = str(merchant) })
@@ -286,7 +266,7 @@ class ChargebacksHandler(BaseHandler):
                 	#{ 'DocGenData.derived_data.status.name': pattern },
                 	{ 'DocGenData.gateway_data.FirstName': pattern },
                 	{ 'DocGenData.gateway_data.LastName': pattern },
-                    { 'DocGenData.derived_data.MerchantName': pattern }
+                    { 'DocGenData.portal_data.ReasonText': pattern }
                 ]})
         
         
@@ -321,9 +301,15 @@ class ChargebackHandler(BaseHandler):
         cb = yield self.db.dispute.find_one({'DocGenData.derived_data.uuid': uuid})
         if cb:
             cb = cleanData(cb)
-            self.content_type = 'application/json'
-            self.write(dumps(cb,default=json_util.default))
-            self.finish()
+
+            if isValidMid(self, cb['portal_data']['MidNumber']):
+                self.content_type = 'application/json'
+                self.write(dumps(cb,default=json_util.default))
+                self.finish()
+            else:
+                self.set_status(401)
+                self.finish("<html><body>Unauthorized!</body></html>")
+
         else:
             self.set_status(404)
             self.finish("<html><body>Record not found.</body></html>")
@@ -349,13 +335,7 @@ class DashboardHandler(BaseHandler):
         # out['progress'] = 130
 
         match = {}
-        
-        merchants = ["272336"]
-        for k,merch in self.user['merchants'].iteritems():
-            for m in merch['mids']:
-                merchants.append( m['mid'] )
-
-        match['DocGenData.portal_data.MidNumber'] = { '$in': merchants }
+        match['DocGenData.portal_data.MidNumber'] = { '$in': getMerchantArray(self) }
         
         search = [
             { '$match': match },
@@ -388,8 +368,13 @@ class HistoryHandler(BaseHandler):
         
         #sort = self.get_argument('sort', 'DocGenData.portal_data.ChargebackDate')
         start_date = datetime.datetime.now() - datetime.timedelta(days=1*365)
+
+        match = {}
+        match['DocGenData.portal_data.MidNumber'] = { '$in': getMerchantArray(self) }
+        match['DocGenData.portal_data.RequestDate'] = { '$gte': start_date }
+
         search = [
-            { '$match': { 'DocGenData.portal_data.RequestDate': { '$gte': start_date } }},
+            { '$match': match },
             { '$project': {
                 '_id': 0,
                 'month': { '$month': "$DocGenData.portal_data.RequestDate" },
@@ -419,6 +404,21 @@ class HistoryHandler(BaseHandler):
         self.finish()
 
 
+
+
+def getMerchantArray(self):
+    merchants = []
+    for k,merch in self.user['merchants'].iteritems():
+        for m in merch['mids']:
+            merchants.append( m['mid'] )
+    return merchants
+
+def isValidMid(self, mid):
+    for k,merch in self.user['merchants'].iteritems():
+        for m in merch['mids']:
+            if m['mid'] == str(mid):
+                return 1
+    return 0
 
 
 
