@@ -24,15 +24,16 @@
 			<div class="row head">
 				<div class="col-sm-3">Date</div>
 				<div class="col-sm-2">Amount</div>
-				<div class="col-sm-4">Customer</div>
-				<div class="col-sm-3">Status</div>
+				<div class="col-sm-3">Customer</div>
+				<div class="col-sm-4">Reason</div>
 			</div>
 
 			<div class="row" ng-repeat="cb in dbs.data">
 				<div class="col-sm-3"><span am-time-ago="cb.portal_data.RequestDate"></span></div>
 				<div class="col-sm-2">{{cb.portal_data.ChargebackAmt | currency}}</div>
-				<div class="col-sm-4">{{cb.gateway_data.FirstName}} {{cb.gateway_data.LastName}}</div>
-				<div class="col-sm-3">
+				<div class="col-sm-3">{{cb.gateway_data.FirstName}} {{cb.gateway_data.LastName}}</div>
+				<div class="col-sm-4">
+					{{cb.portal_data.ReasonText}}
 					<!--
 					<a class="btn btn-sm btn-success" href="/chargeback/{{cb.derived_data.uuid}}/upload">Get Started <span class="glyphicon glyphicon-chevron-right"></span></a>
 					-->
