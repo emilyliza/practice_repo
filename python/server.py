@@ -134,9 +134,11 @@ class HomeHandler(BaseHandler):
     def get(self):
         if os.environ['ENV'] == "production":
             # production -- will load just index.html, all other assets in this file are in CDN
+            print 'Serving production index.html'
             self.render("../dist/index.html")
         else:
             # dev - will load this file and all local js/less files. slower, but easier to work
+            print 'Serving dev index.html'
             self.render("../public/index.html")
 
 
