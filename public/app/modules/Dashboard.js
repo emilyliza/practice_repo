@@ -38,7 +38,7 @@
 			
 			var _this = this;
 
-    		$http.get('/api/v1/chargebacks?status=Open&limit=5')
+    		$http.get('/api/v1/chargebacks?status=Open&limit=10')
 			.success(function (rows) {
 				var new_data = rows;
 				
