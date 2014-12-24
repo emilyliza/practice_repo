@@ -92,11 +92,6 @@ class Application(tornado.web.Application):
 
         root = os.path.dirname(__file__)
 
-        settings = {
-            "debug": True,
-            #"static_path": os.path.join(os.path.dirname(__file__), "public")
-        }
-
         handlers = [
             (r"/dashboard", HomeHandler),
             (r"/login", HomeHandler),
@@ -121,8 +116,8 @@ class Application(tornado.web.Application):
         ]
 
         enable_pretty_logging()
-        tornado.web.Application.__init__(self, handlers, **settings)
-
+        tornado.web.Application.__init__(self, handlers)
+        
         # Have one global connection to the blog DB across all handlers
         self.db = motor.MotorClient( os.environ['MONGOLAB_URI'] ).fapl
 
@@ -450,12 +445,20 @@ def cleanData(cb):
 
 
 def main():
+    
+    settings = {
+        "ssl_options": {
+            "certfile": os.path.join("certs/server.crt"),
+            "keyfile": os.path.join("certs/server.key"),
+        },
+    }
+
     print 'Starting server...'
     tornado.options.parse_command_line()
-    http_server = tornado.httpserver.HTTPServer(Application())
+    http_server = tornado.httpserver.HTTPServer(Application(), **settings)
     http_server.listen(options.port)
     
-    print '\tnow listening on http://localhost:' + str(options.port)
+    print '\tnow listening on https://localhost:' + str(options.port)
     print '\tmongo: ' + str( os.environ['MONGOLAB_URI'] )
     tornado.ioloop.IOLoop.instance().start()
 
