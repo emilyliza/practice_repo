@@ -1,22 +1,25 @@
 <div style="display: block; overflow: hidden; margin-bottom: 25px;">
 	<div class="pull-right merchantSelect">
+    	<!-- 
     	Merchant: <select ng-model="selectedMerchant" ng-change="setMerchant(selectedMerchant)" ng-options="merchant.name for merchant in merchants"></select>
+    	-->
     </div>
 </div>
 
 <div class="row reporting-status">
 	<div class="col-sm-4" style="background-color: #5cb85c;">
-		<div>{{data.amount.Complete | currency}}</div>
-		Successfully<br/>Recovered	
+		<div>{{data.sum | currency}}</div>
+		Total Chargeback Amount
+		<!-- Successfully<br/>Recovered	-->
 	</div>
 
 	<div class="col-sm-4" style="background-color: #0d94c1;">
-		<div>80%</div>
+		<div>Coming Soon</div>
 		Win Rate
 	</div>
 		
 	<div class="col-sm-4" style="background-color: #ffcc00; color: #333;">
-		<div>22 Days</div>
+		<div>Coming Soon</div>
 		Average Days<br/>To Recover
 	</div>
 </div>
