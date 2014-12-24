@@ -9,7 +9,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   config.vm.hostname = "chargeback"
 
   config.vm.network "forwarded_port", guest: 8888, host: 8888
-  config.vm.network "private_network", ip: "10.0.1.100", virtualbox__inet: true
+  config.vm.network "private_network", type: "dhcp"
   
   config.vm.provider :virtualbox do |vb|
     vb.customize ["modifyvm", :id, "--natdnshostresolver1", "on"]
