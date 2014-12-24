@@ -23,8 +23,6 @@ from src.clients.client_serviceauth import ClientServiceAuth
 from src.clients.client_serviceaas import ClientServiceAAS
 
 
-define("port", default=8888, help="run on the given port", type=int)
-
 
 
 # decorator that checks for authorization header that has token value, decrypts and validates
@@ -92,6 +90,10 @@ class Application(tornado.web.Application):
 
         root = os.path.dirname(__file__)
 
+        settings = {
+            "debug": True
+        }
+
         handlers = [
             (r"/dashboard", HomeHandler),
             (r"/login", HomeHandler),
@@ -116,7 +118,7 @@ class Application(tornado.web.Application):
         ]
 
         enable_pretty_logging()
-        tornado.web.Application.__init__(self, handlers)
+        tornado.web.Application.__init__(self, handlers, **settings)
         
         # Have one global connection to the blog DB across all handlers
         self.db = motor.MotorClient( os.environ['MONGOLAB_URI'] ).fapl
@@ -336,7 +338,7 @@ class DashboardHandler(BaseHandler):
             { '$match': match },
             { '$project': {
                 '_id': 0,
-                'amt': '$DocGenData.portal_data.ChargebackAmt' 
+                'amt': '$DocGenData.portal_data.ChargebackAmt_100' 
             }},
             { '$group': {
                 '_id': 0,
@@ -348,7 +350,8 @@ class DashboardHandler(BaseHandler):
         out = {}
         cursor = yield self.db.dispute.aggregate(search)
 
-        out['total'] = cursor['result'][0]['count']
+        out['count'] = cursor['result'][0]['count']
+        out['sum'] = (cursor['result'][0]['sum'] / 100)
 
         self.content_type = 'application/json'
         self.write(dumps(out,default=json_util.default))
@@ -374,7 +377,7 @@ class HistoryHandler(BaseHandler):
                 '_id': 0,
                 'month': { '$month': "$DocGenData.portal_data.RequestDate" },
                 'year': { '$year' : "$DocGenData.portal_data.RequestDate" },
-                'amt': '$DocGenData.portal_data.ChargebackAmt' 
+                'amt': '$DocGenData.portal_data.ChargebackAmt_100' 
             }},
             { '$group': {
                 '_id': { 'year' : "$year", 'month' : "$month"}, 
@@ -391,7 +394,7 @@ class HistoryHandler(BaseHandler):
                 pre = '0'
             out.append({
                 'date': str(row['_id']['year']) + '-' + pre + str(row['_id']['month']) + '-01',
-                'total': row['total']
+                'total': float(row['total'] / 100)
             })
 
         self.content_type = 'application/json'
@@ -456,9 +459,9 @@ def main():
     print 'Starting server...'
     tornado.options.parse_command_line()
     http_server = tornado.httpserver.HTTPServer(Application(), **settings)
-    http_server.listen(options.port)
+    http_server.listen( os.environ['PORT'] )
     
-    print '\tnow listening on https://localhost:' + str(options.port)
+    print '\tnow listening on https://localhost:' + str( os.environ['PORT'] )
     print '\tmongo: ' + str( os.environ['MONGOLAB_URI'] )
     tornado.ioloop.IOLoop.instance().start()
 
