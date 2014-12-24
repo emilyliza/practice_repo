@@ -502,10 +502,10 @@
 				
 				var	container = elem.find('div'),
 					outerWidth = container.width(),
-					outerHeight = container.width() * .67,
+					outerHeight = container.width() * 0.67,
 					margin = {top: 20, right: 20, bottom: 30, left: 50},
 					width = container.width() - margin.left - margin.right,
-					height = (container.width() * .67) - margin.top - margin.bottom,
+					height = (container.width() * 0.67) - margin.top - margin.bottom,
 					d3 = $window.d3;
 					
 				var parseDate = d3.time.format("%Y-%m-%d").parse;
@@ -537,7 +537,7 @@
 					.attr("width", outerWidth)
 					.attr("height", outerHeight)
 					.append("g")
-					.attr("transform", "translate(" + margin.left + "," + margin.top + ")")
+					.attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
 				// x-axis
 				chart
