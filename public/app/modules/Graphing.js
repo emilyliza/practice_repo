@@ -503,7 +503,7 @@
 				var	container = elem.find('div'),
 					outerWidth = container.width(),
 					outerHeight = container.width() * 0.67,
-					margin = {top: 20, right: 20, bottom: 30, left: 50},
+					margin = {top: 20, right: 20, bottom: 30, left: 70},
 					width = container.width() - margin.left - margin.right,
 					height = (container.width() * 0.67) - margin.top - margin.bottom,
 					d3 = $window.d3;
