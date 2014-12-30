@@ -352,8 +352,11 @@ class DashboardHandler(BaseHandler):
         out = {}
         cursor = yield self.db.dispute.aggregate(search)
 
-        out['count'] = cursor['result'][0]['count']
-        out['sum'] = (cursor['result'][0]['sum'] / 100)
+        out['count'] = 0
+        out['sum'] = 0
+        if cursor['result'] and cursor['result'][0]:
+            out['count'] = cursor['result'][0]['count']
+            out['sum'] = (cursor['result'][0]['sum'] / 100)
 
         self.content_type = 'application/json'
         self.write(dumps(out,default=json_util.default))
