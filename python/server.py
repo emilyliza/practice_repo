@@ -451,12 +451,14 @@ def cleanData(cb):
 
 def main():
     
-    settings = {
-        "ssl_options": {
-            "certfile": os.path.join("certs/server.crt"),
-            "keyfile": os.path.join("certs/server.key"),
-        },
-    }
+    settings = {}
+    if (os.environ['ENV'] == "production"):
+        settings = {
+            "ssl_options": {
+                "certfile": os.path.join("certs/server.crt"),
+                "keyfile": os.path.join("certs/server.key"),
+            },
+        }
 
     print 'Starting server...'
     tornado.options.parse_command_line()
