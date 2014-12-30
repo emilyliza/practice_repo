@@ -154,7 +154,7 @@ class LoginHandler(BaseHandler):
         
         if error_num != 0:
             self.set_status(401)
-            self.finish({ 'errors': { 'password': 'invalid password' }})
+            self.finish({ 'errors': { 'password': 'invalid username or password' }})
         else:
             # print user_session_data
 
