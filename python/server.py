@@ -239,11 +239,15 @@ class ChargebacksHandler(BaseHandler):
 
         if (start is not None): 
             start_date = datetime.datetime.fromtimestamp(float(start)/1000)
-            search['$and'].append( { 'DocGenData.portal_data.ChargebackDate': { '$gte': start_date.strftime("%Y-%m-%d") } })
+            if (end is not None): 
+                end_date = datetime.datetime.fromtimestamp(float(end)/1000)
+                search['$and'].append( { 'DocGenData.portal_data.RequestDate': { '$gt': start_date, '$lt': end_date } })
+            else:
+                search['$and'].append( { 'DocGenData.portal_data.RequestDate': { '$gte': start_date } })
 
-        if (end is not None): 
-            end_date = datetime.datetime.fromtimestamp(float(end))
-            search['$and'].append( { 'DocGenData.portal_data.ChargebackDate': { '$gte': end_date.strftime("%Y-%m-%d") } })
+        if (start is None and end is not None): 
+            end_date = datetime.datetime.fromtimestamp(float(end)/1000)
+            search['$and'].append( { 'DocGenData.portal_data.RequestDate': { '$lt': end_date } })
 
         #if (status is not None): 
         #    search['DocGenData.derived_data.Status'] = str(status)
@@ -253,20 +257,17 @@ class ChargebacksHandler(BaseHandler):
             search['$and'].append( {'DocGenData.gateway_data.CcType': str(card_type) })
 
         if query:
+            search['$or'] = []
             if query.isnumeric():
-	            search['$and'].append( { '$or': [
-                    { 'DocGenData.portal_data.ChargebackAmt': float(query) },
-                    { 'DocGenData.derived_data.uuid': int(query) }
-                ]})
+                search['$or'].append( { 'DocGenData.portal_data.ChargebackAmt': float(query) } )
+                search['$or'].append( { 'DocGenData.derived_data.uuid': int(query) } )
             else:
                 pattern = re.compile('.*'+query+'.*', re.IGNORECASE)
                 print pattern
-                search['$and'].append( { '$or': [
-                	#{ 'DocGenData.derived_data.status.name': pattern },
-                	{ 'DocGenData.gateway_data.FirstName': pattern },
-                	{ 'DocGenData.gateway_data.LastName': pattern },
-                    { 'DocGenData.portal_data.ReasonText': pattern }
-                ]})
+                search['$or'].append( { 'DocGenData.gateway_data.FirstName': pattern } )
+                search['$or'].append( { 'DocGenData.gateway_data.LastName': pattern } )
+                search['$or'].append( { 'DocGenData.portal_data.ReasonText': pattern } )
+                
         
         
         
