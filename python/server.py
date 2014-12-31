@@ -267,13 +267,14 @@ class ChargebacksHandler(BaseHandler):
             search['$or'] = []
             if query.isnumeric():
                 search['$or'].append( { 'DocGenData.portal_data.ChargebackAmt': float(query) } )
-                search['$or'].append( { 'DocGenData.derived_data.uuid': int(query) } )
-            else:
-                pattern = re.compile('.*'+query+'.*', re.IGNORECASE)
-                print pattern
-                search['$or'].append( { 'DocGenData.gateway_data.FirstName': pattern } )
-                search['$or'].append( { 'DocGenData.gateway_data.LastName': pattern } )
-                search['$or'].append( { 'DocGenData.portal_data.ReasonText': pattern } )
+                
+            pattern = re.compile('.*'+query+'.*', re.IGNORECASE)
+            search['$or'].append( { 'DocGenData.gateway_data.FirstName': pattern } )
+            search['$or'].append( { 'DocGenData.gateway_data.LastName': pattern } )
+            search['$or'].append( { 'DocGenData.portal_data.ReasonText': pattern } )
+            search['$or'].append( { 'DocGenData.portal_data.ReasonCode': pattern } )
+            search['$or'].append( { 'DocGenData.portal_data.CaseNumber': pattern } )
+            search['$or'].append( { 'DocGenData.portal_data.MidNumber': pattern } )
                 
         
         
