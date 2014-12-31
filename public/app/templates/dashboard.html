@@ -31,7 +31,7 @@
 			</div>
 
 			<div class="row" ng-repeat="cb in dbs.data">
-				<div class="col-sm-2">{{cb.portal_data.RequestDate | date:'MMMM d, yyyy'}}</div>
+				<div class="col-sm-2">{{cb.portal_data.RequestDate | date:'MM/dd/yyyy'}}</div>
 				<div class="col-sm-1">{{cb.portal_data.ChargebackAmt | currency}}</div>
 				<div class="col-sm-2">{{cb.gateway_data.FirstName}} {{cb.gateway_data.LastName}}</div>
 				<div class="col-sm-2">{{cb.portal_data.MidNumber}}</div>
@@ -44,8 +44,11 @@
 				<div class="col-sm-2">{{cb.portal_data.CaseNumber}}</div>
 			</div>
 			
-			<div class="row" ng-if="dbs.data.length == 0">
+			<div class="row" ng-if="dbs.loaded && dbs.data.length == 0">
 				<div class="col-sm-12"><h3>No chargebacks found</h3></div>
+			</div>	
+			<div class="row" ng-if="!dbs.loaded">
+				<div class="col-sm-12"><h3 style="color: #999;">Loading Chargebacks...</h3></div>
 			</div>	
 		</div>
 

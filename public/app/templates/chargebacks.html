@@ -46,7 +46,10 @@
 
 	</div>
 	
-	<div class="row" ng-if="dbs.data.length == 0">
-		<div class="col-sm-12"><h3>No chargebacks found</h3></div>
+	<div class="row" ng-if="cbs.loaded && cbs.data.length == 0">
+		<div class="col-sm-12"><h3>No chargebacks found {{date.start.val | date:'MM/dd/yyyy'}} thru {{date.end.val | date:'MM/dd/yyyy'}}</h3></div>
+	</div>	
+	<div class="row" ng-if="!cbs.loaded">
+		<div class="col-sm-12"><h3 style="color: #999;">Loading Chargebacks...</h3></div>
 	</div>	
 </div>

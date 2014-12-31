@@ -57,6 +57,7 @@
 			this.filterTextTimeout = false;
 			this.start = moment().subtract(3, 'month').toDate();
 			this.end = new Date();
+			this.loaded = false;
 		};
 
 		ChargebacksService.prototype.setDates = function(d) {
@@ -76,6 +77,7 @@
 			this.page = 1;
 			this.data = [];
 			this.query = "";
+			this.loaded = false;
 			this.last_page = false;
 			this.nextPage();
 			return;
@@ -94,6 +96,7 @@
 				this.page = 1;
 				this.data = [];
     			this.query = "";
+    			this.loaded = false;
     			this.last_page = false;
     			this.lastQuery = this.query;
 				this.nextPage();
@@ -160,6 +163,7 @@
 
     		$http.get(url)
 			.success(function (rows) {
+				_this.loaded = true;
 				var new_data = rows;
 				
 				_.each(new_data, function(d) {
