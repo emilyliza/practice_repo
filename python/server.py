@@ -22,7 +22,8 @@ from src.clients.client_register import ClientServiceReg
 from src.clients.client_serviceauth import ClientServiceAuth
 from src.clients.client_serviceaas import ClientServiceAAS
 
-
+reload(sys)
+sys.setdefaultencoding("utf-8")
 
 
 # decorator that checks for authorization header that has token value, decrypts and validates
