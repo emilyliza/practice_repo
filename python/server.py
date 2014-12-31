@@ -29,10 +29,13 @@ from src.clients.client_serviceaas import ClientServiceAAS
 def authenticated(method):
     @functools.wraps(method)
     def wrapper(self, *args, **kwargs):
-        try:
+        if 'Authorization' in self.request.headers.keys():
             token = self.request.headers['Authorization']
-        except KeyError:
+        else:
             token = None    
+
+        if token is None and self.get_argument('cbkey'):
+            token = self.get_argument('cbkey')
 
         #print token
         if token is not None:
@@ -220,6 +223,7 @@ class ChargebacksHandler(BaseHandler):
         status = self.get_argument('status', None)
         card_type = self.get_argument('card_type', None)
         query = self.get_argument('query', "")
+        export = self.get_argument("export", None)
         
         search = {}
         search['$and'] = []
@@ -233,6 +237,8 @@ class ChargebacksHandler(BaseHandler):
         else:
             search['$and'].append( { 'DocGenData.portal_data.MidNumber': { '$in': getMerchantArray(self) }} )
             
+        # only 2.0 dispute data
+        search['$and'].append( { 'dispute_version':  '2.0' } )
 
         # if (merchant is not None): 
         #     search['$and'].append( { 'DocGenData.derived_data.Merchant'] = str(merchant) })
@@ -277,20 +283,77 @@ class ChargebacksHandler(BaseHandler):
         print ' ==> Query: ' + str(search)
         print ' ==> Query sorting: ' + sort + ' ' + str(sort_dir)
 		
-        # TODO: need index on sortable fields!!
-        #self.db.dispute.ensure_index(sort)
-        cursor = self.db.dispute.find(search).sort([(sort, sort_dir)]).skip(skip)
-        #cursor = self.db.dispute.find(search).skip(skip)
-        
-        out = []
-        data = yield cursor.to_list(int(limit))
-        for cb in data:
-            cb = cleanData(cb)
-            out.append(cb)
+       
+        if (export is not None):
             
-        self.content_type = 'application/json'
-        self.write(dumps(out,default=json_util.default))
-        self.finish()
+            cursor = self.db.dispute.find(search).sort([(sort, sort_dir)])
+            data = yield cursor.to_list(None)
+            
+            self.content_type = 'text/csv'
+            self.set_header ('Content-Disposition', 'attachment; filename=export.csv')
+            self.write("Stage\tMerchName\tMID\tCaseNum\tRequestDate\tCbAmount\tReasonCode\tReasonText\tCcPrefix\tCcSuffix\tTransId\tTransAmt\tTransDate\tFirstName\tLastName\tBillingAddr1\tBillingAddr2\tBillingCity\tBillingCountry\tBillingPostal\tBillingState\tAVS\tCVV\tEmail\tTrackingNumber\tTrackingSummary\tIPAddress\tDeliveryAddr1\tDeliveryAddr2\tDeliveryCity\tDeliveryCountry\tDeliveryPostal\tDeliveryState\n")
+            for line in data:
+                
+                if 'stage' in line.keys():
+                    if line['stage'] == "cb":
+                        self.write("Chargeback\t")
+                    elif line['stage'] == "rr":
+                        self.write("Retrieval Request\t")
+                    elif line['stage'] == "cbx":
+                        self.write("Pre-Arbitration\t")
+                    else:
+                        self.write("\t")
+                else:
+                    self.write("\t")
+                
+                printLineItem('Merchant', line['DocGenData']['derived_data'], self)
+                printLineItem('MidNumber', line['DocGenData']['portal_data'], self)
+                printLineItem('CaseNumber', line['DocGenData']['portal_data'], self)
+                printLineItem('RequestDate', line['DocGenData']['portal_data'], self)
+                printLineItem('ChargebackAmt', line['DocGenData']['portal_data'], self)
+                printLineItem('ReasonCode', line['DocGenData']['portal_data'], self)
+                printLineItem('ReasonText', line['DocGenData']['portal_data'], self)
+                printLineItem('CcPrefix', line['DocGenData']['portal_data'], self)
+                printLineItem('CcSuffix', line['DocGenData']['portal_data'], self)
+                printLineItem('TransId', line['DocGenData']['gateway_data'], self)
+                printLineItem('TransAmount', line['DocGenData']['gateway_data'], self)
+                printLineItem('TransDate', line['DocGenData']['gateway_data'], self)
+                printLineItem('FirstName', line['DocGenData']['gateway_data'], self)
+                printLineItem('LastName', line['DocGenData']['gateway_data'], self)
+                printLineItem('BillingAddr1', line['DocGenData']['gateway_data'], self)
+                printLineItem('BillingAddr2', line['DocGenData']['gateway_data'], self)
+                printLineItem('BillingCity', line['DocGenData']['gateway_data'], self)
+                printLineItem('BillingCountry', line['DocGenData']['gateway_data'], self)
+                printLineItem('BillingPostal', line['DocGenData']['gateway_data'], self)
+                printLineItem('BillingState', line['DocGenData']['gateway_data'], self)
+                printLineItem('AvsStatus', line['DocGenData']['gateway_data'], self)
+                printLineItem('CvvStatus', line['DocGenData']['gateway_data'], self)
+                printLineItem('Email', line['DocGenData']['crm_data'], self)
+                printLineItem('TrackingNum', line['DocGenData']['shipping_data'], self)
+                printLineItem('TrackingSum', line['DocGenData']['shipping_data'], self)
+                printLineItem('IpAddress', line['DocGenData']['crm_data'], self)
+                printLineItem('IpAddress', line['DocGenData']['crm_data'], self)
+                printLineItem('DeliveryAddr1', line['DocGenData']['crm_data'], self)
+                printLineItem('DeliveryAddr2', line['DocGenData']['crm_data'], self)
+                printLineItem('DeliveryCity', line['DocGenData']['crm_data'], self)
+                printLineItem('DeliveryCountry', line['DocGenData']['crm_data'], self)
+                printLineItem('DeliveryPostal', line['DocGenData']['crm_data'], self)
+                printLineItem('DeliveryState', line['DocGenData']['crm_data'], self)
+                self.write("\n")
+
+            self.finish()
+        else:
+
+            cursor = self.db.dispute.find(search).sort([(sort, sort_dir)]).skip(skip)
+            out = []
+            data = yield cursor.to_list(int(limit))
+            for cb in data:
+                cb = cleanData(cb)
+                out.append(cb)
+
+            self.content_type = 'application/json'
+            self.write(dumps(out,default=json_util.default))
+            self.finish()
 
 
 class ChargebackHandler(BaseHandler):
@@ -336,6 +399,8 @@ class DashboardHandler(BaseHandler):
 
         match = {}
         match['DocGenData.portal_data.MidNumber'] = { '$in': getMerchantArray(self) }
+        # only 2.0 dispute data
+        match['dispute_version'] = '2.0'
         
         search = [
             { '$match': match },
@@ -350,6 +415,7 @@ class DashboardHandler(BaseHandler):
             }}
         ];
 
+        print search
         out = {}
         cursor = yield self.db.dispute.aggregate(search)
 
@@ -376,6 +442,7 @@ class HistoryHandler(BaseHandler):
         match = {}
         match['DocGenData.portal_data.MidNumber'] = { '$in': getMerchantArray(self) }
         match['DocGenData.portal_data.RequestDate'] = { '$gte': start_date }
+        match['dispute_version'] = "2.0"
 
         search = [
             { '$match': match },
@@ -408,6 +475,13 @@ class HistoryHandler(BaseHandler):
         self.finish()
 
 
+
+def printLineItem(key, line, self):
+    try:
+        if key in line:
+            self.write( str(line[key]) + "\t" )
+    except KeyError:
+        self.write("\t")
 
 
 def getMerchantArray(self):

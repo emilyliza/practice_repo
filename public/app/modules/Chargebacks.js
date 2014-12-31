@@ -41,7 +41,8 @@
 
 		$scope.download = function() {
 			var url = $scope.cbs.nextPage(true);
-			window.open(url,'_blank');
+			console.log(url);
+			window.open(url, "_blank");
 		}
 
 	}])
@@ -75,9 +76,9 @@
 		ChargebacksService.prototype.clearAndRun = function() {
 			// reset
 			this.page = 1;
-			this.done = false;
 			this.data = [];
 			this.query = "";
+			this.last_page = false;
 			this.nextPage();
 			return;
 		};
@@ -95,6 +96,7 @@
 				this.page = 1;
 				this.data = [];
     			this.query = "";
+    			this.last_page = false;
     			this.lastQuery = this.query;
 				this.nextPage();
 				return;
@@ -149,9 +151,15 @@
     		}
 
     		if (download) {
+    			_this.busy = false;
     			return url + '&export=csv&cbkey=' + $window.sessionStorage.token;
     		}
     		
+    		if (this.page == this.last_page) {
+    			this.busy = false;
+    			return;
+    		}
+
     		$http.get(url)
 			.success(function (rows) {
 				var new_data = rows;
@@ -160,10 +168,10 @@
 					_this.data.push(d);
 				});
 
-				// if (_this.data.length > 0 && this.data.length < 30) {
-				// 	_this.done = true;
-				// }
-				_this.page++;
+				_this.last_page = _this.page;
+				if (_this.data.length == 30) {
+					_this.page++;
+				}
 				$timeout(function() {
 					_this.busy = false;
 				},50);
