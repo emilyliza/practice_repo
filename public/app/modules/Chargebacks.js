@@ -13,7 +13,7 @@
 	
 	}])
 
-	.controller('ChargebacksController', ['$scope', 'ChargebacksService', function($scope, ChargebacksService) {
+	.controller('ChargebacksController', ['$scope', '$timeout', 'ChargebacksService', function($scope, $timeout, ChargebacksService) {
 		
 		$scope.date = {
 			start: {
