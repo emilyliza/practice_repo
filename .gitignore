@@ -20,3 +20,4 @@ dump/
 venv
 *.pyc
 tim/
+certs/*

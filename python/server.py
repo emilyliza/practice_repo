@@ -533,8 +533,8 @@ def main():
     if (os.environ['ENV'] == "production"):
         settings = {
             "ssl_options": {
-                "certfile": os.path.join("certs/server.crt"),
-                "keyfile": os.path.join("certs/server.key"),
+                "certfile": os.path.join("certs/2779cbb02efdfc.crt"),
+                "keyfile": os.path.join("certs/sslPriv.pem"),
             },
         }
 
