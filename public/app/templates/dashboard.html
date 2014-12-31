@@ -32,7 +32,7 @@
 
 			<div class="row" ng-repeat="cb in dbs.data">
 				<div class="col-sm-2">{{cb.portal_data.RequestDate | date:'MMMM d, yyyy'}}</div>
-				<div class="col-sm-1">{{cb.portal_data.ChargebackAmt | currency:"$":0}}</div>
+				<div class="col-sm-1">{{cb.portal_data.ChargebackAmt | currency}}</div>
 				<div class="col-sm-2">{{cb.gateway_data.FirstName}} {{cb.gateway_data.LastName}}</div>
 				<div class="col-sm-2">{{cb.portal_data.MidNumber}}</div>
 				<div class="col-sm-3">
