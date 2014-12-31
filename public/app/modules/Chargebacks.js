@@ -43,6 +43,13 @@
 			window.open(url, "_blank");
 		};
 
+		$scope.$on(
+			"$destroy",
+			function( event ) {
+				$timeout.cancel( $scope.cbs.filterTextTimeout );
+			}
+		);
+
 	}])
 
 	.factory('ChargebacksService', ['$http', '$timeout', '$state', '$window', function ($http, $timeout, $state, $window) {
@@ -72,11 +79,11 @@
 			};
 		};
 
-		ChargebacksService.prototype.clearAndRun = function() {
+		ChargebacksService.prototype.clearAndRun = function(q) {
 			// reset
 			this.page = 1;
 			this.data = [];
-			this.query = "";
+			this.query = (q || (this.lastQuery || ""));
 			this.loaded = false;
 			this.last_page = false;
 			this.nextPage();
@@ -104,19 +111,16 @@
 			}
 
 			// prevent dupes
-			//if (this.lastQuery == query) {
-			//	return;
-			//}
+			if (this.lastQuery == query) {
+				return;
+			}
 
-			// throttle searches to 250ms
-    		if (this.filterTextTimeout) {
-    			$timeout.cancel(this.filterTextTimeout);
-    		}
-    		this.filterTextTimeout = $timeout(function() {
-    			_this.query = query;
-    			console.log('search, calling next: ' + query);
-    			_this.nextPage();
-    		}, 250);
+			if (this.filterTextTimeout) {
+				$timeout.cancel(this.filterTextTimeout);
+			}
+			this.filterTextTimeout = $timeout(function() {
+				_this.clearAndRun(query);
+			}, 600);
     	};
 
 		ChargebacksService.prototype.nextPage = function(download) {
@@ -171,7 +175,7 @@
 				});
 
 				_this.last_page = _this.page;
-				if (_this.data.length == 30) {
+				if (rows.length == 30) {
 					_this.page++;
 				}
 				
