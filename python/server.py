@@ -117,6 +117,9 @@ class Application(tornado.web.Application):
             (r"/api/v1/chargebacks", ChargebacksHandler),
             (r"/api/v1/chargeback/([0-9-A-Za-z]+)", ChargebackHandler),
             (r"/api/v1/history", HistoryHandler),
+            (r"/api/v1/report/status", ReportStatusHandler),
+            (r"/api/v1/report/midStatus", ReportStatusMidHandler),
+            (r"/api/v1/report/processorStatus", ReportStatusProcessorHandler),
             (r"/api/v1/dashboard", DashboardHandler),
             (r"/(.*)", tornado.web.StaticFileHandler, {"path": os.path.join(root, "../public")}),
         ]
@@ -476,6 +479,230 @@ class HistoryHandler(BaseHandler):
         self.write(dumps(out,default=json_util.default))
         self.finish()
 
+
+
+class ReportStatusHandler(BaseHandler):
+    @tornado.web.asynchronous
+    @gen.coroutine
+    @authenticated
+    def get(self):
+        
+        start = self.get_argument('start', None)
+        end = self.get_argument('end', None)
+
+        if start is None:
+            self.set_status(400)
+            self.finish("No start")
+            return 
+        if end is None:
+            self.set_status(400)
+            self.finish("No end")
+            return 
+
+        start_date = datetime.datetime.fromtimestamp(float(start)/1000)
+        end_date = datetime.datetime.fromtimestamp(float(end)/1000)
+
+        match = {}
+        match['DocGenData.portal_data.MidNumber'] = { '$in': getMerchantArray(self) }
+        match['DocGenData.portal_data.RequestDate'] = { '$gte': start_date, '$lte': end_date }
+        match['dispute_version'] = "2.0"
+
+        search1 = [
+            { '$match': match },
+            { '$project': {
+                '_id': 0,
+                'status': "$pipeline_status.current.status"
+            }},
+            { '$group': {
+                '_id': { 'status' : "$status"}, 
+                'total': { '$sum': 1 }
+            }},
+            { '$sort' : { '_id': 1 } }
+        ];
+
+        search2 = [
+            { '$match': match },
+            { '$project': {
+                '_id': 0,
+                'status': "$pipeline_status.current.status",
+                'amt': '$DocGenData.portal_data.ChargebackAmt_100'
+            }},
+            { '$group': {
+                '_id': { 'status' : "$status"}, 
+                'total': { '$sum': "$amt" }
+            }},
+            { '$sort' : { '_id': 1 } }
+        ];
+
+        
+        a = self.db.dispute.aggregate(search1)
+        b = self.db.dispute.aggregate(search2)
+
+        # run in parrellel, but yield to both
+        cursor1,cursor2 = yield [a,b]
+        
+        result1 = []
+        result2 = []
+        for row in cursor1['result']: 
+            result1.append( { 'name': row['_id']['status'], "val": row['total'] } )
+
+        for row in cursor2['result']: 
+            result2.append( { 'name': row['_id']['status'], "val": row['total'] / 100 } )
+
+        out = {
+            "byVolume": {
+                "label": 'Status By Volume',
+                "data_type": 'currency',
+                "filtertype": 'status',
+                "data": result1
+            },
+            "byCount": {
+                "label": 'Status By Count',
+                "data_type": 'number',
+                "filtertype": 'status',
+                "data": result2
+            }
+        }
+
+        self.content_type = 'application/json'
+        self.write(dumps(out,default=json_util.default))
+        self.finish()
+
+
+class ReportStatusMidHandler(BaseHandler):
+    @tornado.web.asynchronous
+    @gen.coroutine
+    @authenticated
+    def get(self):
+        
+        start = self.get_argument('start', None)
+        end = self.get_argument('end', None)
+
+        if start is None:
+            self.set_status(400)
+            self.finish("No start")
+            return 
+        if end is None:
+            self.set_status(400)
+            self.finish("No end")
+            return 
+
+        start_date = datetime.datetime.fromtimestamp(float(start)/1000)
+        end_date = datetime.datetime.fromtimestamp(float(end)/1000)
+
+        match = {}
+        match['DocGenData.portal_data.MidNumber'] = { '$in': getMerchantArray(self) }
+        match['DocGenData.portal_data.RequestDate'] = { '$gte': start_date, '$lte': end_date }
+        match['dispute_version'] = "2.0"
+
+        search = [
+            { '$match': match },
+            { '$project': {
+                '_id': 0,
+                'status': "$pipeline_status.current.status",
+                'mid': "$DocGenData.portal_data.MidNumber",
+                'amt': '$DocGenData.portal_data.ChargebackAmt_100'
+            }},
+            { '$group': {
+                '_id': { 'mid': '$mid', 'status' : "$status"}, 
+                'total': { '$sum': "$amt" }
+            }},
+            { '$sort' : { '_id': 1 } }
+        ];
+
+        cursor = yield self.db.dispute.aggregate(search)
+        
+        result = {}
+        for row in cursor['result']: 
+            if row['_id']['mid'] in result:
+                result[ row['_id']['mid'] ]['data'].append({ "name": row["_id"]["status"], "val": row['total']/100 })
+            else:
+                result[ row['_id']['mid'] ] = {
+                    "data": [
+                        { "name": row["_id"]["status"], "val": row['total']/100 }
+                    ]
+                }
+            
+        out = []
+        for key,value in result.iteritems():
+            out.append({
+                "label": key,
+                "data_type": 'currency',
+                "filtertype": 'status',
+                "data": value['data']
+            })
+        
+        self.content_type = 'application/json'
+        self.write(dumps(out,default=json_util.default))
+        self.finish()
+
+
+class ReportStatusProcessorHandler(BaseHandler):
+    @tornado.web.asynchronous
+    @gen.coroutine
+    @authenticated
+    def get(self):
+        
+        start = self.get_argument('start', None)
+        end = self.get_argument('end', None)
+
+        if start is None:
+            self.set_status(400)
+            self.finish("No start")
+            return 
+        if end is None:
+            self.set_status(400)
+            self.finish("No end")
+            return 
+
+        start_date = datetime.datetime.fromtimestamp(float(start)/1000)
+        end_date = datetime.datetime.fromtimestamp(float(end)/1000)
+
+        match = {}
+        match['DocGenData.portal_data.MidNumber'] = { '$in': getMerchantArray(self) }
+        match['DocGenData.portal_data.RequestDate'] = { '$gte': start_date, '$lte': end_date }
+        match['dispute_version'] = "2.0"
+
+        search = [
+            { '$match': match },
+            { '$project': {
+                '_id': 0,
+                'status': "$pipeline_status.current.status",
+                'processor': "$DocGenData.derived_data.Merchant",
+                'amt': '$DocGenData.portal_data.ChargebackAmt_100'
+            }},
+            { '$group': {
+                '_id': { 'processor': '$processor', 'status' : "$status"}, 
+                'total': { '$sum': "$amt" }
+            }},
+            { '$sort' : { '_id': 1 } }
+        ];
+
+        cursor = yield self.db.dispute.aggregate(search)
+        
+        result = {}
+        for row in cursor['result']: 
+            if row['_id']['processor'] in result:
+                result[ row['_id']['processor'] ]['data'].append({ "name": row["_id"]["status"], "val": row['total']/100 })
+            else:
+                result[ row['_id']['processor'] ] = {
+                    "data": [
+                        { "name": row["_id"]["status"], "val": row['total']/100 }
+                    ]
+                }
+            
+        out = []
+        for key,value in result.iteritems():
+            out.append({
+                "label": key,
+                "data_type": 'currency',
+                "filtertype": 'status',
+                "data": value['data']
+            })
+        
+        self.content_type = 'application/json'
+        self.write(dumps(out,default=json_util.default))
+        self.finish()
 
 
 def printLineItem(key, line, self):
