@@ -31,7 +31,6 @@
 
 		$scope.$watch("date.start.val", function(newValue, oldValue){
 			$scope.cbs.setDates($scope.date);
-			console.log('start changed')
 			$scope.cbs.clearAndRun();
 		});
 		$scope.$watch("date.end.val", function(newValue, oldValue){
@@ -41,9 +40,8 @@
 
 		$scope.download = function() {
 			var url = $scope.cbs.nextPage(true);
-			console.log(url);
 			window.open(url, "_blank");
-		}
+		};
 
 	}])
 
@@ -172,6 +170,7 @@
 				if (_this.data.length == 30) {
 					_this.page++;
 				}
+				
 				$timeout(function() {
 					_this.busy = false;
 				},50);
