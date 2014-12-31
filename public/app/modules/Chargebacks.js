@@ -39,9 +39,14 @@
 			$scope.cbs.clearAndRun();
 		});
 
+		$scope.download = function() {
+			var url = $scope.cbs.nextPage(true);
+			window.open(url,'_blank');
+		}
+
 	}])
 
-	.factory('ChargebacksService', ['$http', '$timeout', '$state', function ($http, $timeout, $state) {
+	.factory('ChargebacksService', ['$http', '$timeout', '$state', '$window', function ($http, $timeout, $state, $window) {
 		
 		var ChargebacksService = function() {
 			this.data = [];
@@ -76,6 +81,7 @@
 			this.nextPage();
 			return;
 		};
+		
 
 		ChargebacksService.prototype.search = function(query) {
 			var _this = this;
@@ -110,7 +116,7 @@
     		}, 250);
     	};
 
-		ChargebacksService.prototype.nextPage = function() {
+		ChargebacksService.prototype.nextPage = function(download) {
 			if (this.busy) { return; }
 			this.busy = true;
     		var _this = this;
@@ -140,6 +146,10 @@
     					url += '&' + k + '=' + $state.params[k];
     				}
     			});
+    		}
+
+    		if (download) {
+    			return url + '&export=csv&cbkey=' + $window.sessionStorage.token;
     		}
     		
     		$http.get(url)
