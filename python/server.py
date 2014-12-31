@@ -292,7 +292,7 @@ class ChargebacksHandler(BaseHandler):
             
             self.content_type = 'text/csv'
             self.set_header ('Content-Disposition', 'attachment; filename=export.csv')
-            self.write("Stage\tMerchName\tMID\tCaseNum\tRequestDate\tCbAmount\tReasonCode\tReasonText\tCcPrefix\tCcSuffix\tTransId\tTransAmt\tTransDate\tFirstName\tLastName\tBillingAddr1\tBillingAddr2\tBillingCity\tBillingCountry\tBillingPostal\tBillingState\tAVS\tCVV\tEmail\tTrackingNumber\tTrackingSummary\tIPAddress\tDeliveryAddr1\tDeliveryAddr2\tDeliveryCity\tDeliveryCountry\tDeliveryPostal\tDeliveryState\n")
+            self.write("Stage\tMID\tCaseNum\tRequestDate\tCbAmount\tReasonCode\tReasonText\tCcPrefix\tCcSuffix\tTransId\tTransAmt\tTransDate\tFirstName\tLastName\tBillingAddr1\tBillingAddr2\tBillingCity\tBillingCountry\tBillingPostal\tBillingState\tAVS\tCVV\tEmail\tTrackingNumber\tTrackingSummary\tIPAddress\tDeliveryAddr1\tDeliveryAddr2\tDeliveryCity\tDeliveryCountry\tDeliveryPostal\tDeliveryState\n")
             for line in data:
                 
                 if 'stage' in line.keys():
@@ -307,7 +307,7 @@ class ChargebacksHandler(BaseHandler):
                 else:
                     self.write("\t")
                 
-                printLineItem('Merchant', line['DocGenData']['derived_data'], self)
+                #printLineItem('Merchant', line['DocGenData']['derived_data'], self)
                 printLineItem('MidNumber', line['DocGenData']['portal_data'], self)
                 printLineItem('CaseNumber', line['DocGenData']['portal_data'], self)
                 printLineItem('RequestDate', line['DocGenData']['portal_data'], self)
