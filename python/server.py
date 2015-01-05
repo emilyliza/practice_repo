@@ -448,9 +448,15 @@ class HistoryHandler(BaseHandler):
         start_date = datetime.datetime.now() - datetime.timedelta(days=1*365)
 
         match = {}
-        match['DocGenData.portal_data.MidNumber'] = { '$in': getMerchantArray(self) }
         match['DocGenData.portal_data.RequestDate'] = { '$gte': start_date }
         match['dispute_version'] = "2.0"
+
+        mids = self.get_argument('mids', None)
+        if (mids is not None and mids):
+            mid_array = mids.split(',')
+            match['DocGenData.portal_data.MidNumber'] = { '$in': mid_array }
+        else:
+            match['DocGenData.portal_data.MidNumber'] = { '$in': getMerchantArray(self) }
 
         search = [
             { '$match': match },

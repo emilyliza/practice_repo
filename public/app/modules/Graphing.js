@@ -491,7 +491,7 @@
 		};
 	}])
 
-	.directive('graphBar', ['$parse', '$window', '$http', function($parse, $window, $http){
+	.directive('graphBar', ['$parse', '$window', '$http', 'ReportingService', function($parse, $window, $http, ReportingService){
 		return {
 			restrict:'EA',
 			template: "<div></div>",
@@ -502,10 +502,10 @@
 				
 				var	container = elem.find('div'),
 					outerWidth = container.width(),
-					outerHeight = container.width() * 0.67,
+					outerHeight = container.width() * 0.45,
 					margin = {top: 20, right: 20, bottom: 30, left: 70},
 					width = container.width() - margin.left - margin.right,
-					height = (container.width() * 0.67) - margin.top - margin.bottom,
+					height = (container.width() * 0.45) - margin.top - margin.bottom,
 					d3 = $window.d3;
 					
 				var parseDate = d3.time.format("%Y-%m-%d").parse;
@@ -527,7 +527,6 @@
 					.ticks(d3.time.month, 1)
 					.tickFormat(d3.time.format('%b %Y'));
 
-				
 				var yAxis = d3.svg.axis()
 					.scale(y)
 					.orient("left");
@@ -553,10 +552,41 @@
 				}
 				ctrl.update = function(data) {
 
+					// console.log(ReportingService.getDates().start);
+					// var start_month = moment( ReportingService.getDates().start ).month();
+					// ReportingService start is not used within history, it is hard coded to one year back.
+
+					var test_months = [];
+					
 					data.forEach(function(d) {
 						d.date = parseDate(d.date);
 						d.total = +d.total;
+						test_months[ moment(d.date).month() ] = +d.total;
 					});
+
+					var build_months = [],
+						month_year_ago = moment().subtract(1, 'year').month(),
+						year_ago = moment().subtract(1, 'year').year();
+					for(var i = 0; i < 12; i++) {
+						var t = 0;
+						
+						if (_.contains(_.keys(test_months), month_year_ago + ""))  {
+							t = test_months[ month_year_ago + "" ];
+						}
+						build_months.push({
+							date: parseDate( moment( year_ago + "-" + (month_year_ago + 1) + "-01" ).format('YYYY-MM-DD') ),
+							total: t
+						});
+						
+						month_year_ago++;
+						if (month_year_ago == 12) {
+							month_year_ago = 0;
+							year_ago++;
+						}
+					}
+
+					data = build_months;
+					
 
 					x.domain(d3.extent(data, function(d) { return d.date; }));
 					y.domain([0, d3.max(data, function(d) { return d.total; })]);
@@ -579,17 +609,19 @@
 					// new data:
 					bar.enter().append("rect")
 						.attr("class", "bar")
-						.attr("x", function(d) { return x(d.date); })
 						.attr("x", function(d) { return x(d.date) - (barWidth/2); })
+						.attr("y", function(d) { return y(d.total); })
 						.attr("width", barWidth)
-						.attr('y', height)
-						.attr("height", 0)
-						.transition().duration(1000)
+						.attr("height", function(d) { return height - y(d.total); });
+					bar
+						.transition()
+						.duration(750)
 						.attr("y", function(d) { return y(d.total); })
 						.attr("height", function(d) { return height - y(d.total); });
 
 					// removed data:
-					bar.exit().remove();
+					bar.exit().transition().remove();
+					
 					
 					// updated data:
 					bar
@@ -599,11 +631,13 @@
 						.attr("height", function(d) { return height - y(d.total); });
 
 
+					chart.select(".x.axis").remove();
 					chart.append("g")
 						.attr("class", "x axis")
 						.attr("transform", "translate(0," + height + ")")
 						.call(xAxis);
 
+					chart.select(".y.axis").remove();
 					chart.append("g")
 						.attr("class", "y axis")
 						.call(yAxis)
@@ -612,56 +646,6 @@
 						.attr("y", 6)
 						.attr("dy", ".71em")
 						.style("text-anchor", "end");
-
-
-					
-
-					// x.domain(d3.extent(data, function(d) { return d.date; }));
-					// y.domain([0, d3.max(data, function(d) { return d.total; })]);
-
-					// // Call x-axis. 
-					// d3.select(".x.axis")
-					// 	.transition().duration(1000)
-					// 	.call(xAxis);
-					
-					// var bars = svg.selectAll(".bar")
-					// 	.data(data, function(d) { return d.date; });
-
-					// bars.exit().remove();
-    
-					// bars.transition().duration(1000)
-					// 	.attr("x", function(d) { return x(d.date) - (barWidth/2); })
-					// 	.attr("width", barWidth)
-					// 	.attr("y", function(d) { return y(d.air_used); })
-					// 	.attr("height", function(d) { return height - y(d.air_used);});
-
-
-					// bars.enter().append("rect")
-					// 	.attr("class", "bar")
-					// 	//.attr("x", function(d) { return x(d.date); })
-					// 	.attr("x", function(d) { return x(d.date) - (barWidth/2); })
-    	// 				.attr("width", barWidth)
-    	// 				.attr("y", height)
-					// 	.attr("height", 0)
-					// 	.transition().duration(1000)
-					// 	.attr("y", function(d) { return y(d.total); })
-					// 	.attr("height", function(d) { return height - y(d.total); });
-
-
-					// svg.append("g")
-					// 	.attr("class", "x axis")
-					// 	.attr("transform", "translate(0," + height + ")")
-					// 	.call(xAxis);
-
-					// svg.append("g")
-					// 	.attr("class", "y axis")
-					// 	.call(yAxis)
-					// 	.append("text")
-					// 	.attr("transform", "rotate(-90)")
-					// 	.attr("y", 6)
-					// 	.attr("dy", ".71em")
-					// 	.style("text-anchor", "end")
-						
 					
 				};
 

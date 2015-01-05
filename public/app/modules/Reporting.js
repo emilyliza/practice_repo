@@ -157,13 +157,15 @@
 
 		$scope.$watch("date.start.val", function(newValue, oldValue){
 			ReportingService.setDates($scope.date);
-			console.log($scope.last);
-			$scope[$scope.last]();
+			if ($scope.last) {
+				$scope[$scope.last]();
+			}
 		});
 		$scope.$watch("date.end.val", function(newValue, oldValue){
 			ReportingService.setDates($scope.date);
-			console.log($scope.last);
-			$scope[$scope.last]();
+			if ($scope.last) {
+				$scope[$scope.last]();
+			}
 		});
 		
 		// go full screen inside reporting
@@ -172,7 +174,7 @@
 		
 		//@TODO: the merchants array should come from initial user data
 		var cu = UserService.getCurrentUser();
-		$scope.merchants = [{'name': '-- All --'}];
+		$scope.merchants = [{'name': 'All'}];
 		_.each(cu.merchants, function(m) {
 			$scope.merchants.push(m);
 		})
