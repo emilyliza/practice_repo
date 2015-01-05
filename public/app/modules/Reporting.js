@@ -1,6 +1,6 @@
 (function() {
 
-	angular.module('reporting', ['ui.router', 'ngAnimate', 'graphing'])
+	angular.module('reporting', ['ui.router', 'ngAnimate', 'graphing', 'user'])
 	
 	.config(['$stateProvider', '$urlRouterProvider', function( $stateProvider, $urlRouterProvider ) {
 		
@@ -120,7 +120,7 @@
 	}])
 
 	
-	.controller('ReportingController', [ '$scope', '$rootScope', 'ReportingService', '$state', '$timeout', function($scope, $rootScope, ReportingService, $state, $timeout) {
+	.controller('ReportingController', [ '$scope', '$rootScope', 'ReportingService', '$state', '$timeout', 'UserService', function($scope, $rootScope, ReportingService, $state, $timeout, UserService) {
 		//$scope.data = res.data;
 		$scope.data = null;
 		$scope.last = null;
@@ -145,7 +145,7 @@
 
 		$scope.date = {
 			start: {
-				val: moment().date(1).toDate(),
+				val: moment().subtract(1, 'month').toDate(),
 				opened: false
 			},
 			end: {
@@ -157,11 +157,13 @@
 
 		$scope.$watch("date.start.val", function(newValue, oldValue){
 			ReportingService.setDates($scope.date);
-			//@TODO: rerun pie data
+			console.log($scope.last);
+			$scope[$scope.last]();
 		});
 		$scope.$watch("date.end.val", function(newValue, oldValue){
 			ReportingService.setDates($scope.date);
-			//@TODO: rerun pie data
+			console.log($scope.last);
+			$scope[$scope.last]();
 		});
 		
 		// go full screen inside reporting
@@ -169,13 +171,12 @@
 
 		
 		//@TODO: the merchants array should come from initial user data
-		$scope.merchants = [
-			{ name:'CozyThings LLC', shade:'dark'},
-			{ name:'MoneyMakers Inc', shade:'light'},
-			{ name:'Christmas Co', shade:'dark'},
-			{ name:'Holiday Inc', shade:'dark'},
-			{ name:'BigMerchant Corp', shade:'light'}
-		];
+		var cu = UserService.getCurrentUser();
+		$scope.merchants = [{'name': '-- All --'}];
+		_.each(cu.merchants, function(m) {
+			$scope.merchants.push(m);
+		})
+		
 		ReportingService.setMerchants($scope.merchants);
 		
 		// default is first
@@ -324,32 +325,41 @@
 			});
 		};
 
+		reportingService.getMidString = function() {
+			var mids_str = "";
+			_.each(merchants[merchant].mids, function(mid) {
+				if (mids_str) { mids_str += ","; }
+				mids_str += mid.mid;
+			});
+			return mids_str;
+		};
+
 		reportingService.getHistory = function() {
-			return $http.get('/api/v1/history?start=' + start + "&end=" + end + "&merchant=" + merchants[merchant].name);
+			return $http.get('/api/v1/history?start=' + start + "&end=" + end + "&mids=" + this.getMidString() );
 		};
 
 		reportingService.getStatusData = function() {
-			return $http.get('/api/v1/report/status?start=' + start + "&end=" + end + "&merchant=" + merchants[merchant].name);
+			return $http.get('/api/v1/report/status?start=' + start + "&end=" + end + "&mids=" + this.getMidString() );
 		};
 
 		reportingService.getMidStatusData = function() {
-			return $http.get('/api/v1/report/midStatus?start=' + start + "&end=" + end + "&merchant=" + merchants[merchant].name);
+			return $http.get('/api/v1/report/midStatus?start=' + start + "&end=" + end + "&mids=" + this.getMidString() );
 		};
 
 		reportingService.getTypeData = function() {
-			return $http.get('/api/v1/report/cctypes?start=' + start + "&end=" + end + "&merchant=" + merchants[merchant].name);
+			return $http.get('/api/v1/report/cctypes?start=' + start + "&end=" + end + "&mids=" + this.getMidString() );
 		};
 
 		reportingService.getMidTypeData = function() {
-			return $http.get('/api/v1/report/midTypes?start=' + start + "&end=" + end + "&merchant=" + merchants[merchant].name);
+			return $http.get('/api/v1/report/midTypes?start=' + start + "&end=" + end + "&mids=" + this.getMidString() );
 		};
 
 		reportingService.getProcessorTypeData = function() {
-			return $http.get('/api/v1/report/processorTypes?start=' + start + "&end=" + end + "&merchant=" + merchants[merchant].name);
+			return $http.get('/api/v1/report/processorTypes?start=' + start + "&end=" + end + "&mids=" + this.getMidString() );
 		};
 
 		reportingService.getProcessorStatusData = function() {
-			return $http.get('/api/v1/report/processorStatus?start=' + start + "&end=" + end + "&merchant=" + merchant);
+			return $http.get('/api/v1/report/processorStatus?start=' + start + "&end=" + end + "&mids=" + this.getMidString() );
 		};
 
 

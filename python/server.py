@@ -489,7 +489,7 @@ class ReportStatusHandler(BaseHandler):
         
         start = self.get_argument('start', None)
         end = self.get_argument('end', None)
-
+        
         if start is None:
             self.set_status(400)
             self.finish("No start")
@@ -503,9 +503,15 @@ class ReportStatusHandler(BaseHandler):
         end_date = datetime.datetime.fromtimestamp(float(end)/1000)
 
         match = {}
-        match['DocGenData.portal_data.MidNumber'] = { '$in': getMerchantArray(self) }
         match['DocGenData.portal_data.RequestDate'] = { '$gte': start_date, '$lte': end_date }
         match['dispute_version'] = "2.0"
+
+        mids = self.get_argument('mids', None)
+        if (mids is not None and mids):
+            mid_array = mids.split(',')
+            match['DocGenData.portal_data.MidNumber'] = { '$in': mid_array }
+        else:
+            match['DocGenData.portal_data.MidNumber'] = { '$in': getMerchantArray(self) }
 
         search1 = [
             { '$match': match },
@@ -534,7 +540,9 @@ class ReportStatusHandler(BaseHandler):
             { '$sort' : { '_id': 1 } }
         ];
 
-        
+        print search1
+        print search2
+
         a = self.db.dispute.aggregate(search1)
         b = self.db.dispute.aggregate(search2)
 
@@ -591,9 +599,15 @@ class ReportStatusMidHandler(BaseHandler):
         end_date = datetime.datetime.fromtimestamp(float(end)/1000)
 
         match = {}
-        match['DocGenData.portal_data.MidNumber'] = { '$in': getMerchantArray(self) }
         match['DocGenData.portal_data.RequestDate'] = { '$gte': start_date, '$lte': end_date }
         match['dispute_version'] = "2.0"
+
+        mids = self.get_argument('mids', None)
+        if (mids is not None and mids):
+            mid_array = mids.split(',')
+            match['DocGenData.portal_data.MidNumber'] = { '$in': mid_array }
+        else:
+            match['DocGenData.portal_data.MidNumber'] = { '$in': getMerchantArray(self) }
 
         search = [
             { '$match': match },
@@ -610,6 +624,8 @@ class ReportStatusMidHandler(BaseHandler):
             { '$sort' : { '_id': 1 } }
         ];
 
+        print search
+        
         cursor = yield self.db.dispute.aggregate(search)
         
         result = {}
@@ -659,9 +675,15 @@ class ReportStatusProcessorHandler(BaseHandler):
         end_date = datetime.datetime.fromtimestamp(float(end)/1000)
 
         match = {}
-        match['DocGenData.portal_data.MidNumber'] = { '$in': getMerchantArray(self) }
         match['DocGenData.portal_data.RequestDate'] = { '$gte': start_date, '$lte': end_date }
         match['dispute_version'] = "2.0"
+
+        mids = self.get_argument('mids', None)
+        if (mids is not None and mids):
+            mid_array = mids.split(',')
+            match['DocGenData.portal_data.MidNumber'] = { '$in': mid_array }
+        else:
+            match['DocGenData.portal_data.MidNumber'] = { '$in': getMerchantArray(self) }
 
         search = [
             { '$match': match },
@@ -678,6 +700,8 @@ class ReportStatusProcessorHandler(BaseHandler):
             { '$sort' : { '_id': 1 } }
         ];
 
+        print search
+        
         cursor = yield self.db.dispute.aggregate(search)
         
         result = {}
