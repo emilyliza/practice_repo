@@ -5,7 +5,7 @@
 	.config(['$stateProvider', function( $stateProvider ) {
 		
 		$stateProvider.state('chargebacks', {
-			url: '/chargebacks?status&start&end&card_type&merchant',
+			url: '/chargebacks?status&start&end&card_type&mids',
 			templateUrl: '/app/templates/chargebacks.html',
 			requiresAuth: true,
 			controller: 'ChargebacksController'
@@ -13,7 +13,7 @@
 	
 	}])
 
-	.controller('ChargebacksController', ['$scope', '$timeout', 'ChargebacksService', function($scope, $timeout, ChargebacksService) {
+	.controller('ChargebacksController', ['$scope', '$timeout', 'ChargebacksService', '$state', function($scope, $timeout, ChargebacksService, $state) {
 		
 		$scope.date = {
 			start: {
@@ -25,6 +25,13 @@
 				opened: false
 			}
 		};
+
+		if ($state.params.start) {
+			$scope.date.start.val = moment($state.params.start).toDate();
+		}
+		if ($state.params.end) {
+			$scope.date.end.val = moment($state.params.end).toDate();
+		}
 
 		$scope.cbs = new ChargebacksService();	
 		$scope.cbs.setDates($scope.date);

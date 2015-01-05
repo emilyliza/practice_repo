@@ -248,7 +248,17 @@
 									params[res.filtertype] = d.name;
 									params['start'] = dates.start;
 									params['end'] = dates.end;
-									params['merchant'] = merchant.name;
+									
+									if (merchant.mids.length) {
+										mstr = '';
+										_.each(merchant.mids, function(m) {
+											if (mstr) { mstr += ","; }
+											mstr += m.mid;
+										});
+										params['mids'] = mstr;
+									}
+										
+									console.log(merchant)
 									$state.go('chargebacks', params );
 								});
 							paths

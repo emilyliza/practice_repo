@@ -172,7 +172,6 @@
 		angular.element('#pages').removeClass("container");
 
 		
-		//@TODO: the merchants array should come from initial user data
 		var cu = UserService.getCurrentUser();
 		$scope.merchants = [{'name': 'All'}];
 		_.each(cu.merchants, function(m) {
