@@ -5,7 +5,7 @@
 	.config(['$stateProvider', function( $stateProvider ) {
 		
 		$stateProvider.state('chargebacks', {
-			url: '/chargebacks?status&start&end&card_type&mids',
+			url: '/chargebacks?status&start&end&cctype&mids',
 			templateUrl: '/app/templates/chargebacks.html',
 			requiresAuth: true,
 			controller: 'ChargebacksController'
@@ -138,7 +138,7 @@
     		console.log('nextPage');
     		console.log('\tQuery: ' + this.query);
     		console.log('\tLast: ' + this.lastQuery);
-    		console.log($state.params);
+    		//console.log($state.params);
 
 			if (this.query && this.lastQuery != this.query) {
     			// new query, reset list
@@ -153,7 +153,7 @@
     		url += '&start=' + this.start + "&end=" + this.end;
     		url += '&query=' + this.query;
     		
-    		// additional params such as start, end, card_type, merchanct, etc
+    		// additional params such as start, end, cctype, merchanct, etc
     		if ($state.params) {
     			_.each(_.keys($state.params), function(k) {
     				if ($state.params[k]) {

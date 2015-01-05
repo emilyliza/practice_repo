@@ -245,6 +245,7 @@
 									var params = {},
 										dates = ReportingService.getDates(),
 										merchant = ReportingService.getMerchants()[ ReportingService.getMerchant() ];
+									
 									params[res.filtertype] = d.name;
 									params['start'] = dates.start;
 									params['end'] = dates.end;
@@ -258,7 +259,6 @@
 										params['mids'] = mstr;
 									}
 										
-									console.log(merchant)
 									$state.go('chargebacks', params );
 								});
 							paths

@@ -228,7 +228,7 @@ class ChargebacksHandler(BaseHandler):
         mids = self.get_argument('mids', None)
         merchant = self.get_argument('merchant', None)
         status = self.get_argument('status', None)
-        card_type = self.get_argument('card_type', None)
+        cctype = self.get_argument('cctype', None)
         query = self.get_argument('query', "")
         export = self.get_argument("export", None)
         
@@ -264,8 +264,8 @@ class ChargebacksHandler(BaseHandler):
         #    search['DocGenData.derived_data.Status'] = str(status)
 
 
-        if (card_type is not None): 
-            search['$and'].append( {'DocGenData.gateway_data.CcType': str(card_type) })
+        if (cctype is not None): 
+            search['$and'].append( {'DocGenData.gateway_data.CcType': str(cctype) })
         
         if (status is not None): 
             search['$and'].append( {'pipeline_status.current.status': str(status) })
