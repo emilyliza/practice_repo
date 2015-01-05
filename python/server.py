@@ -225,7 +225,7 @@ class ChargebacksHandler(BaseHandler):
         skip = (int(page) - 1) * int(limit)
         start = self.get_argument('start', None)
         end = self.get_argument('end', None)
-        mid = self.get_argument('mid', None)
+        mids = self.get_argument('mids', None)
         merchant = self.get_argument('merchant', None)
         status = self.get_argument('status', None)
         card_type = self.get_argument('card_type', None)
@@ -236,11 +236,9 @@ class ChargebacksHandler(BaseHandler):
         search['$and'] = []
 
         # if mid, then make sure it belongs to user
-        if (mid is not None): 
-            if isValidMid(self, mid):
-                search['$and'].append( { 'DocGenData.portal_data.MidNumber': str(mid) })
-            else:
-                search['$and'].append( { 'DocGenData.portal_data.MidNumber': { '$in': getMerchantArray(self) }} )
+        if (mids is not None): 
+            mid_array = mids.split(',')
+            search['$and'].append( { 'DocGenData.portal_data.MidNumber': { '$in': mid_array }} )
         else:
             search['$and'].append( { 'DocGenData.portal_data.MidNumber': { '$in': getMerchantArray(self) }} )
             
@@ -268,6 +266,9 @@ class ChargebacksHandler(BaseHandler):
 
         if (card_type is not None): 
             search['$and'].append( {'DocGenData.gateway_data.CcType': str(card_type) })
+        
+        if (status is not None): 
+            search['$and'].append( {'pipeline_status.current.status': str(status) })
 
         if query:
             search['$or'] = []
