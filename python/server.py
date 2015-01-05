@@ -120,6 +120,9 @@ class Application(tornado.web.Application):
             (r"/api/v1/report/status", ReportStatusHandler),
             (r"/api/v1/report/midStatus", ReportStatusMidHandler),
             (r"/api/v1/report/processorStatus", ReportStatusProcessorHandler),
+            (r"/api/v1/report/cctypes", ReportCcTypesHandler),
+            (r"/api/v1/report/midTypes", ReportCcTypesMidHandler),
+            (r"/api/v1/report/processorTypes", ReportCcTypesProcessorHandler),
             (r"/api/v1/dashboard", DashboardHandler),
             (r"/(.*)", tornado.web.StaticFileHandler, {"path": os.path.join(root, "../public")}),
         ]
@@ -487,74 +490,20 @@ class ReportStatusHandler(BaseHandler):
     @authenticated
     def get(self):
         
-        start = self.get_argument('start', None)
-        end = self.get_argument('end', None)
-        
-        if start is None:
-            self.set_status(400)
-            self.finish("No start")
-            return 
-        if end is None:
-            self.set_status(400)
-            self.finish("No end")
-            return 
+        project = {
+            '_id': 0,
+            'status': "$pipeline_status.current.status",
+            'amt': '$DocGenData.portal_data.ChargebackAmt_100'
+        };
+        group = { 'status' : "$status" }
+        cursors = yield pieOverview(self, project, group);
 
-        start_date = datetime.datetime.fromtimestamp(float(start)/1000)
-        end_date = datetime.datetime.fromtimestamp(float(end)/1000)
-
-        match = {}
-        match['DocGenData.portal_data.RequestDate'] = { '$gte': start_date, '$lte': end_date }
-        match['dispute_version'] = "2.0"
-
-        mids = self.get_argument('mids', None)
-        if (mids is not None and mids):
-            mid_array = mids.split(',')
-            match['DocGenData.portal_data.MidNumber'] = { '$in': mid_array }
-        else:
-            match['DocGenData.portal_data.MidNumber'] = { '$in': getMerchantArray(self) }
-
-        search1 = [
-            { '$match': match },
-            { '$project': {
-                '_id': 0,
-                'status': "$pipeline_status.current.status"
-            }},
-            { '$group': {
-                '_id': { 'status' : "$status"}, 
-                'total': { '$sum': 1 }
-            }},
-            { '$sort' : { '_id': 1 } }
-        ];
-
-        search2 = [
-            { '$match': match },
-            { '$project': {
-                '_id': 0,
-                'status': "$pipeline_status.current.status",
-                'amt': '$DocGenData.portal_data.ChargebackAmt_100'
-            }},
-            { '$group': {
-                '_id': { 'status' : "$status"}, 
-                'total': { '$sum': "$amt" }
-            }},
-            { '$sort' : { '_id': 1 } }
-        ];
-
-        print search1
-        print search2
-
-        a = self.db.dispute.aggregate(search1)
-        b = self.db.dispute.aggregate(search2)
-
-        # run in parrellel, but yield to both
-        cursor1,cursor2 = yield [a,b]
-        
         result1 = []
         result2 = []
-        for row in cursor1['result']: 
+        for row in cursors[0]['result']: 
             result1.append( { 'name': row['_id']['status'], "val": row['total'] } )
 
-        for row in cursor2['result']: 
+        for row in cursors[1]['result']: 
             result2.append( { 'name': row['_id']['status'], "val": row['total'] / 100 } )
 
         out = {
@@ -583,71 +532,14 @@ class ReportStatusMidHandler(BaseHandler):
     @authenticated
     def get(self):
         
-        start = self.get_argument('start', None)
-        end = self.get_argument('end', None)
-
-        if start is None:
-            self.set_status(400)
-            self.finish("No start")
-            return 
-        if end is None:
-            self.set_status(400)
-            self.finish("No end")
-            return 
-
-        start_date = datetime.datetime.fromtimestamp(float(start)/1000)
-        end_date = datetime.datetime.fromtimestamp(float(end)/1000)
-
-        match = {}
-        match['DocGenData.portal_data.RequestDate'] = { '$gte': start_date, '$lte': end_date }
-        match['dispute_version'] = "2.0"
-
-        mids = self.get_argument('mids', None)
-        if (mids is not None and mids):
-            mid_array = mids.split(',')
-            match['DocGenData.portal_data.MidNumber'] = { '$in': mid_array }
-        else:
-            match['DocGenData.portal_data.MidNumber'] = { '$in': getMerchantArray(self) }
-
-        search = [
-            { '$match': match },
-            { '$project': {
-                '_id': 0,
-                'status': "$pipeline_status.current.status",
-                'mid': "$DocGenData.portal_data.MidNumber",
-                'amt': '$DocGenData.portal_data.ChargebackAmt_100'
-            }},
-            { '$group': {
-                '_id': { 'mid': '$mid', 'status' : "$status"}, 
-                'total': { '$sum': "$amt" }
-            }},
-            { '$sort' : { '_id': 1 } }
-        ];
-
-        print search
-        
-        cursor = yield self.db.dispute.aggregate(search)
-        
-        result = {}
-        for row in cursor['result']: 
-            if row['_id']['mid'] in result:
-                result[ row['_id']['mid'] ]['data'].append({ "name": row["_id"]["status"], "val": row['total']/100 })
-            else:
-                result[ row['_id']['mid'] ] = {
-                    "data": [
-                        { "name": row["_id"]["status"], "val": row['total']/100 }
-                    ]
-                }
-            
-        out = []
-        for key,value in result.iteritems():
-            out.append({
-                "label": key,
-                "data_type": 'currency',
-                "filtertype": 'status',
-                "data": value['data']
-            })
-        
+        project = {
+            '_id': 0,
+            'status': "$pipeline_status.current.status",
+            'mid': "$DocGenData.portal_data.MidNumber",
+            'amt': '$DocGenData.portal_data.ChargebackAmt_100'
+        };
+        group = { 'key': '$mid', 'status' : "$status" };
+        out = yield pie(self, project, group, 'status');
         self.content_type = 'application/json'
         self.write(dumps(out,default=json_util.default))
         self.finish()
@@ -659,74 +551,227 @@ class ReportStatusProcessorHandler(BaseHandler):
     @authenticated
     def get(self):
         
-        start = self.get_argument('start', None)
-        end = self.get_argument('end', None)
-
-        if start is None:
-            self.set_status(400)
-            self.finish("No start")
-            return 
-        if end is None:
-            self.set_status(400)
-            self.finish("No end")
-            return 
-
-        start_date = datetime.datetime.fromtimestamp(float(start)/1000)
-        end_date = datetime.datetime.fromtimestamp(float(end)/1000)
-
-        match = {}
-        match['DocGenData.portal_data.RequestDate'] = { '$gte': start_date, '$lte': end_date }
-        match['dispute_version'] = "2.0"
-
-        mids = self.get_argument('mids', None)
-        if (mids is not None and mids):
-            mid_array = mids.split(',')
-            match['DocGenData.portal_data.MidNumber'] = { '$in': mid_array }
-        else:
-            match['DocGenData.portal_data.MidNumber'] = { '$in': getMerchantArray(self) }
-
-        search = [
-            { '$match': match },
-            { '$project': {
-                '_id': 0,
-                'status': "$pipeline_status.current.status",
-                'processor': "$DocGenData.derived_data.Merchant",
-                'amt': '$DocGenData.portal_data.ChargebackAmt_100'
-            }},
-            { '$group': {
-                '_id': { 'processor': '$processor', 'status' : "$status"}, 
-                'total': { '$sum': "$amt" }
-            }},
-            { '$sort' : { '_id': 1 } }
-        ];
-
-        print search
-        
-        cursor = yield self.db.dispute.aggregate(search)
-        
-        result = {}
-        for row in cursor['result']: 
-            if row['_id']['processor'] in result:
-                result[ row['_id']['processor'] ]['data'].append({ "name": row["_id"]["status"], "val": row['total']/100 })
-            else:
-                result[ row['_id']['processor'] ] = {
-                    "data": [
-                        { "name": row["_id"]["status"], "val": row['total']/100 }
-                    ]
-                }
-            
-        out = []
-        for key,value in result.iteritems():
-            out.append({
-                "label": key,
-                "data_type": 'currency',
-                "filtertype": 'status',
-                "data": value['data']
-            })
-        
+        project = {
+            '_id': 0,
+            'status': "$pipeline_status.current.status",
+            'processor': "$DocGenData.derived_data.Merchant",
+            'amt': '$DocGenData.portal_data.ChargebackAmt_100'
+        };
+        group = { 'key': '$processor', 'status' : "$status" };
+        out = yield pie(self, project, group, 'status');
         self.content_type = 'application/json'
         self.write(dumps(out,default=json_util.default))
         self.finish()
+
+
+class ReportCcTypesHandler(BaseHandler):
+    @tornado.web.asynchronous
+    @gen.coroutine
+    @authenticated
+    def get(self):
+        
+        project = {
+            '_id': 0,
+            'cctype': "$DocGenData.gateway_data.CcType",
+            'amt': '$DocGenData.portal_data.ChargebackAmt_100'
+        };
+        group = { 'cctype' : "$cctype" }
+        cursors = yield pieOverview(self, project, group);
+
+        result1 = []
+        result2 = []
+        for row in cursors[0]['result']: 
+            result1.append( { 'name': row['_id']['cctype'], "val": row['total'] } )
+
+        for row in cursors[1]['result']: 
+            result2.append( { 'name': row['_id']['cctype'], "val": row['total'] / 100 } )
+
+        out = {
+            "byVolume": {
+                "label": 'Card Type By Volume',
+                "data_type": 'currency',
+                "filtertype": 'cctype',
+                "data": result1
+            },
+            "byCount": {
+                "label": 'Card Type By Count',
+                "data_type": 'number',
+                "filtertype": 'cctype',
+                "data": result2
+            }
+        }
+
+        self.content_type = 'application/json'
+        self.write(dumps(out,default=json_util.default))
+        self.finish()
+
+
+class ReportCcTypesMidHandler(BaseHandler):
+    @tornado.web.asynchronous
+    @gen.coroutine
+    @authenticated
+    def get(self):
+        
+        project = {
+            '_id': 0,
+            'cctype': "$DocGenData.gateway_data.CcType",
+            'mid': "$DocGenData.portal_data.MidNumber",
+            'amt': '$DocGenData.portal_data.ChargebackAmt_100'
+        };
+        group = { 'key': '$mid', 'cctype' : "$cctype" };
+        out = yield pie(self, project, group, 'cctype');
+        self.content_type = 'application/json'
+        self.write(dumps(out,default=json_util.default))
+        self.finish()
+
+
+class ReportCcTypesProcessorHandler(BaseHandler):
+    @tornado.web.asynchronous
+    @gen.coroutine
+    @authenticated
+    def get(self):
+        
+        project = {
+            '_id': 0,
+            'cctype': "$DocGenData.gateway_data.CcType",
+            'processor': "$DocGenData.derived_data.Merchant",
+            'amt': '$DocGenData.portal_data.ChargebackAmt_100'
+        };
+        group = { 'key': '$processor', 'cctype' : "$cctype" };
+        out = yield pie(self, project, group, 'cctype');
+        self.content_type = 'application/json'
+        self.write(dumps(out,default=json_util.default))
+        self.finish()
+
+
+@gen.coroutine
+def pieOverview(self, project, group):
+    
+    start = self.get_argument('start', None)
+    end = self.get_argument('end', None)
+    
+    if start is None:
+        self.set_status(400)
+        self.finish("No start")
+        return 
+    if end is None:
+        self.set_status(400)
+        self.finish("No end")
+        return 
+
+    start_date = datetime.datetime.fromtimestamp(float(start)/1000)
+    end_date = datetime.datetime.fromtimestamp(float(end)/1000)
+
+    match = {}
+    match['DocGenData.portal_data.RequestDate'] = { '$gte': start_date, '$lte': end_date }
+    match['dispute_version'] = "2.0"
+
+    mids = self.get_argument('mids', None)
+    if (mids is not None and mids):
+        mid_array = mids.split(',')
+        match['DocGenData.portal_data.MidNumber'] = { '$in': mid_array }
+    else:
+        match['DocGenData.portal_data.MidNumber'] = { '$in': getMerchantArray(self) }
+
+    search1 = [
+        { '$match': match },
+        { '$project': project },
+        { '$group': {
+            '_id': group, 
+            'total': { '$sum': 1 }
+        }},
+        { '$sort' : { '_id': 1 } }
+    ];
+
+    search2 = [
+        { '$match': match },
+        { '$project': project },
+        { '$group': {
+            '_id': group, 
+            'total': { '$sum': "$amt" }
+        }},
+        { '$sort' : { '_id': 1 } }
+    ];
+
+    print search1
+    print search2
+
+    a = self.db.dispute.aggregate(search1)
+    b = self.db.dispute.aggregate(search2)
+
+    # run in parrellel, but yield to both
+    cursor1,cursor2 = yield [a,b]
+    
+    raise gen.Return([cursor1, cursor2])
+
+
+
+@gen.coroutine
+def pie(self, project, group, val_field):
+   
+    start = self.get_argument('start', None)
+    end = self.get_argument('end', None)
+
+    if start is None:
+        self.set_status(400)
+        self.finish("No start")
+        return 
+    if end is None:
+        self.set_status(400)
+        self.finish("No end")
+        return 
+
+    start_date = datetime.datetime.fromtimestamp(float(start)/1000)
+    end_date = datetime.datetime.fromtimestamp(float(end)/1000)
+
+    match = {}
+    match['DocGenData.portal_data.RequestDate'] = { '$gte': start_date, '$lte': end_date }
+    match['dispute_version'] = "2.0"
+
+    mids = self.get_argument('mids', None)
+    if (mids is not None and mids):
+        mid_array = mids.split(',')
+        match['DocGenData.portal_data.MidNumber'] = { '$in': mid_array }
+    else:
+        match['DocGenData.portal_data.MidNumber'] = { '$in': getMerchantArray(self) }
+
+    search = [
+        { '$match': match },
+        { '$project': project },
+        { '$group': {
+            '_id': group, 
+            'total': { '$sum': "$amt" }
+        }},
+        { '$sort' : { '_id': 1 } }
+    ];
+
+    print search
+    
+    cursor = yield self.db.dispute.aggregate(search)
+    
+    result = {}
+    for row in cursor['result']: 
+        print row['_id']
+        if row['_id']['key'] in result:
+            result[ row['_id']['key'] ]['data'].append({ "name": row["_id"][val_field], "val": row['total']/100 })
+        else:
+            result[ row['_id']['key'] ] = {
+                "data": [
+                    { "name": row["_id"][val_field], "val": row['total']/100 }
+                ]
+            }
+        
+    out = []
+    for key,value in result.iteritems():
+        out.append({
+            "label": key,
+            "data_type": 'currency',
+            "filtertype": val_field,
+            "data": value['data']
+        })
+    
+    raise gen.Return(out)
+
 
 
 def printLineItem(key, line, self):
