@@ -244,6 +244,7 @@ class ChargebacksHandler(BaseHandler):
             
         # only 2.0 dispute data
         search['$and'].append( { 'dispute_version':  '2.0' } )
+        search['$and'].append( { 'pipeline_status.current.status': { '$ne': 'void' }} )
 
         # if (merchant is not None): 
         #     search['$and'].append( { 'DocGenData.derived_data.Merchant'] = str(merchant) })
@@ -410,6 +411,7 @@ class DashboardHandler(BaseHandler):
         match['DocGenData.portal_data.MidNumber'] = { '$in': getMerchantArray(self) }
         # only 2.0 dispute data
         match['dispute_version'] = '2.0'
+        match['pipeline_status.current.status'] = { '$ne': 'void' }
         
         search = [
             { '$match': match },
@@ -451,6 +453,8 @@ class HistoryHandler(BaseHandler):
         match = {}
         match['DocGenData.portal_data.RequestDate'] = { '$gte': start_date }
         match['dispute_version'] = "2.0"
+        match['pipeline_status.current.status'] = { '$ne': 'void' }
+        
 
         mids = self.get_argument('mids', None)
         if (mids is not None and mids):
@@ -672,6 +676,7 @@ def pieOverview(self, project, group):
     match = {}
     match['DocGenData.portal_data.RequestDate'] = { '$gte': start_date, '$lte': end_date }
     match['dispute_version'] = "2.0"
+    match['pipeline_status.current.status'] = { '$ne': 'void' }
 
     mids = self.get_argument('mids', None)
     if (mids is not None and mids):
@@ -734,6 +739,7 @@ def pie(self, project, group, val_field):
     match = {}
     match['DocGenData.portal_data.RequestDate'] = { '$gte': start_date, '$lte': end_date }
     match['dispute_version'] = "2.0"
+    match['pipeline_status.current.status'] = { '$ne': 'void' }
 
     mids = self.get_argument('mids', None)
     if (mids is not None and mids):
