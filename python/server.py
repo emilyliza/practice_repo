@@ -835,7 +835,7 @@ def cleanData(cb):
 def main():
     
     settings = {}
-    if (os.environ['ENV'] == "production"):
+    if (os.environ['ENV'] == "production" and os.environ['SSL'] == "on"):
         settings = {
             "ssl_options": {
                 "certfile": os.path.join("certs/2779cbb02efdfc.crt"),
