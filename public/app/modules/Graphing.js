@@ -181,6 +181,7 @@
 
 
 						function filterData(element, index, array) {
+							console.log(res)
 							element.name = res.data[index].name;
 							element.value = res.data[index].val;
 							element.pct = res.data[index].val / sum;
@@ -189,7 +190,7 @@
 						}
 						filteredPieData = pieData.filter(filterData);
 
-						if(filteredPieData.length > 0) {
+						//if(filteredPieData.length > 0) {
 
 							//REMOVE PLACEHOLDER CIRCLE
 							arc_group.selectAll("circle").remove();
@@ -249,8 +250,10 @@
 									params[res.filtertype] = d.name;
 									params['start'] = dates.start;
 									params['end'] = dates.end;
+
+									console.log(d);
 									
-									if (merchant.mids.length) {
+									if (merchant && merchant.mids && merchant.mids.length) {
 										mstr = '';
 										_.each(merchant.mids, function(m) {
 											if (mstr) { mstr += ","; }
@@ -429,7 +432,7 @@
 							nameLabels.transition().duration(tweenDuration).attrTween("transform", textTween);
 
 							nameLabels.exit().remove();
-						}
+						//}
 
 						
 					};
