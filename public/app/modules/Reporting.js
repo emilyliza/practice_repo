@@ -176,7 +176,7 @@
 		$scope.merchants = [{'name': 'All'}];
 		_.each(cu.merchants, function(m) {
 			$scope.merchants.push(m);
-		})
+		});
 		
 		ReportingService.setMerchants($scope.merchants);
 		

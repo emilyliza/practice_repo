@@ -15,6 +15,6 @@
     "browser": true,
     "maxerr": 5,
     "maxdepth": 2,
-    "maxstatements": 30,
+    "maxstatements": 40,
     "maxcomplexity": 7
 }
