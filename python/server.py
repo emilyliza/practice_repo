@@ -271,6 +271,9 @@ class ChargebacksHandler(BaseHandler):
         if (status is not None): 
             search['$and'].append( {'pipeline_status.current.status': str(status) })
 
+        if (merchant is not None): 
+            search['$and'].append( {'DocGenData.derived_data.Merchant': str(merchant) })
+
         if query:
             search['$or'] = []
             if query.isnumeric():
@@ -454,7 +457,7 @@ class HistoryHandler(BaseHandler):
         match['DocGenData.portal_data.RequestDate'] = { '$gte': start_date }
         match['dispute_version'] = "2.0"
         match['pipeline_status.current.status'] = { '$ne': 'void' }
-        
+
 
         mids = self.get_argument('mids', None)
         if (mids is not None and mids):
@@ -550,7 +553,7 @@ class ReportStatusMidHandler(BaseHandler):
             'amt': '$DocGenData.portal_data.ChargebackAmt_100'
         };
         group = { 'key': '$mid', 'status' : "$status" };
-        out = yield pie(self, project, group, 'status');
+        out = yield pie(self, project, group, 'status', 'mid');
         self.content_type = 'application/json'
         self.write(dumps(out,default=json_util.default))
         self.finish()
@@ -568,8 +571,8 @@ class ReportStatusProcessorHandler(BaseHandler):
             'processor': "$DocGenData.derived_data.Merchant",
             'amt': '$DocGenData.portal_data.ChargebackAmt_100'
         };
-        group = { 'key': '$processor', 'status' : "$status" };
-        out = yield pie(self, project, group, 'status');
+        group = { 'key': '$processor', 'status' : "$status", "grouping": "DocGenData.derived_data.Merchant" };
+        out = yield pie(self, project, group, 'status', 'merchant');
         self.content_type = 'application/json'
         self.write(dumps(out,default=json_util.default))
         self.finish()
@@ -630,7 +633,7 @@ class ReportCcTypesMidHandler(BaseHandler):
             'amt': '$DocGenData.portal_data.ChargebackAmt_100'
         };
         group = { 'key': '$mid', 'cctype' : "$cctype" };
-        out = yield pie(self, project, group, 'cctype');
+        out = yield pie(self, project, group, 'cctype', 'mid');
         self.content_type = 'application/json'
         self.write(dumps(out,default=json_util.default))
         self.finish()
@@ -649,7 +652,7 @@ class ReportCcTypesProcessorHandler(BaseHandler):
             'amt': '$DocGenData.portal_data.ChargebackAmt_100'
         };
         group = { 'key': '$processor', 'cctype' : "$cctype" };
-        out = yield pie(self, project, group, 'cctype');
+        out = yield pie(self, project, group, 'cctype', 'merchant');
         self.content_type = 'application/json'
         self.write(dumps(out,default=json_util.default))
         self.finish()
@@ -719,7 +722,7 @@ def pieOverview(self, project, group):
 
 
 @gen.coroutine
-def pie(self, project, group, val_field):
+def pie(self, project, group, val_field, group_type):
    
     start = self.get_argument('start', None)
     end = self.get_argument('end', None)
@@ -764,13 +767,12 @@ def pie(self, project, group, val_field):
     
     result = {}
     for row in cursor['result']: 
-        print row['_id']
         if row['_id']['key'] in result:
-            result[ row['_id']['key'] ]['data'].append({ "name": row["_id"][val_field], "val": row['total']/100 })
+            result[ row['_id']['key'] ]['data'].append({ "name": row["_id"][val_field], "val": row['total'] })
         else:
             result[ row['_id']['key'] ] = {
                 "data": [
-                    { "name": row["_id"][val_field], "val": row['total']/100 }
+                    { "name": row["_id"][val_field], "val": row['total'] }
                 ]
             }
         
@@ -780,6 +782,7 @@ def pie(self, project, group, val_field):
             "label": key,
             "data_type": 'currency',
             "filtertype": val_field,
+            'grouptype': group_type,
             "data": value['data']
         })
     

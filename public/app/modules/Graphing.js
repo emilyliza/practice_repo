@@ -177,14 +177,14 @@
 						pieData = donut(res.data);
 
 						var sum = 0;
-						 _.each(res.data, function(d) { sum += d.val; });
+						 _.each(res.data, function(d) { sum += (d.val / 100); });
 
 
 						function filterData(element, index, array) {
 							console.log(res)
 							element.name = res.data[index].name;
-							element.value = res.data[index].val;
-							element.pct = res.data[index].val / sum;
+							element.value = res.data[index].val / 100;
+							element.pct = (res.data[index].val / 100) / sum;
 							element.color = GRAPHING_COLORS[index];
 							return (element.value > 0);
 						}
@@ -251,8 +251,12 @@
 									params['start'] = dates.start;
 									params['end'] = dates.end;
 
-									console.log(d);
-									
+									if (res.grouptype == "mid") {
+										params['mids'] = [ res.label ];
+									} else if (res.grouptype == "merchant") {
+										params['merchant'] = [ res.label ];
+									}
+
 									if (merchant && merchant.mids && merchant.mids.length) {
 										mstr = '';
 										_.each(merchant.mids, function(m) {

@@ -5,7 +5,7 @@
 	.config(['$stateProvider', function( $stateProvider ) {
 		
 		$stateProvider.state('chargebacks', {
-			url: '/chargebacks?status&start&end&cctype&mids',
+			url: '/chargebacks?status&start&end&cctype&mids&merchant',
 			templateUrl: '/app/templates/chargebacks.html',
 			requiresAuth: true,
 			controller: 'ChargebacksController'
@@ -27,10 +27,10 @@
 		};
 
 		if ($state.params.start) {
-			$scope.date.start.val = moment($state.params.start).toDate();
+			$scope.date.start.val = moment().millisecond($state.params.start).toDate();
 		}
 		if ($state.params.end) {
-			$scope.date.end.val = moment($state.params.end).toDate();
+			$scope.date.end.val = moment().millisecond($state.params.end).toDate();
 		}
 
 		$scope.cbs = new ChargebacksService();	
