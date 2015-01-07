@@ -1,6 +1,6 @@
 (function() {
 
-	angular.module('chargebacks', ['ui.router', 'ngAnimate', 'infinite-scroll'])
+	angular.module('chargebacks', ['ui.router', 'ngAnimate', 'infinite-scroll', 'user'])
 	
 	.config(['$stateProvider', function( $stateProvider ) {
 		
@@ -13,7 +13,7 @@
 	
 	}])
 
-	.controller('ChargebacksController', ['$scope', '$timeout', 'ChargebacksService', '$state', function($scope, $timeout, ChargebacksService, $state) {
+	.controller('ChargebacksController', ['$scope', '$timeout', 'ChargebacksService', 'UserService', '$state', function($scope, $timeout, ChargebacksService, UserService, $state) {
 		
 		$scope.date = {
 			start: {
@@ -32,6 +32,21 @@
 		if ($state.params.end) {
 			$scope.date.end.val = moment().millisecond($state.params.end).toDate();
 		}
+
+		$scope.filters = "";
+		_.forOwn($state.params, function(num,key) {
+			if ($state.params[key] && _.contains(['status', 'merchant', 'mids', 'cctype'], key)) {
+				if ($scope.filters) { $scope.filters += ", "; }
+				if (key == "mids" && $state.params[key].split(',').length > 1) {
+					var m = UserService.getMerchantFromMids($state.params[key]);
+					$scope.filters += "Merchant=" + m + " (all mids)";
+				} else {
+					$scope.filters += key + "=" + $state.params[key];	
+				}
+			}
+		});
+		
+		
 
 		$scope.cbs = new ChargebacksService();	
 		$scope.cbs.setDates($scope.date);

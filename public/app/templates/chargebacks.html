@@ -18,6 +18,10 @@
 	</div>
 </div>
 
+<div class="row" style="margin-bottom: 20px;" ng-if="filters">
+	<div class="col-sm-12" style="text-align: center;">Additional Filters: {{filters}} (<a href="/chargebacks">Clear</a>)</div>
+</div>
+
 
 <div class="animated-grid chargebacks" infinite-scroll="cbs.nextPage(q)" infinite-scroll-disabled="cbs.busy">
 	<div class="row head">

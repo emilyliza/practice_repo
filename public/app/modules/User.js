@@ -76,7 +76,22 @@
 			delete $window.sessionStorage.user;
 			return true;	
 		};
-		
+
+		this.getMerchantFromMids = function(mids) {
+			var merchants = this.getCurrentUser().merchants,
+				found = false;
+			_.each(merchants, function(m) {
+				var gm = [];
+				_.each(m.mids, function(mm) {
+					gm.push(mm.mid);
+				});
+				var baz = _.difference(mids.split(','), gm);
+				if (!baz.length) {
+					found = m.name;
+				}
+			});
+			return found;
+		};
 	
 	}]);	
 
