@@ -181,7 +181,6 @@
 
 
 						function filterData(element, index, array) {
-							console.log(res)
 							element.name = res.data[index].name;
 							element.value = res.data[index].val / 100;
 							element.pct = (res.data[index].val / 100) / sum;
