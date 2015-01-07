@@ -26,6 +26,8 @@ describe('graphing directive', function() {
 		UserService = $injector.get('UserService');
 		UserService.logout();
 
+		ReportingService = $injector.get('ReportingService');
+
 	}));
 
 	afterEach(function() {
@@ -38,15 +40,22 @@ describe('graphing directive', function() {
 		var element, scope;
 
 		beforeEach(inject(function($rootScope, $compile, $controller) {
-			scope = $rootScope.$new();
 			
-			var ctrl = $controller('LoginController', { $scope: scope });
+			var token = 'authed';
+			UserService.setToken(token);
 
-			scope.g = JSON.stringify({"label":"MID: 36501","filtertype":"status","data_type":"number","data":[{"name":"Received","val":346},{"name":"Bundled","val":200},{"name":"Waiting","val":479},{"name":"Responded","val":97},{"name":"Accepted","val":382},{"name":"Late","val":412},{"name":"Won","val":239},{"name":"Pre-arb","val":187},{"name":"Presented","val":278},{"name":"Lost","val":209}],"searchField":"MID: 36501"});
-			element = '<div class="pie" pie control="graphstatus1" ></div>';
+			$httpBackend.expectGET('/api/v1/user')
+					.respond(200, { '_id': 123456, name: 'test'});
+
+			scope = $rootScope.$new();
+			var ctrl = $controller('ReportingController', { $scope: scope });
+
+			$rootScope.g = {"label":"MID: 36501","filtertype":"status","grouptype":"status","data_type":"number","data":[{"name":"Received","val":346},{"name":"Bundled","val":200},{"name":"Waiting","val":479},{"name":"Responded","val":97},{"name":"Accepted","val":382},{"name":"Late","val":412},{"name":"Won","val":239},{"name":"Pre-arb","val":187},{"name":"Presented","val":278},{"name":"Lost","val":209}],"searchField":"MID: 36501"};
 			
-			element = $compile(element)(scope);
+			var el = '<div class="pie" pie graph-data="{{g}}" ></div>';
+			element = $compile(el)(scope);
 			scope.$digest();
+			$httpBackend.flush();
 		}));
 
 		it("should have svg element with 100% width", function() {

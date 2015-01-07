@@ -19,7 +19,6 @@ module.exports = function(config) {
 			"public/bower_components/angular-ui-router/release/angular-ui-router.js",
 			"public/bower_components/angular-animate/angular-animate.min.js",
 			"public/bower_components/angular-bootstrap/ui-bootstrap-tpls.js",
-			"public/bower_components/underscore/underscore-min.js",
 			"public/bower_components/lodash/dist/lodash.compat.js",
 			"public/bower_components/angular-bootstrap-show-errors/src/showErrors.js",
 			"public/bower_components/ngInfiniteScroll/build/ng-infinite-scroll.min.js",
@@ -27,6 +26,8 @@ module.exports = function(config) {
 			"public/bower_components/d3/d3.min.js",
 			"public/bower_components/moment/min/moment.min.js",
 			"public/bower_components/angular-moment/angular-moment.min.js",
+			"public/bower_components/angular-filter/dist/angular-filter.min.js",
+			"public/bower_components/angular-busy/dist/angular-busy.min.js",
 			"public/lib/AngularUtils.js",
 			"public/lib/console-sham.js",
 			"public/app/modules/User.js",
@@ -41,7 +42,6 @@ module.exports = function(config) {
 			"public/app/modules/Dashboard.js",
 			"public/app/modules/Graphing.js",
 			"public/app/index.js",
-
 			"public/app/templates/*.html",
 			"public/bower_components/angular-mocks/angular-mocks.js",
 			"public/app/tests/*.js"	

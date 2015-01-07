@@ -61,382 +61,378 @@
 			},
 			link: function(scope, elem, attrs) {
 				
-				$timeout(function() {
-					
-					var	container = elem.find('div'),
-						d3 = $window.d3,
-						w = container.width(),
-						h = container.width(),
-						r = container.width()/2 - 75,
-						ir = r - 50,
-						textOffset = 14,
-						tweenDuration = 250;
+				var	container = elem.find('div'),
+					d3 = $window.d3,
+					w = container.width(),
+					h = container.width(),
+					r = container.width()/2 - 75,
+					ir = r - 50,
+					textOffset = 14,
+					tweenDuration = 250;
 
-					//OBJECTS TO BE POPULATED WITH DATA LATER
-					var lines, valueLabels, nameLabels;
-					var pieData = [];    
-					var oldPieData = [];
-					var filteredPieData = [];
+				//OBJECTS TO BE POPULATED WITH DATA LATER
+				var lines, valueLabels, nameLabels;
+				var pieData = [];    
+				var oldPieData = [];
+				var filteredPieData = [];
 
-					//D3 helper function to populate pie slice parameters from array data
-					var donut = d3.layout.pie().value(function(d){
-						return d.val;
-					});
+				//D3 helper function to populate pie slice parameters from array data
+				var donut = d3.layout.pie().value(function(d){
+					return d.val;
+				});
 
-					
-
-					//D3 helper function to draw arcs, populates parameter "d" in path object
-					var arc = d3.svg.arc()
-						.startAngle(function(d){ return d.startAngle; })
-						.endAngle(function(d){ return d.endAngle; })
-						.innerRadius(ir)
-						.outerRadius(r);
-						
-
-						
 				
 
-					///////////////////////////////////////////////////////////
-					// CREATE VIS & GROUPS ////////////////////////////////////
-					///////////////////////////////////////////////////////////
-
-					var vis = d3.select(container[0]).append("svg:svg")
-						//.attr("width", w)
-						//.attr("height", h)
-						.attr("width", '100%')
-						.attr("height", '100%')
-						.attr('viewBox','0 0 '+Math.min(w,h)+' '+Math.min(w,h))
-						.attr('preserveAspectRatio','xMinYMin');
-
-					//GROUP FOR ARCS/PATHS
-					var arc_group = vis.append("svg:g")
-						.attr("class", "arc")
-						.attr("transform", "translate(" + (w/2) + "," + (h/2) + ")");
-
-
-					//GROUP FOR LABELS
-					var label_group = vis.append("svg:g")
-						.attr("class", "label_group")
-						.attr("transform", "translate(" + (w/2) + "," + (h/2) + ")");
-
-					//GROUP FOR CENTER TEXT  
-					var center_group = vis.append("svg:g")
-						.attr("class", "center_group")
-						.attr("transform", "translate(" + (w/2) + "," + (h/2) + ")");
-
-					//PLACEHOLDER GRAY CIRCLE
-					var paths = arc_group.append("svg:circle")
-						.attr("fill", "#EFEFEF")
-						.attr("r", r);
-
-					///////////////////////////////////////////////////////////
-					// CENTER TEXT ////////////////////////////////////////////
-					///////////////////////////////////////////////////////////
-
-					//WHITE CIRCLE BEHIND LABELS
-					var whiteCircle = center_group.append("svg:circle")
-						.attr("fill", "white")
-						.attr("r", ir);
-
-					// "Report Type" LABEL
-					var reportTypeLabel = center_group.append("svg:text")
-						.attr("class", "report-type")
-						.attr("dy", -25)
-						.attr("text-anchor", "middle") // text-align: right
-						.text(" ");
-
-					// "TOTAL" LABEL
-					var totalLabel = center_group.append("svg:text")
-						.attr("class", "label")
-						.attr("dy", 0)
-						.attr("text-anchor", "middle") // text-align: right
-						.text("TOTAL");
-
-					//TOTAL TRAFFIC VALUE
-					var totalValue = center_group.append("svg:text")
-						.attr("class", "total")
-						.attr("dy", 20)
-						.attr("text-anchor", "middle") // text-align: right
-						.text("Waiting...");
-
-					//UNITS LABEL
-					// var totalUnits = center_group.append("svg:text")
-					// 	.attr("class", "units")
-					// 	.attr("dy", 21)
-					// 	.attr("text-anchor", "middle") // text-align: right
-					// 	.text("kb");
+				//D3 helper function to draw arcs, populates parameter "d" in path object
+				var arc = d3.svg.arc()
+					.startAngle(function(d){ return d.startAngle; })
+					.endAngle(function(d){ return d.endAngle; })
+					.innerRadius(ir)
+					.outerRadius(r);
+					
 
 					
-					var ctrl = this;
-					if (scope.control) {
-						ctrl = scope.control;
+			
+
+				///////////////////////////////////////////////////////////
+				// CREATE VIS & GROUPS ////////////////////////////////////
+				///////////////////////////////////////////////////////////
+
+				var vis = d3.select(container[0]).append("svg:svg")
+					//.attr("width", w)
+					//.attr("height", h)
+					.attr("width", '100%')
+					.attr("height", '100%')
+					.attr('viewBox','0 0 '+Math.min(w,h)+' '+Math.min(w,h))
+					.attr('preserveAspectRatio','xMinYMin');
+
+				//GROUP FOR ARCS/PATHS
+				var arc_group = vis.append("svg:g")
+					.attr("class", "arc")
+					.attr("transform", "translate(" + (w/2) + "," + (h/2) + ")");
+
+
+				//GROUP FOR LABELS
+				var label_group = vis.append("svg:g")
+					.attr("class", "label_group")
+					.attr("transform", "translate(" + (w/2) + "," + (h/2) + ")");
+
+				//GROUP FOR CENTER TEXT  
+				var center_group = vis.append("svg:g")
+					.attr("class", "center_group")
+					.attr("transform", "translate(" + (w/2) + "," + (h/2) + ")");
+
+				//PLACEHOLDER GRAY CIRCLE
+				var paths = arc_group.append("svg:circle")
+					.attr("fill", "#EFEFEF")
+					.attr("r", r);
+
+				///////////////////////////////////////////////////////////
+				// CENTER TEXT ////////////////////////////////////////////
+				///////////////////////////////////////////////////////////
+
+				//WHITE CIRCLE BEHIND LABELS
+				var whiteCircle = center_group.append("svg:circle")
+					.attr("fill", "white")
+					.attr("r", ir);
+
+				// "Report Type" LABEL
+				var reportTypeLabel = center_group.append("svg:text")
+					.attr("class", "report-type")
+					.attr("dy", -25)
+					.attr("text-anchor", "middle") // text-align: right
+					.text(" ");
+
+				// "TOTAL" LABEL
+				var totalLabel = center_group.append("svg:text")
+					.attr("class", "label")
+					.attr("dy", 0)
+					.attr("text-anchor", "middle") // text-align: right
+					.text("TOTAL");
+
+				//TOTAL TRAFFIC VALUE
+				var totalValue = center_group.append("svg:text")
+					.attr("class", "total")
+					.attr("dy", 20)
+					.attr("text-anchor", "middle") // text-align: right
+					.text("Waiting...");
+
+				//UNITS LABEL
+				// var totalUnits = center_group.append("svg:text")
+				// 	.attr("class", "units")
+				// 	.attr("dy", 21)
+				// 	.attr("text-anchor", "middle") // text-align: right
+				// 	.text("kb");
+
+				
+				var ctrl = this;
+				if (scope.control) {
+					ctrl = scope.control;
+				}
+				ctrl.update = function(res) {
+
+					oldPieData = filteredPieData;
+					pieData = donut(res.data);
+
+					var sum = 0;
+					 _.each(res.data, function(d) { sum += (d.val / 100); });
+
+
+					function filterData(element, index, array) {
+						element.name = res.data[index].name;
+						element.value = res.data[index].val / 100;
+						element.pct = (res.data[index].val / 100) / sum;
+						element.color = GRAPHING_COLORS[index];
+						return (element.value > 0);
 					}
-					ctrl.update = function(res) {
+					filteredPieData = pieData.filter(filterData);
 
-						oldPieData = filteredPieData;
-						pieData = donut(res.data);
+					//if(filteredPieData.length > 0) {
 
-						var sum = 0;
-						 _.each(res.data, function(d) { sum += (d.val / 100); });
+						//REMOVE PLACEHOLDER CIRCLE
+						arc_group.selectAll("circle").remove();
 
-
-						function filterData(element, index, array) {
-							element.name = res.data[index].name;
-							element.value = res.data[index].val / 100;
-							element.pct = (res.data[index].val / 100) / sum;
-							element.color = GRAPHING_COLORS[index];
-							return (element.value > 0);
-						}
-						filteredPieData = pieData.filter(filterData);
-
-						//if(filteredPieData.length > 0) {
-
-							//REMOVE PLACEHOLDER CIRCLE
-							arc_group.selectAll("circle").remove();
-
-							totalValue.text(function(){
-								if (res.data_type == "currency") {
-									return $filter('currency')(sum, '$', 2);
-								} else {
-									return $filter('number')(sum, 2);
-								}
-							});
+						totalValue.text(function(){
+							if (res.data_type == "currency") {
+								return $filter('currency')(sum, '$', 2);
+							} else {
+								return $filter('number')(sum, 2);
+							}
+						});
 
 
-							reportTypeLabel.text(function() {
-								return res.label;
-							});
-								
-
-							//DRAW ARC PATHS
-							paths = arc_group.selectAll("path").data(filteredPieData);
-							paths.enter().append("svg:path")
-								.attr("stroke", "white")
-								.attr("stroke-width", 0.5)
-								.attr("fill", function(d, i) { return d.color; })
-								.transition()
-								.duration(tweenDuration)
-								.attrTween("d", pieTween);
-							// add mouseover tooltip
-							paths.on("mouseover", function (d) {
-									
-									var tt = '<b>' + d.name + '</b><br/><div>';
-									if (res.data_type == "currency") {
-										tt += $filter('currency')(d.value, '$', 2);
-									} else {
-										tt += $filter('number')(d.value);
-									}
-									tt += " or " + Math.round( d.pct * 10000)/100 + '%';
-									tt += '</div>';
-
-									d3.select("#tooltip")
-										.style("left", (d3.event.pageX - 220) + "px")
-										.style("top", (d3.event.pageY - 100) + "px")
-										.style("opacity", 1)
-										.select('.content')
-										.html(tt);
-								})
-								.on("mouseout", function () {
-									// Hide the tooltip
-									d3.select("#tooltip")
-										.style("opacity", 0);
-								})
-								.on("click", function(d) {
-									var params = {},
-										dates = ReportingService.getDates(),
-										merchant = ReportingService.getMerchants()[ ReportingService.getMerchant() ];
-									
-									params[res.filtertype] = d.name;
-									params['start'] = dates.start;
-									params['end'] = dates.end;
-
-									if (res.grouptype == "mid") {
-										params['mids'] = [ res.label ];
-									} else if (res.grouptype == "merchant") {
-										params['merchant'] = [ res.label ];
-									}
-
-									if (merchant && merchant.mids && merchant.mids.length) {
-										mstr = '';
-										_.each(merchant.mids, function(m) {
-											if (mstr) { mstr += ","; }
-											mstr += m.mid;
-										});
-										params['mids'] = mstr;
-									}
-										
-									$state.go('chargebacks', params );
-								});
-							paths
-								.transition()
-								.duration(tweenDuration)
-								.attr("fill", function(d, i) { return d.color; })
-								.attrTween("d", pieTween);
-							paths.exit()
-								.transition()
-								.duration(tweenDuration)
-								.attrTween("d", removePieTween)
-								.remove();
-
-							//DRAW TICK MARK LINES FOR LABELS
-							lines = label_group.selectAll("line").data(filteredPieData.filter(function(d) {
-								var percentage = Math.round(d.pct*100);
-								if (percentage > 2) {
-									return d;
-								}
-							}));
-							lines.enter().append("svg:line")
-								.attr("x1", 0)
-								.attr("x2", 0)
-								.attr("y1", -r-3)
-								.attr("y2", -r-8)
-								.attr("stroke", "gray")
-								.attr("transform", function(d) {
-									return "rotate(" + (d.startAngle+d.endAngle)/2 * (180/Math.PI) + ")";
-								});
-							lines.transition()
-								.duration(tweenDuration)
-								.attr("transform", function(d) {
-									return "rotate(" + (d.startAngle+d.endAngle)/2 * (180/Math.PI) + ")";
-								});
-							lines.exit().remove();
-
+						reportTypeLabel.text(function() {
+							return res.label;
+						});
 							
 
-							//DRAW LABELS WITH PERCENTAGE VALUES
-							valueLabels = label_group.selectAll("text.value").data(filteredPieData)
-								.attr("dy", function(d){
-									if ((d.startAngle+d.endAngle)/2 > Math.PI/2 && (d.startAngle+d.endAngle)/2 < Math.PI*1.5 ) {
-										return 5;
-									} else {
-										return -7;
-									}
-								})
-								.attr("text-anchor", function(d){
-									if ( (d.startAngle+d.endAngle)/2 < Math.PI ){
-										return "beginning";
-									} else {
-										return "end";
-									}
-								})
-								.text(function(d){
-									var percentage = Math.round(d.pct*100);
-									if (percentage > 2) {
-										return percentage + "%";
-									} else {
-										return '';
-									}
-								});
+						//DRAW ARC PATHS
+						paths = arc_group.selectAll("path").data(filteredPieData);
+						paths.enter().append("svg:path")
+							.attr("stroke", "white")
+							.attr("stroke-width", 0.5)
+							.attr("fill", function(d, i) { return d.color; })
+							.transition()
+							.duration(tweenDuration)
+							.attrTween("d", pieTween);
+						// add mouseover tooltip
+						paths.on("mouseover", function (d) {
+								
+								var tt = '<b>' + d.name + '</b><br/><div>';
+								if (res.data_type == "currency") {
+									tt += $filter('currency')(d.value, '$', 2);
+								} else {
+									tt += $filter('number')(d.value);
+								}
+								tt += " or " + Math.round( d.pct * 10000)/100 + '%';
+								tt += '</div>';
 
-							valueLabels.enter().append("svg:text")
-								.attr("class", "value")
-								.attr("transform", function(d) {
-									return "translate(" + Math.cos(((d.startAngle+d.endAngle - Math.PI)/2)) * (r+textOffset) + "," + Math.sin((d.startAngle+d.endAngle - Math.PI)/2) * (r+textOffset) + ")";
-								})
-								.attr("dy", function(d){
-									if ((d.startAngle+d.endAngle)/2 > Math.PI/2 && (d.startAngle+d.endAngle)/2 < Math.PI*1.5 ) {
-										return 5;
-									} else {
-										return -7;
-									}
-								})
-								.attr("text-anchor", function(d){
-									if ( (d.startAngle+d.endAngle)/2 < Math.PI ){
-										return "beginning";
-									} else {
-										return "end";
-									}
-								}).text(function(d){
-									var percentage = Math.round(d.pct*100);
-									if (percentage > 2) {
-										return percentage + "%";
-									} else {
-										return '';
-									}
-								});
+								d3.select("#tooltip")
+									.style("left", (d3.event.pageX - 220) + "px")
+									.style("top", (d3.event.pageY - 100) + "px")
+									.style("opacity", 1)
+									.select('.content')
+									.html(tt);
+							})
+							.on("mouseout", function () {
+								// Hide the tooltip
+								d3.select("#tooltip")
+									.style("opacity", 0);
+							})
+							.on("click", function(d) {
+								var params = {},
+									dates = ReportingService.getDates(),
+									merchant = ReportingService.getMerchants()[ ReportingService.getMerchant() ];
+								
+								params[res.filtertype] = d.name;
+								params['start'] = dates.start;
+								params['end'] = dates.end;
 
-							valueLabels.transition().duration(tweenDuration).attrTween("transform", textTween);
+								if (res.grouptype == "mid") {
+									params['mids'] = [ res.label ];
+								} else if (res.grouptype == "merchant") {
+									params['merchant'] = [ res.label ];
+								}
 
-							valueLabels.exit().remove();
-
-
-							// var sliceLabel = label_group.selectAll("text.slice").data(filteredPieData);
-							// sliceLabel.enter().append("svg:text")
-							// 	.attr("class", "slice")
-							// 	.attr("transform", function(d) {return "translate(" + arc.centroid(d) + ")"; })
-							// 	.attr("text-anchor", "middle")
-							// 	.text(function(d, i) {
-							// 		console.log(d.value);
-							// 		if (res.data_type == "currency") {
-							// 			if (d.value >= 100) {
-							// 				return $filter('currency')(d.value, '$', 0);
-							// 			}
-							// 			return '';
-							// 		} else if (res.data_type == "number") {
-							// 			return $filter('number')(d.value, 0);
-							// 		}
+								if (merchant && merchant.mids && merchant.mids.length) {
+									mstr = '';
+									_.each(merchant.mids, function(m) {
+										if (mstr) { mstr += ","; }
+										mstr += m.mid;
+									});
+									params['mids'] = mstr;
+								}
 									
-							// 	});
+								$state.go('chargebacks', params );
+							});
+						paths
+							.transition()
+							.duration(tweenDuration)
+							.attr("fill", function(d, i) { return d.color; })
+							.attrTween("d", pieTween);
+						paths.exit()
+							.transition()
+							.duration(tweenDuration)
+							.attrTween("d", removePieTween)
+							.remove();
 
-							// sliceLabel.exit().remove();
+						//DRAW TICK MARK LINES FOR LABELS
+						lines = label_group.selectAll("line").data(filteredPieData.filter(function(d) {
+							var percentage = Math.round(d.pct*100);
+							if (percentage > 2) {
+								return d;
+							}
+						}));
+						lines.enter().append("svg:line")
+							.attr("x1", 0)
+							.attr("x2", 0)
+							.attr("y1", -r-3)
+							.attr("y2", -r-8)
+							.attr("stroke", "gray")
+							.attr("transform", function(d) {
+								return "rotate(" + (d.startAngle+d.endAngle)/2 * (180/Math.PI) + ")";
+							});
+						lines.transition()
+							.duration(tweenDuration)
+							.attr("transform", function(d) {
+								return "rotate(" + (d.startAngle+d.endAngle)/2 * (180/Math.PI) + ")";
+							});
+						lines.exit().remove();
+
+						
+
+						//DRAW LABELS WITH PERCENTAGE VALUES
+						valueLabels = label_group.selectAll("text.value").data(filteredPieData)
+							.attr("dy", function(d){
+								if ((d.startAngle+d.endAngle)/2 > Math.PI/2 && (d.startAngle+d.endAngle)/2 < Math.PI*1.5 ) {
+									return 5;
+								} else {
+									return -7;
+								}
+							})
+							.attr("text-anchor", function(d){
+								if ( (d.startAngle+d.endAngle)/2 < Math.PI ){
+									return "beginning";
+								} else {
+									return "end";
+								}
+							})
+							.text(function(d){
+								var percentage = Math.round(d.pct*100);
+								if (percentage > 2) {
+									return percentage + "%";
+								} else {
+									return '';
+								}
+							});
+
+						valueLabels.enter().append("svg:text")
+							.attr("class", "value")
+							.attr("transform", function(d) {
+								return "translate(" + Math.cos(((d.startAngle+d.endAngle - Math.PI)/2)) * (r+textOffset) + "," + Math.sin((d.startAngle+d.endAngle - Math.PI)/2) * (r+textOffset) + ")";
+							})
+							.attr("dy", function(d){
+								if ((d.startAngle+d.endAngle)/2 > Math.PI/2 && (d.startAngle+d.endAngle)/2 < Math.PI*1.5 ) {
+									return 5;
+								} else {
+									return -7;
+								}
+							})
+							.attr("text-anchor", function(d){
+								if ( (d.startAngle+d.endAngle)/2 < Math.PI ){
+									return "beginning";
+								} else {
+									return "end";
+								}
+							}).text(function(d){
+								var percentage = Math.round(d.pct*100);
+								if (percentage > 2) {
+									return percentage + "%";
+								} else {
+									return '';
+								}
+							});
+
+						valueLabels.transition().duration(tweenDuration).attrTween("transform", textTween);
+
+						valueLabels.exit().remove();
 
 
-							//DRAW LABELS WITH ENTITY NAMES
-							nameLabels = label_group.selectAll("text.units").data(filteredPieData)
-								.attr("dy", function(d){
-									if ((d.startAngle+d.endAngle)/2 > Math.PI/2 && (d.startAngle+d.endAngle)/2 < Math.PI*1.5 ) {
-										return 17;
-									} else {
-										return 5;
-									}
-								})
-								.attr("text-anchor", function(d){
-									if ((d.startAngle+d.endAngle)/2 < Math.PI ) {
-										return "beginning";
-									} else {
-										return "end";
-									}
-								}).text(function(d){
-									var percentage = Math.round(d.pct*100);
-									if (percentage > 2) {
-										return d.name;
-									} else {
-										return '';
-									}
-								});
+						// var sliceLabel = label_group.selectAll("text.slice").data(filteredPieData);
+						// sliceLabel.enter().append("svg:text")
+						// 	.attr("class", "slice")
+						// 	.attr("transform", function(d) {return "translate(" + arc.centroid(d) + ")"; })
+						// 	.attr("text-anchor", "middle")
+						// 	.text(function(d, i) {
+						// 		console.log(d.value);
+						// 		if (res.data_type == "currency") {
+						// 			if (d.value >= 100) {
+						// 				return $filter('currency')(d.value, '$', 0);
+						// 			}
+						// 			return '';
+						// 		} else if (res.data_type == "number") {
+						// 			return $filter('number')(d.value, 0);
+						// 		}
+								
+						// 	});
 
-							nameLabels.enter().append("svg:text")
-								.attr("class", "units")
-								.attr("transform", function(d) {
-									return "translate(" + Math.cos(((d.startAngle+d.endAngle - Math.PI)/2)) * (r+textOffset) + "," + Math.sin((d.startAngle+d.endAngle - Math.PI)/2) * (r+textOffset) + ")";
-								})
-								.attr("dy", function(d){
-									if ((d.startAngle+d.endAngle)/2 > Math.PI/2 && (d.startAngle+d.endAngle)/2 < Math.PI*1.5 ) {
-										return 17;
-									} else {
-										return 5;
-									}
-								})
-								.attr("text-anchor", function(d){
-									if ((d.startAngle+d.endAngle)/2 < Math.PI ) {
-										return "beginning";
-									} else {
-										return "end";
-									}
-								}).text(function(d){
-									var percentage = Math.round(d.pct*100);
-									if (percentage > 2) {
-										return d.name;
-									} else {
-										return '';
-									}
-								});
+						// sliceLabel.exit().remove();
 
-							nameLabels.transition().duration(tweenDuration).attrTween("transform", textTween);
 
-							nameLabels.exit().remove();
-						//}
+						//DRAW LABELS WITH ENTITY NAMES
+						nameLabels = label_group.selectAll("text.units").data(filteredPieData)
+							.attr("dy", function(d){
+								if ((d.startAngle+d.endAngle)/2 > Math.PI/2 && (d.startAngle+d.endAngle)/2 < Math.PI*1.5 ) {
+									return 17;
+								} else {
+									return 5;
+								}
+							})
+							.attr("text-anchor", function(d){
+								if ((d.startAngle+d.endAngle)/2 < Math.PI ) {
+									return "beginning";
+								} else {
+									return "end";
+								}
+							}).text(function(d){
+								var percentage = Math.round(d.pct*100);
+								if (percentage > 2) {
+									return d.name;
+								} else {
+									return '';
+								}
+							});
 
+						nameLabels.enter().append("svg:text")
+							.attr("class", "units")
+							.attr("transform", function(d) {
+								return "translate(" + Math.cos(((d.startAngle+d.endAngle - Math.PI)/2)) * (r+textOffset) + "," + Math.sin((d.startAngle+d.endAngle - Math.PI)/2) * (r+textOffset) + ")";
+							})
+							.attr("dy", function(d){
+								if ((d.startAngle+d.endAngle)/2 > Math.PI/2 && (d.startAngle+d.endAngle)/2 < Math.PI*1.5 ) {
+									return 17;
+								} else {
+									return 5;
+								}
+							})
+							.attr("text-anchor", function(d){
+								if ((d.startAngle+d.endAngle)/2 < Math.PI ) {
+									return "beginning";
+								} else {
+									return "end";
+								}
+							}).text(function(d){
+								var percentage = Math.round(d.pct*100);
+								if (percentage > 2) {
+									return d.name;
+								} else {
+									return '';
+								}
+							});
+
+						nameLabels.transition().duration(tweenDuration).attrTween("transform", textTween);
+
+						nameLabels.exit().remove();
 						
 					};
 
@@ -502,7 +498,7 @@
 						};
 					}
 
-				});
+				//});
 			}
 		};
 	}])
