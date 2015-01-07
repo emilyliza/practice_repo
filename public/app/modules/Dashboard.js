@@ -8,46 +8,39 @@
 			url: '/dashboard',
 			templateUrl: '/app/templates/dashboard.html',
 			requiresAuth: true,
-			resolve: {
-				res: ['$http', function($http){
-					// $http returns a promise for the url data
-					return $http({method: 'GET', url: '/api/v1/dashboard'});
-				}]
-			},
 			controller: 'DashboardController'
 		});
 
 	}])
 
-	.controller('DashboardController', [ '$scope', 'res', 'DashboardService', function($scope, res, DashboardService) {
-		
-		$scope.data = res.data;
+	.controller('DashboardController', [ '$scope', 'DashboardService', function($scope, DashboardService) {
 		$scope.dbs = new DashboardService();
-		$scope.dbs.load();
-	
+		$scope.dbs.loadDashboard();
+		$scope.dbs.loadChargebacks();
 	}])
 
 
 	.factory('DashboardService', ['$http', '$timeout', function ($http, $timeout) {
 			
 		var DashboardService = function() {
-			this.data = [];
-			this.loaded = false;
+			this.data_chargebacks = [];
+			this.data_dashboard = [];
+			this.loaded_chargebacks = false;
 		};
 
-		DashboardService.prototype.load = function() {
-			
+		DashboardService.prototype.loadChargebacks = function() {
 			var _this = this;
-
-    		$http.get('/api/v1/chargebacks?limit=10')
+			$http.get('/api/v1/chargebacks?limit=10')
 			.success(function (rows) {
-				_this.loaded = true;
-				var new_data = rows;
-				
-				_.each(new_data, function(d) {
-					_this.data.push(d);
-				});
-				
+				_this.data_chargebacks = rows;
+				_this.loaded_chargebacks = true;
+			});
+		};
+		DashboardService.prototype.loadDashboard = function() {
+			var _this = this;
+			$http.get('/api/v1/dashboard')
+			.success(function (data) {
+				_this.data_dashboard = data;
 			});
 		};
 

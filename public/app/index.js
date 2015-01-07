@@ -5,6 +5,7 @@
 		"ui.bootstrap", 
 		"ui.bootstrap.showErrors", 
 		"angular.filter",
+		"cgBusy",
 		"utils",
 		"user",
 		"upload",

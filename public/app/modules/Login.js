@@ -50,7 +50,7 @@
 			$scope.$broadcast('show-errors-check-validity');
 			if ($scope.loginForm.$valid) {
 				
-				UserService.login(credentials).then(function (user) {
+				$scope.loginService = UserService.login(credentials).then(function (user) {
 					$rootScope.$broadcast(AUTH_EVENTS.loginSuccess);
 					$scope.credentials = {};
 					$state.go('dashboard');

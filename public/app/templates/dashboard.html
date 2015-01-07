@@ -5,13 +5,13 @@
 	<div class="col-sm-3">
 		<div class="img-circle" style="background-color: #5cb85c; padding-top: 25px;">
 			<span style="color: #666;">&nbsp; <!--New--></span>
-			<div>{{data.count | number}}</div>
+			<div>{{dbs.data_dashboard.count | number}}</div>
 			<span style="color: #666">Chargebacks</span>
 		</div>
 
 		<div class="img-circle" style="background-color: #5cb85c; padding-top: 25px; margin: 20px auto;">
 			<span style="color: #666">Amount</span>
-			<div style="font-size: 20px;">{{data.sum | currency:"$":0}}</div>
+			<div style="font-size: 20px;">{{dbs.data_dashboard.sum | currency:"$":0}}</div>
 			<span style="color: #666">Charged Back</span>
 		</div>
 		
@@ -30,7 +30,7 @@
 				<div class="col-sm-2">Case #</div>
 			</div>
 
-			<div class="row" ng-repeat="cb in dbs.data">
+			<div class="row" ng-repeat="cb in dbs.data_chargebacks">
 				<div class="col-sm-2">{{cb.portal_data.RequestDate | date:'MM/dd/yyyy'}}</div>
 				<div class="col-sm-1">{{cb.portal_data.ChargebackAmt | currency}}</div>
 				<div class="col-sm-2">{{cb.gateway_data.FirstName}} {{cb.gateway_data.LastName}}</div>
@@ -44,10 +44,10 @@
 				<div class="col-sm-2">{{cb.portal_data.CaseNumber}}</div>
 			</div>
 			
-			<div class="row" ng-if="dbs.loaded && dbs.data.length == 0">
+			<div class="row" ng-if="dbs.loaded_chargebacks && dbs.data_chargebacks.length == 0">
 				<div class="col-sm-12"><h3>No chargebacks found</h3></div>
 			</div>	
-			<div class="row" ng-if="!dbs.loaded">
+			<div class="row" ng-if="!dbs.loaded_chargebacks">
 				<div class="col-sm-12"><h3 style="color: #999;">Loading Chargebacks...</h3></div>
 			</div>	
 		</div>
