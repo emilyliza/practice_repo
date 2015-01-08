@@ -112,6 +112,8 @@ class Application(tornado.web.Application):
             (r"/reporting/cctype/overview", HomeHandler),
             (r"/reporting/cctype/byMid", HomeHandler),
             (r"/reporting/cctype/byProcessor", HomeHandler),
+            (r"/chargeback/([0-9-A-Za-z]+)/(card|portal|gateway|crm|shipping|comments|review)", HomeHandler),
+            (r"/chargeback/([0-9-A-Za-z]+)", HomeHandler),
             (r"/", HomeHandler),
             (r"/api/v1/login", LoginHandler),
             (r"/api/v1/chargebacks", ChargebacksHandler),
@@ -141,7 +143,8 @@ class BaseHandler(tornado.web.RequestHandler):
 
 
 class HomeHandler(BaseHandler):
-    def get(self):
+    def get(*args):
+        self = args[0]
         if os.environ['ENV'] == "production":
             # production -- will load just index.html, all other assets in this file are in CDN
             print 'Serving production index.html'
@@ -414,7 +417,8 @@ class DashboardHandler(BaseHandler):
         match['DocGenData.portal_data.MidNumber'] = { '$in': getMerchantArray(self) }
         # only 2.0 dispute data
         match['dispute_version'] = '2.0'
-        match['pipeline_status.current.status'] = { '$nin': [ 'void', 'duplicate' ] }
+        #match['pipeline_status.current.status'] = { '$nin': [ 'void', 'duplicate' ] }
+        match['pipeline_status.current.status'] = "new"
         
         search = [
             { '$match': match },
@@ -837,6 +841,8 @@ def cleanData(cb):
     clean['crm_data']['CancelDateSystem'] = str(cb['DocGenData']['crm_data']['CancelDateSystem'])
     clean['crm_data']['RefundDateFull'] = str(cb['DocGenData']['crm_data']['RefundDateFull'])
     clean['crm_data']['RefundDatePartial'] = str(cb['DocGenData']['crm_data']['RefundDatePartial'])
+
+    clean['derived_data']['status'] = str(cb['pipeline_status']['current']['status'])
     return clean
 
 

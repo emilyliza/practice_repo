@@ -4,6 +4,7 @@
 	
 	.config(['$stateProvider', '$urlRouterProvider', function( $stateProvider, $urlRouterProvider ) {
 		
+		$urlRouterProvider.when('/chargeback/{_id}', '/chargeback/{_id}/card');	
 		$stateProvider
 		.state('chargeback', {
 			url: '/chargeback/{_id}',
@@ -18,10 +19,10 @@
 			}
 			
 		})
-		.state('chargeback.upload', {
-			url: '/upload',
+		.state('chargeback.card', {
+			url: '/card',
 			requiresAuth: true,
-			templateUrl: '/app/templates/chargeback.upload.html'
+			templateUrl: '/app/templates/chargeback.card.html'
 		})
 		.state('chargeback.portal', {
 			url: '/portal',
@@ -77,20 +78,34 @@
 	}])
 
 	.controller('ChargebackController', 
-			['$scope', '$rootScope', 'ChargebackService', 'UploadService', '$timeout', 'res',
-			function ($scope, $rootScope, ChargebackService, UploadService, $timeout, res) {
+			['$scope', '$rootScope', 'ChargebackService', 'UploadService', '$timeout', 'res', '$state',
+			function ($scope, $rootScope, ChargebackService, UploadService, $timeout, res, $state) {
 		
 		// data is retrieved in resolve within route
 		$scope.data = res.data;
 		$scope.us = UploadService;
 
-		$scope.uploaderTerms = UploadService.create($scope.data.uploads.terms, 10);
+		$scope.state = $state;
+
+		$scope.setCard = function(c) {
+			$scope.cardpresent = false;
+			if (c == "present") {
+				$scope.cardpresent = true;
+				$state.go('chargeback.portal');
+			} else {
+				$state.go('chargeback.crm');
+			}
+		}
+
+		//$scope.uploaderTerms = UploadService.create(($scope.data.uploads.terms || {}), 10);
+		$scope.uploaderTerms = UploadService.create({}, 10);
 		$scope.uploaderTerms.onWhenAddingFileFailed = function() {
 			// set UploadError to true to display error message in side bar
 			$scope.uploadError = true;
 		};
 
-		$scope.uploaderScreen = UploadService.create($scope.data.uploads.screens, 10);
+		//$scope.uploaderScreen = UploadService.create($scope.data.uploads.screens, 10);
+		$scope.uploaderScreen = UploadService.create({}, 10);
 		$scope.uploaderScreen.onWhenAddingFileFailed = function() {
 			// set UploadError to true to display error message in side bar
 			$scope.uploadError = true;

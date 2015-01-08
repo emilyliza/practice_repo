@@ -172,7 +172,30 @@ footer {
 		}
 	}
 }
-
+.card-present {
+	margin-top: 40px;
+	.present, .notpresent {
+		cursor: pointer;
+		text-align: center;
+		color: @cbBlue;
+		.glyphicon-credit-card {
+			font-size: 200px;
+		}
+		.glyphicon-ban-circle {
+			font-size: 200px;
+			color: #999;
+			opacity: .6
+		}
+		&:hover {
+			color: darken(@cbBlue, 12%);
+		}
+	}	
+	.notpresent {
+		.glyphicon-credit-card {
+			position: absolute;
+		}
+	}
+}
 
 .dateRange {
 	font-size: 18px;
