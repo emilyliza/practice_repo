@@ -95,7 +95,7 @@
 			} else {
 				$state.go('chargeback.crm');
 			}
-		}
+		};
 
 		//$scope.uploaderTerms = UploadService.create(($scope.data.uploads.terms || {}), 10);
 		$scope.uploaderTerms = UploadService.create({}, 10);
