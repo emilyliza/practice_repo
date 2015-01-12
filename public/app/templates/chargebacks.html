@@ -47,7 +47,7 @@
 			-->
 		</div>
 		<div class="col-sm-2">
-			<a ng-if="cb.derived_data.status == 'new'" class="btn btn-sm btn-success" href="/chargeback/{{cb.derived_data.uuid}}/card">Get Started <span class="glyphicon glyphicon-chevron-right"></span></a>
+			<a ng-if="cb.derived_data.status == 'new'" class="btn btn-sm btn-success" href="/chargeback/{{cb.derived_data.uuid}}/card">Work This Chargeback <span class="glyphicon glyphicon-chevron-right"></span></a>
 			<a ng-if="cb.derived_data.status != 'new'" href="/chargeback/{{cb.derived_data.uuid}}">{{cb.portal_data.CaseNumber}}</a>
 		</div>
 
