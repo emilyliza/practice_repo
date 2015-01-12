@@ -438,7 +438,7 @@ class DashboardHandler(BaseHandler):
         out['sum'] = 0
         if cursor['result'] and cursor['result'][0]:
             out['count'] = cursor['result'][0]['count']
-            out['sum'] = (cursor['result'][0]['sum'] / 100)
+            out['sum'] = (cursor['result'][0]['sum'] / 100 )
 
         self.content_type = 'application/json'
         self.write(dumps(out,default=json_util.default))
@@ -490,7 +490,7 @@ class HistoryHandler(BaseHandler):
                 pre = '0'
             out.append({
                 'date': str(row['_id']['year']) + '-' + pre + str(row['_id']['month']) + '-01',
-                'total': float(row['total'] / 100)
+                'total': float(row['total'] )
             })
 
         self.content_type = 'application/json'
@@ -519,7 +519,7 @@ class ReportStatusHandler(BaseHandler):
             result1.append( { 'name': row['_id']['status'], "val": row['total'] } )
 
         for row in cursors[1]['result']: 
-            result2.append( { 'name': row['_id']['status'], "val": row['total'] / 100 } )
+            result2.append( { 'name': row['_id']['status'], "val": row['total'] } )
 
         out = {
             "byVolume": {
@@ -599,20 +599,20 @@ class ReportCcTypesHandler(BaseHandler):
             result1.append( { 'name': row['_id']['cctype'], "val": row['total'] } )
 
         for row in cursors[1]['result']: 
-            result2.append( { 'name': row['_id']['cctype'], "val": row['total'] / 100 } )
+            result2.append( { 'name': row['_id']['cctype'], "val": row['total'] } )
 
         out = {
             "byVolume": {
                 "label": 'Card Type By Volume',
                 "data_type": 'currency',
                 "filtertype": 'cctype',
-                "data": result1
+                "data": result2
             },
             "byCount": {
                 "label": 'Card Type By Count',
                 "data_type": 'number',
                 "filtertype": 'cctype',
-                "data": result2
+                "data": result1
             }
         }
 

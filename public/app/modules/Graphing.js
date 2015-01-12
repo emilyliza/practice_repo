@@ -176,14 +176,23 @@
 
 					var sum = 0;
 					 _.each(res.data, function(d) {
-					 	sum += d.val;
+					 	if (res.data_type == "currency") {
+					 		sum += (d.val / 100);
+					 	} else {
+					 		sum += d.val;
+					 	}
 					 });
 
 
 					function filterData(element, index, array) {
 						element.name = res.data[index].name;
-						element.value = res.data[index].val;
-						element.pct = res.data[index].val / sum;
+						if (res.data_type == "currency") {
+							element.value = res.data[index].val / 100;
+							element.pct = (res.data[index].val / 100) / sum;
+						} else {
+							element.value = res.data[index].val;
+							element.pct = (res.data[index].val) / sum;
+						}
 						element.color = GRAPHING_COLORS[index];
 						return (element.value > 0);
 					}
@@ -198,7 +207,7 @@
 							if (res.data_type == "currency") {
 								return $filter('currency')(sum, '$', 2);
 							} else {
-								return $filter('number')(sum, 0);
+								return $filter('number')(sum, 2);
 							}
 						});
 
