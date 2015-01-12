@@ -174,24 +174,25 @@ class LoginHandler(BaseHandler):
 
             merchants = {}
             merchant_checker = []
-            for k,v in user_perm_data['merchants'].iteritems():
-                if (v['MerchID'] not in merchant_checker):
-                    m = {
-                        "id": v['MerchID'],
-                        "name": v['MerchName'],
-                        "alt_name": v['MerchAltname'],
-                        "mids": [{
+            if user_perm_data['merchants']:
+                for k,v in user_perm_data['merchants'].iteritems():
+                    if (v['MerchID'] not in merchant_checker):
+                        m = {
+                            "id": v['MerchID'],
+                            "name": v['MerchName'],
+                            "alt_name": v['MerchAltname'],
+                            "mids": [{
+                                "mid": k,
+                                "mid_display": v['MID']
+                            }]
+                        }
+                        merchants[ str(v['MerchID']) ] = m
+                        merchant_checker.append(v['MerchID'])
+                    else:
+                        merchants[ str(v['MerchID']) ]['mids'].append({
                             "mid": k,
                             "mid_display": v['MID']
-                        }]
-                    }
-                    merchants[ str(v['MerchID']) ] = m
-                    merchant_checker.append(v['MerchID'])
-                else:
-                    merchants[ str(v['MerchID']) ]['mids'].append({
-                        "mid": k,
-                        "mid_display": v['MID']
-                    })
+                        })
             
 
             # We are sending the profile inside the token
@@ -244,7 +245,7 @@ class ChargebacksHandler(BaseHandler):
             
         # only 2.0 dispute data
         search['$and'].append( { 'dispute_version':  '2.0' } )
-        search['$and'].append( { 'pipeline_status.current.status': { '$nin': [ 'void', 'duplicate' ] }} )
+        search['$and'].append( { 'pipeline_status.current.display_status': { '$nin': [ 'void', 'duplicate' ] }} )
 
         # if (merchant is not None): 
         #     search['$and'].append( { 'DocGenData.derived_data.Merchant'] = str(merchant) })
@@ -269,7 +270,7 @@ class ChargebacksHandler(BaseHandler):
             search['$and'].append( {'DocGenData.gateway_data.CcType': str(cctype) })
         
         if (status is not None): 
-            search['$and'].append( {'pipeline_status.current.status': str(status) })
+            search['$and'].append( {'pipeline_status.current.display_status': str(status) })
 
         if (merchant is not None): 
             search['$and'].append( {'DocGenData.derived_data.Merchant': str(merchant) })
@@ -414,7 +415,7 @@ class DashboardHandler(BaseHandler):
         match['DocGenData.portal_data.MidNumber'] = { '$in': getMerchantArray(self) }
         # only 2.0 dispute data
         match['dispute_version'] = '2.0'
-        match['pipeline_status.current.status'] = { '$nin': [ 'void', 'duplicate' ] }
+        match['pipeline_status.current.display_status'] = { '$nin': [ 'void', 'duplicate' ] }
         
         search = [
             { '$match': match },
@@ -456,7 +457,7 @@ class HistoryHandler(BaseHandler):
         match = {}
         match['DocGenData.portal_data.RequestDate'] = { '$gte': start_date }
         match['dispute_version'] = "2.0"
-        match['pipeline_status.current.status'] = { '$nin': [ 'void', 'duplicate' ] }
+        match['pipeline_status.current.display_status'] = { '$nin': [ 'void', 'duplicate' ] }
 
 
         mids = self.get_argument('mids', None)
@@ -506,7 +507,7 @@ class ReportStatusHandler(BaseHandler):
         
         project = {
             '_id': 0,
-            'status': "$pipeline_status.current.status",
+            'status': "$pipeline_status.current.display_status",
             'amt': '$DocGenData.portal_data.ChargebackAmt_100'
         };
         group = { 'status' : "$status" }
@@ -548,7 +549,7 @@ class ReportStatusMidHandler(BaseHandler):
         
         project = {
             '_id': 0,
-            'status': "$pipeline_status.current.status",
+            'status': "$pipeline_status.current.display_status",
             'mid': "$DocGenData.portal_data.MidNumber",
             'amt': '$DocGenData.portal_data.ChargebackAmt_100'
         };
@@ -567,7 +568,7 @@ class ReportStatusProcessorHandler(BaseHandler):
         
         project = {
             '_id': 0,
-            'status': "$pipeline_status.current.status",
+            'status': "$pipeline_status.current.display_status",
             'processor': "$DocGenData.derived_data.Merchant",
             'amt': '$DocGenData.portal_data.ChargebackAmt_100'
         };
@@ -679,7 +680,7 @@ def pieOverview(self, project, group):
     match = {}
     match['DocGenData.portal_data.RequestDate'] = { '$gte': start_date, '$lte': end_date }
     match['dispute_version'] = "2.0"
-    match['pipeline_status.current.status'] = { '$nin': [ 'void', 'duplicate' ] }
+    match['pipeline_status.current.display_status'] = { '$nin': [ 'void', 'duplicate' ] }
 
     mids = self.get_argument('mids', None)
     if (mids is not None and mids):
@@ -742,7 +743,7 @@ def pie(self, project, group, val_field, group_type):
     match = {}
     match['DocGenData.portal_data.RequestDate'] = { '$gte': start_date, '$lte': end_date }
     match['dispute_version'] = "2.0"
-    match['pipeline_status.current.status'] = { '$nin': [ 'void', 'duplicate' ] }
+    match['pipeline_status.current.display_status'] = { '$nin': [ 'void', 'duplicate' ] }
 
     mids = self.get_argument('mids', None)
     if (mids is not None and mids):
