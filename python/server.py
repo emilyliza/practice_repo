@@ -526,13 +526,13 @@ class ReportStatusHandler(BaseHandler):
                 "label": 'Status By Volume',
                 "data_type": 'currency',
                 "filtertype": 'status',
-                "data": result1
+                "data": result2
             },
             "byCount": {
                 "label": 'Status By Count',
                 "data_type": 'number',
                 "filtertype": 'status',
-                "data": result2
+                "data": result1
             }
         }
 
@@ -771,6 +771,7 @@ def pie(self, project, group, val_field, group_type):
         if row['_id']['key'] in result:
             result[ row['_id']['key'] ]['data'].append({ "name": row["_id"][val_field], "val": row['total'] })
         else:
+            print row["_id"]
             result[ row['_id']['key'] ] = {
                 "data": [
                     { "name": row["_id"][val_field], "val": row['total'] }
