@@ -768,13 +768,17 @@ def pie(self, project, group, val_field, group_type):
     
     result = {}
     for row in cursor['result']: 
-        if row['_id']['key'] in result:
-            result[ row['_id']['key'] ]['data'].append({ "name": row["_id"][val_field], "val": row['total'] })
+        if val_field in row['_id'].keys():
+            n = row["_id"][val_field]
         else:
-            print row["_id"]
+            n = ""
+
+        if row['_id']['key'] in result:
+            result[ row['_id']['key'] ]['data'].append({ "name": n, "val": row['total'] })
+        else:
             result[ row['_id']['key'] ] = {
                 "data": [
-                    { "name": row["_id"][val_field], "val": row['total'] }
+                    { "name": n, "val": row['total'] }
                 ]
             }
         
