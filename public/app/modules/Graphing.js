@@ -207,7 +207,7 @@
 							if (res.data_type == "currency") {
 								return $filter('currency')(sum, '$', 2);
 							} else {
-								return $filter('number')(sum, 2);
+								return $filter('number')(sum, 0);
 							}
 						});
 
