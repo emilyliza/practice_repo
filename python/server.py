@@ -112,7 +112,7 @@ class Application(tornado.web.Application):
             (r"/reporting/cctype/overview", HomeHandler),
             (r"/reporting/cctype/byMid", HomeHandler),
             (r"/reporting/cctype/byProcessor", HomeHandler),
-            (r"/chargeback/([0-9-A-Za-z]+)/(card|portal|gateway|crm|shipping|comments|review)", HomeHandler),
+            (r"/chargeback/([0-9-A-Za-z]+)/(card|chargeback|customer|documents|review)", HomeHandler),
             (r"/chargeback/([0-9-A-Za-z]+)", HomeHandler),
             (r"/", HomeHandler),
             (r"/api/v1/login", LoginHandler),
@@ -248,7 +248,11 @@ class ChargebacksHandler(BaseHandler):
             
         # only 2.0 dispute data
         search['$and'].append( { 'dispute_version':  '2.0' } )
-        search['$and'].append( { 'pipeline_status.current.display_status': { '$nin': [ 'void', 'duplicate' ] }} )
+        
+        if (status is not None): 
+            search['$and'].append( {'pipeline_status.current.display_status': str(status) })
+        else:
+            search['$and'].append( { 'pipeline_status.current.display_status': { '$nin': [ 'void', 'duplicate' ] }} )
 
         # if (merchant is not None): 
         #     search['$and'].append( { 'DocGenData.derived_data.Merchant'] = str(merchant) })
@@ -272,9 +276,6 @@ class ChargebacksHandler(BaseHandler):
         if (cctype is not None): 
             search['$and'].append( {'DocGenData.gateway_data.CcType': str(cctype) })
         
-        if (status is not None): 
-            search['$and'].append( {'pipeline_status.current.display_status': str(status) })
-
         if (merchant is not None): 
             search['$and'].append( {'DocGenData.derived_data.Merchant': str(merchant) })
 
