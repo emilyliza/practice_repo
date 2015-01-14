@@ -84,6 +84,13 @@
 			$state.go('chargeback.chargeback');
 		};
 
+		$scope.data.uploads = {
+			'adds': [],
+			'terms': [],
+			'products': [],
+			'shippings': []
+		};
+
 		//$scope.uploaderTerms = UploadService.create(($scope.data.uploads.terms || {}), 10);
 		$scope.uploaderTerms = UploadService.create({}, 10);
 		$scope.uploaderTerms.onWhenAddingFileFailed = function() {
@@ -177,7 +184,7 @@
 		};
 
 		this.save = function(data) {
-			return $http.put('/api/v1/chargeback/' + data._id, data);
+			return $http.put('/api/v1/chargeback/' + data.derived_data.uuid, data);
 		};
 
 	}]);
