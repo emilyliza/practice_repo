@@ -105,8 +105,14 @@
 		};
 
 		//$scope.uploaderScreen = UploadService.create($scope.data.uploads.screens, 10);
-		$scope.uploaderScreen = UploadService.create({}, 10);
-		$scope.uploaderScreen.onWhenAddingFileFailed = function() {
+		$scope.uploaderProduct = UploadService.create({}, 10);
+		$scope.uploaderProduct.onWhenAddingFileFailed = function() {
+			// set UploadError to true to display error message in side bar
+			$scope.uploadError = true;
+		};
+
+		$scope.uploaderShipping = UploadService.create({}, 10);
+		$scope.uploaderShipping.onWhenAddingFileFailed = function() {
 			// set UploadError to true to display error message in side bar
 			$scope.uploadError = true;
 		};
@@ -154,7 +160,7 @@
 
 		$scope.removeItem = function(item, el) {
 			angular.element(el).val('');	// have to clear out element value
-			_.each([$scope.data.uploads.screens, $scope.data.uploads.terms], function(upload_array) {
+			_.each([$scope.data.uploads.products, $scope.data.uploads.terms, $scope.data.uploads.shippings, $scope.data.uploads.adds], function(upload_array) {
 				var i = 0;
 				_.each(upload_array, function(s) {
 					if (s && s._id == item._id) {

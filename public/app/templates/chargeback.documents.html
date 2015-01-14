@@ -1,0 +1,226 @@
+
+<div class="row">
+	
+	<div class="col-sm-4 col-sm-push-8 form-sidebar" style="padding-top: 30px;">
+		<div class="side-main-head">COMMENTS &amp; DOCUMENTS</div>
+		<div>
+			Provide any additional details or comments here that would help solve this chargeback. Anything that was not addressed in the previous steps.
+		</div>
+	</div>
+	<div class="col-sm-8 col-sm-pull-4"  style="padding-top: 30px;" >
+
+		<div class="row">
+			<div class="col-md-6" style="margin-bottom: 60px;">
+
+				<div ng-show="uploaderProduct.isHTML5">
+					<div nv-file-drop="" uploader="uploaderProduct">
+						<div nv-file-over="" uploader="uploaderProduct" over-class="ddhover" class="ddzone" ng-click="triggerUpload('#productFile')">
+							Upload Product Screenshot<br/>
+							<span class="glyphicon glyphicon-picture"></span>
+							<div class="subtext">(drag here or click to upload)</div>
+						</div>
+					</div>
+				</div>
+				<div ng-hide="uploaderProduct.isHTML5" class="ddzone">
+					Upload Product Screenshot<br/><input id="productFile" type="file" nv-file-select="" uploader="uploaderProduct"  />
+				</div>
+
+
+				<div class="uploaded">
+
+					<div ng-repeat="saved_item in data.uploads.products">
+						<div class="img">
+							<div class="remove pull-right" ng-click="removeItem(saved_item, '#productFile')">
+								<span class="glyphicon glyphicon-remove-circle"></span>
+							</div>
+							<img src="{{saved_item.url}}">
+						</div>
+						<div style="font-weight: bold; text-align: center;">{{ saved_item.filename }}</div>
+					</div>
+
+					<div ng-repeat="item in uploaderProduct.queue">
+						<div class="img" ng-show="uploaderProduct.isHTML5">
+							<div class="remove pull-right" ng-click="removeItem(item, '#productFile')">
+								<span class="glyphicon glyphicon-remove-circle"></span>
+							</div>
+							<div ng-thumb="{ file: item._file, width: 200 }"></div>
+						</div>
+						<div style="font-weight: bold; text-align: center;">{{ item.file.name }}</div>
+						<div ng-show="uploaderProduct.isHTML5" style="text-align: center;">
+							<div nowrap>{{ item.file.size/1024/1024|number:2 }} MB</div>
+							<div class="progress" style="margin-bottom: 0;">
+								<div class="progress-bar" role="progressbar" ng-style="{ 'width': item.progress + '%' }"></div>
+							</div>
+						</div>
+					</div>
+
+				</div>
+
+			</div>
+
+			<div class="col-md-6">
+
+				<div ng-show="uploaderTerms.isHTML5">
+					<div nv-file-drop="" uploader="uploaderTerms">
+						<div nv-file-over="" uploader="uploaderTerms" over-class="ddhover" class="ddzone" ng-click="triggerUpload('#termsFile')">
+							Upload Terms of Service<br/>
+							<span class="glyphicon glyphicon-list-alt"></span>
+							<div class="subtext">(drag here or click to upload)</div>
+						</div>
+					</div>
+				</div>
+				<div ng-hide="uploaderTerms.isHTML5" class="ddzone">
+					Upload Terms of Service<br/><input id="termsFile" type="file" nv-file-select="" uploader="uploaderTerms"  />
+				</div>
+
+				<div class="uploaded">
+
+					<div ng-repeat="saved_item in data.uploads.terms">
+						<div class="img">
+							<div class="remove pull-right" ng-click="removeItem(saved_item, '#termsFile')">
+								<span class="glyphicon glyphicon-remove-circle"></span>
+							</div>
+							<img src="{{saved_item.url}}">
+						</div>
+						<div style="font-weight: bold; text-align: center;">{{ saved_item.filename }}</div>
+					</div>
+
+					<div ng-repeat="item in uploaderTerms.queue">
+						<div class="img" ng-show="uploaderTerms.isHTML5">
+							<div class="remove pull-right" ng-click="removeItem(item, '#termsFile')">
+								<span class="glyphicon glyphicon-remove-circle"></span>
+							</div>
+							<div ng-thumb="{ file: item._file, width: 200 }"></div>
+						</div>
+						<div style="font-weight: bold; text-align: center;">{{ item.file.name }}</div>
+						<div ng-show="uploaderTerms.isHTML5" style="text-align: center;">
+							<div nowrap>{{ item.file.size/1024/1024|number:2 }} MB</div>
+							<div class="progress" style="margin-bottom: 0;">
+								<div class="progress-bar" role="progressbar" ng-style="{ 'width': item.progress + '%' }"></div>
+							</div>
+						</div>
+					</div>
+
+				</div>
+
+			</div>
+
+		</div>
+
+		<div class="row">
+			<div class="col-md-6" style="margin-bottom: 60px;">
+
+				<div ng-show="uploaderShipping.isHTML5">
+					<div nv-file-drop="" uploader="uploaderShipping">
+						<div nv-file-over="" uploader="uploaderShipping" over-class="ddhover" class="ddzone" ng-click="triggerUpload('#shippingFile')">
+							Upload Shipping Screenshot<br/>
+							<span class="glyphicon glyphicon-picture"></span>
+							<div class="subtext">(drag here or click to upload)</div>
+						</div>
+					</div>
+				</div>
+				<div ng-hide="uploaderShipping.isHTML5" class="ddzone">
+					Upload Shipping Screenshot<br/><input id="shippingFile" type="file" nv-file-select="" uploader="uploaderShipping"  />
+				</div>
+
+
+				<div class="uploaded">
+
+					<div ng-repeat="saved_item in data.uploads.shippings">
+						<div class="img">
+							<div class="remove pull-right" ng-click="removeItem(saved_item, '#shippingFile')">
+								<span class="glyphicon glyphicon-remove-circle"></span>
+							</div>
+							<img src="{{saved_item.url}}">
+						</div>
+						<div style="font-weight: bold; text-align: center;">{{ saved_item.filename }}</div>
+					</div>
+
+					<div ng-repeat="item in uploaderShipping.queue">
+						<div class="img" ng-show="uploaderShipping.isHTML5">
+							<div class="remove pull-right" ng-click="removeItem(item, '#shippingFile')">
+								<span class="glyphicon glyphicon-remove-circle"></span>
+							</div>
+							<div ng-thumb="{ file: item._file, width: 200 }"></div>
+						</div>
+						<div style="font-weight: bold; text-align: center;">{{ item.file.name }}</div>
+						<div ng-show="uploaderShipping.isHTML5" style="text-align: center;">
+							<div nowrap>{{ item.file.size/1024/1024|number:2 }} MB</div>
+							<div class="progress" style="margin-bottom: 0;">
+								<div class="progress-bar" role="progressbar" ng-style="{ 'width': item.progress + '%' }"></div>
+							</div>
+						</div>
+					</div>
+
+				</div>
+
+			</div>
+
+			<div class="col-md-6">
+
+				<div ng-show="uploaderAdditional.isHTML5">
+					<div nv-file-drop="" uploader="uploaderAdditional">
+						<div nv-file-over="" uploader="uploaderAdditional" over-class="ddhover" class="ddzone" ng-click="triggerUpload('#addFile')">
+							Upload Terms of Service<br/>
+							<span class="glyphicon glyphicon-list-alt"></span>
+							<div class="subtext">(drag here or click to upload)</div>
+						</div>
+					</div>
+				</div>
+				<div ng-hide="uploaderAdditional.isHTML5" class="ddzone">
+					Upload Terms of Service<br/><input id="addFile" type="file" nv-file-select="" uploader="uploaderAdditional"  />
+				</div>
+
+				<div class="uploaded">
+
+					<div ng-repeat="saved_item in data.uploads.adds">
+						<div class="img">
+							<div class="remove pull-right" ng-click="removeItem(saved_item, '#addFile')">
+								<span class="glyphicon glyphicon-remove-circle"></span>
+							</div>
+							<img src="{{saved_item.url}}">
+						</div>
+						<div style="font-weight: bold; text-align: center;">{{ saved_item.filename }}</div>
+					</div>
+
+					<div ng-repeat="item in uploaderAdditional.queue">
+						<div class="img" ng-show="uploaderAdditional.isHTML5">
+							<div class="remove pull-right" ng-click="removeItem(item, '#addFile')">
+								<span class="glyphicon glyphicon-remove-circle"></span>
+							</div>
+							<div ng-thumb="{ file: item._file, width: 200 }"></div>
+						</div>
+						<div style="font-weight: bold; text-align: center;">{{ item.file.name }}</div>
+						<div ng-show="uploaderAdditional.isHTML5" style="text-align: center;">
+							<div nowrap>{{ item.file.size/1024/1024|number:2 }} MB</div>
+							<div class="progress" style="margin-bottom: 0;">
+								<div class="progress-bar" role="progressbar" ng-style="{ 'width': item.progress + '%' }"></div>
+							</div>
+						</div>
+					</div>
+
+				</div>
+
+			</div>
+
+		</div>
+
+		<div class="jgs-form">
+			<div class="row">
+				<div class="col-md-12">
+					<div class="form-group" show-errors>
+						<label>Additional Comments</label>
+						<textarea class="form-control" name="additional_comments" type="text" class="form-control" ng-model="data.additional_comments"></textarea>
+					</div>
+				</div>
+			</div>
+			
+			<div class="form-group btns">
+				<a ui-sref="chargeback.review" class="btn btn-success pull-right">Continue to Final Review</a>
+			</div>
+
+		</div>
+
+	</div>
+
+</div>
