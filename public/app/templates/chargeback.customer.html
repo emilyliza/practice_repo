@@ -1,8 +1,21 @@
 <div class="row">
 	
-	<div class="col-sm-4 col-sm-push-8 form-sidebar" style="padding-top: 30px;">
+	<div class="col-sm-4 col-sm-push-8 form-sidebar">
 		<div class="side-main-head">CUSTOMER INFORMATION</div>
 		<div>Help details here.</div>
+		
+		<div class="side-cbinfo">
+			<div class="side-cbinfo-head">CHARGEBACK REFERENCE</div>
+			<div>
+				Portal: <span style="font-weight: bold;">{{data.portal_data.Portal}}</span><br/>
+				Case #: <span style="font-weight: bold;">{{data.portal_data.CaseNumber}}</span><br/>
+				Referenece #: <span style="font-weight: bold;">{{data.portal_data.RefNumber}}</span><br/>
+				CC Prefix: <span style="font-weight: bold;">{{data.portal_data.CcPrefix}}</span><br/>
+				CC Suffix: <span style="font-weight: bold;">{{data.portal_data.CcSuffix}}</span><br/>
+				Amount: <span style="font-weight: bold;">{{data.portal_data.ChargebackAmt}}</span><br/>
+				Mid #: <span style="font-weight: bold;">{{data.portal_data.MidNumber}}</span>
+			</div>
+		</div>
 	</div>
 	<div class="col-sm-8 col-sm-pull-4 jgs-form">
 
