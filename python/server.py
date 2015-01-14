@@ -177,24 +177,25 @@ class LoginHandler(BaseHandler):
 
             merchants = {}
             merchant_checker = []
-            for k,v in user_perm_data['merchants'].iteritems():
-                if (v['MerchID'] not in merchant_checker):
-                    m = {
-                        "id": v['MerchID'],
-                        "name": v['MerchName'],
-                        "alt_name": v['MerchAltname'],
-                        "mids": [{
+            if user_perm_data['merchants']:
+                for k,v in user_perm_data['merchants'].iteritems():
+                    if (v['MerchID'] not in merchant_checker):
+                        m = {
+                            "id": v['MerchID'],
+                            "name": v['MerchName'],
+                            "alt_name": v['MerchAltname'],
+                            "mids": [{
+                                "mid": k,
+                                "mid_display": v['MID']
+                            }]
+                        }
+                        merchants[ str(v['MerchID']) ] = m
+                        merchant_checker.append(v['MerchID'])
+                    else:
+                        merchants[ str(v['MerchID']) ]['mids'].append({
                             "mid": k,
                             "mid_display": v['MID']
-                        }]
-                    }
-                    merchants[ str(v['MerchID']) ] = m
-                    merchant_checker.append(v['MerchID'])
-                else:
-                    merchants[ str(v['MerchID']) ]['mids'].append({
-                        "mid": k,
-                        "mid_display": v['MID']
-                    })
+                        })
             
 
             # We are sending the profile inside the token
@@ -247,7 +248,7 @@ class ChargebacksHandler(BaseHandler):
             
         # only 2.0 dispute data
         search['$and'].append( { 'dispute_version':  '2.0' } )
-        search['$and'].append( { 'pipeline_status.current.status': { '$nin': [ 'void', 'duplicate' ] }} )
+        search['$and'].append( { 'pipeline_status.current.display_status': { '$nin': [ 'void', 'duplicate' ] }} )
 
         # if (merchant is not None): 
         #     search['$and'].append( { 'DocGenData.derived_data.Merchant'] = str(merchant) })
@@ -272,7 +273,7 @@ class ChargebacksHandler(BaseHandler):
             search['$and'].append( {'DocGenData.gateway_data.CcType': str(cctype) })
         
         if (status is not None): 
-            search['$and'].append( {'pipeline_status.current.status': str(status) })
+            search['$and'].append( {'pipeline_status.current.display_status': str(status) })
 
         if (merchant is not None): 
             search['$and'].append( {'DocGenData.derived_data.Merchant': str(merchant) })
@@ -417,8 +418,10 @@ class DashboardHandler(BaseHandler):
         match['DocGenData.portal_data.MidNumber'] = { '$in': getMerchantArray(self) }
         # only 2.0 dispute data
         match['dispute_version'] = '2.0'
+
         #match['pipeline_status.current.status'] = { '$nin': [ 'void', 'duplicate' ] }
         match['pipeline_status.current.status'] = "new"
+
         
         search = [
             { '$match': match },
@@ -441,7 +444,7 @@ class DashboardHandler(BaseHandler):
         out['sum'] = 0
         if cursor['result'] and cursor['result'][0]:
             out['count'] = cursor['result'][0]['count']
-            out['sum'] = (cursor['result'][0]['sum'] / 100)
+            out['sum'] = (cursor['result'][0]['sum'] / 100 )
 
         self.content_type = 'application/json'
         self.write(dumps(out,default=json_util.default))
@@ -460,7 +463,7 @@ class HistoryHandler(BaseHandler):
         match = {}
         match['DocGenData.portal_data.RequestDate'] = { '$gte': start_date }
         match['dispute_version'] = "2.0"
-        match['pipeline_status.current.status'] = { '$nin': [ 'void', 'duplicate' ] }
+        match['pipeline_status.current.display_status'] = { '$nin': [ 'void', 'duplicate' ] }
 
 
         mids = self.get_argument('mids', None)
@@ -493,7 +496,7 @@ class HistoryHandler(BaseHandler):
                 pre = '0'
             out.append({
                 'date': str(row['_id']['year']) + '-' + pre + str(row['_id']['month']) + '-01',
-                'total': float(row['total'] / 100)
+                'total': float(row['total'] )
             })
 
         self.content_type = 'application/json'
@@ -510,7 +513,7 @@ class ReportStatusHandler(BaseHandler):
         
         project = {
             '_id': 0,
-            'status': "$pipeline_status.current.status",
+            'status': "$pipeline_status.current.display_status",
             'amt': '$DocGenData.portal_data.ChargebackAmt_100'
         };
         group = { 'status' : "$status" }
@@ -522,20 +525,20 @@ class ReportStatusHandler(BaseHandler):
             result1.append( { 'name': row['_id']['status'], "val": row['total'] } )
 
         for row in cursors[1]['result']: 
-            result2.append( { 'name': row['_id']['status'], "val": row['total'] / 100 } )
+            result2.append( { 'name': row['_id']['status'], "val": row['total'] } )
 
         out = {
             "byVolume": {
                 "label": 'Status By Volume',
                 "data_type": 'currency',
                 "filtertype": 'status',
-                "data": result1
+                "data": result2
             },
             "byCount": {
                 "label": 'Status By Count',
                 "data_type": 'number',
                 "filtertype": 'status',
-                "data": result2
+                "data": result1
             }
         }
 
@@ -552,7 +555,7 @@ class ReportStatusMidHandler(BaseHandler):
         
         project = {
             '_id': 0,
-            'status': "$pipeline_status.current.status",
+            'status': "$pipeline_status.current.display_status",
             'mid': "$DocGenData.portal_data.MidNumber",
             'amt': '$DocGenData.portal_data.ChargebackAmt_100'
         };
@@ -571,7 +574,7 @@ class ReportStatusProcessorHandler(BaseHandler):
         
         project = {
             '_id': 0,
-            'status': "$pipeline_status.current.status",
+            'status': "$pipeline_status.current.display_status",
             'processor': "$DocGenData.derived_data.Merchant",
             'amt': '$DocGenData.portal_data.ChargebackAmt_100'
         };
@@ -602,20 +605,20 @@ class ReportCcTypesHandler(BaseHandler):
             result1.append( { 'name': row['_id']['cctype'], "val": row['total'] } )
 
         for row in cursors[1]['result']: 
-            result2.append( { 'name': row['_id']['cctype'], "val": row['total'] / 100 } )
+            result2.append( { 'name': row['_id']['cctype'], "val": row['total'] } )
 
         out = {
             "byVolume": {
                 "label": 'Card Type By Volume',
                 "data_type": 'currency',
                 "filtertype": 'cctype',
-                "data": result1
+                "data": result2
             },
             "byCount": {
                 "label": 'Card Type By Count',
                 "data_type": 'number',
                 "filtertype": 'cctype',
-                "data": result2
+                "data": result1
             }
         }
 
@@ -683,7 +686,7 @@ def pieOverview(self, project, group):
     match = {}
     match['DocGenData.portal_data.RequestDate'] = { '$gte': start_date, '$lte': end_date }
     match['dispute_version'] = "2.0"
-    match['pipeline_status.current.status'] = { '$nin': [ 'void', 'duplicate' ] }
+    match['pipeline_status.current.display_status'] = { '$nin': [ 'void', 'duplicate' ] }
 
     mids = self.get_argument('mids', None)
     if (mids is not None and mids):
@@ -746,7 +749,7 @@ def pie(self, project, group, val_field, group_type):
     match = {}
     match['DocGenData.portal_data.RequestDate'] = { '$gte': start_date, '$lte': end_date }
     match['dispute_version'] = "2.0"
-    match['pipeline_status.current.status'] = { '$nin': [ 'void', 'duplicate' ] }
+    match['pipeline_status.current.display_status'] = { '$nin': [ 'void', 'duplicate' ] }
 
     mids = self.get_argument('mids', None)
     if (mids is not None and mids):
@@ -771,12 +774,17 @@ def pie(self, project, group, val_field, group_type):
     
     result = {}
     for row in cursor['result']: 
+        if val_field in row['_id'].keys():
+            n = row["_id"][val_field]
+        else:
+            n = ""
+
         if row['_id']['key'] in result:
-            result[ row['_id']['key'] ]['data'].append({ "name": row["_id"][val_field], "val": row['total'] })
+            result[ row['_id']['key'] ]['data'].append({ "name": n, "val": row['total'] })
         else:
             result[ row['_id']['key'] ] = {
                 "data": [
-                    { "name": row["_id"][val_field], "val": row['total'] }
+                    { "name": n, "val": row['total'] }
                 ]
             }
         
