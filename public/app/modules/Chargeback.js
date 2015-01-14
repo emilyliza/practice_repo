@@ -17,52 +17,36 @@
 						
 				}]
 			}
-			
 		})
 		.state('chargeback.card', {
 			url: '/card',
 			requiresAuth: true,
 			templateUrl: '/app/templates/chargeback.card.html'
 		})
-		.state('chargeback.portal', {
-			url: '/portal',
+		.state('chargeback.chargeback', {
+			url: '/chargeback',
 			requiresAuth: true,
-			templateUrl: '/app/templates/chargeback.portal.html'
-		})
-		.state('chargeback.gateway', {
-			url: '/gateway',
-			requiresAuth: true,
-			templateUrl: '/app/templates/chargeback.gateway.html',
+			templateUrl: '/app/templates/chargeback.chargeback.html',
 			resolve: {
 				scroll:  function() {
 					$("html, body").animate({ scrollTop: 0 }, 200);
 				}
 			}
 		})
-		.state('chargeback.crm', {
-			url: '/crm',
+		.state('chargeback.customer', {
+			url: '/customer',
 			requiresAuth: true,
-			templateUrl: '/app/templates/chargeback.crm.html',
+			templateUrl: '/app/templates/chargeback.customer.html',
 			resolve: {
 				scroll:  function() {
 					$("html, body").animate({ scrollTop: 0 }, 200);
 				}
 			}
 		})
-		.state('chargeback.shipping', {
-			url: '/shipping',
+		.state('chargeback.documents', {
+			url: '/documents',
 			requiresAuth: true,
-			templateUrl: '/app/templates/chargeback.shipping.html',
-			resolve: {
-				scroll:  function() {
-					$("html, body").animate({ scrollTop: 0 }, 200);
-				}
-			}
-		})
-		.state('chargeback.comments', {
-			url: '/comments',
-			requiresAuth: true,
-			templateUrl: '/app/templates/chargeback.comments.html',
+			templateUrl: '/app/templates/chargeback.documents.html',
 			resolve: {
 				scroll:  function() {
 					$("html, body").animate({ scrollTop: 0 }, 200);
@@ -72,7 +56,12 @@
 		.state('chargeback.review', {
 			url: '/review',
 			requiresAuth: true,
-			templateUrl: '/app/templates/chargeback.review.html'
+			templateUrl: '/app/templates/chargeback.review.html',
+			resolve: {
+				scroll:  function() {
+					$("html, body").animate({ scrollTop: 0 }, 200);
+				}
+			}
 		});
 		
 	}])
@@ -91,10 +80,8 @@
 			$scope.cardpresent = false;
 			if (c == "present") {
 				$scope.cardpresent = true;
-				$state.go('chargeback.portal');
-			} else {
-				$state.go('chargeback.crm');
 			}
+			$state.go('chargeback.chargeback');
 		};
 
 		//$scope.uploaderTerms = UploadService.create(($scope.data.uploads.terms || {}), 10);
@@ -113,6 +100,12 @@
 
 		$scope.uploaderShipping = UploadService.create({}, 10);
 		$scope.uploaderShipping.onWhenAddingFileFailed = function() {
+			// set UploadError to true to display error message in side bar
+			$scope.uploadError = true;
+		};
+
+		$scope.uploaderAdditional = UploadService.create({}, 10);
+		$scope.uploaderAdditional.onWhenAddingFileFailed = function() {
 			// set UploadError to true to display error message in side bar
 			$scope.uploadError = true;
 		};
