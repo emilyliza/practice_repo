@@ -14,20 +14,12 @@
 		<div class="page-header text-center" style="border-bottom: none;" ng-if="state.current.url != '/card'">
 			<!-- the links to our nested states using relative paths -->
 			<!-- add the active class if the state matches our ui-sref -->
-			<div id="status-buttons" class="text-center" ng-if="cardpresent">
-				<a ui-sref-active="active" ui-sref=".portal"><span>1</span> Portal</a>
-				<a ui-sref-active="active" ui-sref=".crm"><span>1</span> CRM</a>
-				<a ui-sref-active="active" ui-sref=".shipping"><span>2</span> Shipping</a>
-				<a ui-sref-active="active" ui-sref=".comments"><span>3</span> Comment</a>
-				<a ui-sref-active="active" ui-sref=".review"><span>4</span> Review</a>
-			</div>
-			<div id="status-buttons" class="text-center" ng-if="!cardpresent">
-				<a ui-sref-active="active" ui-sref=".portal"><span>1</span> Portal</a>
-				<a ui-sref-active="active" ui-sref=".gateway"><span>2</span> Gateway</a>
-				<a ui-sref-active="active" ui-sref=".crm"><span>3</span> CRM</a>
-				<a ui-sref-active="active" ui-sref=".shipping"><span>4</span> Shipping</a>
-				<a ui-sref-active="active" ui-sref=".comments"><span>5</span> Comment</a>
-				<a ui-sref-active="active" ui-sref=".review"><span>6</span> Review</a>
+			<div id="status-buttons" class="text-center">
+				<a ui-sref-active="active" ui-sref=".card"><span>1</span> Type</a>
+				<a ui-sref-active="active" ui-sref=".chargeback"><span>2</span> Chargeback</a>
+				<a ui-sref-active="active" ui-sref=".customer"><span>3</span> Customer</a>
+				<a ui-sref-active="active" ui-sref=".documents"><span>4</span> Documents</a>
+				<a ui-sref-active="active" ui-sref=".review"><span>5</span> Review</a>
 			</div>
 		</div>
 

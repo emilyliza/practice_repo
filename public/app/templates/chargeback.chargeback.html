@@ -7,7 +7,6 @@
 	</div>
 	<div class="col-sm-8 col-sm-pull-4 jgs-form">
 
-
 		<div class="row bt">
 			<div class="col-md-12">
 				<div class="form-group" show-errors>
@@ -112,6 +111,26 @@
 				<div class="form-group" show-errors>
 					<label>Transaction Status</label>
 					<input name="TransStatus" type="text" class="form-control" pop-show="{{errors.TransStatus}}" pop="{{errors.TransStatus}}" pop-placement="right" ng-model="data.gateway_data.TransStatus" placeholder="">
+				</div>
+			</div>
+		</div>
+		<div class="row" ng-if="cardpresent">
+			<div class="col-md-4">
+				<div class="form-group" show-errors>
+					<label>Cc Type</label>
+					<input name="CcType" type="text" class="form-control" pop-show="{{errors.CcType}}" pop="{{errors.CcType}}" pop-placement="right" ng-model="data.gateway_data.CcType" placeholder="">
+				</div>
+			</div>
+			<div class="col-md-4">
+				<div class="form-group" show-errors>
+					<label>Cc Expire</label>
+					<input name="CcExpire" type="text" class="form-control" pop-show="{{errors.CcExpire}}" pop="{{errors.CcExpire}}" pop-placement="right" ng-model="data.gateway_data.CcExpire" placeholder="">
+				</div>
+			</div>
+			<div class="col-md-4">
+				<div class="form-group" show-errors>
+					<label>Currency</label>
+					<input name="Currency" type="text" class="form-control" pop-show="{{errors.Currency}}" pop="{{errors.Currency}}" pop-placement="right" ng-model="data.gateway_data.Currency" placeholder="">
 				</div>
 			</div>
 		</div>

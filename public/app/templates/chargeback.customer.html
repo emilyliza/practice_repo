@@ -78,8 +78,8 @@
 			</div>
 		</div>
 
-		<h5 style="margin-top: 40px;">Payment Information</h5>
-		<div class="row bt">
+		<h5 style="margin-top: 40px;" ng-if="!cardpresent">Payment Information</h5>
+		<div class="row bt" ng-if="!cardpresent">
 			<div class="col-md-6">
 				<div class="form-group" show-errors>
 					<label>Auth Code</label>
@@ -93,7 +93,7 @@
 				</div>
 			</div>
 		</div>
-		<div class="row">
+		<div class="row" ng-if="!cardpresent">
 			<div class="col-md-3">
 				<div class="form-group" show-errors>
 					<label>Cc Type</label>
@@ -121,41 +121,50 @@
 		</div>
 
 
-		<h5>CRM Order Information</h5>
+		<h5 style="margin-top: 40px;">Order Information</h5>
 		<div class="row bt">
-			<div class="col-md-4">
+			<div class="col-md-3">
 				<div class="form-group" show-errors>
 					<label>Order Date</label>
 					<input class="form-control" name="OrderDate" type="text" class="form-control" datepicker-popup="MM/dd/yyyy" ng-model="data.crm_data.OrderDate" is-open="opened1" ng-click="opened1=true" isdate >
 				</div>
 			</div>
-			<div class="col-md-4">
+			<div class="col-md-3">
 				<div class="form-group" show-errors>
 					<label>Is Fraud?</label>
 					<input name="IsFraud" type="text" class="form-control" pop-show="{{errors.IsFraud}}" pop="{{errors.IsFraud}}" pop-placement="right" ng-model="data.crm_data.IsFraud" placeholder="">
 				</div>
 			</div>
-			<div class="col-md-4">
+			<div class="col-md-3">
 				<div class="form-group" show-errors>
 					<label>Is Recurring?</label>
 					<input name="IsRecurring" type="text" class="form-control" pop-show="{{errors.IsRecurring}}" pop="{{errors.IsRecurring}}" pop-placement="right" ng-model="data.crm_data.IsRecurring" placeholder="">
 				</div>
 			</div>
-		</div>
-		<div class="row">
-			<div class="col-md-4">
+			<div class="col-md-3">
 				<div class="form-group" show-errors>
 					<label>Price Point</label>
 					<input name="PricePoint" type="text" class="form-control" pop-show="{{errors.PricePoint}}" pop="{{errors.PricePoint}}" pop-placement="right" ng-model="data.crm_data.PricePoint" placeholder="">
 				</div>
 			</div>
-			<div class="col-md-4">
+		</div>
+		
+		<div class="row" ng-if="!cardpresent">
+			<div class="col-md-6">
 				<div class="form-group" show-errors>
 					<label>CRM Product Name</label>
 					<input name="ProductCrmName" type="text" class="form-control" pop-show="{{errors.ProductCrmName}}" pop="{{errors.ProductCrmName}}" pop-placement="right" ng-model="data.crm_data.ProductCrmName" placeholder="">
 				</div>
 			</div>
-			<div class="col-md-4">
+			<div class="col-md-6">
+				<div class="form-group" show-errors>
+					<label>Product Name</label>
+					<input name="ProductName" type="text" class="form-control" pop-show="{{errors.ProductName}}" pop="{{errors.ProductName}}" pop-placement="right" ng-model="data.crm_data.ProductName" placeholder="">
+				</div>
+			</div>
+		</div>
+		<div class="row" ng-if="cardpresent">
+			<div class="col-md-12">
 				<div class="form-group" show-errors>
 					<label>Product Name</label>
 					<input name="ProductName" type="text" class="form-control" pop-show="{{errors.ProductName}}" pop="{{errors.ProductName}}" pop-placement="right" ng-model="data.crm_data.ProductName" placeholder="">
