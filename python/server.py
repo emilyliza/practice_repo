@@ -133,7 +133,7 @@ class Application(tornado.web.Application):
         tornado.web.Application.__init__(self, handlers, **settings)
         
         # Have one global connection to the blog DB across all handlers
-        self.db = motor.MotorClient( os.environ['MONGOLAB_URI'] ).fapl
+        self.db = motor.MotorReplicaSetClient( os.environ['MONGOLAB_URI'], os.environ('MONGOLAB_SET') ).fapl
 
 
 class BaseHandler(tornado.web.RequestHandler):
