@@ -63,7 +63,7 @@
     "karma-ng-html2js-preprocessor": "^0.1.2"
   },
   "scripts": {
-    "postinstall": "node node_modules/bower/bin/bower install",
+    "postinstall": "[ \"$NODE_ENV\" != production ] && node_modules/bower/bin/bower install",
     "start": "env $(cat .env-local) node_modules/nodemon/bin/nodemon.js server.js",
     "test": "node_modules/karma/bin/karma start karma.dev.conf.js",
     "test-single-run": "node_modules/karma/bin/karma start karma.dev.conf.js  --single-run",
