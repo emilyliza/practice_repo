@@ -1,7 +1,8 @@
-chargeback.com
+CART
 ================================
 
-A frontend for Chargeback.com merchants.
+The merchant portal for Chargeback.com!
+
 
 ## Getting Started
 
@@ -20,8 +21,8 @@ its package manager (npm) installed.  You can get them from [http://nodejs.org/]
 Clone the chargeback.com repository using [git][git]:
 
 ```
-git clone https://justinshreve@bitbucket.org/chargebackcomdev/merchantportal.git
-cd merchantportal
+git clone git@bitbucket.org:chargebackcomdev/cart.git
+cd cart
 ```
 
 
