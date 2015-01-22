@@ -49,7 +49,7 @@
 		tooltip.compile = function (element, attrs) {      
 			var first = true;
 			attrs.$observe('popShow', function (val) {
-				if (JSON.parse(!first || val || false)) {
+				if (!first || val || false) {
 					$timeout(function () {
 						element.triggerHandler('event');
 					});

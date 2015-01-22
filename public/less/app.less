@@ -172,7 +172,30 @@ footer {
 		}
 	}
 }
-
+.card-present {
+	margin-top: 40px;
+	.present, .notpresent {
+		cursor: pointer;
+		text-align: center;
+		color: @cbBlue;
+		.glyphicon-credit-card {
+			font-size: 200px;
+		}
+		.glyphicon-ban-circle {
+			font-size: 200px;
+			color: #999;
+			opacity: .6
+		}
+		&:hover {
+			color: darken(@cbBlue, 12%);
+		}
+	}	
+	.notpresent {
+		.glyphicon-credit-card {
+			position: absolute;
+		}
+	}
+}
 
 .dateRange {
 	font-size: 18px;
@@ -238,7 +261,7 @@ footer {
 		margin-right:10px;
 		text-align:center; 
 		text-transform:uppercase;
-		width: 55px;
+		width: 90px;
 	}
 	a:hover {
 		text-decoration:none;
@@ -299,11 +322,12 @@ footer {
 		height: 180px;
 		margin: 0px auto;
 		background-color: @cbBlue;
-		line-height: 40px;
+		line-height: 20px;
 		div {
 			text-align: center;
 			width: auto;
 			font-size: 45px;
+			padding-top: 14px;
 		}
 	}
 }
@@ -340,9 +364,11 @@ footer {
 			margin-bottom: 5px;
 		}
 	}
-	.additional_comments, .gateway, .shipping {
-		background-color: #efefef;
-		border-radius: 5px;
+	.gateway, .shipping {
+		border-left: solid 1px #333;
+	}
+	.additional_comments {
+		border-top: solid 1px #333;
 	}
 
 	.additional_comments {
@@ -383,6 +409,17 @@ footer {
 	}
 }
 
+.side-cbinfo {
+	margin-top: 30px;
+	border-radius: 4px;
+	background-color: @cbBlue;
+	padding: 8px;
+	color: white;
+	.side-cbinfo-head {
+		font-weight: bold;
+		margin-bottom: 10px;
+	}
+}
 
 
 /* Hide for mobile, show later */

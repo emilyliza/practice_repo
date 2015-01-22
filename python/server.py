@@ -112,6 +112,8 @@ class Application(tornado.web.Application):
             (r"/reporting/cctype/overview", HomeHandler),
             (r"/reporting/cctype/byMid", HomeHandler),
             (r"/reporting/cctype/byProcessor", HomeHandler),
+            (r"/chargeback/([0-9-A-Za-z]+)/(card|chargeback|customer|documents|review)", HomeHandler),
+            (r"/chargeback/([0-9-A-Za-z]+)", HomeHandler),
             (r"/", HomeHandler),
             (r"/api/v1/login", LoginHandler),
             (r"/api/v1/chargebacks", ChargebacksHandler),
@@ -131,7 +133,7 @@ class Application(tornado.web.Application):
         tornado.web.Application.__init__(self, handlers, **settings)
         
         # Have one global connection to the blog DB across all handlers
-        self.db = motor.MotorClient( os.environ['MONGOLAB_URI'] ).fapl
+        self.db = motor.MotorReplicaSetClient( os.environ['MONGOLAB_URI'], replicaSet=os.environ['MONGOLAB_SET'] ).fapl
 
 
 class BaseHandler(tornado.web.RequestHandler):
@@ -141,7 +143,8 @@ class BaseHandler(tornado.web.RequestHandler):
 
 
 class HomeHandler(BaseHandler):
-    def get(self):
+    def get(*args):
+        self = args[0]
         if os.environ['ENV'] == "production":
             # production -- will load just index.html, all other assets in this file are in CDN
             print 'Serving production index.html'
@@ -245,7 +248,11 @@ class ChargebacksHandler(BaseHandler):
             
         # only 2.0 dispute data
         search['$and'].append( { 'dispute_version':  '2.0' } )
-        search['$and'].append( { 'pipeline_status.current.display_status': { '$nin': [ 'void', 'duplicate' ] }} )
+        
+        if (status is not None): 
+            search['$and'].append( {'pipeline_status.current.display_status': str(status) })
+        else:
+            search['$and'].append( { 'pipeline_status.current.display_status': { '$nin': [ 'void', 'duplicate' ] }} )
 
         # if (merchant is not None): 
         #     search['$and'].append( { 'DocGenData.derived_data.Merchant'] = str(merchant) })
@@ -269,9 +276,6 @@ class ChargebacksHandler(BaseHandler):
         if (cctype is not None): 
             search['$and'].append( {'DocGenData.gateway_data.CcType': str(cctype) })
         
-        if (status is not None): 
-            search['$and'].append( {'pipeline_status.current.display_status': str(status) })
-
         if (merchant is not None): 
             search['$and'].append( {'DocGenData.derived_data.Merchant': str(merchant) })
 
@@ -415,7 +419,10 @@ class DashboardHandler(BaseHandler):
         match['DocGenData.portal_data.MidNumber'] = { '$in': getMerchantArray(self) }
         # only 2.0 dispute data
         match['dispute_version'] = '2.0'
-        match['pipeline_status.current.display_status'] = { '$nin': [ 'void', 'duplicate' ] }
+
+        #match['pipeline_status.current.status'] = { '$nin': [ 'void', 'duplicate' ] }
+        match['pipeline_status.current.status'] = "new"
+
         
         search = [
             { '$match': match },
@@ -843,6 +850,8 @@ def cleanData(cb):
     clean['crm_data']['CancelDateSystem'] = str(cb['DocGenData']['crm_data']['CancelDateSystem'])
     clean['crm_data']['RefundDateFull'] = str(cb['DocGenData']['crm_data']['RefundDateFull'])
     clean['crm_data']['RefundDatePartial'] = str(cb['DocGenData']['crm_data']['RefundDatePartial'])
+
+    clean['derived_data']['status'] = str(cb['pipeline_status']['current']['status'])
     return clean
 
 

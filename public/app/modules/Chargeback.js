@@ -4,6 +4,7 @@
 	
 	.config(['$stateProvider', '$urlRouterProvider', function( $stateProvider, $urlRouterProvider ) {
 		
+		$urlRouterProvider.when('/chargeback/{_id}', '/chargeback/{_id}/card');	
 		$stateProvider
 		.state('chargeback', {
 			url: '/chargeback/{_id}',
@@ -16,52 +17,36 @@
 						
 				}]
 			}
-			
 		})
-		.state('chargeback.upload', {
-			url: '/upload',
+		.state('chargeback.card', {
+			url: '/card',
 			requiresAuth: true,
-			templateUrl: '/app/templates/chargeback.upload.html'
+			templateUrl: '/app/templates/chargeback.card.html'
 		})
-		.state('chargeback.portal', {
-			url: '/portal',
+		.state('chargeback.chargeback', {
+			url: '/chargeback',
 			requiresAuth: true,
-			templateUrl: '/app/templates/chargeback.portal.html'
-		})
-		.state('chargeback.gateway', {
-			url: '/gateway',
-			requiresAuth: true,
-			templateUrl: '/app/templates/chargeback.gateway.html',
+			templateUrl: '/app/templates/chargeback.chargeback.html',
 			resolve: {
 				scroll:  function() {
 					$("html, body").animate({ scrollTop: 0 }, 200);
 				}
 			}
 		})
-		.state('chargeback.crm', {
-			url: '/crm',
+		.state('chargeback.customer', {
+			url: '/customer',
 			requiresAuth: true,
-			templateUrl: '/app/templates/chargeback.crm.html',
+			templateUrl: '/app/templates/chargeback.customer.html',
 			resolve: {
 				scroll:  function() {
 					$("html, body").animate({ scrollTop: 0 }, 200);
 				}
 			}
 		})
-		.state('chargeback.shipping', {
-			url: '/shipping',
+		.state('chargeback.documents', {
+			url: '/documents',
 			requiresAuth: true,
-			templateUrl: '/app/templates/chargeback.shipping.html',
-			resolve: {
-				scroll:  function() {
-					$("html, body").animate({ scrollTop: 0 }, 200);
-				}
-			}
-		})
-		.state('chargeback.comments', {
-			url: '/comments',
-			requiresAuth: true,
-			templateUrl: '/app/templates/chargeback.comments.html',
+			templateUrl: '/app/templates/chargeback.documents.html',
 			resolve: {
 				scroll:  function() {
 					$("html, body").animate({ scrollTop: 0 }, 200);
@@ -71,27 +56,63 @@
 		.state('chargeback.review', {
 			url: '/review',
 			requiresAuth: true,
-			templateUrl: '/app/templates/chargeback.review.html'
+			templateUrl: '/app/templates/chargeback.review.html',
+			resolve: {
+				scroll:  function() {
+					$("html, body").animate({ scrollTop: 0 }, 200);
+				}
+			}
 		});
 		
 	}])
 
 	.controller('ChargebackController', 
-			['$scope', '$rootScope', 'ChargebackService', 'UploadService', '$timeout', 'res',
-			function ($scope, $rootScope, ChargebackService, UploadService, $timeout, res) {
+			['$scope', '$rootScope', 'ChargebackService', 'UploadService', '$timeout', 'res', '$state',
+			function ($scope, $rootScope, ChargebackService, UploadService, $timeout, res, $state) {
 		
 		// data is retrieved in resolve within route
 		$scope.data = res.data;
 		$scope.us = UploadService;
 
-		$scope.uploaderTerms = UploadService.create($scope.data.uploads.terms, 10);
+		$scope.state = $state;
+
+		$scope.setCard = function(c) {
+			$scope.cardpresent = false;
+			if (c == "present") {
+				$scope.cardpresent = true;
+			}
+			$state.go('chargeback.chargeback');
+		};
+
+		$scope.data.uploads = {
+			'adds': [],
+			'terms': [],
+			'products': [],
+			'shippings': []
+		};
+
+		//$scope.uploaderTerms = UploadService.create(($scope.data.uploads.terms || {}), 10);
+		$scope.uploaderTerms = UploadService.create({}, 10);
 		$scope.uploaderTerms.onWhenAddingFileFailed = function() {
 			// set UploadError to true to display error message in side bar
 			$scope.uploadError = true;
 		};
 
-		$scope.uploaderScreen = UploadService.create($scope.data.uploads.screens, 10);
-		$scope.uploaderScreen.onWhenAddingFileFailed = function() {
+		//$scope.uploaderScreen = UploadService.create($scope.data.uploads.screens, 10);
+		$scope.uploaderProduct = UploadService.create({}, 10);
+		$scope.uploaderProduct.onWhenAddingFileFailed = function() {
+			// set UploadError to true to display error message in side bar
+			$scope.uploadError = true;
+		};
+
+		$scope.uploaderShipping = UploadService.create({}, 10);
+		$scope.uploaderShipping.onWhenAddingFileFailed = function() {
+			// set UploadError to true to display error message in side bar
+			$scope.uploadError = true;
+		};
+
+		$scope.uploaderAdditional = UploadService.create({}, 10);
+		$scope.uploaderAdditional.onWhenAddingFileFailed = function() {
 			// set UploadError to true to display error message in side bar
 			$scope.uploadError = true;
 		};
@@ -139,7 +160,7 @@
 
 		$scope.removeItem = function(item, el) {
 			angular.element(el).val('');	// have to clear out element value
-			_.each([$scope.data.uploads.screens, $scope.data.uploads.terms], function(upload_array) {
+			_.each([$scope.data.uploads.products, $scope.data.uploads.terms, $scope.data.uploads.shippings, $scope.data.uploads.adds], function(upload_array) {
 				var i = 0;
 				_.each(upload_array, function(s) {
 					if (s && s._id == item._id) {
@@ -163,7 +184,7 @@
 		};
 
 		this.save = function(data) {
-			return $http.put('/api/v1/chargeback/' + data._id, data);
+			return $http.put('/api/v1/chargeback/' + data.derived_data.uuid, data);
 		};
 
 	}]);

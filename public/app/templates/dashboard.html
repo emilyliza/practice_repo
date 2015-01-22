@@ -3,37 +3,36 @@
 <div class="row dashboard-status">
 		
 	<div class="col-sm-3">
-		<div class="img-circle" style="background-color: #5cb85c; padding-top: 25px;">
-			<span style="color: #666;">&nbsp; <!--New--></span>
+		<div class="img-circle" style="background-color: #5cb85c; padding-top: 40px;">
+			<span style="color: #666;">Chargebacks to  respond to</span>
 			<div>{{dbs.data_dashboard.count | number}}</div>
-			<span style="color: #666">Chargebacks</span>
+			<span style="color: #666"></span>
 		</div>
 
-		<div class="img-circle" style="background-color: #5cb85c; padding-top: 25px; margin: 20px auto;">
-			<span style="color: #666">Amount</span>
-			<div style="font-size: 20px;">{{dbs.data_dashboard.sum | currency:"$":0}}</div>
-			<span style="color: #666">Charged Back</span>
+		<div class="img-circle" style="background-color: #5cb85c; padding-top: 40px; margin: 20px auto;">
+			<span style="color: #666">Amount you<br/>could recover</span>
+			<div style="font-size: 30px;">{{dbs.data_dashboard.sum | currency:"$":0}}</div>
+			<span style="color: #666"></span>
 		</div>
 		
 	</div>
 
 	<div class="col-sm-9">
 		
-		<h3 style="margin-top: 0px;">Ten Most Recent Chargebacks</h3>
+		<h3 style="margin-top: 0px;">Ten Newest Chargebacks</h3>
 		<div class="animated-grid chargebacks">
 			<div class="row head">
 				<div class="col-sm-2">Date</div>
 				<div class="col-sm-1">Amt</div>
-				<div class="col-sm-2">Customer</div>
 				<div class="col-sm-2">MID</div>
 				<div class="col-sm-3">Reason (Code)</div>
 				<div class="col-sm-2">Case #</div>
+				<div class="col-sm-2"></div>
 			</div>
 
 			<div class="row" ng-repeat="cb in dbs.data_chargebacks">
 				<div class="col-sm-2">{{cb.portal_data.RequestDate | date:'MM/dd/yyyy'}}</div>
 				<div class="col-sm-1">{{cb.portal_data.ChargebackAmt | currency}}</div>
-				<div class="col-sm-2">{{cb.gateway_data.FirstName}} {{cb.gateway_data.LastName}}</div>
 				<div class="col-sm-2">{{cb.portal_data.MidNumber}}</div>
 				<div class="col-sm-3">
 					{{cb.portal_data.ReasonText}} <span style="color:#999;">({{cb.portal_data.ReasonCode}})</span>
@@ -42,6 +41,9 @@
 					-->
 				</div>
 				<div class="col-sm-2">{{cb.portal_data.CaseNumber}}</div>
+				<div class="col-sm-2">
+					<a class="btn btn-sm btn-success" href="/chargeback/{{cb.derived_data.uuid}}/card">Work This Chargeback <span class="glyphicon glyphicon-chevron-right"></span></a>
+				</div>
 			</div>
 			
 			<div class="row" ng-if="dbs.loaded_chargebacks && dbs.data_chargebacks.length == 0">
@@ -52,7 +54,7 @@
 			</div>	
 		</div>
 
-		<a class="btn btn-default pull-right" style="margin: 20px 60px 0px 0px;" href="/chargebacks">View All Chargebacks</a>
+		<a class="btn btn-default pull-right" style="margin: 20px 60px 0px 0px;" href="/chargebacks">View All My Chargebacks</a>
 		
 
 	</div>
