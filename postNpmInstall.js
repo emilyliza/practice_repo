@@ -7,10 +7,10 @@ if (env !== 'production') {
 	exec('bower install', function(err, stdout, stderr) {
 		console.log(stdout);
 		console.log(stderr);
-		return process.exit(1);
+		return process.exit(0);
 	});
     
 } else {
 	console.error('No task for environment:', env);
-	process.exit(1);
+	process.exit(0);
 }
