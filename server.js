@@ -129,18 +129,7 @@ app.use(function(err, req, res, next) {
 
 
 
-if (process.env.NODE_ENV == 'production' || process.env.NODE_ENV == 'staging') {
-
-	var port = process.env.PORT || 5000;
-	app.listen(port, function() {
-		console.log("Listening on " + port);
-	});
-
-} else {
-
-	var port = process.env.PORT || 5000;
-	app.listen(port, function() {
-		console.log("Listening on " + port);
-	});
-
-}
+var port = process.env.PORT || 5000;
+app.listen(port, function() {
+	console.log("Listening on " + port);
+});
