@@ -82,7 +82,11 @@ if (process.env.NODE_ENV == "local") {
 app.settings.db.connect(process.env.MONGOLAB_URI, function(err,db) {
 	if (err) { throw err; }
 	var mongo = process.env.MONGOLAB_URI.split(/@/);
-	console.log('MONGODB CONNECTED - ' + mongo[1]);
+	if (mongo[1]) {
+		console.log('MONGODB CONNECTED - ' + mongo[1]);
+	} else {
+		console.log('MONGODB CONNECTED - localhost');	
+	}
 });
 
 
@@ -96,11 +100,14 @@ require('./lib/appExtensions')(app);
 require('./controllers/login')(app);
 require('./controllers/chargebacks')(app);
 require('./controllers/user')(app);
-require('./controllers/forgot')(app);
+
 require('./controllers/reporting')(app);
 require('./controllers/s3')(app);
 require('./controllers/dashboard')(app);
 require('./controllers/graphing')(app);
+require('./controllers/login')(app);
+require('./controllers/reset')(app);
+require('./controllers/forgot')(app);
 
 if(process.env.NODE_ENV == 'production') {
 	app.use(function(req, res){
