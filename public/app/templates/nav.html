@@ -16,12 +16,13 @@
 			<p ng-if="currentUser" class="navbar-text pull-right">{{ currentUser.fullname }}</p>
 			<ul class="nav navbar-nav" ng-if="!currentUser">
 				<li ng-class="{active: $state.includes('login')}"><a href="/login">Login</a></li>
+				<li ng-class="{active: $state.includes('create')}"><a href="/create">Create</a></li>
 			</ul>
 			<ul class="nav navbar-nav" ng-if="currentUser">
 				<li ng-class="{active: $state.includes('dashboard')}"><a href="/dashboard">Dashboard</a></li>
 				<li ng-class="{active: $state.includes('chargebacks') || $state.includes('chargeback.*')}"><a href="/chargebacks">Chargebacks</a></li>
 				<li ng-class="{active: $state.includes('reporting')}"><a href="/reporting/overview">Reporting</a></li>
-				<!-- <li ng-class="{active: $state.includes('account')}"><a href="/account">Account</a></li> -->
+				<li ng-class="{active: $state.includes('account')}"><a href="/account">Account</a></li>
 				<li><a href="/logout">Log Out</a></li>
 			</ul>
 		</div>
