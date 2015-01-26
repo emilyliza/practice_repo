@@ -22,6 +22,53 @@ module.exports = function(app) {
 	
 	});
 
+
+	app.post('/api/v1/user', function(req, res, next) {
+		
+		req.assert('email', 'Please enter your email.').notEmpty();
+		req.assert('username', 'Please enter your username.').notEmpty();
+		req.assert('name', 'Please enter your name.').notEmpty();
+		req.assert('password', 'Please enter a password.').notEmpty();
+		
+		var errors = req.validationErrors();
+		if (errors) {
+			return res.json(400, errors );
+		}
+
+		// clean data.
+		req.sanitize(req.body.username).trim();
+		req.sanitize(req.body.password).trim();
+		req.sanitize(req.body.email).trim();
+		req.sanitize(req.body.name).trim();
+
+		$()
+		.seq(function(user) {
+			var user = new User({
+				'name': req.body.name,
+				'username': req.body.username,
+				'email': req.body.email,
+				'password': req.body.password
+			});
+			
+			var meta = {
+				ip: Util.getClientAddress(req),
+				useragent: Util.getClientUseragent(req)
+			};
+
+			user.timestamps.createdOn = new Date();
+			user.timestamps.firstLogin = new Date();
+			user.meta.lastIp = meta.ip;
+			user.meta.useragent = meta.useragent;
+
+			user.save(this);
+		})
+		.seq(function(user) {
+			return req.json(user);
+		})
+		.catch(next);
+
+	});
+
 	app.put('/api/v1/user', mw.auth(), function(req, res, next) {
 		put(req, res, next);
 	});
@@ -33,7 +80,7 @@ module.exports = function(app) {
 		req.assert('email', 'Please enter your email.').notEmpty();
 		req.assert('username', 'Please enter your username.').notEmpty();
 		req.assert('name', 'Please enter your name.').notEmpty();
-		req.assert('password', 'Please enter your password.').notEmpty();
+		
 		
 		var errors = req.validationErrors();
 		if (errors) {
@@ -52,9 +99,11 @@ module.exports = function(app) {
 		})
 		.seq(function(user) {
 			user.set('username', req.body.username);
-			user.set('name', req.body.name);
-			user.set('password', req.body.password);
 			user.set('email', req.body.email);
+			user.set('name', req.body.name);
+			if (req.body.password) {
+				user.set('password', req.body.password);
+			}
 			user.save(this);
 		})
 		seq(function(user) {
