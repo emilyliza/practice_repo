@@ -32,7 +32,8 @@
     "jsonwebtoken": "1.1.2",
     "express-csv": "0.6.0",
     "ejs": "0.8.5",
-    "postmark": "0.2.6"
+    "postmark": "0.2.6",
+    "bcrypt": "0.8.1"
   },
   "devDependencies": {
     "protractor": "^1.1.1",
