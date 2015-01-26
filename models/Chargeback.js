@@ -5,6 +5,7 @@ module.exports = function(app) {
 
 	var db = app.settings.db,
 		$ = require('seq'),
+		Util = require('../lib/Util'),
 		Schema = db.Schema,
 		ObjectId = Schema.ObjectId,
 		_ = require('underscore');
@@ -13,7 +14,9 @@ module.exports = function(app) {
 	var ChargebackSchema = new Schema({
 		"status": { "type": String, "required": true, "index": true },
 		"merchant": { "type": String },
-		'portal' : {
+		"createdOn": { "type": Date },
+		"chargebackDate": { "type": Date },
+		'portal_data' : {
 			'Portal'           : String,
 			'CaseNumber'       : Number,
 			'RefNumber'        : Number,
@@ -24,7 +27,7 @@ module.exports = function(app) {
 			'ReasonCode'       : String,
 			'ReasonText'       : String
 		},
-		'gateway' : {
+		'gateway_data' : {
 			'AuthCode'         : String,
 			'AvsStatus'        : String,
 			'FirstName'        : String,
@@ -48,7 +51,7 @@ module.exports = function(app) {
 			'TransType'        : String,
 			'TransDate'        : Date,
 		},
-		'crm' : {
+		'crm_data' : {
 			'OrderDate'          : Date,
 			'DeliveryAddr1'      : String,
 			'DeliveryAddr2'      : String,

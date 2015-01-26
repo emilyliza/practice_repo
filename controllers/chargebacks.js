@@ -12,32 +12,48 @@ module.exports = function(app) {
 		var params = req.query;
 
 		if (!params.limit) { params.limit = 30; }
-		console.log(params.page);
-
+		
 		$()
 		.seq(function() {
 			var query = Chargeback.find();
 
 			if (params.start) {
-				query.where('gateway_data.TransDate').gte( moment(parseInt(params.start)).toDate() );
+				query.where('chargebackDate').gte( moment(parseInt(params.start)).toDate() );
 			}
 			if (params.end) {
-				query.where('gateway_data.TransDate').lte( moment(parseInt(params.end)).toDate() );
+				query.where('chargebackDate').lte( moment(parseInt(params.end)).toDate() );
 			}
 
 			if (params.query && params.query.match(/[0-9\.]/)) {
 				query.or([
-					{ 'portal_data.ChargebackAmt': params.query },
-					{ 'derived_data.uuid': params.query }
+					{ 'portal_data.ChargebackAmt': params.query }
 				]);
 			} else if (params.query) {
 				var pattern = new RegExp('.*'+params.query+'.*', 'i');
 				query.or([
 					{ 'derived_data.status.name': pattern },
 					{ 'gateway_data.FirstName': pattern },
-					{ 'gateway_data.LastName': pattern }
+					{ 'gateway_data.LastName': pattern },
+					{ 'portal_data.ReasonText': pattern },
+					{ 'portal_data.ReasonCode': pattern },
+					{ 'portal_data.MidNumber': pattern },
+					{ 'portal_data.CaseNumber': pattern }
 				]);
 			}
+
+			if (params.mids) { 
+				mid_array = parasm.mids.split(',')
+				query.where('portal_data.MidNumber').in( mid_array );
+			}
+        	
+			if (params.cctype) {
+				query.where('gateway_data.CcType').equals( params.cctype );
+			}
+
+			if (params.status) {
+				query.where('status').equals( params.status );
+			}
+
 
 			query.skip( (params.page ? ((+params.page - 1) * params.limit) : 0) );
 			query.limit((params.limit ? params.limit : 30));
@@ -67,7 +83,7 @@ module.exports = function(app) {
 
 		$()
 		.seq(function() {
-			Chargeback.findOne({'derived_data.uuid': req.params._id}, this);	
+			Chargeback.findById(req.params._id, this);	
 		})
 		.seq(function(data) {
 
@@ -84,8 +100,6 @@ module.exports = function(app) {
 	});
 
 	app.put('/api/v1/chargeback/:_id', mw.auth(), function(req, res, next) {
-
-		console.log('stingk')
 
 		$()
 		.seq(function() {

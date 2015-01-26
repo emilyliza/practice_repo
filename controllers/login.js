@@ -2,6 +2,7 @@ module.exports = function(app) {
 
 	var _ = require('underscore'),
 		$ = require('seq'),
+		Util = require('../lib/Util'),
 		jwt = require('jsonwebtoken'),
 		User = app.Models.get('User');
 

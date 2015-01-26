@@ -6,6 +6,7 @@ module.exports = function(app) {
 		_ = require('underscore'),
 		$ = require('seq'),
 		moment = require('moment'),
+		Util = require('../lib/Util'),
 		db = app.settings.db,
 		Schema = db.Schema,
 		ObjectId = Schema.ObjectId;
@@ -15,8 +16,8 @@ module.exports = function(app) {
 		'name': { type: String, required: true },
 		'username': { type: String, required: true, index: true },
 		'email': { type: String, required: true, unique: true, index: true },
-		'password': { type: String },
-		'active': { type: Boolean, default true },
+		'password': { type: String, set: Util.hash_password },
+		'active': { type: Boolean, default: true },
 		'timestamps': {
 			'createdOn': { type: Date },
 			'lastLogin': { type: Date },

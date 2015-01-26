@@ -3,6 +3,7 @@ module.exports = function(app) {
 	var _ = require('underscore'),
 		mw = require('./middleware'),
 		$ = require('seq'),
+		Util = require('../lib/Util'),
 		User = app.Models.get('User');
 		
 
