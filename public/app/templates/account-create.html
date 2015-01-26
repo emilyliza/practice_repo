@@ -1,0 +1,58 @@
+
+<div class="row search" style="margin-bottom: 20px;">
+	<div class="col-md-12">
+		<h2 style="margin-top: 0px;">Create Account</h2>
+	</div>
+</div>
+
+<div class="row">
+	
+	<div class="col-sm-4 col-sm-push-8 form-sidebar">
+
+	</div>
+	<div class="col-sm-8 col-sm-pull-4" cg-busy="{promise:accountService,message:'Creating Account',backdrop:true}">
+
+		<form name="registerForm" 
+				role="form" 
+				class="jgs-form" 
+				ng-submit="create(user)" novalidate >
+		
+			<div class="row">
+				<div class="col-md-6">
+					<div class="form-group" show-errors>
+						<label>Name</label>
+						<input name="name" type="text" required class="form-control" pop-show="{{errors.name}}" pop="{{errors.name}}" pop-placement="right" ng-model="user.name">
+					</div>
+				</div>
+				<div class="col-md-6">
+					<div class="form-group" show-errors>
+						<label>Username</label>
+						<input name="username" type="text" required class="form-control" pop-show="{{errors.username}}" pop="{{errors.username}}" pop-placement="right" ng-model="user.username">
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-md-12">
+					<div class="form-group" show-errors>
+						<label>Email</label>
+						<input name="email" type="email" required class="form-control" pop-show="{{errors.email}}" pop="{{errors.email}}" pop-placement="right" ng-model="user.email">
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-md-12">
+					<div class="form-group" show-errors>
+						<label>Password</label>
+						<input type="password" name="pass" required class="form-control" pop-show="{{errors.password}}" pop="{{errors.password}}" pop-placement="right" ng-model="user.password" />
+					</div>
+				</div>
+			</div>
+
+			<div class="form-group btns">
+				<button type="submit" class="btn btn-success pull-right">Create Account</button>
+			</div>
+		
+		</form>
+	</div>
+
+</div>

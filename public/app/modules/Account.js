@@ -1,23 +1,35 @@
 (function() {
 
-	angular.module('account', ['ui.router'])
+	angular.module('account', ['ui.router', 'user'])
 	
-	.config(['$stateProvider', function( $stateProvider ) {
+	.config(['$stateProvider', '$urlRouterProvider', function( $stateProvider, $urlRouterProvider ) {
 		
 		$stateProvider.state('account', {
 			url: '/account',
 			controller: 'AccountController',
 			requiresAuth: true,
-			templateUrl: '/app/templates/account.html'
+			templateUrl: '/app/templates/account-edit.html'
+		});
+		
+		$stateProvider.state('create', {
+			url: '/create',
+			controller: 'AccountController',
+			templateUrl: '/app/templates/account-create.html',
+			resolve: {
+				scroll:  function() {
+					$("html, body").animate({ scrollTop: 0 }, 200);
+				}
+			}
 		});
 
 	}])
 
-	.controller('AccountController', ['$scope', '$rootScope', 'AccountService', function ($scope, $rootScope, AccountService) {
+	.controller('AccountController', ['$scope', '$rootScope', '$state', 'AUTH_EVENTS', 'AccountService', 'UserService', function ($scope, $rootScope, $state, AUTH_EVENTS, AccountService, UserService) {
 		
+		$scope.user = {};
 		$scope.errors = {};
-		$scope.saved = false;
-
+		$scope.$state = $state;	// for navigation active to work		
+		
 		// watch for changes to clear out errors
 		$scope.$watch("currentUser", function(newValue, oldValue){
 			$scope.errors = null;
@@ -31,11 +43,35 @@
 			$scope.$broadcast('show-errors-check-validity');
 			if ($scope.acctForm.$valid) {
 				
-				data.fullname = data.fname + ' ' + data.lname;		// mostly for testing.
-
 				AccountService.save(data).then(function (user) {
 					$scope.setCurrentUser(user);
 					$scope.saved = true;
+				}, function (res) {
+					if (res.data.errors) {
+						$scope.errors = res.data.errors;
+					}
+				});
+
+			}
+		};
+
+		$scope.create = function(data) {
+			$scope.$broadcast('show-errors-check-validity');
+			if ($scope.registerForm.$valid) {
+				
+				AccountService.create(data).then(function (user) {
+					
+					$scope.accountService = UserService.login(user).then(function (user) {
+						$rootScope.$broadcast(AUTH_EVENTS.loginSuccess);
+						$scope.user = {};
+						$state.go('dashboard');
+					}, function (res) {
+						$rootScope.$broadcast(AUTH_EVENTS.loginFailed);
+						if (res.data.errors) {
+							$scope.errors = res.data.errors;
+						}
+					});
+
 				}, function (res) {
 					if (res.data.errors) {
 						$scope.errors = res.data.errors;
@@ -53,6 +89,14 @@
 		acctService.save = function(data) {
 			return $http
 			.put('/api/v1/user/' + data._id, data)
+			.then(function (res) {
+				return res.data;
+			});
+		};
+
+		acctService.create = function(data) {
+			return $http
+			.post('/api/v1/user', data)
 			.then(function (res) {
 				return res.data;
 			});
