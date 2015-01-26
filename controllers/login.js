@@ -77,16 +77,18 @@ module.exports = function(app) {
 		.seq(function(saved_user) {
 
 			// We are sending the profile inside the token
-			var token = jwt.sign({
+			var obj = {
 				"_id": saved_user._id,
 				"name": saved_user.name,
 				"username": saved_user.username
-			}, process.env.TOKEN_SECRET, { expiresInMinutes: 60*5 });
+			};
+			
+			var token = jwt.sign(obj, process.env.TOKEN_SECRET, { expiresInMinutes: 60*5 });
 
 			var query_end = new Date().getTime();
 			console.log("Login Time: " + (query_end - query_start) + "ms");
 
-			saved_user.authtoken = token;
+			saved_user.set('authtoken', token, { strict: false });
 
 			setTimeout(function() {
 				return res.json(saved_user);
