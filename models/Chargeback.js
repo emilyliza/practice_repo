@@ -11,7 +11,9 @@ module.exports = function(app) {
 
 	
 	var ChargebackSchema = new Schema({
-		'portal_data' : {
+		"status": { "type": String, "required": true, "index": true },
+		"merchant": { "type": String },
+		'portal' : {
 			'Portal'           : String,
 			'CaseNumber'       : Number,
 			'RefNumber'        : Number,
@@ -22,7 +24,7 @@ module.exports = function(app) {
 			'ReasonCode'       : String,
 			'ReasonText'       : String
 		},
-		'gateway_data' : {
+		'gateway' : {
 			'AuthCode'         : String,
 			'AvsStatus'        : String,
 			'FirstName'        : String,
@@ -46,7 +48,7 @@ module.exports = function(app) {
 			'TransType'        : String,
 			'TransDate'        : Date,
 		},
-		'crm_data' : {
+		'crm' : {
 			'OrderDate'          : Date,
 			'DeliveryAddr1'      : String,
 			'DeliveryAddr2'      : String,
@@ -73,30 +75,15 @@ module.exports = function(app) {
 			'TrackingNum'      : Number,
 			'TrackingSum'      : String
 		},
-		'uploads': {
-			'terms': [{
-				'_id': String ,
-				'extension': String,
-				'filename': String,	// original file name, pre _id naming
-				'mimetype': String,
-				'url': String
-			}],
-			'screens': [{
-				'_id': String,
-				'extension': String,
-				'filename': String,	// original file name, pre _id naming
-				'mimetype': String,
-				'url': String
-			}],
-		},
-		'additional_comments': String,
-		'derived_data' : {
-			'uuid'             : Number,
-			'CcNum'            : String,
-			'Merchant'         : String,
-			'CrmPuid'          : String,
-			"status"		   : {}
-		}
+		'uploads': [{
+			'type': String,	
+			'_id': String ,
+			'extension': String,
+			'filename': String,	// original file name, pre _id naming
+			'mimetype': String,
+			'url': String
+		}],
+		'additional_comments': String
 	}, { strict: true })
 	
 	
