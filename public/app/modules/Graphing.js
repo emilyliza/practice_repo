@@ -588,7 +588,7 @@
 					});
 
 					var build_months = [],
-						month_year_ago = moment().subtract(1, 'year').month(),
+						month_year_ago = moment().subtract(11, 'month').month(),
 						year_ago = moment().subtract(1, 'year').year();
 					for(var i = 0; i < 12; i++) {
 						var t = 0;
