@@ -36,7 +36,8 @@ var Schema = app.settings.db.Schema,
 
 require('../lib/appExtensions')(app);
 
-var Chargeback = app.Models.get('Chargeback');
+var Chargeback = app.Models.get('Chargeback'),
+	User = app.Models.get("User");
 
 $()
 .seq('config_file', function() {
@@ -76,22 +77,14 @@ $()
 .seq(function() {
 	Chargeback.remove({}, this);
 })
+.seq('user', function() {
+	User.findOne(this);
+})
 .seq(function() {
 	
 	var chance = new Chance(),
-		status = [{
-			name: 'Open',
-			color: 'green'
-		},{
-			name: 'Pending',
-			color: '#0d94c1'
-		},{
-			name: 'In-Progress',
-			color: 'orange'
-		},{
-			name: 'Complete',
-			color: '#ccc'
-		}],
+		status = ['New','In-Progress','Sent','Won','Lost'],
+		types = ["cp","cnp"],
 		rand = 1,
 		data = [];
 
@@ -101,6 +94,12 @@ $()
 
 	for(var i = 0; i < this.vars.total_records; i++) {
 		data.push({
+			"status": status[ randomIntFromInterval(0,status.length-1) ],
+			"merchant": { "type": String },
+			"createdOn": new Date(),
+			"chargebackDate": chance.date({year: 2015}),
+			"user": User.toMicro(this.vars.user),
+			"type": types[ randomIntFromInterval(0,types.length-1) ],
 			'portal_data' : {
 				'Portal'           : "",
 				'CaseNumber'       : chance.natural({min: 1, max: 100000}),
@@ -109,8 +108,8 @@ $()
 				'CcSuffix'         : "",
 				'ChargebackAmt'    : chance.floating({min: 1, max: 100, fixed: 2}),
 				'MidNumber'        : chance.natural({min: 1, max: 100000}),
-				'ReasonCode'       : "",
-				'ReasonText'       : ""
+				'ReasonCode'       : chance.syllable(),
+				'ReasonText'       : chance.sentence({words: 5})
 			},
 			'gateway_data' : {
 				'AuthCode'         : "",
@@ -134,10 +133,10 @@ $()
 				'TransId'          : chance.natural({min: 1, max: 100000}),
 				'TransStatus'      : "",
 				'TransType'        : "",
-				'TransDate'        : chance.date({year: 2014})
+				'TransDate'        : chance.date({year: 2015})
 			},
 			'crm_data' : {
-				'OrderDate'          : chance.date({year: 2014}),
+				'OrderDate'          : chance.date({year: 2015}),
 				'DeliveryAddr1'      : chance.address(),
 				'DeliveryAddr2'      : "",
 				'DeliveryCity'       : chance.city(),
@@ -159,17 +158,11 @@ $()
 			},
 			'shipping_data' : {
 				'has_tracking'     : chance.bool(),
-				'ShippingDate'     : chance.date({year: 2014}),
+				'ShippingDate'     : chance.date({year: 2015}),
 				'TrackingNum'      : chance.natural({min: 1, max: 100000}),
 				'TrackingSum'      : ""
-			},
-			'derived_data' : {
-				'uuid'             : chance.natural({min: 1, max: 100000}),
-				'CcNum'            : chance.cc(),
-				'Merchant'         : "",
-				'CrmPuid'          : "",
-				"status"		   : status[ randomIntFromInterval(0,status.length-1) ]
 			}
+			
 		});
 	}
 
