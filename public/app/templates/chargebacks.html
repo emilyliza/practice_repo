@@ -36,7 +36,7 @@
 	<div class="row" ng-repeat="cb in cbs.data">
 		<!-- <div class="col-sm-2"><a href="/chargeback/{{cb.derived_data.uuid}}">{{cb.portal_data.CaseNumber}}</a></div> -->
 		<!-- <div class="col-sm-4" style="color: {{cb.derived_data.status.color}}">{{cb.derived_data.status.name}}</div> -->
-		<div class="col-sm-2">{{cb.portal_data.RequestDate | date:'MMMM d, yyyy'}}</div>
+		<div class="col-sm-2">{{cb.chargebackDate | date:'MMMM d, yyyy'}}</div>
 		<div class="col-sm-1">{{cb.portal_data.ChargebackAmt | currency}}</div>
 		<div class="col-sm-2">{{cb.gateway_data.FirstName}} {{cb.gateway_data.LastName}}</div>
 		<div class="col-sm-2">{{cb.portal_data.MidNumber}}</div>
@@ -47,8 +47,8 @@
 			-->
 		</div>
 		<div class="col-sm-2">
-			<a ng-if="cb.derived_data.status == 'new'" class="btn btn-sm btn-success" href="/chargeback/{{cb.derived_data.uuid}}/card">Work This Chargeback <span class="glyphicon glyphicon-chevron-right"></span></a>
-			<a ng-if="cb.derived_data.status != 'new'" href="/chargeback/{{cb.derived_data.uuid}}">{{cb.portal_data.CaseNumber}}</a>
+			<a ng-if="cb.derived_data.status == 'New'" class="btn btn-sm btn-success" href="/chargeback/{{cb._id}}/card">Work This Chargeback <span class="glyphicon glyphicon-chevron-right"></span></a>
+			<a ng-if="cb.derived_data.status != 'New'" href="/chargeback/{{cb._id}}">{{cb.portal_data.CaseNumber}}</a>
 		</div>
 
 	</div>

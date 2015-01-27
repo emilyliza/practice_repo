@@ -17,6 +17,9 @@ module.exports = function(app) {
 		.seq(function() {
 			var query = Chargeback.find();
 
+			// restrict to just this user's chargebacks
+			query.where('user._id', req.user._id);
+
 			if (params.start) {
 				query.where('chargebackDate').gte( moment(parseInt(params.start)).toDate() );
 			}
@@ -54,11 +57,10 @@ module.exports = function(app) {
 				query.where('status').equals( params.status );
 			}
 
-
 			query.skip( (params.page ? ((+params.page - 1) * params.limit) : 0) );
 			query.limit((params.limit ? params.limit : 30));
 
-			query.sort('-gateway_data.TransDate');
+			query.sort('-chargebackDate');
 			
 			console.log('Chargeback Query...');
 			console.log(query._conditions);

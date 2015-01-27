@@ -184,7 +184,7 @@
 		};
 
 		this.save = function(data) {
-			return $http.put('/api/v1/chargeback/' + data.derived_data.uuid, data);
+			return $http.put('/api/v1/chargeback/' + data._id, data);
 		};
 
 	}]);

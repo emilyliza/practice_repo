@@ -8,7 +8,8 @@ module.exports = function(app) {
 		Util = require('../lib/Util'),
 		Schema = db.Schema,
 		ObjectId = Schema.ObjectId,
-		_ = require('underscore');
+		_ = require('underscore'),
+		UserMicro = require('./UserMicro');
 
 	
 	var ChargebackSchema = new Schema({
@@ -16,6 +17,7 @@ module.exports = function(app) {
 		"merchant": { "type": String },
 		"createdOn": { "type": Date },
 		"chargebackDate": { "type": Date },
+		"type": { "type": String, "required": true, "enum": ["cp","cnp"] },
 		'portal_data' : {
 			'Portal'           : String,
 			'CaseNumber'       : Number,
@@ -88,6 +90,7 @@ module.exports = function(app) {
 		}],
 		'additional_comments': String
 	}, { strict: true })
+	.plugin(UserMicro, { path: 'user', objectid: ObjectId });
 	
 	
 	db.model('Chargeback', ChargebackSchema);
