@@ -87,6 +87,8 @@ $()
 		status = ['New','In-Progress','Sent','Won','Lost'],
 		types = ["cp","cnp"],
 		rand = 1,
+		mids = [ 12346775, 99883456, 1234567744, 12323434, 111112343211, 12121212, 4565456, 66978797 ],
+		merchants = ["Merchant A", "Merchant B", "Merchant C", "Merchant D"],
 		data = [];
 
 	function randomIntFromInterval(min,max) {
@@ -96,7 +98,7 @@ $()
 	for(var i = 0; i < this.vars.total_records; i++) {
 		data.push({
 			"status": status[ randomIntFromInterval(0,status.length-1) ],
-			"merchant": { "type": String },
+			"merchant": merchants[ randomIntFromInterval(0,merchants.length-1) ],
 			"createdOn": new Date(),
 			"chargebackDate": chance.date({month: moment().month(), year: moment().year()}),
 			"user": User.toMicro(this.vars.user),
@@ -108,7 +110,7 @@ $()
 				'CcPrefix'         : "",
 				'CcSuffix'         : "",
 				'ChargebackAmt'    : chance.floating({min: 1, max: 100, fixed: 2}),
-				'MidNumber'        : chance.natural({min: 1, max: 100000}),
+				'MidNumber'        : mids[ randomIntFromInterval(0,mids.length-1) ],
 				'ReasonCode'       : chance.syllable(),
 				'ReasonText'       : chance.sentence({words: 5})
 			},

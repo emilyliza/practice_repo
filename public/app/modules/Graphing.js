@@ -177,7 +177,7 @@
 					var sum = 0;
 					 _.each(res.data, function(d) {
 					 	if (res.data_type == "currency") {
-					 		sum += (d.val / 100);
+					 		sum += (d.val);
 					 	} else {
 					 		sum += d.val;
 					 	}
@@ -187,8 +187,8 @@
 					function filterData(element, index, array) {
 						element.name = res.data[index].name;
 						if (res.data_type == "currency") {
-							element.value = res.data[index].val / 100;
-							element.pct = (res.data[index].val / 100) / sum;
+							element.value = res.data[index].val;
+							element.pct = (res.data[index].val) / sum;
 						} else {
 							element.value = res.data[index].val;
 							element.pct = (res.data[index].val) / sum;
@@ -235,7 +235,7 @@
 								} else {
 									tt += $filter('number')(d.value);
 								}
-								tt += " or " + Math.round( d.pct * 10000)/100 + '%';
+								tt += " or " + Math.round( d.pct * 100) + '%';
 								tt += '</div>';
 
 								d3.select("#tooltip")
