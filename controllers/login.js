@@ -20,9 +20,11 @@ module.exports = function(app) {
 			return res.json(401, errors );
 		}
 
+		var errors = {};
 		if (!process.env.TOKEN_SECRET) {
 			console.log('NO ENV TOKEN_SECRET!!');
-			return res.json(401);
+			errors['username'] = "No token.";
+			return res.json(401, errors);
 		}
 
 		// clean data.
@@ -43,23 +45,29 @@ module.exports = function(app) {
 				q = User.findOne();
 			q.where('active', true);
 			q.where('username', query_reg);
+			if (req.body.admin) {
+				q.where('admin', true);
+			}
 			q.exec(this);
 		})
 		.seq(function() {
 			
 			if (!this.vars.user) {
 				console.log('user not found.');
-				return res.json(404, [{ "username": "User does not exist."}]);
+				errors['username'] = "User does not exist.";
+				return res.json(404, errors);
 			}
 
 			if (!this.vars.user.password) {
 				console.log('no password.');
-				return res.json(400, [{ "password": "No password set for this user. Access denied."}]);
+				errors['username'] = "No password set for this user. Access denied.";
+				return res.json(400, errors);
 			}
 
 			if (!Util.compare_password(req.body.password, this.vars.user.password)) { 
 				console.log('invalid password');
-				return res.json(401, [{ "password": "Invalid password"}]);
+				errors['password'] = "Invalid password";
+				return res.json(401, errors);
 			}
 
 			// any data updates here.
@@ -82,6 +90,11 @@ module.exports = function(app) {
 				"name": saved_user.name,
 				"username": saved_user.username
 			};
+
+			// store admin flag in session token
+			if (req.body.admin) {
+				obj.admin = true;
+			}
 			
 			var token = jwt.sign(obj, process.env.TOKEN_SECRET, { expiresInMinutes: 60*5 });
 

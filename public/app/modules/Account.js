@@ -61,7 +61,12 @@
 				
 				AccountService.create(data).then(function (user) {
 					
-					$scope.accountService = UserService.login(user).then(function (user) {
+					var payload = {
+						'username': user.username,
+						'password': $scope.user.password
+					};
+
+					$scope.accountService = UserService.login(payload).then(function (user) {
 						$rootScope.$broadcast(AUTH_EVENTS.loginSuccess);
 						$scope.user = {};
 						$state.go('dashboard');

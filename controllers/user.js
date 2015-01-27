@@ -63,7 +63,7 @@ module.exports = function(app) {
 			user.save(this);
 		})
 		.seq(function(user) {
-			return req.json(user);
+			return res.json(user);
 		})
 		.catch(next);
 

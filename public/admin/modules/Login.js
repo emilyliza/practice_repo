@@ -15,12 +15,12 @@
 		
 		$stateProvider
 		.state('login', {
-			url: '/login',
+			url: '/admin/login',
 			controller: 'LoginController',
-			templateUrl: '/app/templates/login.html'
+			templateUrl: '/admin/templates/login.html'
 		})
 		.state('logout', {
-			url: '/logout',
+			url: '/admin/logout',
 			controller: 'LogoutController'
 		});
 
@@ -50,6 +50,7 @@
 			$scope.$broadcast('show-errors-check-validity');
 			if ($scope.loginForm.$valid) {
 				
+				credentials.admin = true;
 				$scope.loginService = UserService.login(credentials).then(function (user) {
 					$rootScope.$broadcast(AUTH_EVENTS.loginSuccess);
 					$scope.credentials = {};

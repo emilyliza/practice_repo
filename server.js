@@ -109,6 +109,12 @@ require('./controllers/login')(app);
 require('./controllers/reset')(app);
 require('./controllers/forgot')(app);
 
+// for admin area
+app.get(/^\/admin(.*)$/, function(req, res, next) {
+	res.sendfile('./public/admin.html'); 
+});
+
+
 if(process.env.NODE_ENV == 'production') {
 	app.use(function(req, res){
 		res.sendfile('./dist/index.html'); 
@@ -133,6 +139,8 @@ app.use(function(err, req, res, next) {
 	}
 
 });
+
+
 
 
 
