@@ -149,7 +149,7 @@
 				opened: false
 			},
 			end: {
-				val: new Date(),
+				val: moment().toDate(),
 				opened: false
 			}
 		};

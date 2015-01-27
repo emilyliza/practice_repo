@@ -165,7 +165,7 @@
     		
 
     		var url = '/api/v1/chargebacks?page=' + this.page;
-    		url += '&start=' + this.start + "&end=" + this.end;
+    		//url += '&start=' + this.start + "&end=" + this.end;
     		url += '&query=' + this.query;
     		
     		// additional params such as start, end, cctype, merchanct, etc
