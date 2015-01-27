@@ -4,6 +4,7 @@ var $ = require('seq'),
 	fs = require('fs'),
 	program = require('commander'),
 	fs = require('fs'),
+	moment = require('moment'),
 	Chance = require('chance')
 	streamExec = function(cmd, options, fn) {
 		return function() {
@@ -97,7 +98,7 @@ $()
 			"status": status[ randomIntFromInterval(0,status.length-1) ],
 			"merchant": { "type": String },
 			"createdOn": new Date(),
-			"chargebackDate": chance.date({year: 2015}),
+			"chargebackDate": chance.date({month: moment().month(), year: moment().year()}),
 			"user": User.toMicro(this.vars.user),
 			"type": types[ randomIntFromInterval(0,types.length-1) ],
 			'portal_data' : {
@@ -136,7 +137,7 @@ $()
 				'TransDate'        : chance.date({year: 2015})
 			},
 			'crm_data' : {
-				'OrderDate'          : chance.date({year: 2015}),
+				'OrderDate'          : chance.date({month: moment().month(), year: moment().year()}),
 				'DeliveryAddr1'      : chance.address(),
 				'DeliveryAddr2'      : "",
 				'DeliveryCity'       : chance.city(),
@@ -158,7 +159,7 @@ $()
 			},
 			'shipping_data' : {
 				'has_tracking'     : chance.bool(),
-				'ShippingDate'     : chance.date({year: 2015}),
+				'ShippingDate'     : chance.date({month: moment().month(), year: moment().year()}),
 				'TrackingNum'      : chance.natural({min: 1, max: 100000}),
 				'TrackingSum'      : ""
 			}
