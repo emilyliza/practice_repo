@@ -11,13 +11,19 @@ module.exports = function(app) {
 
 	app.get("/api/v1/history?", mw.auth(), function(req, res, next) {
 
-		
 		var start_date = moment().subtract(1, 'year').toDate(),
-			search = [{
-				'$match': {
-					'chargebackDate': { '$gte': start_date },
-					'user._id': mongoose.Types.ObjectId( req.user._id )
-				}
+			match = {
+				'chargebackDate': { '$gte': start_date },
+				'user._id': mongoose.Types.ObjectId( req.user._id )
+			};	
+		
+		if (req.query.mids) {
+			var mid_array = req.query.mids.split(',')
+			match['portal_data.MidNumber'] = { '$in': mid_array }
+		}
+		
+		var search = [{
+				'$match': match
 				},{
 					'$project': {
 						'_id': 0,
