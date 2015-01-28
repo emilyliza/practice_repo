@@ -20,6 +20,7 @@
 	])
 
 	.config(['$locationProvider', '$urlRouterProvider', 'datepickerPopupConfig', function( $locationProvider, $urlRouterProvider, $datepickerPopupConfig) {
+		moment.defaultFormat = "YYYY-MM-DDTHH:mm:ss.SSS\\Z";
 		$locationProvider.html5Mode(true).hashPrefix('!');
 		$datepickerPopupConfig.appendToBody = true;
 	}])

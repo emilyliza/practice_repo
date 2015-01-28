@@ -582,14 +582,14 @@
 					var test_months = [];
 					
 					data.forEach(function(d) {
-						d.date = parseDate(d.date);
+						//d.date = parseDate(d.date);
 						d.total = +d.total;
-						test_months[ moment(d.date).month() ] = +d.total;
+						test_months[ moment(d.date, "YYYY-MM-DD").month() ] = +d.total;
 					});
 
 					var build_months = [],
-						month_year_ago = moment().subtract(11, 'month').month(),
-						year_ago = moment().subtract(1, 'year').year();
+						month_year_ago = moment().utc().subtract(11, 'month').month(),
+						year_ago = moment().utc().subtract(1, 'year').year();
 					for(var i = 0; i < 12; i++) {
 						var t = 0;
 						
@@ -597,7 +597,7 @@
 							t = test_months[ month_year_ago + "" ];
 						}
 						build_months.push({
-							date: parseDate( moment( year_ago + "-" + (month_year_ago + 1) + "-01" ).format('YYYY-MM-DD') ),
+							date: parseDate( moment( year_ago + "-" + (month_year_ago + 1) + "-01", "YYYY-MM-DD" ).utc().format('YYYY-MM-DD') ),
 							total: t
 						});
 						

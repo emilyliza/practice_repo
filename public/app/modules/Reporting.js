@@ -145,23 +145,25 @@
 
 		$scope.date = {
 			start: {
-				val: moment().subtract(1, 'month').toDate(),
+				val: moment().utc().subtract(1, 'month').format(),
 				opened: false
 			},
 			end: {
-				val: moment().toDate(),
+				val: moment().utc().format(),
 				opened: false
 			}
 		};
 		ReportingService.setDates($scope.date);
 
 		$scope.$watch("date.start.val", function(newValue, oldValue){
+			//@TODO: alert location for history option, like chargeback list
 			ReportingService.setDates($scope.date);
 			if ($scope.last) {
 				$scope[$scope.last]();
 			}
 		});
 		$scope.$watch("date.end.val", function(newValue, oldValue){
+			//@TODO: alert location for history option, like chargeback list
 			ReportingService.setDates($scope.date);
 			if ($scope.last) {
 				$scope[$scope.last]();

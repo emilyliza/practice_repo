@@ -13,25 +13,30 @@
 	
 	}])
 
-	.controller('ChargebacksController', ['$scope', '$timeout', 'ChargebacksService', 'UserService', '$state', function($scope, $timeout, ChargebacksService, UserService, $state) {
+	.controller('ChargebacksController', ['$scope', '$timeout', 'ChargebacksService', 'UserService', '$state', '$location', function($scope, $timeout, ChargebacksService, UserService, $state, $location) {
 		
+		var s = moment().utc().subtract(6, 'month').format(),
+			e = moment().utc().format();
+
+		if ($state.params.start) {
+			s = moment( parseInt($state.params.start) ).utc().format();
+		}
+		if ($state.params.end) {
+			e = moment( parseInt($state.params.end) ).utc().format();
+		}
+
 		$scope.date = {
 			start: {
-				val: moment().subtract(6, 'month').toDate(),
+				val: s,
 				opened: false
 			},
 			end: {
-				val: moment().toDate(),
+				val: e,
 				opened: false
 			}
 		};
 
-		if ($state.params.start) {
-			$scope.date.start.val = moment().millisecond($state.params.start).toDate();
-		}
-		if ($state.params.end) {
-			$scope.date.end.val = moment().millisecond($state.params.end).toDate();
-		}
+		
 
 		$scope.filters = "";
 		_.forOwn($state.params, function(num,key) {
@@ -49,16 +54,22 @@
 		
 
 		$scope.cbs = new ChargebacksService();	
-		$scope.cbs.setDates($scope.date);
-
+		
+		$scope.load_start = false;
+		$scope.load_end = false;
 		$scope.$watch("date.start.val", function(newValue, oldValue){
-			$scope.cbs.setDates($scope.date);
-			$scope.cbs.clearAndRun();
+			if ($scope.load_start) {
+				$location.search('start', moment(new Date(newValue)).utc().valueOf() );
+			}
+			$scope.load_start = true;
 		});
 		$scope.$watch("date.end.val", function(newValue, oldValue){
-			$scope.cbs.setDates($scope.date);
-			$scope.cbs.clearAndRun();
+			if ($scope.load_end) {
+				$location.search('end', moment(new Date(newValue)).utc().valueOf() );
+			}
+			$scope.load_end = true;
 		});
+		
 
 		$scope.download = function() {
 			var url = $scope.cbs.nextPage(true);
@@ -84,22 +95,21 @@
 			this.query = '';
 			this.lastQuery = '';
 			this.filterTextTimeout = false;
-			this.start = moment().subtract(3, 'month').toDate();
+			this.start = moment().utc().subtract(3, 'month');
 			this.end = new Date();
 			this.loaded = false;
 		};
 
-		ChargebacksService.prototype.setDates = function(d) {
-			this.start = moment(d.start.val).valueOf();
-			this.end = moment(d.end.val).valueOf();
+		ChargebacksService.prototype.clear = function() {
+			// reset
+			this.page = 1;
+			this.data = [];
+			this.query = "";
+			this.loaded = false;
+			this.last_page = false;
+			return;
 		};
-
-		ChargebacksService.prototype.getDates = function() {
-			return {
-				start: this.start,
-				end: this.end
-			};
-		};
+		
 
 		ChargebacksService.prototype.clearAndRun = function(q) {
 			// reset
