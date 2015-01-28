@@ -38,7 +38,7 @@
 			if ($state.params[key] && _.contains(['status', 'merchant', 'mids', 'cctype'], key)) {
 				if ($scope.filters) { $scope.filters += ", "; }
 				if (key == "mids" && $state.params[key].split(',').length > 1) {
-					var m = UserService.getMerchantFromMids($state.params[key]);
+					var m = UserService.getMerchantFromMids( $state.params[key] );
 					$scope.filters += "Merchant=" + m + " (all mids)";
 				} else {
 					$scope.filters += key + "=" + $state.params[key];	

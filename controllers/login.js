@@ -4,7 +4,9 @@ module.exports = function(app) {
 		$ = require('seq'),
 		Util = require('../lib/Util'),
 		jwt = require('jsonwebtoken'),
-		User = app.Models.get('User');
+		mongoose = require('mongoose'),
+		User = app.Models.get('User'),
+		Chargeback = app.Models.get('Chargeback');
 
 		
 
@@ -82,13 +84,33 @@ module.exports = function(app) {
 			this.vars.user.save(this);
 
 		})
-		.seq(function(saved_user) {
+		.seq(function() {
+
+			var search = [
+				{ '$match': {
+					'user._id': mongoose.Types.ObjectId( this.vars.user._id )
+				}},
+				{ '$project': {
+					'_id': 0,
+					'merchant': "$merchant",
+					'mids': "$portal_data.MidNumber"
+				}},
+				{ '$group': {
+					'_id': { 'merchant': '$merchant' },
+					'mids': { '$addToSet': "$mids" }
+				}}
+			];
+			console.log(search);
+			Chargeback.aggregate(search, this);
+
+		})
+		.seq(function(merchants) {
 
 			// We are sending the profile inside the token
 			var obj = {
-				"_id": saved_user._id,
-				"name": saved_user.name,
-				"username": saved_user.username
+				"_id": this.vars.user._id,
+				"name": this.vars.user.name,
+				"username": this.vars.user.username
 			};
 
 			// store admin flag in session token
@@ -101,13 +123,21 @@ module.exports = function(app) {
 			var query_end = new Date().getTime();
 			console.log("Login Time: " + (query_end - query_start) + "ms");
 
-			saved_user.set('authtoken', token, { strict: false });
+			this.vars.user.set('authtoken', token, { strict: false });
+			this.vars.user.password = undefined;
 
-			saved_user.password = undefined;
+			var merchs = [];
+			_.each(merchants, function(m) {
+				merchs.push({
+					name: m._id.merchant,
+					mids: m.mids
+				});
+			});
 
-			setTimeout(function() {
-				return res.json(saved_user);
-			},0);
+			this.vars.user.set('merchants', merchs, { strict: false });
+
+			return res.json(this.vars.user);
+			
 
 		})
 		.catch(next);

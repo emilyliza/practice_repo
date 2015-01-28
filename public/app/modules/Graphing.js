@@ -269,7 +269,7 @@
 									mstr = '';
 									_.each(merchant.mids, function(m) {
 										if (mstr) { mstr += ","; }
-										mstr += m.mid;
+										mstr += m;
 									});
 									params['mids'] = mstr;
 								}

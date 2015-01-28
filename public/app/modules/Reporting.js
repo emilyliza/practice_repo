@@ -330,7 +330,7 @@
 			var mids_str = "";
 			_.each(merchants[merchant].mids, function(mid) {
 				if (mids_str) { mids_str += ","; }
-				mids_str += mid.mid;
+				mids_str += mid;
 			});
 			return mids_str;
 		};
