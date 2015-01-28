@@ -150,10 +150,6 @@
 			this.busy = true;
     		var _this = this;
 
-    		console.log('nextPage');
-    		console.log('\tQuery: ' + this.query);
-    		console.log('\tLast: ' + this.lastQuery);
-    		//console.log($state.params);
 
 			if (this.query && this.lastQuery != this.query) {
     			// new query, reset list
@@ -162,8 +158,6 @@
     			this.lastQuery = this.query;
     		}
     		
-    		
-
     		var url = '/api/v1/chargebacks?page=' + this.page;
     		//url += '&start=' + this.start + "&end=" + this.end;
     		url += '&query=' + this.query;
@@ -186,6 +180,12 @@
     			this.busy = false;
     			return;
     		}
+
+    		console.log('nextPage');
+    		console.log('\tQuery: ' + this.query);
+    		console.log('\tLast: ' + this.lastQuery);
+    		console.log('\tPage: ' + this.page);
+    		console.log('\tLast Page: ' + this.last_page);
 
     		$http.get(url)
 			.success(function (rows) {
