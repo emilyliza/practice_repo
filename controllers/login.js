@@ -98,6 +98,9 @@ module.exports = function(app) {
 				{ '$group': {
 					'_id': { 'merchant': '$merchant' },
 					'mids': { '$addToSet': "$mids" }
+				}},
+				{ '$sort': {
+					"_id.merchant": 1
 				}}
 			];
 			console.log(search);
