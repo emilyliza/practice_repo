@@ -25,7 +25,7 @@ module.exports = function(app) {
 			'CcPrefix'         : String,
 			'CcSuffix'         : String,
 			'ChargebackAmt'    : Number,
-			'MidNumber'        : Number,
+			'MidNumber'        : String,
 			'ReasonCode'       : String,
 			'ReasonText'       : String
 		},
