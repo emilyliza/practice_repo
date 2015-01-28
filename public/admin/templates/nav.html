@@ -13,7 +13,7 @@
 		</div>
 
 		<div class="navbar-collapse collapse"  collapse="isCollapsed">
-			<p ng-if="currentUser" class="navbar-text pull-right">{{ currentUser.fullname }}</p>
+			<p ng-if="currentUser" class="navbar-text pull-right">{{ currentUser.name }}</p>
 			<ul class="nav navbar-nav" ng-if="!currentUser">
 				<li ng-class="{active: $state.includes('login')}"><a ui-sref="login">Login</a></li>
 			</ul>
