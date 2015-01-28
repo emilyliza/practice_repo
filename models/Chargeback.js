@@ -17,7 +17,7 @@ module.exports = function(app) {
 		"merchant": { "type": String },
 		"createdOn": { "type": Date },
 		"chargebackDate": { "type": Date },
-		"type": { "type": String, "required": true, "enum": ["cp","cnp"] },
+		"type": { "type": String },		// an enum of cp or cnp
 		'portal_data' : {
 			'Portal'           : String,
 			'CaseNumber'       : Number,

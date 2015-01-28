@@ -14,7 +14,6 @@
 			resolve: {
 				res: ['$http', '$stateParams', 'ChargebackService', function($http, $stateParams, ChargebackService){
 					return ChargebackService.get($stateParams._id);
-						
 				}]
 			}
 		})
@@ -22,6 +21,7 @@
 			url: '/card',
 			requiresAuth: true,
 			templateUrl: '/app/templates/chargeback.card.html'
+			
 		})
 		.state('chargeback.chargeback', {
 			url: '/chargeback',
@@ -78,12 +78,17 @@
 
 		$scope.setCard = function(c) {
 			$scope.cardpresent = false;
-			if (c == "present") {
+			$scope.data.type == c;
+			if (c == "cp") {
 				$scope.cardpresent = true;
 			}
-			$state.go('chargeback.chargeback');
+			if (c && $state.current.name == "chargeback.card") {
+				$state.go('chargeback.chargeback');
+			}
 		};
 
+		$scope.setCard($scope.data.type);	
+		
 		$scope.data.uploads = {
 			'adds': [],
 			'terms': [],
@@ -91,6 +96,7 @@
 			'shippings': []
 		};
 
+		
 		//$scope.uploaderTerms = UploadService.create(($scope.data.uploads.terms || {}), 10);
 		$scope.uploaderTerms = UploadService.create({}, 10);
 		$scope.uploaderTerms.onWhenAddingFileFailed = function() {

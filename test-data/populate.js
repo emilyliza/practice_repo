@@ -96,13 +96,19 @@ $()
 	}
 
 	for(var i = 0; i < this.vars.total_records; i++) {
+		var temp_status = status[ randomIntFromInterval(0,status.length-1) ],
+			temp_type = "";
+		if (temp_status != "New") {
+			temp_type = types[ randomIntFromInterval(0,types.length-1) ];
+		}
+
 		data.push({
-			"status": status[ randomIntFromInterval(0,status.length-1) ],
+			"status": temp_status,
 			"merchant": merchants[ randomIntFromInterval(0,merchants.length-1) ],
 			"createdOn": new Date(),
 			"chargebackDate": chance.date({month: moment().month(), year: moment().year()}),
 			"user": User.toMicro(this.vars.user),
-			"type": types[ randomIntFromInterval(0,types.length-1) ],
+			"type": temp_type,
 			'portal_data' : {
 				'Portal'           : "",
 				'CaseNumber'       : chance.natural({min: 1, max: 100000}),

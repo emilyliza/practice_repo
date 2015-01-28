@@ -31,7 +31,7 @@
 			</div>
 
 			<div class="row" ng-repeat="cb in dbs.data_chargebacks">
-				<div class="col-sm-2">{{cb.portal_data.RequestDate | date:'MM/dd/yyyy'}}</div>
+				<div class="col-sm-2">{{cb.chargebackDate | date:'MM/dd/yyyy'}}</div>
 				<div class="col-sm-1">{{cb.portal_data.ChargebackAmt | currency}}</div>
 				<div class="col-sm-2">{{cb.portal_data.MidNumber}}</div>
 				<div class="col-sm-3">
@@ -42,7 +42,7 @@
 				</div>
 				<div class="col-sm-2">{{cb.portal_data.CaseNumber}}</div>
 				<div class="col-sm-2">
-					<a class="btn btn-sm btn-success" href="/chargeback/{{cb.derived_data.uuid}}/card">Work This Chargeback <span class="glyphicon glyphicon-chevron-right"></span></a>
+					<a class="btn btn-sm btn-success" href="/chargeback/{{cb._id}}/card">Work This Chargeback <span class="glyphicon glyphicon-chevron-right"></span></a>
 				</div>
 			</div>
 			
