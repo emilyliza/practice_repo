@@ -103,6 +103,8 @@ module.exports = function(app) {
 
 			saved_user.set('authtoken', token, { strict: false });
 
+			saved_user.password = undefined;
+
 			setTimeout(function() {
 				return res.json(saved_user);
 			},0);

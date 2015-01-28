@@ -43,7 +43,7 @@
 			$scope.$broadcast('show-errors-check-validity');
 			if ($scope.acctForm.$valid) {
 				
-				AccountService.save(data).then(function (user) {
+				$scope.accountService = AccountService.save(data).then(function (user) {
 					$scope.setCurrentUser(user);
 					$scope.saved = true;
 				}, function (res) {

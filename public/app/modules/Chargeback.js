@@ -132,7 +132,7 @@
 			_.each(popups, function(p) { p.remove(); });
 			
 			// if new value, save it.
-			if ($scope.data && $scope.data.derived_data && $scope.data.derived_data.uuid && JSON.stringify(newValue) != JSON.stringify(oldValue)) {
+			if ($scope.data && $scope.data._id && JSON.stringify(newValue) != JSON.stringify(oldValue)) {
 				if ($scope.timeout) {
 					$timeout.cancel($scope.timeout);
 				}

@@ -106,8 +106,8 @@ module.exports = function(app) {
 			}
 			user.save(this);
 		})
-		seq(function(user) {
-			return req.json(user);
+		.seq(function(user) {
+			return res.json(user);
 		})
 		.catch(next);
 
