@@ -16,7 +16,13 @@ middleware.auth = function() {
 			return res.send(401);
 		}		
 
-		var token = req.headers.authorization;
+		var token = false;
+		if (req.headers.authorization) {
+			token = req.headers.authorization;
+		} else if (req.query.cbkey) {
+			token = req.query.cbkey;
+		}
+
 		if (!token) {
 			console.log('no auth header');
 			return res.send(401);
