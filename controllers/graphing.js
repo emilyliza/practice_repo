@@ -3,7 +3,6 @@ module.exports = function(app) {
 	var _ = require('underscore'),
 		$ = require('seq'),
 		mw = require('./middleware'),
-		csv = require('express-csv'),
 		Chargeback = app.Models.get('Chargeback');
 		
 

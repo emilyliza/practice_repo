@@ -80,9 +80,7 @@
 		this.getMerchantFromMids = function(mids) {
 			var merchants = this.getCurrentUser().merchants,
 				found = false;
-				console.log(mids.split(','));
 			_.each(merchants, function(m) {
-				console.log(m.mids)
 				var baz = _.difference(mids.split(','), m.mids);
 				if (!baz.length) {
 					found = m.name;
