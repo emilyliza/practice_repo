@@ -10,6 +10,7 @@
 		"user",
 		"login",
 		"dashboard",
+		"csvupload",
 		"home"
 	])
 

@@ -1,0 +1,38 @@
+
+
+<div class="row search" style="margin-bottom: 20px;">
+	<div class="col-md-12">
+		<h2 style="margin-top: 0px;">Upload CSV File</h2>
+	</div>
+</div>
+
+<div class="row">
+	
+	<div class="col-sm-4 col-sm-push-8 form-sidebar">
+	Use this to upload files to CART
+	</div>
+	<div class="col-sm-8 col-sm-pull-4" >
+
+		<ng-csv-import class="import" content="csv.content" header="true" separator="','" result="csv.result"></ng-csv-import>
+
+		<div class="row" style="margin-top: 20px;" ng-if="fields.length > 0">
+			<div class="col-md-12"><h4>CSV Field Mapper</h4></div>
+		</div>
+		<table class="table table-bordered" ng-if="fields.length > 0">
+			<tr>
+				<td><b>Uploaded Field Name</b></td>
+				<td><b>Example Data</b></td>
+				<td><b>Mapped Field</b></td>
+			</tr>
+			<tr ng-repeat="f in fields">
+				<td>{{f.field}}</td>
+				<td>{{f.example}}</td>
+				<td>
+					<input ng-model="map[f.field]" ng-blur="blowItUp()" typeahead="field for field in cbFields | filter:$viewValue | limitTo:8" class="form-control" placeholder="Find Corresponding Field" />
+				</td>
+			</tr>
+		</table>
+
+    </div>
+</div>
+
