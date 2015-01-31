@@ -6,7 +6,6 @@ var fs = require('fs'),
 	path = require('path'),
 	_ = require('underscore'),
 	expressValidator = require('express-validator'),
-	winston = require('winston'),
 	logger = require('morgan'),
     bodyParser = require('body-parser'),
 	methodOverride = require('method-override'),
@@ -47,24 +46,41 @@ app.use(device.capture());
 app.use(methodOverride());
 
 
-var wlogger = new (winston.Logger)({
-	transports: [
-		new winston.transports.Console({
-			colorize: true
-		})
-	],
-	expressFormat: true,
-	colorStatus: true
-});
+var le_log = false;
+if (process.env.NODE_ENV == "production" && process.env.LOGENTRIES) {
+	var logentries = require('le_node');
+	le_log = logentries.logger({
+		token: process.env.LOGENTRIES
+	});
+}
 
-//app.use(logger('combined'));
-// enable web server logging; pipe those log messages through winston
-var winstonStream = {
+processLog = function(m) {
+	if (le_log) {
+		le_log.info(m);
+	};
+	return console.log(m);
+}
+
+
+var	log = {
+	log: function(m) { processLog(m); },
+	info: function(m) { processLog(m); },
+	debug: function(m) { processLog(m); },
+	notice: function(m) { processLog(m); },
+	warning: function(m) { processLog(m); },
+	err: function(m) { processLog(m); }
+};
+
+app.set('log', log);
+
+
+var myStream = {
 	write: function(message, encoding){
-		wlogger.info(message);
+		log.info(message);
 	}
 };
-app.use(logger('combined', {stream: winstonStream}))
+app.use(logger('combined', {stream: myStream}))
+
 
 
 if(process.env.NODE_ENV == 'production') {
@@ -74,42 +90,8 @@ if(process.env.NODE_ENV == 'production') {
 }
 
 
-
-var log;
-if (process.env.NODE_ENV == "production" && process.env.LOGENTRIES) {
-	var logentries = require('le_node');
-	log = logentries.logger({
-		token: process.env.LOGENTRIES
-	});
-	log.winston( winston )
-} else {
-	log = {
-		winston: {
-			log: function(d) { console.log(d); },
-			info: function(d) { console.log(d); },
-			debug: function(d) { console.log(d); },
-			notice: function(d) { console.log(d); },
-			warning: function(d) { console.log(d); },
-			err: function(d) { console.log(d) }
-		}
-	};
-}
-
-// create shorthand wrapper
-var mylog = {
-	log: function(m) { log.winston.log(m); },
-	info: function(m) { log.winston.info(m); },
-	debug: function(m) { log.winston.debug(m); },
-	notice: function(m) { log.winston.notice(m); },
-	warning: function(m) { log.winston.warning(m); },
-	err: function(m) { log.winston.err(m); }
-}
-
-app.set('mylog', mylog);
-
-
 process.on('uncaughtException', function(err) {
-	mylog.err(err.stack);
+	log.err(err.stack);
 	if (process.env.NODE_ENV === 'development' || process.env.NODE_ENV === 'local') {
 		process.exit(1);
 	} else {
@@ -126,9 +108,9 @@ process.on('uncaughtException', function(err) {
 // Production: NODE_ENV=production node ex_express.js
 
 if (process.env.NODE_ENV == "local") {
-	mylog.log('======= Local Environment =======');
+	log.info('======= Local Environment =======');
 } else if (process.env.NODE_ENV == "production") {
-	mylog.log('======= Production Environment =======');
+	log.info('======= Production Environment =======');
 }
 
 
@@ -137,15 +119,15 @@ app.settings.db.connect(process.env.MONGOLAB_URI, function(err,db) {
 	if (err) { throw err; }
 	var mongo = process.env.MONGOLAB_URI.split(/@/);
 	if (mongo[1]) {
-		mylog.log('MONGODB CONNECTED - ' + mongo[1]);
+		log.log('MONGODB CONNECTED - ' + mongo[1]);
 	} else {
-		mylog.log('MONGODB CONNECTED - localhost');	
+		log.log('MONGODB CONNECTED - localhost');	
 	}
 });
 
 
 
-mylog.log('HEAD is ' + process.env.VERSION);
+log.log('HEAD is ' + process.env.VERSION);
 
 
 require('./lib/appExtensions')(app);
@@ -184,7 +166,7 @@ if(process.env.NODE_ENV == 'production') {
 app.use(function(err, req, res, next) {
 	// don't log user errors
 	if (err) {
-		mylog.log(err);
+		log.log(err);
 	}
 
 	if (typeof err === 'string') {
@@ -201,5 +183,5 @@ app.use(function(err, req, res, next) {
 
 var port = process.env.PORT || 5000;
 app.listen(port, function() {
-	mylog.log("Listening on " + port);
+	log.log("Listening on " + port);
 });

@@ -6,7 +6,7 @@ module.exports = function(app) {
 		jwt = require('jsonwebtoken'),
 		mongoose = require('mongoose'),
 		User = app.Models.get('User'),
-		mylog = app.get('mylog'),
+		log = app.get('log'),
 		Chargeback = app.Models.get('Chargeback');
 
 		
@@ -25,7 +25,7 @@ module.exports = function(app) {
 
 		var errors = {};
 		if (!process.env.TOKEN_SECRET) {
-			mylog.log('NO ENV TOKEN_SECRET!!');
+			log.log('NO ENV TOKEN_SECRET!!');
 			errors['username'] = "No token.";
 			return res.json(401, errors);
 		}
@@ -56,19 +56,19 @@ module.exports = function(app) {
 		.seq(function() {
 			
 			if (!this.vars.user) {
-				mylog.log('user not found.');
+				log.log('user not found.');
 				errors['username'] = "User does not exist.";
 				return res.json(404, errors);
 			}
 
 			if (!this.vars.user.password) {
-				mylog.log('no password.');
+				log.log('no password.');
 				errors['username'] = "No password set for this user. Access denied.";
 				return res.json(400, errors);
 			}
 
 			if (!Util.compare_password(req.body.password, this.vars.user.password)) { 
-				mylog.log('invalid password');
+				log.log('invalid password');
 				errors['password'] = "Invalid password";
 				return res.json(401, errors);
 			}
@@ -104,7 +104,7 @@ module.exports = function(app) {
 					"_id.merchant": 1
 				}}
 			];
-			mylog.log(search);
+			log.log(search);
 			Chargeback.aggregate(search, this);
 
 		})
@@ -125,7 +125,7 @@ module.exports = function(app) {
 			var token = jwt.sign(obj, process.env.TOKEN_SECRET, { expiresInMinutes: 60*5 });
 
 			var query_end = new Date().getTime();
-			mylog.log("Login Time: " + (query_end - query_start) + "ms");
+			log.log("Login Time: " + (query_end - query_start) + "ms");
 
 			this.vars.user.set('authtoken', token, { strict: false });
 			this.vars.user.password = undefined;

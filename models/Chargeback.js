@@ -9,7 +9,7 @@ module.exports = function(app) {
 		Schema = db.Schema,
 		ObjectId = Schema.ObjectId,
 		_ = require('underscore'),
-		mylog = app.get('mylog'),
+		log = app.get('log'),
 		UserMicro = require('./UserMicro');
 
 	

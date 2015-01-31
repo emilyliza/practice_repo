@@ -5,7 +5,7 @@ module.exports = function(app) {
 		mw = require('./middleware'),
 		mongoose = require('mongoose'),
 		Chargeback = app.Models.get('Chargeback'),
-		mylog = app.get('mylog');
+		log = app.get('log');
 		
 
 	app.get('/api/v1/dashboard', mw.auth(), function(req, res, next) {
@@ -26,7 +26,7 @@ module.exports = function(app) {
 				}}
 			];
 			
-			mylog.log(agg);
+			log.log(agg);
 			Chargeback.aggregate(agg, this);
 
 		})

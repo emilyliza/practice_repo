@@ -4,7 +4,7 @@ module.exports = function(app) {
 		$ = require('seq'),
 		mailer = require(app.settings.root_dir + '/lib/mailer')(app),
 		User = app.Models.get('User'),
-		mylog = app.get('mylog');
+		log = app.get('log');
 
 
 	app.post('/api/v1/forgot?', function(req, res, next) {

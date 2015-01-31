@@ -5,7 +5,7 @@ module.exports = function(app) {
 		mw = require('./middleware'),
 		mongoose = require('mongoose'),
 		moment = require('moment'),
-		mylog = app.get('mylog'),
+		log = app.get('log'),
 		Chargeback = app.Models.get('Chargeback');
 		
 
@@ -44,13 +44,13 @@ module.exports = function(app) {
 		$()
 		.seq(function() {
 			
-			mylog.log(search);
+			log.log(search);
 			Chargeback.aggregate(search, this);
 
 		})
 		.seq(function(data) {
 
-			mylog.log(data);
+			log.log(data);
 
 			var out = [];
 			_.each(data, function(row) {
@@ -92,7 +92,7 @@ module.exports = function(app) {
 
 		pieOverview(params, req.user._id, project, group, function(err, out) {
 			if (err) { return next(err); }
-			mylog.log(out)
+			log.log(out)
 			
 			var result1 = [],
 				result2 = [];
@@ -141,7 +141,7 @@ module.exports = function(app) {
 
 		pieOverview(params, req.user._id, project, group, function(err, out) {
 			if (err) { return next(err); }
-			mylog.log(out)
+			log.log(out)
 			
 			var result1 = [],
 				result2 = [];
@@ -278,8 +278,8 @@ module.exports = function(app) {
 			{ '$sort' : { '_id': 1 } }
 		];
 
-		mylog.log(search1);
-		mylog.log(search2);
+		log.log(search1);
+		log.log(search2);
 
 		$()
 		.par('a', function() {
@@ -314,7 +314,7 @@ module.exports = function(app) {
 			{ '$sort' : { '_id': 1 } }
 		];
 
-		mylog.log(search);
+		log.log(search);
 
 		$()
 		.seq(function() {
@@ -323,7 +323,7 @@ module.exports = function(app) {
 		.seq(function(data) {
 			var result = {};
 			_.each(data, function(row) {
-				mylog.log(_.keys(row._id));
+				log.log(_.keys(row._id));
 				if (_.contains( _.keys(row._id), val_field)) {
 					n = row._id[val_field];
 				} else {

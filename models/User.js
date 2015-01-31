@@ -7,7 +7,7 @@ module.exports = function(app) {
 		$ = require('seq'),
 		moment = require('moment'),
 		Util = require('../lib/Util'),
-		mylog = app.get('mylog'),
+		log = app.get('log'),
 		db = app.settings.db,
 		Schema = db.Schema,
 		ObjectId = Schema.ObjectId;
@@ -74,9 +74,9 @@ module.exports = function(app) {
 			query.sort( 'name' );
 		}
 
-		mylog.log('User Query...');
-		mylog.log(query._conditions);
-		mylog.log(query.options);
+		log.log('User Query...');
+		log.log(query._conditions);
+		log.log(query.options);
 
 		var np = false;
 		query.select('-password');

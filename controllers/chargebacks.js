@@ -6,7 +6,7 @@ module.exports = function(app) {
 		moment = require('moment'),
 		csv = require('express-csv'),
 		Chargeback = app.Models.get('Chargeback'),
-		mylog = app.get('mylog');
+		log = app.get('log');
 		
 
 	app.get('/api/v1/chargebacks?', mw.auth(), function(req, res, next) {
@@ -64,9 +64,9 @@ module.exports = function(app) {
 
 			query.sort('-chargebackDate');
 			
-			mylog.log('Chargeback Query...');
-			mylog.log(query._conditions);
-			mylog.log(query.options);
+			log.log('Chargeback Query...');
+			log.log(query._conditions);
+			log.log(query.options);
 
 			query.exec(this);
 		})
