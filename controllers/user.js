@@ -4,6 +4,7 @@ module.exports = function(app) {
 		mw = require('./middleware'),
 		$ = require('seq'),
 		Util = require('../lib/Util'),
+		mylog = app.get('mylog'),
 		User = app.Models.get('User');
 		
 

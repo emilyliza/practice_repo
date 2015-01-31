@@ -3,7 +3,8 @@ module.exports = function(app) {
 	var _ = require('underscore'),
 		$ = require('seq'),
 		mailer = require(app.settings.root_dir + '/lib/mailer')(app),
-		User = app.Models.get('User');
+		User = app.Models.get('User'),
+		mylog = app.get('mylog');
 
 
 	app.post('/api/v1/forgot?', function(req, res, next) {

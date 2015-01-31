@@ -6,6 +6,7 @@ module.exports = function(app) {
 		path = require('path'),
 		moment = require('moment'),
 		mw = require('./middleware'),
+		mylog = app.get('mylog'),
 		crypto = require( "crypto" );
 
 	
@@ -17,7 +18,7 @@ module.exports = function(app) {
 	app.get('/api/v1/s3?', mw.auth(), function(req, res, next) {
 
 		var expires = moment().add('minutes', 10).toISOString();
-		//console.log(expires);
+		//mylog.log(expires);
 
 		var filename = path.basename(req.query.filename),
 			extension = path.extname(req.query.filename),
@@ -35,10 +36,10 @@ module.exports = function(app) {
 		};
 
 		var policyBase64 = new Buffer( JSON.stringify(policy) ).toString('base64');
-		//console.log ( policyBase64 )
+		//mylog.log ( policyBase64 )
 
 		var signature = crypto.createHmac( "sha1", process.env.AWS_SECRET_ACCESS_KEY ).update( policyBase64 ).digest( "base64" );
-		//console.log( signature);
+		//mylog.log( signature);
 
 		var c_ext = "";
 		if (extension == ".pdf") {

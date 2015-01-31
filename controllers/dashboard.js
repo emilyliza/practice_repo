@@ -4,7 +4,8 @@ module.exports = function(app) {
 		$ = require('seq'),
 		mw = require('./middleware'),
 		mongoose = require('mongoose'),
-		Chargeback = app.Models.get('Chargeback');
+		Chargeback = app.Models.get('Chargeback'),
+		mylog = app.get('mylog');
 		
 
 	app.get('/api/v1/dashboard', mw.auth(), function(req, res, next) {
@@ -24,7 +25,8 @@ module.exports = function(app) {
 					'count': { '$sum': 1 }
 				}}
 			];
-			console.log(agg);
+			
+			mylog.log(agg);
 			Chargeback.aggregate(agg, this);
 
 		})

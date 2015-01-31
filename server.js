@@ -6,8 +6,9 @@ var fs = require('fs'),
 	path = require('path'),
 	_ = require('underscore'),
 	expressValidator = require('express-validator'),
+	winston = require('winston'),
 	logger = require('morgan'),
-	bodyParser = require('body-parser'),
+    bodyParser = require('body-parser'),
 	methodOverride = require('method-override'),
 	app = module.exports = express();
 	
@@ -41,8 +42,29 @@ app.use(expressValidator({
 	}
 }));
 
+
 app.use(device.capture());
 app.use(methodOverride());
+
+
+var wlogger = new (winston.Logger)({
+	transports: [
+		new winston.transports.Console({
+			colorize: true
+		})
+	],
+	expressFormat: true,
+	colorStatus: true
+});
+
+//app.use(logger('combined'));
+// enable web server logging; pipe those log messages through winston
+var winstonStream = {
+	write: function(message, encoding){
+		wlogger.info(message);
+	}
+};
+app.use(logger('combined', {stream: winstonStream}))
 
 
 if(process.env.NODE_ENV == 'production') {
@@ -51,11 +73,43 @@ if(process.env.NODE_ENV == 'production') {
 	app.use('/', express.static('./public', { maxAge: 10 }));
 }
 
-app.use(logger('combined'));
+
+
+var log;
+if (process.env.NODE_ENV == "production" && process.env.LOGENTRIES) {
+	var logentries = require('le_node');
+	log = logentries.logger({
+		token: process.env.LOGENTRIES
+	});
+	log.winston( winston )
+} else {
+	log = {
+		winston: {
+			log: function(d) { console.log(d); },
+			info: function(d) { console.log(d); },
+			debug: function(d) { console.log(d); },
+			notice: function(d) { console.log(d); },
+			warning: function(d) { console.log(d); },
+			err: function(d) { console.log(d) }
+		}
+	};
+}
+
+// create shorthand wrapper
+var mylog = {
+	log: function(m) { log.winston.log(m); },
+	info: function(m) { log.winston.info(m); },
+	debug: function(m) { log.winston.debug(m); },
+	notice: function(m) { log.winston.notice(m); },
+	warning: function(m) { log.winston.warning(m); },
+	err: function(m) { log.winston.err(m); }
+}
+
+app.set('mylog', mylog);
 
 
 process.on('uncaughtException', function(err) {
-	console.log(err.stack);
+	mylog.err(err.stack);
 	if (process.env.NODE_ENV === 'development' || process.env.NODE_ENV === 'local') {
 		process.exit(1);
 	} else {
@@ -72,9 +126,9 @@ process.on('uncaughtException', function(err) {
 // Production: NODE_ENV=production node ex_express.js
 
 if (process.env.NODE_ENV == "local") {
-	console.log('======= Local Environment =======');
+	mylog.log('======= Local Environment =======');
 } else if (process.env.NODE_ENV == "production") {
-	console.log('======= Production Environment =======');
+	mylog.log('======= Production Environment =======');
 }
 
 
@@ -83,15 +137,15 @@ app.settings.db.connect(process.env.MONGOLAB_URI, function(err,db) {
 	if (err) { throw err; }
 	var mongo = process.env.MONGOLAB_URI.split(/@/);
 	if (mongo[1]) {
-		console.log('MONGODB CONNECTED - ' + mongo[1]);
+		mylog.log('MONGODB CONNECTED - ' + mongo[1]);
 	} else {
-		console.log('MONGODB CONNECTED - localhost');	
+		mylog.log('MONGODB CONNECTED - localhost');	
 	}
 });
 
 
 
-console.log('HEAD is ' + process.env.VERSION);
+mylog.log('HEAD is ' + process.env.VERSION);
 
 
 require('./lib/appExtensions')(app);
@@ -125,11 +179,12 @@ if(process.env.NODE_ENV == 'production') {
 	});
 }
 
+
 // error handler
 app.use(function(err, req, res, next) {
 	// don't log user errors
 	if (err) {
-		console.log(err);
+		mylog.log(err);
 	}
 
 	if (typeof err === 'string') {
@@ -146,5 +201,5 @@ app.use(function(err, req, res, next) {
 
 var port = process.env.PORT || 5000;
 app.listen(port, function() {
-	console.log("Listening on " + port);
+	mylog.log("Listening on " + port);
 });

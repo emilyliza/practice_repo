@@ -3,6 +3,7 @@ module.exports = function(app) {
 	var _ = require('underscore'),
 		$ = require('seq'),
 		jwt = require('jsonwebtoken'),
+		mylog = app.get('mylog'),
 		User = app.Models.get('User');
 
 	
@@ -81,7 +82,7 @@ module.exports = function(app) {
 			if (!this.vars.user) { return res.json(404, [{ "password1": "No user was found."}]); }
 
 			if (this.vars.user.email != req.session.tempemail) {
-				console.log('session email does not equal db email');
+				mylog.log('session email does not equal db email');
 				return res.json(404, [{ "password1": "No user was found."}]);
 			}
 

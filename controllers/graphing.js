@@ -3,6 +3,7 @@ module.exports = function(app) {
 	var _ = require('underscore'),
 		$ = require('seq'),
 		mw = require('./middleware'),
+		mylog = app.get('mylog'),
 		Chargeback = app.Models.get('Chargeback');
 		
 
