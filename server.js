@@ -114,16 +114,24 @@ if (process.env.NODE_ENV == "local") {
 }
 
 
-
-app.settings.db.connect(process.env.MONGOLAB_URI, function(err,db) {
-	if (err) { throw err; }
-	var mongo = process.env.MONGOLAB_URI.split(/@/);
-	if (mongo[1]) {
+if (process.env.MONGO_URI_2) {
+	app.settings.db.connect(process.env.MONGOLAB_URI + "," + process.env.MONGO_URI_2, function(err,db) {
+		if (err) { throw err; }
+		var mongo = process.env.MONGOLAB_URI.split(/@/);
+		log.log('MONGODB REPLICA!');
 		log.log('MONGODB CONNECTED - ' + mongo[1]);
-	} else {
-		log.log('MONGODB CONNECTED - localhost');	
-	}
-});
+	});
+} else {
+	app.settings.db.connect(process.env.MONGOLAB_URI, function(err,db) {
+		if (err) { throw err; }
+		var mongo = process.env.MONGOLAB_URI.split(/@/);
+		if (mongo[1]) {
+			log.log('MONGODB CONNECTED - ' + mongo[1]);
+		} else {
+			log.log('MONGODB CONNECTED - localhost');	
+		}
+	});
+}
 
 
 

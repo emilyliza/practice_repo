@@ -78,7 +78,7 @@
 
 		$scope.setCard = function(c) {
 			$scope.cardpresent = false;
-			$scope.data.type == c;
+			$scope.data.type = c;
 			if (c == "cp") {
 				$scope.cardpresent = true;
 			}
