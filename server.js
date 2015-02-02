@@ -113,6 +113,7 @@ if (process.env.NODE_ENV == "local") {
 	log.info('======= Production Environment =======');
 }
 
+log.debug(process.env);
 
 if (process.env.MONGO_URI_2) {
 	app.settings.db.connect(process.env.MONGOLAB_URI + "," + process.env.MONGO_URI_2, function(err,db) {
