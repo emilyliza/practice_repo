@@ -82,6 +82,7 @@ public/                 --> all of the source files for the client side applicat
   less/                 --> less css files (does not include bootstrap libs installed via bower)  
   lib/                  --> js utilities (directives and services)
   index.html            --> app layout file (the main html template file of the app)
+  admin.html            --> admin UI layout file (the main html template file of the admin app)
 dist/                   --> dir created by running npm build, stores compiled production files
 node_modules/           --> dir created by runnnig npm install, stores npm modules
 karma.conf.js           --> config file for running unit tests with Karma
@@ -92,9 +93,9 @@ e2e-tests/              --> end-to-end tests
   protractor-conf.js    --> Protractor config file
   scenarios.js          --> end-to-end scenarios to be run by Protractor
 lib/                    --> nodejs lib, for testing only
-node-mongo-models/      --> nodejs mongoose model definitions - for test data only
-node-controllers/       --> nodejs files for servering fake REST API
-python                  --> python API server files (see README-python)
+models/                 --> nodejs mongoose model definitions - for test data only
+controllers/            --> nodejs files for servering fake REST API
+server.js               --> the main application file
 ```
 
 
@@ -166,9 +167,27 @@ npm run protractor
 This script will execute the end-to-end tests against the application being hosted on the
 development server.
 
+## Logging
+
+### Request logs and info 
+
+In development logs are sent to stdout/console. In production, logs are sent to stdout/console, but also
+to logentries.com if process.env.LOGENTRIES is set. This enables 3rd party log searching and works better
+with AWS OpsWorks, since the server process is started by a root Chef script root and gaining access to
+stdout is not possible.
+
+### Bugs and errors
+
+TODO: bugsnag
 
 
-### Production Build Process
+### Server information
+
+TODO: new relic
+
+
+
+## Production Build Process
 
 The build process requires Grunt `~0.4.1` which is installed via npm install (no need to install separately).
 
@@ -209,6 +228,10 @@ or run with --verbose for more information. Then check ./dist for the results. Y
 
 
 ```
-npm start --production
+npm start
+```
+OR for production mode, set up env and start...
+```
+env $(cat .env) node server.js
 ```
 
