@@ -56,9 +56,14 @@ if (process.env.NODE_ENV == "production" && process.env.LOGENTRIES) {
 
 processLog = function(m) {
 	if (le_log) {
-		le_log.info(m);
-	};
-	return console.log(m);
+		if (_.isObject(m)) {
+			// need to clone so object info is not overwritten!
+			return le_log.info(_.clone(m));
+		}
+		return le_log.info(m);
+	} else {
+		return console.log(m);
+	}
 }
 
 
