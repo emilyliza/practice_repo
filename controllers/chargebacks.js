@@ -184,6 +184,54 @@ module.exports = function(app) {
 
 	});
 
+
+	app.post('/api/v1/chargebacks?', mw.auth(), function(req, res, next) {
+
+		req.assert('chargebacks', 'An array of chargebacks is required.').notEmpty();
+		
+		var errors = req.validationErrors();
+		if (errors) {
+			return res.json(400, errors );
+		}
+
+		if (!req.body.chargebacks.length) {
+			return res.json(401, { 'chargebacks': 'an array of chargebacks is required.'});
+		}
+
+		$()
+		.seq('user', function() {
+			User.findById( req.user._id , this);	
+		})
+		.seq(function() {
+			if (!user.admin) {
+				return res.json(401, { 'admin': 'admin permissions required'});
+			}
+			this(null, req.body.chargebacks);
+		})
+		.flatten()
+		.seqEach(function(cb) {
+
+			var chargeback = new Chargeback(cb);
+			chargeback.status = "New";
+			chargeback.user = User.toMicro(this.vars.user);
+			if (!chargeback.merchant) {
+				chargeback.merchant = req.user.name;	
+			}
+			chargeback.save(this);
+
+		})
+		.seq(function() {
+
+			// cache busting on static api end point
+			res.header('Content-Type', 'application/json');
+			res.header('Cache-Control', 'no-cache, private, no-store, must-revalidate, max-stale=0, post-check=0, pre-check=0');
+			return res.json({ 'success': true });
+
+		})
+		.catch(next);
+
+	});
+
 	app.put('/api/v1/chargeback/:_id', mw.auth(), function(req, res, next) {
 
 		$()

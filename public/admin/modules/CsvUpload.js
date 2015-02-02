@@ -23,6 +23,7 @@
 		};
 		$scope.fields = [];
 		$scope.map = [];
+		$scope.chargebacks = [];
 
 		$scope.cbFields = [
 			"status",
@@ -87,8 +88,19 @@
 		
 		$scope.blowItUp = function() {
 			var f = CsvService.mapAll($scope.json, $scope.map);
-			console.log(f);
+			$scope.chargebacks = f;
 		}
+
+		$scope.save = function() {
+			
+			$scope.service = CsvService.save( { 'chargebacks': $scope.chargebacks } ).then(function () {
+				$scope.json = {};
+				$state.go('dashboard');
+			}, function (res) {
+				console.log(res);
+			});
+
+		};
 
 		var processed = false;
 		$scope.$watch("csv.result", function(newValue, oldValue){
@@ -138,6 +150,13 @@
 				out.push( service.map(d, map) );
 			})
 			return out;
+		};
+		service.save = function(data) {
+			return $http
+				.post('/api/v1/chargebacks', data)
+				.then(function (res) {
+					return res.data;
+				});
 		};
 
 		return service;
