@@ -66,8 +66,8 @@ module.exports = function(app) {
 			query.sort('-chargebackDate');
 			
 			log.log('Chargeback Query...');
-			log.log(q._conditions);
-			log.log(q.options);
+			log.log(query._conditions);
+			log.log(query.options);
 
 			query.exec(this);
 		})
