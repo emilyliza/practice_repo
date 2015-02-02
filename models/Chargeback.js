@@ -36,6 +36,7 @@ module.exports = function(app) {
 			'FirstName'        : String,
 			'MiddleName'       : String,
 			'LastName'         : String,
+			'FullName'         : String,
 			'BillingAddr1'     : String,
 			'BillingAddr2'     : String,
 			'BillingCity'      : String,
@@ -91,6 +92,26 @@ module.exports = function(app) {
 		}],
 		'additional_comments': String
 	}, { strict: true })
+	
+	.pre('save', function (next) {
+		if (!this.gateway_data.FullName && (this.gateway_data.FirstName || this.gateway_data.LastName)) {
+			if (this.gateway_data.FirstName) {
+				this.gateway_data.FullName = this.gateway_data.FirstName;
+			}
+			if (this.gateway_data.LastName) {
+				if (this.gateway_data.FirstName) {
+					this.gateway_data.FullName += " ";
+				}
+				this.gateway_data.FullName += this.gateway_data.LastName;
+			}
+		} else if (this.gateway_data.FullName && (!this.gateway_data.FirstName || !this.gateway_data.LastName)) {
+			var name_chunks = this.gateway_data.FullName.split(" ");
+			this.gateway_data.FirstName = name_chunks[0];
+			this.gateway_data.LastName = name_chunks[name_chunks.length - 1];
+		}
+		next();
+	});
+
 	.plugin(UserMicro, { path: 'user', objectid: ObjectId });
 	
 	
