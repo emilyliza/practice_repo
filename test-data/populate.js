@@ -5,7 +5,7 @@ var $ = require('seq'),
 	program = require('commander'),
 	fs = require('fs'),
 	moment = require('moment'),
-	Chance = require('chance')
+	Chance = require('chance'),
 	streamExec = function(cmd, options, fn) {
 		return function() {
 			if (!options) options = {};
@@ -29,8 +29,30 @@ var app = {
 		env: 'setup',
 		db: require('mongoose'),
 		root_dir: '../'
+	},
+	set: function(v) {
+		this[v] = v;
+	},
+	get: function(v) {
+		return this[v];
 	}
 };
+
+processLog = function(m) {
+	return console.log(m);
+}
+
+
+var	log = {
+	log: function(m) { processLog(m); },
+	info: function(m) { processLog(m); },
+	debug: function(m) { processLog(m); },
+	notice: function(m) { processLog(m); },
+	warning: function(m) { processLog(m); },
+	err: function(m) { processLog(m); }
+};
+
+app.set('log', log);
 
 var Schema = app.settings.db.Schema,
 	ObjectId = Schema.ObjectId;
@@ -53,6 +75,13 @@ $()
 		top(null, v);
 	});
 })
+.seq('user_id', function() {
+	var top = this;
+	program.prompt('Which user (ky=54cfbf7003c7351b4e892004, justin=54cfbd4703c7351b4e892003? ', function(v) {
+		top(null, v);
+	});
+})
+"54cfbf7003c7351b4e892004"
 .seq('config_obj', function() {
 	var config = fs.readFileSync(__dirname + '/../' + this.vars.config_file, 'utf8'),
 		config_obj = {};
@@ -68,21 +97,40 @@ $()
 .seq(function() {
 	var t = this;
 
-	app.settings.db.connect(this.vars.config_obj.MONGOLAB_URI, function(err,db) {
-		if (err) { throw err; }
-		var mongo = t.vars.config_obj.MONGOLAB_URI.split(/@/);
-		console.log('MONGODB CONNECTED - ' + mongo[1]);
-		t();
-	});
+	if (this.vars.config_obj.MONGO_URI_2) {
+		app.settings.db.connect(this.vars.config_obj.MONGO_URI + "," + this.vars.config_obj.MONGO_URI_2, function(err,db) {
+			if (err) { throw err; }
+			var mongo = t.vars.config_obj.MONGO_URI.split(/@/);
+			console.log('MONGODB REPLICA!');
+			console.log('MONGODB CONNECTED - ' + mongo[1]);
+			t();
+		});
+	} else {
+		app.settings.db.connect(this.vars.config_obj.MONGO_URI, function(err,db) {
+			if (err) { throw err; }
+			var mongo = t.vars.config_obj.MONGO_URI.split(/@/);
+			if (mongo[1]) {
+				console.log('MONGODB CONNECTED - ' + mongo[1]);
+			} else {
+				console.log('MONGODB CONNECTED - localhost');	
+			}
+			t();
+		});
+	}
+	
 })
 .seq(function() {
-	Chargeback.remove({}, this);
+	Chargeback.remove({'user._id': this.vars.user_id}, this);
 })
 .seq('user', function() {
-	User.findOne(this);
+	var q = User.findOne();
+	q.where('_id').equals(this.vars.user_id); // ky
+	q.exec(this);
 })
 .seq(function() {
 	
+	console.log(this.vars.user);
+
 	var chance = new Chance(),
 		status = ['New','In-Progress','Sent','Won','Lost'],
 		types = ["cp","cnp"],
@@ -103,10 +151,10 @@ $()
 		}
 
 		data.push({
-			"status": temp_status,
+			"status": "New",
 			"merchant": merchants[ randomIntFromInterval(0,merchants.length-1) ],
 			"createdOn": new Date(),
-			"chargebackDate": chance.date({month: moment().month(), year: moment().year()}),
+			"chargebackDate": chance.date({month: moment().subtract(1, 'month').month(), year: moment().year()}),
 			"user": User.toMicro(this.vars.user),
 			"type": temp_type,
 			'portal_data' : {
@@ -188,8 +236,10 @@ $()
 	process.exit(1);
 })
 .catch(function(err) {
+	console.log(err);
 	if (err) {
 		console.log(err.stack ?  err.stack : err.toString());
 	}
+	process.exit(1);	
 });
 
