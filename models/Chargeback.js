@@ -21,8 +21,8 @@ module.exports = function(app) {
 		"type": { "type": String },		// an enum of cp or cnp
 		'portal_data' : {
 			'Portal'           : String,
-			'CaseNumber'       : Number,
-			'RefNumber'        : Number,
+			'CaseNumber'       : String,
+			'RefNumber'        : String,
 			'CcPrefix'         : String,
 			'CcSuffix'         : String,
 			'ChargebackAmt'    : Number,
@@ -48,9 +48,9 @@ module.exports = function(app) {
 			'CcType'           : String,
 			'Currency'         : String,
 			'CvvStatus'        : String,
-			'OrderId'          : Number,
+			'OrderId'          : String,
 			'TransHistory'     : String,
-			'TransId'          : Number,
+			'TransId'          : String,
 			'TransStatus'      : String,
 			'TransType'        : String,
 			'TransDate'        : Date,
@@ -79,7 +79,7 @@ module.exports = function(app) {
 		'shipping_data' : {
 			'has_tracking'     : Boolean,
 			'ShippingDate'     : Date,
-			'TrackingNum'      : Number,
+			'TrackingNum'      : String,
 			'TrackingSum'      : String
 		},
 		'uploads': [{
@@ -94,6 +94,7 @@ module.exports = function(app) {
 	}, { strict: true })
 	
 	.pre('save', function (next) {
+		// clean up name
 		if (!this.gateway_data.FullName && (this.gateway_data.FirstName || this.gateway_data.LastName)) {
 			if (this.gateway_data.FirstName) {
 				this.gateway_data.FullName = this.gateway_data.FirstName;
@@ -110,7 +111,7 @@ module.exports = function(app) {
 			this.gateway_data.LastName = name_chunks[name_chunks.length - 1];
 		}
 		next();
-	});
+	})
 
 	.plugin(UserMicro, { path: 'user', objectid: ObjectId });
 	
