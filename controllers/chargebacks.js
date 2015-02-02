@@ -6,6 +6,7 @@ module.exports = function(app) {
 		moment = require('moment'),
 		csv = require('express-csv'),
 		Chargeback = app.Models.get('Chargeback'),
+		User = app.Models.get('User'),
 		log = app.get('log');
 		
 
@@ -64,9 +65,10 @@ module.exports = function(app) {
 
 			query.sort('-chargebackDate');
 			
+			var q = _.clone(query);
 			log.log('Chargeback Query...');
-			log.log(query._conditions);
-			log.log(query.options);
+			log.log(q._conditions);
+			log.log(q.options);
 
 			query.exec(this);
 		})
@@ -154,10 +156,11 @@ module.exports = function(app) {
 				// cache busting on static api end point
 				res.header('Content-Type', 'application/json');
 				res.header('Cache-Control', 'no-cache, private, no-store, must-revalidate, max-stale=0, post-check=0, pre-check=0');
-			
+				return res.json(data);
+
 			}
 
-			return res.json(data);
+			
 
 		})
 		.catch(next);
@@ -203,7 +206,7 @@ module.exports = function(app) {
 			User.findById( req.user._id , this);	
 		})
 		.seq(function() {
-			if (!user.admin) {
+			if (!this.vars.user.admin) {
 				return res.json(401, { 'admin': 'admin permissions required'});
 			}
 			this(null, req.body.chargebacks);
@@ -211,12 +214,37 @@ module.exports = function(app) {
 		.flatten()
 		.seqEach(function(cb) {
 
+			console.log(cb);
 			var chargeback = new Chargeback(cb);
 			chargeback.status = "New";
 			chargeback.user = User.toMicro(this.vars.user);
 			if (!chargeback.merchant) {
 				chargeback.merchant = req.user.name;	
 			}
+
+			
+			_.each(chargeback.crm_data, function(v,k) {
+				if (!v || v == "NULL" || v == "null" || v == "Null") {
+					chargeback.crm_data[k] = undefined;
+				}
+			});
+			_.each(chargeback.gateway_data, function(v,k) {
+				if (!v || v == "NULL" || v == "null" || v == "Null") {
+					chargeback.gateway_data[k] = undefined;
+				}
+			});
+			_.each(chargeback.shipping_data, function(v,k) {
+				if (!v || v == "NULL" || v == "null" || v == "Null") {
+					chargeback.shipping_data[k] = undefined;
+				}
+			});
+			_.each(chargeback.portal_data, function(v,k) {
+				if (!v || v == "NULL" || v == "null" || v == "Null") {
+					chargeback.portal_data[k] = undefined;
+				}
+			});
+			console.log(chargeback);
+
 			chargeback.save(this);
 
 		})
