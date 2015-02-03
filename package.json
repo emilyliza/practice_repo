@@ -34,7 +34,8 @@
     "ejs": "0.8.5",
     "postmark": "0.2.6",
     "bcrypt": "0.8.1",
-    "le_node": "0.2.1"
+    "le_node": "0.2.1",
+    "chrono-node": "1.0.2"
   },
   "devDependencies": {
     "protractor": "^1.1.1",

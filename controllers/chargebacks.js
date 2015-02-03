@@ -7,7 +7,8 @@ module.exports = function(app) {
 		csv = require('express-csv'),
 		Chargeback = app.Models.get('Chargeback'),
 		User = app.Models.get('User'),
-		log = app.get('log');
+		log = app.get('log'),
+		chrono = require('chrono-node');
 		
 
 	app.get('/api/v1/chargebacks?', mw.auth(), function(req, res, next) {
@@ -234,11 +235,31 @@ module.exports = function(app) {
 				}
 			});
 
+
+			// date conversions
+			if (cb.chargebackDate) { cb.chargebackDate = chrono.parseDate(cb.chargebackDate); }
+			if (cb.gateway_data) {
+				if (cb.gateway_data.TransDate) { cb.gateway_data.TransDate = chrono.parseDate(cb.gateway_data.TransDate); }
+			}
+			if (cb.crm_data) {
+				if (cb.crm_data.OrderDate) { cb.crm_data.OrderDate = chrono.parseDate(cb.crm_data.OrderDate); }
+				if (cb.crm_data.CancelDateSystem) { cb.crm_data.CancelDateSystem = chrono.parseDate(cb.crm_data.CancelDateSystem); }
+				if (cb.crm_data.RefundDateFull) { cb.crm_data.RefundDateFull = chrono.parseDate(cb.crm_data.RefundDateFull); }
+				if (cb.crm_data.RefundDatePartial) { cb.crm_data.RefundDatePartial = chrono.parseDate(cb.crm_data.RefundDatePartial); }
+			}
+			if (cb.shipping_data) {
+				if (cb.shipping_data.ShippingDate) { cb.shipping_data.ShippingDate = chrono.parseDate(cb.shipping_data.ShippingDate); }
+			}
+			
 			var chargeback = new Chargeback(cb);
 			chargeback.status = "New";
 			chargeback.user = User.toMicro(this.vars.user);
 			if (!chargeback.merchant) {
 				chargeback.merchant = req.user.name;	
+			}
+
+			if (!chargeback.chargebackDate) {
+				chargeback.chargebackDate = new Date();
 			}
 			
 			console.log(chargeback);
