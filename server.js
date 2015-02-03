@@ -159,7 +159,11 @@ require('./controllers/forgot')(app);
 
 // for admin area
 app.get(/^\/admin(.*)$/, function(req, res, next) {
-	res.sendfile('./public/admin.html'); 
+	if(process.env.NODE_ENV == 'production') {
+		res.sendfile('./dist/admin.html'); 
+	} else {
+		res.sendfile('./public/admin.html'); 
+	}
 });
 
 
