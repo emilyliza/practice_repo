@@ -294,6 +294,12 @@ module.exports = function(app) {
 			data.set('uploads', req.body.uploads);
 			data.set('additional_comments', req.body.additional_comments);
 			data.set('type', req.body.type);
+
+			if (!data.updatedOn) {
+				data.set('status', "In Progress");
+				data.set('updatedOn', new Date());
+			}
+
 			data.save(this);
 
 		})

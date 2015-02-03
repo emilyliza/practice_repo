@@ -16,7 +16,8 @@ module.exports = function(app) {
 	var ChargebackSchema = new Schema({
 		"status": { "type": String, "required": true, "index": true },
 		"merchant": { "type": String },
-		"createdOn": { "type": Date },
+		'createdOn': { 'type': Date, 'required': true, 'default': new Date()},
+		"updatedOn": { "type": Date },
 		"chargebackDate": { "type": Date },
 		"type": { "type": String },		// an enum of cp or cnp
 		'portal_data' : {

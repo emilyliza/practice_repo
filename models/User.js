@@ -21,7 +21,7 @@ module.exports = function(app) {
 		'active': { type: Boolean, default: true },
 		'admin': { type: Boolean, default: false },
 		'timestamps': {
-			'createdOn': { type: Date },
+			'createdOn': { 'type': Date, 'required': true, 'default': new Date()},
 			'lastLogin': { type: Date },
 			'firstLogin': { type: Date },
 			'forgotSent': { type: Date }
