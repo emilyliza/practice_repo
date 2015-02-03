@@ -35,11 +35,15 @@ module.exports = function(app) {
 			// cache busting on static api end point
 			res.header('Content-Type', 'application/json');
 			res.header('Cache-Control', 'no-cache, private, no-store, must-revalidate, max-stale=0, post-check=0, pre-check=0');
-			
-			return res.json({
-				count: this.vars.amount[0].count,
-				sum: this.vars.amount[0].sum
-			});
+		
+			if (this.vars.amount && this.vars.amount[0]) {
+				return res.json({
+					count: this.vars.amount[0].count,
+					sum: this.vars.amount[0].sum
+				});
+			} else {
+				return res.json({});
+			}
 
 		})
 		.catch(next);
