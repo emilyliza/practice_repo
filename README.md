@@ -219,7 +219,7 @@ Gruntfile.js contains a full configuration to fully build the app for production
 The output of the grunt process is found in ./dist. To run the build process...
 
 ```
-grunt build
+grunt build --target=(index|admin) // defaults to index if --target it not provided
 ```
 
 or run with --verbose for more information. Then check ./dist for the results. You can run the following to boot up the nodejs app using the production files for testing. Production mode basically uses ./dist directory versus ./public directory as the root web folder.

@@ -21,6 +21,8 @@ module.exports = function(grunt) {
 
 	require('load-grunt-tasks')(grunt);
 
+	var target = target || 'index';
+
 	grunt.initConfig({
 		pkg: grunt.file.readJSON('package.json'),
 		aws: grunt.file.readJSON("aws.json"),
@@ -43,7 +45,7 @@ module.exports = function(grunt) {
 
 		copy: {
 			html: {
-				src: 'public/index.html', dest: 'dist/index.html'
+				src: 'public/' + target + '.html', dest: 'dist/' + target + '.html'
 			},
 			images: {
 				expand: true,
@@ -61,7 +63,7 @@ module.exports = function(grunt) {
 		},
 
 		jshint: {
-			files: ['Gruntfile.js', 'public/app/modules/*.js',  'public/app/index.js', 'public/app/tests/*.js'],
+			files: ['Gruntfile.js', 'public/app/modules/*.js',  'public/app/' + target + '.js', 'public/app/tests/*.js'],
 			options: {
 				// options here to override JSHint defaults
 				jshintrc: './.jshintrc'
@@ -76,7 +78,7 @@ module.exports = function(grunt) {
 		},
 
 		useminPrepare: {
-			html: 'public/index.html',
+			html: 'public/' + target + '.html',
 			options: {
 				flow: {
 					steps: {
@@ -92,7 +94,7 @@ module.exports = function(grunt) {
 		},
 
 		usemin: {
-			html: [ 'dist/index.html' ],
+			html: [ 'dist/' + target + '.html' ],
 			js: [ 'dist/assets/*.*.js' ],
 			options: {
 				assetsDirs: ['dist', 'dist/assets'],
@@ -166,7 +168,7 @@ module.exports = function(grunt) {
 			},
 			dist: {
 				/** @required  - string (or array of) including grunt glob variables */
-				src: ['./dist/index.html', './dist/assets/*.css', './dist/assets/*.js']
+				src: ['./dist/' + target + '.html', './dist/assets/*.css', './dist/assets/*.js']
 			}
 		},
 
@@ -180,7 +182,7 @@ module.exports = function(grunt) {
 				}]
 			},
 			meta: {
-				src: ['dist/index.html'],
+				src: ['dist/' + target + '.html'],
 				overwrite: true,
 				replacements: [{
 					from: /content="\/images/g,
@@ -242,13 +244,12 @@ module.exports = function(grunt) {
 
 	});
 	
-	
 	grunt.registerTask('test', ['jshint', 'karma']);
 
 	grunt.registerTask('build', [
 		'jshint',			// double check jshint
 		'clean:old',		// clean out old dist or reset build 
-		'copy:html',		// copy public/index.html to dist/index.html
+		'copy:html',		// copy public/target.html to dist/target.html
 		'copy:images',		// copy public/images to dist/images
 		'copy:fonts',		// copy public/fonts to dist/fonts
 		'useminPrepare',	// 
@@ -261,7 +262,7 @@ module.exports = function(grunt) {
 		'clean:origcss',	// then remove original a.css
 		'copy:cssmin',		// move a.min.css to a.css
 		'filerev',			// after files are moved and generated, do the versioning
-		'usemin',			// usemin swaps out code from index.html to index.html with new settings from above scripts
+		'usemin',			// usemin swaps out code from target.html to target.html with new settings from above scripts
 		'clean:tmp',		// clean up all the generated garbage
 		'cdn',				// swaps in CDN info
 		'replace',			// replace /images in JS files with CDN/images (cdn doesn't do this :( )
