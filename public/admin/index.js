@@ -11,6 +11,7 @@
 		"login",
 		"dashboard",
 		"csvupload",
+		"users",
 		"home"
 	])
 

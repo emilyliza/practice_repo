@@ -19,6 +19,7 @@
 			</ul>
 			<ul class="nav navbar-nav" ng-if="currentUser">
 				<li ng-class="{active: $state.includes('dashboard')}"><a ui-sref="dashboard">Dashboard</a></li>
+				<li ng-class="{active: $state.includes('users')}"><a ui-sref="users">Users</a></li>
 				<li ng-class="{active: $state.includes('csvupload')}"><a ui-sref="csvupload">CSV Upload</a></li>
 				<li><a ui-sref="logout">Log Out</a></li>
 			</ul>

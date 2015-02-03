@@ -8,6 +8,23 @@ module.exports = function(app) {
 		User = app.Models.get('User');
 		
 
+	app.get('/api/v1/users', mw.auth(), function(req, res, next) {
+
+		if (!req.user.admin) {
+			return res.json(401, { 'admin': 'admin permissions required'});
+		}
+		
+		$()
+		.seq(function() {
+			User.search(req, this);
+		})
+		.seq(function(users) {	
+			return res.json(users);
+		})
+		.catch(next);
+	
+	});
+
 	app.get('/api/v1/user', mw.auth(), function(req, res, next) {
 
 		$()

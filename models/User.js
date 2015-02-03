@@ -52,7 +52,7 @@ module.exports = function(app) {
 	};
 
 
-	User.search = function(params, session, next) {
+	User.search = function(params, next) {
 
 		var query = User.find();
 

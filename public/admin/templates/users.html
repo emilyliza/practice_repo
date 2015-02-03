@@ -1,0 +1,30 @@
+
+<div class="row search" style="margin-bottom: 20px;">
+	<div class="col-md-8">
+		<h2>CART Users</h2>
+	</div>
+	<div class="col-md-4" style="padding-top: 20px;">
+		<input ng-model="q" type="text" class="form-control pull-right" name="query" autocomplete="off" placeholder="Search" ng-keyup="users.search(q)">
+	</div>
+</div>
+
+
+<div class="animated-grid chargebacks" infinite-scroll="users.nextPage(q)" infinite-scroll-disabled="users.busy">
+	<div class="row head">
+		<div class="col-sm-4">Username</div>
+		<div class="col-sm-4">Name</div>
+		<div class="col-sm-4">Email</div>
+	</div>
+	<div class="row" ng-repeat="user in users.data">
+		<div class="col-sm-4">{{user.username}}</div>
+		<div class="col-sm-4">{{user.name}}</div>
+		<div class="col-sm-4">{{user.email}}</div>
+	</div>
+
+	<div class="row" ng-if="users.loaded && users.data.length == 0">
+		<div class="col-sm-12"><h3>No users found.</h3></div>
+	</div>	
+	<div class="row" ng-if="!users.loaded">
+		<div class="col-sm-12"><h3 style="color: #999;">Loading Users...</h3></div>
+	</div>	
+</div>
