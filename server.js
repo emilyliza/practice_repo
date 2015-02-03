@@ -58,12 +58,12 @@ processLog = function(m) {
 	if (le_log) {
 		if (_.isObject(m)) {
 			// need to clone so object info is not overwritten!
-			return le_log.info(_.clone(m));
+			le_log.info(_.clone(m));
+		} else {
+			le_log.info(m);
 		}
-		return le_log.info(m);
-	} else {
-		return console.log(m);
 	}
+	return console.log(m);	// always output to console
 }
 
 
