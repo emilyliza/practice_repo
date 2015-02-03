@@ -91,8 +91,8 @@
 			</div>
 		</div>
 
-		<h5 style="margin-top: 40px;" ng-if="!cardpresent">Payment Information</h5>
-		<div class="row bt" ng-if="!cardpresent">
+		<h5 style="margin-top: 40px;" ng-if="data.type == 'cnp'">Payment Information</h5>
+		<div class="row bt" ng-if="data.type == 'cnp'">
 			<div class="col-md-6">
 				<div class="form-group" show-errors>
 					<label>Auth Code</label>
@@ -106,7 +106,7 @@
 				</div>
 			</div>
 		</div>
-		<div class="row" ng-if="!cardpresent">
+		<div class="row" ng-if="data.type == 'cnp'">
 			<div class="col-md-3">
 				<div class="form-group" show-errors>
 					<label>Cc Type</label>
@@ -162,7 +162,7 @@
 			</div>
 		</div>
 		
-		<div class="row" ng-if="!cardpresent">
+		<div class="row" ng-if="data.type == 'cnp'">
 			<div class="col-md-6">
 				<div class="form-group" show-errors>
 					<label>CRM Product Name</label>
@@ -176,7 +176,7 @@
 				</div>
 			</div>
 		</div>
-		<div class="row" ng-if="cardpresent">
+		<div class="row" ng-if="data.type == 'cp'">
 			<div class="col-md-12">
 				<div class="form-group" show-errors>
 					<label>Product Name</label>
@@ -283,8 +283,8 @@
 		</div>
 
 
-		<h5 style="margin-top: 40px;" ng-if="cardpresent">Shipping Information</h5>
-		<div class="row bt" ng-if="cardpresent">
+		<h5 style="margin-top: 40px;" ng-if="data.type == 'cp'">Shipping Information</h5>
+		<div class="row bt" ng-if="data.type == 'cp'">
 			<div class="col-md-3">
 				<div class="form-group" show-errors>
 					<label>Shipping Date</label>
@@ -310,7 +310,7 @@
 				</div>
 			</div>
 		</div>
-		<div class="row" ng-if="cardpresent">
+		<div class="row" ng-if="data.type == 'cp'">
 			<div class="col-md-12">
 				<div class="form-group" show-errors>
 					<label>Tracking Summary</label>

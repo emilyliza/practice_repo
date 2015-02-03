@@ -77,18 +77,17 @@
 		$scope.state = $state;
 
 		$scope.setCard = function(c) {
-			$scope.cardpresent = false;
 			$scope.data.type = c;
-			if (c == "cp") {
-				$scope.cardpresent = true;
-			}
-			if (c && $state.current.name == "chargeback.card") {
+			$scope.save($scope.data);
+			if ($state.current.name == "chargeback.card") {
 				$state.go('chargeback.chargeback');
 			}
 		};
 
-		$scope.setCard($scope.data.type);	
-		
+		if ($scope.data.type && $state.current.name == "chargeback.card") {
+			$state.go('chargeback.chargeback');
+		}
+
 		$scope.data.uploads = {
 			'adds': [],
 			'terms': [],

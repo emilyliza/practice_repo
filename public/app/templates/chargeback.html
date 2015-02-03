@@ -3,8 +3,8 @@
 <div class="row">
 	<div class="col-md-12">
 		<div class="pull-right" style="font-size: 16px; color: #999;" ng-if="state.current.url != '/card'">
-			<span ng-if="cardpresent">Card Present Chargeback</span>
-			<span ng-if="!cardpresent">Card Not Present Chargeback</span>
+			<span ng-if="data.type == 'cp'">Card Present Chargeback</span>
+			<span ng-if="data.type == 'cnp'">Card Not Present Chargeback</span>
 		</div>
 
 		<h2 style="margin-top: 0px;">

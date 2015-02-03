@@ -293,6 +293,7 @@ module.exports = function(app) {
 			data.set('portal_data', req.body.portal_data);
 			data.set('uploads', req.body.uploads);
 			data.set('additional_comments', req.body.additional_comments);
+			data.set('type', req.body.type);
 			data.save(this);
 
 		})

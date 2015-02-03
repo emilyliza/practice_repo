@@ -69,15 +69,15 @@
 				<div class="col-sm-5">Tx Status:</div>
 				<div class="col-sm-7">{{data.gateway_data.TransStatus}}</div>
 			</div>
-			<div class="row" ng-if="cardpresent">
+			<div class="row" ng-if="data.type == 'cp'">
 				<div class="col-sm-5">CC Expire:</div>
 				<div class="col-sm-7">{{data.gateway_data.CcExpire}}</div>
 			</div>
-			<div class="row" ng-if="cardpresent">
+			<div class="row" ng-if="data.type == 'cp'">
 				<div class="col-sm-5">CC Type:</div>
 				<div class="col-sm-7">{{data.gateway_data.CcType}}</div>
 			</div>
-			<div class="row" ng-if="cardpresent">
+			<div class="row" ng-if="data.type == 'cp'">
 				<div class="col-sm-5">Currency:</div>
 				<div class="col-sm-7">{{data.gateway_data.Currency}}</div>
 			</div>
@@ -140,7 +140,7 @@
 			<!--  cctype ; cardnot-->
 			<!--  ccexpires ; cardnot-->
 			
-			<div class="row" ng-if="!cardpresent">
+			<div class="row" ng-if="data.type == 'cnp'">
 				<div class="col-sm-5">CVV Status:</div>
 				<div class="col-sm-7">{{data.gateway_data.CvvStatus}}</div>
 			</div>
@@ -163,7 +163,7 @@
 				<div class="col-sm-5">Price Point:</div>
 				<div class="col-sm-7">{{data.crm_data.PricePoint}}</div>
 			</div>
-			<div class="row" ng-if="!cardpresent">
+			<div class="row" ng-if="data.type == 'cnp'">
 				<div class="col-sm-5">Prod Crm Name:</div>
 				<div class="col-sm-7">{{data.crm_data.ProductCrmName}}</div>
 			</div>
@@ -226,19 +226,19 @@
 				<div class="col-sm-7">{{data.crm_data.Rma}}</div>
 			</div>
 
-			<div class="row" ng-if="cardpresent">
+			<div class="row" ng-if="data.type == 'cp'">
 				<div class="col-sm-5">Has Tracking:</div>
 				<div class="col-sm-7">{{data.shipping_data.has_tracking}}</div>
 			</div>
-			<div class="row" ng-if="cardpresent">
+			<div class="row" ng-if="data.type == 'cp'">
 				<div class="col-sm-5">ShippingDate:</div>
 				<div class="col-sm-7">{{data.shipping_data.ShippingDate | date:'MM/dd/yy HH:mm a'}}</div>
 			</div>
-			<div class="row" ng-if="cardpresent">
+			<div class="row" ng-if="data.type == 'cp'">
 				<div class="col-sm-5">TrackingNum:</div>
 				<div class="col-sm-7">{{data.shipping_data.TrackingNum}}</div>
 			</div>
-			<div class="row" ng-if="cardpresent">
+			<div class="row" ng-if="data.type == 'cp'">
 				<div class="col-sm-5">TrackingSum:</div>
 				<div class="col-sm-7">{{data.shipping_data.TrackingSum}}</div>
 			</div>
