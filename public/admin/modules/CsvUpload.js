@@ -41,6 +41,7 @@
 			'portal_data.ReasonText',
 			'gateway_data.AuthCode',
 			'gateway_data.AvsStatus',
+			'gateway_data.FullName',
 			'gateway_data.FirstName',
 			'gateway_data.MiddleName',
 			'gateway_data.LastName',
@@ -86,7 +87,7 @@
 			'shipping_data.TrackingSum'
 		];
 		
-		$scope.blowItUp = function() {
+		$scope.blowItUp = function(ff) {
 			var f = CsvService.mapAll($scope.json, $scope.map);
 			$scope.chargebacks = f;
 		}

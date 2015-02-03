@@ -213,35 +213,34 @@ module.exports = function(app) {
 		.flatten()
 		.seqEach(function(cb) {
 
-			console.log(cb);
+			_.each(cb.crm_data, function(v,k) {
+				if (!v || _.isNull(v) || v == "NULL" || v == "null" || v == "Null") {
+					delete cb.crm_data[k];
+				}
+			});
+			_.each(cb.gateway_data, function(v,k) {
+				if (!v || _.isNull(v) || v == "NULL" || v == "null" || v == "Null") {
+					delete cb.gateway_data[k];
+				}
+			});
+			_.each(cb.shipping_data, function(v,k) {
+				if (!v || _.isNull(v) || v == "NULL" || v == "null" || v == "Null") {
+					delete cb.shipping_data[k];
+				}
+			});
+			_.each(cb.portal_data, function(v,k) {
+				if (!v || _.isNull(v) || v == "NULL" || v == "null" || v == "Null") {
+					delete cb.portal_data[k];
+				}
+			});
+
 			var chargeback = new Chargeback(cb);
 			chargeback.status = "New";
 			chargeback.user = User.toMicro(this.vars.user);
 			if (!chargeback.merchant) {
 				chargeback.merchant = req.user.name;	
 			}
-
 			
-			_.each(chargeback.crm_data, function(v,k) {
-				if (!v || v == "NULL" || v == "null" || v == "Null") {
-					chargeback.crm_data[k] = undefined;
-				}
-			});
-			_.each(chargeback.gateway_data, function(v,k) {
-				if (!v || v == "NULL" || v == "null" || v == "Null") {
-					chargeback.gateway_data[k] = undefined;
-				}
-			});
-			_.each(chargeback.shipping_data, function(v,k) {
-				if (!v || v == "NULL" || v == "null" || v == "Null") {
-					chargeback.shipping_data[k] = undefined;
-				}
-			});
-			_.each(chargeback.portal_data, function(v,k) {
-				if (!v || v == "NULL" || v == "null" || v == "Null") {
-					chargeback.portal_data[k] = undefined;
-				}
-			});
 			console.log(chargeback);
 
 			chargeback.save(this);
