@@ -21,7 +21,11 @@ module.exports = function(grunt) {
 
 	require('load-grunt-tasks')(grunt);
 
-	var target = target || 'index';
+	var target = grunt.option('target') || 'index',
+		target_dir = "app";
+	if (target == "admin") {
+		target_dir = "admin";
+	}
 
 	grunt.initConfig({
 		pkg: grunt.file.readJSON('package.json'),
@@ -63,7 +67,7 @@ module.exports = function(grunt) {
 		},
 
 		jshint: {
-			files: ['Gruntfile.js', 'public/app/modules/*.js',  'public/app/' + target + '.js', 'public/app/tests/*.js'],
+			files: ['Gruntfile.js', 'public/' + target_dir + '/modules/*.js',  'public/' + target_dir + '/' + target + '.js', 'public/' + target_dir + '/tests/*.js'],
 			options: {
 				// options here to override JSHint defaults
 				jshintrc: './.jshintrc'
@@ -115,7 +119,7 @@ module.exports = function(grunt) {
 		ngtemplates:  {
 			app: {
 				cwd: 'public',
-				src: 'app/templates/*.html',
+				src: target_dir + '/templates/*.html',
 				dest: '.tmp/templates.js',
 				options:  {
 					usemin: 'assets/a.js', // <~~ This came from the <!-- build:js --> block

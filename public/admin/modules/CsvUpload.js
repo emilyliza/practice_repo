@@ -90,7 +90,7 @@
 		$scope.blowItUp = function(ff) {
 			var f = CsvService.mapAll($scope.json, $scope.map);
 			$scope.chargebacks = f;
-		}
+		};
 
 		$scope.save = function() {
 			
@@ -122,12 +122,12 @@
 
 	.factory('CsvService', ['$http', '$timeout', function ($http, $timeout) {
 			
-		var service = {}
+		var service = {};
 
 		service.map = function(existing, map) {
 			var b = {};
-			_.each(existing, function(value, key) {
-				var key = map[key] || key,
+			_.each(existing, function(value, k) {
+				var key = map[k] || k,
 					second = false;
 				if (key.match(/\./)) {
 					var parts = key.split(".");		// only handles one level of nested json!
@@ -149,7 +149,7 @@
 			var out = [];
 			_.each(data, function(d) {
 				out.push( service.map(d, map) );
-			})
+			});
 			return out;
 		};
 		service.save = function(data) {

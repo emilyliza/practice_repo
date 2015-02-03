@@ -14,9 +14,7 @@
 
 	.controller('HomeController', [ "$scope", function($scope) {
 		
-		console.log("thigns")
 		$scope.goHome = function() {
-			console.log('eat it')
 			window.location = "/";
 		};
 
