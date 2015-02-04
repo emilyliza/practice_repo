@@ -5,6 +5,8 @@
 		"ui.bootstrap", 
 		"ui.bootstrap.showErrors", 
 		"angular.filter",
+		"angulartics",
+		"angulartics.google.analytics",
 		"cgBusy",
 		"utils",
 		"user",
