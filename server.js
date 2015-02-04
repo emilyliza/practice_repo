@@ -1,6 +1,6 @@
 
 var fs = require('fs'),
-	//newrelic = require('newrelic'),
+	newrelic = require('newrelic'),
 	express = require('express'),
 	device = require('express-device'),
 	path = require('path'),
@@ -9,7 +9,6 @@ var fs = require('fs'),
 	logger = require('morgan'),
     bodyParser = require('body-parser'),
 	methodOverride = require('method-override'),
-	newrelic = require('newrelic'),
 	app = module.exports = express();
 	
 
