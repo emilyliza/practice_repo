@@ -9,15 +9,7 @@ dist/images
 dist/fonts
 dist/assets
 aws.json
-*.py[co]
-.idea/**
-*.project
-*.pydevproject
-.idea/**
-__pycache__/**
 dump/
-.vagrant
-venv
-*.pyc
 tim/
 certs/*
+newrelic_agent.log
