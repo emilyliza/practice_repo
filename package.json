@@ -65,7 +65,8 @@
     "commander": "1.0.x",
     "nodemon": "1.2.1",
     "karma-ng-html2js-preprocessor": "^0.1.2",
-    "chance": "0.7.3"
+    "chance": "0.7.3",
+    "newrelic": "1.15.1"
   },
   "scripts": {
     "postinstall": "node postNpmInstall.js",

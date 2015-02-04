@@ -9,6 +9,7 @@ var fs = require('fs'),
 	logger = require('morgan'),
     bodyParser = require('body-parser'),
 	methodOverride = require('method-override'),
+	require('newrelic'),
 	app = module.exports = express();
 	
 
