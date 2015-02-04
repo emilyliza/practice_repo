@@ -13,7 +13,7 @@
 
 	}])
 
-	.controller('CsvController', [ '$scope', 'CsvService', function($scope, CsvService) {
+	.controller('CsvController', [ '$scope', '$state', 'CsvService', function($scope, $state, CsvService) {
 		
 		$scope.csv = {
 			content: null,
@@ -23,6 +23,7 @@
 		};
 		$scope.fields = [];
 		$scope.map = [];
+		$scope.user = "";
 		$scope.chargebacks = [];
 
 		$scope.cbFields = [
@@ -86,6 +87,8 @@
 			'shipping_data.TrackingNum',
 			'shipping_data.TrackingSum'
 		];
+
+		$scope.service = CsvService;
 		
 		$scope.blowItUp = function(ff) {
 			var f = CsvService.mapAll($scope.json, $scope.map);
@@ -94,14 +97,18 @@
 
 		$scope.save = function() {
 			
-			$scope.service = CsvService.save( { 'chargebacks': $scope.chargebacks } ).then(function () {
+			CsvService.save( { 'user': $scope.user, 'chargebacks': $scope.chargebacks } ).then(function () {
 				$scope.json = {};
+				$scope.chargebacks = {};
+				$scope.user = "";
 				$state.go('dashboard');
 			}, function (res) {
 				console.log(res);
 			});
 
 		};
+
+		
 
 		var processed = false;
 		$scope.$watch("csv.result", function(newValue, oldValue){
@@ -157,6 +164,14 @@
 				.post('/api/v1/chargebacks', data)
 				.then(function (res) {
 					return res.data;
+				});
+		};
+
+		service.getUsers = function(q) {
+			return $http
+				.get('/api/v1/users?query=' + q)
+				.then(function(response){
+					return response.data;
 				});
 		};
 

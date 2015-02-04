@@ -191,6 +191,7 @@ module.exports = function(app) {
 	app.post('/api/v1/chargebacks?', mw.auth(), function(req, res, next) {
 
 		req.assert('chargebacks', 'An array of chargebacks is required.').notEmpty();
+		req.assert('user', 'A user object is required.').notEmpty();
 		
 		var errors = req.validationErrors();
 		if (errors) {
@@ -203,7 +204,7 @@ module.exports = function(app) {
 
 		$()
 		.seq('user', function() {
-			User.findById( req.user._id , this);	
+			User.findById( req.body.user._id , this);	
 		})
 		.seq(function() {
 			if (!this.vars.user.admin) {
