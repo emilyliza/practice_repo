@@ -4,10 +4,12 @@ module.exports = function(app) {
 		$ = require('seq'),
 		mw = require('./middleware'),
 		moment = require('moment'),
+		Util = require('../lib/Util'),
 		csv = require('express-csv'),
 		Chargeback = app.Models.get('Chargeback'),
 		User = app.Models.get('User'),
 		log = app.get('log'),
+		Chance = require('chance'),
 		chrono = require('chrono-node');
 		
 
@@ -251,7 +253,20 @@ module.exports = function(app) {
 			if (cb.shipping_data) {
 				if (cb.shipping_data.ShippingDate) { cb.shipping_data.ShippingDate = chrono.parseDate(cb.shipping_data.ShippingDate); }
 			}
-			
+
+			if (!cb.gateway_data || !cb.gateway_data.CcType) {
+				if (cb.portal_data.CardNumber) {
+					cb.gateway_data.CcType = Util.detectCardType( cb.portal_data.CardNumber + '' );
+					cb.gateway_data.CcPrefix = cb.portal_data.CardNumber.substr(0,4);
+					cb.gateway_data.CcSuffix = cb.portal_data.CardNumber.substr(-4);
+				} else if (cb.portal_data.CcPrefix && cb.portal_data.CcSuffix) {
+					var chance = new Chance(),
+						middle = chance.integer({min: 10000000, max: 99999999}) + '';
+					cb.gateway_data.CcType = Util.detectCardType( cb.portal_data.CcPrefix + middle + cb.portal_data.CcSuffix );
+				}
+			}
+				
+
 			var chargeback = new Chargeback(cb);
 			chargeback.status = "New";
 			chargeback.user = User.toMicro(this.vars.user);

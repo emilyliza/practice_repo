@@ -31,6 +31,7 @@
 			"merchant",
 			"chargebackDate",
 			"type",
+			'portal_data.CardNumber',	// not stored, but used to determine prefix, suffix and type
 			'portal_data.Portal',
 			'portal_data.CaseNumber',
 			'portal_data.RefNumber',
