@@ -36,7 +36,8 @@
     "bcrypt": "0.8.1",
     "le_node": "0.2.1",
     "chrono-node": "1.0.2",
-    "newrelic": "1.15.1"
+    "newrelic": "1.15.1",
+    "chance": "0.7.3"
   },
   "devDependencies": {
     "protractor": "^1.1.1",
@@ -65,8 +66,7 @@
     "karma": "0.12.24",
     "commander": "1.0.x",
     "nodemon": "1.2.1",
-    "karma-ng-html2js-preprocessor": "^0.1.2",
-    "chance": "0.7.3"
+    "karma-ng-html2js-preprocessor": "^0.1.2"
   },
   "scripts": {
     "postinstall": "node postNpmInstall.js",
