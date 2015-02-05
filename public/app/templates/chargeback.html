@@ -11,15 +11,14 @@
 			<span style="color: #999;">Working on</span> Chargeback {{data.portal_data.CaseNumber}}
 		</h2>
 
-		<div class="page-header text-center" style="border-bottom: none;" ng-if="state.current.url != '/card'">
+		<div class="page-header text-center" style="border-bottom: none;" ng-if="state.current.url == '/data'">
 			<!-- the links to our nested states using relative paths -->
 			<!-- add the active class if the state matches our ui-sref -->
 			<div id="status-buttons" class="text-center">
 				<a ui-sref-active="active" ui-sref=".card"><span>1</span> Type</a>
-				<a ui-sref-active="active" ui-sref=".chargeback"><span>2</span> Chargeback</a>
-				<a ui-sref-active="active" ui-sref=".customer"><span>3</span> Customer</a>
-				<a ui-sref-active="active" ui-sref=".documents"><span>4</span> Documents</a>
-				<a ui-sref-active="active" ui-sref=".review"><span>5</span> Review</a>
+				<a ui-sref-active="active" ui-sref=".questions"><span>2</span> Questions</a>
+				<a ui-sref-active="active" ui-sref=".data"><span>3</span> Data</a>
+				<a ui-sref-active="active" ui-sref=".review"><span>4</span> Review</a>
 			</div>
 		</div>
 
