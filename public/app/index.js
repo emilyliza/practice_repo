@@ -7,6 +7,7 @@
 		"angular.filter",
 		"angulartics",
 		"angulartics.google.analytics",
+		"toggle-switch",
 		"cgBusy",
 		"utils",
 		"user",

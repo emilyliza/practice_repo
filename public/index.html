@@ -64,6 +64,7 @@
 		<script type="text/javascript" src="/bower_components/angular-busy/dist/angular-busy.min.js"></script>
 		<script type="text/javascript" src="/bower_components/angulartics/dist/angulartics.min.js"></script>
 		<script type="text/javascript" src="/bower_components/angulartics/dist/angulartics-ga.min.js"></script>
+		<script type="text/javascript" src="/bower_components/angular-toggle-switch/angular-toggle-switch.js"></script>
 		<script type="text/javascript" src="/lib/AngularUtils.js"></script>
 		<script type="text/javascript" src="/lib/console-sham.js"></script>
 		<script type="text/javascript" src="/app/modules/User.js"></script>
@@ -92,6 +93,23 @@
 
 	<!-- build:ignore-in-production -->
 		<script type="text/javascript" src="/bower_components/less/dist/less.min.js"></script>
+		<script type="text/javascript">
+			function destroyLessCache(pathToCss) { // e.g. '/css/' or '/stylesheets/'
+ 				if (!window.localStorage || !less) {
+					console.log('no less');
+					return;
+				}
+				var host = window.location.host;
+				var protocol = window.location.protocol;
+				var keyPrefix = protocol + '//' + host + pathToCss;
+				for (var key in window.localStorage) {
+					if (key.indexOf(keyPrefix) === 0) {
+						delete window.localStorage[key];
+					}
+				}
+			}
+			destroyLessCache('/less/');	
+		</script>
 	<!-- endbuild -->
 	
 

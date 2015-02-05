@@ -20,6 +20,9 @@ module.exports = function(app) {
 		"updatedOn": { "type": Date },
 		"chargebackDate": { "type": Date },
 		"type": { "type": String },		// an enum of cp or cnp
+		"refunded": { "type": Boolean },
+		"shipped": { "type": Boolean },
+		"recurring": { "type": Boolean },
 		'portal_data' : {
 			'Portal'           : String,
 			'CaseNumber'       : String,

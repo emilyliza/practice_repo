@@ -23,30 +23,16 @@
 			templateUrl: '/app/templates/chargeback.card.html'
 			
 		})
-		.state('chargeback.chargeback', {
-			url: '/chargeback',
+		.state('chargeback.questions', {
+			url: '/questions',
 			requiresAuth: true,
-			templateUrl: '/app/templates/chargeback.chargeback.html',
-			resolve: {
-				scroll:  function() {
-					$("html, body").animate({ scrollTop: 0 }, 200);
-				}
-			}
+			templateUrl: '/app/templates/chargeback.questions.html'
+			
 		})
-		.state('chargeback.customer', {
-			url: '/customer',
+		.state('chargeback.data', {
+			url: '/data',
 			requiresAuth: true,
-			templateUrl: '/app/templates/chargeback.customer.html',
-			resolve: {
-				scroll:  function() {
-					$("html, body").animate({ scrollTop: 0 }, 200);
-				}
-			}
-		})
-		.state('chargeback.documents', {
-			url: '/documents',
-			requiresAuth: true,
-			templateUrl: '/app/templates/chargeback.documents.html',
+			templateUrl: '/app/templates/chargeback.data.html',
 			resolve: {
 				scroll:  function() {
 					$("html, body").animate({ scrollTop: 0 }, 200);
@@ -80,12 +66,12 @@
 			$scope.data.type = c;
 			$scope.save($scope.data);
 			if ($state.current.name == "chargeback.card") {
-				$state.go('chargeback.chargeback');
+				$state.go('chargeback.questions');
 			}
 		};
 
 		if ($scope.data.type && $state.current.name == "chargeback.card") {
-			$state.go('chargeback.chargeback');
+			$state.go('chargeback.data');
 		}
 
 		$scope.data.uploads = {
@@ -94,6 +80,9 @@
 			'products': [],
 			'shippings': []
 		};
+		if (!$scope.data.shipped) {
+			$scope.shipped = false;
+		}
 
 		
 		//$scope.uploaderTerms = UploadService.create(($scope.data.uploads.terms || {}), 10);

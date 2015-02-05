@@ -1,0 +1,52 @@
+
+<div class="row">
+	
+	<div class="col-sm-3 col-sm-push-9 form-sidebar">
+		
+		<div class="side-cbinfo" style="margin-top: 60px;">
+			<div class="side-cbinfo-head">IMPORTED CHARGEBACK DATA</div>
+			<div>
+				<div ng-if="data.portal_data.Portal">Portal: <span style="font-weight: bold;">{{data.portal_data.Portal}}</span></div>
+				
+				<div ng-if="data.portal_data.CaseNumber">Case #: <span style="font-weight: bold;">{{data.portal_data.CaseNumber}}</span></div>
+				<div ng-if="data.portal_data.RefNumber">Referenece #: <span style="font-weight: bold;">{{data.portal_data.RefNumber}}</span></div>
+				<div ng-if="data.portal_data.CcPrefix">CC Prefix: <span style="font-weight: bold;">{{data.portal_data.CcPrefix}}</span></div>
+				<div ng-if="data.portal_data.CcSuffix">CC Suffix: <span style="font-weight: bold;">{{data.portal_data.CcSuffix}}</span></div>
+				<div ng-if="data.gateway_data.CcType">CC Type: <span style="font-weight: bold;">{{data.gateway_data.CcType}}</span></div>
+				<div ng-if="data.gateway_data.CcExpire">CC Expires: <span style="font-weight: bold;">{{data.gateway_data.CcExpire}}</span></div>
+				
+				<div ng-if="data.portal_data.ChargebackAmt">Amount: <span style="font-weight: bold;">{{data.portal_data.ChargebackAmt}}</span></div>
+				<div ng-if="data.portal_data.MidNumber">Mid #: <span style="font-weight: bold;">{{data.portal_data.MidNumber}}</span></div>
+				<div ng-if="data.portal_data.ReasonCode">Reason Code: <span style="font-weight: bold;">{{data.portal_data.ReasonCode}}</span></div>
+				<div ng-if="data.portal_data.ReasonText">Reason: <span style="font-weight: bold;">{{data.portal_data.ReasonText}}</span></div>
+
+				<div ng-if="data.gateway_data.AuthCode">Auth Code: <span style="font-weight: bold;">{{data.gateway_data.AuthCode}}</span></div>
+				<div ng-if="data.gateway_data.AvsStatus">AVS Status: <span style="font-weight: bold;">{{data.gateway_data.AvsStatus}}</span></div>
+				
+			</div>
+		</div>
+	</div>
+	<div class="col-sm-9 col-sm-pull-3">
+
+		<div class="row" style="margin: 60px 0px;">
+			<div class="col-lg-4" style="text-align: center;">
+				<h4 style="margin-bottom: 20px;">Did you ship a product?</h4>
+				<toggle-switch ng-model="data.shipped" on-label="Yes" off-label="No"></toggle-switch>
+			</div>
+			<div class="col-lg-4" style="text-align: center;">
+				<h4 style="margin-bottom: 20px;">Did you issue a refund?</h4>
+				<toggle-switch ng-model="data.refunded" on-label="Yes" off-label="No"></toggle-switch>
+			</div>
+			<div class="col-lg-4" style="text-align: center;">
+				<h4 style="margin-bottom: 20px;">Was this a recurring charge?</h4>
+				<toggle-switch ng-model="data.recurring" on-label="Yes" off-label="No"></toggle-switch>
+			</div>
+		</div>
+
+		<div class="form-group btns" style="text-align: center;">
+			<a ui-sref="chargeback.data" class="btn btn-success">Continue</a>
+		</div>
+
+	</div>
+
+</div>

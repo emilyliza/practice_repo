@@ -218,21 +218,25 @@ module.exports = function(app) {
 		.seqEach(function(cb) {
 
 			_.each(cb.crm_data, function(v,k) {
+				v = v.trim();
 				if (!v || _.isNull(v) || v == "NULL" || v == "null" || v == "Null") {
 					delete cb.crm_data[k];
 				}
 			});
 			_.each(cb.gateway_data, function(v,k) {
+				v = v.trim();
 				if (!v || _.isNull(v) || v == "NULL" || v == "null" || v == "Null") {
 					delete cb.gateway_data[k];
 				}
 			});
 			_.each(cb.shipping_data, function(v,k) {
+				v = v.trim();
 				if (!v || _.isNull(v) || v == "NULL" || v == "null" || v == "Null") {
 					delete cb.shipping_data[k];
 				}
 			});
 			_.each(cb.portal_data, function(v,k) {
+				v = v.trim();
 				if (!v || _.isNull(v) || v == "NULL" || v == "null" || v == "Null") {
 					delete cb.portal_data[k];
 				}
@@ -265,7 +269,26 @@ module.exports = function(app) {
 					cb.gateway_data.CcType = Util.detectCardType( cb.portal_data.CcPrefix + middle + cb.portal_data.CcSuffix );
 				}
 			}
-				
+			
+			// determine if it was shipped...
+			cb.shipped = false;
+			if (cb.crm_data && (cb.crm_data.DeliveryAddr1 || cb.crm_data.DeliveryPostal || cb.crm_data.DeliveryCity)) {
+				cb.shipped = true;
+			} else if (cb.shipping_data && (cb.shipping_data.has_tracking || cb.shipping_data.ShippingDate || cb.shipping_data.TrackingNum || cb.shipping_data.TrackingSum)) {
+				cb.shipped = true;
+			}
+
+			// determine if it was refunded
+			cb.refunded = false;
+			if (cb.crm_data && (cb.crm_data.CancelDateSystem || cb.crm_data.RefundAmount || cb.crm_data.RefundDateFull || cb.crm_data.RefundDatePartial)) {
+				cb.refunded = true;
+			}
+			
+			// determine if it is recurring
+			cb.recurring = false;
+			if (cb.crm_data && cb.crm_data.IsRecurring) {
+				cb.recurring = true;
+			}
 
 			var chargeback = new Chargeback(cb);
 			chargeback.status = "New";
@@ -310,6 +333,9 @@ module.exports = function(app) {
 			data.set('uploads', req.body.uploads);
 			data.set('additional_comments', req.body.additional_comments);
 			data.set('type', req.body.type);
+			data.set('refunded', req.body.refunded);
+			data.set('recurring', req.body.recurring);
+			data.set('shipped', req.body.shipped);
 
 			if (!data.updatedOn) {
 				data.set('status', "In Progress");
