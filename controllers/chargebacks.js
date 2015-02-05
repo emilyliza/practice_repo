@@ -204,14 +204,16 @@ module.exports = function(app) {
 			return res.json(401, { 'chargebacks': 'an array of chargebacks is required.'});
 		}
 
+		if (!req.user.admin) {
+			return res.json(401, { 'admin': 'admin permissions required'});
+		}
+
+
 		$()
 		.seq('user', function() {
 			User.findById( req.body.user._id , this);	
 		})
 		.seq(function() {
-			if (!this.vars.user.admin) {
-				return res.json(401, { 'admin': 'admin permissions required'});
-			}
 			this(null, req.body.chargebacks);
 		})
 		.flatten()
