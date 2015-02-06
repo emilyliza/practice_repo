@@ -32,9 +32,7 @@ module.exports = function(app) {
 			User.findById(req.user._id, this);
 		})
 		.seq(function(user) {
-			// hide
-			user.password = undefined;
-			return res.json(req.user);
+			return res.json( _.omit(user.toJSON(), ['password', 'admin', 'timestamps', 'meta', 'active', '__v']) );
 		})
 		.catch(next);
 	
@@ -81,7 +79,7 @@ module.exports = function(app) {
 			user.save(this);
 		})
 		.seq(function(user) {
-			return res.json(user);
+			return res.json( _.omit( user.toJSON(), ['password', 'admin', 'timestamps', 'meta', 'active', '__v']) );
 		})
 		.catch(next);
 
@@ -125,7 +123,7 @@ module.exports = function(app) {
 			user.save(this);
 		})
 		.seq(function(user) {
-			return res.json(user);
+			return res.json( _.omit(user.toJSON(), ['password', 'admin', 'timestamps', 'meta', 'active', '__v']) );
 		})
 		.catch(next);
 

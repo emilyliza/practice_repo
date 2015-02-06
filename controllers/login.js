@@ -128,8 +128,7 @@ module.exports = function(app) {
 			log.log("Login Time: " + (query_end - query_start) + "ms");
 
 			this.vars.user.set('authtoken', token, { strict: false });
-			this.vars.user.password = undefined;
-
+			
 			var merchs = [];
 			_.each(merchants, function(m) {
 				merchs.push({
@@ -140,7 +139,7 @@ module.exports = function(app) {
 
 			this.vars.user.set('merchants', merchs, { strict: false });
 
-			return res.json(this.vars.user);
+			return res.json( _.omit(this.vars.user.toJSON(), ['password', 'admin', 'timestamps', 'meta', 'active', '__v']) );
 			
 
 		})
