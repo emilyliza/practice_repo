@@ -14,8 +14,9 @@
 
 	.controller('ForgotController', ['$scope', '$state', 'ForgotService', function($scope, $state, ForgotService) {
 
-		$scope.data = new ForgotService();
+		$scope.service = new ForgotService();
 		$scope.errors = {};
+		$scope.data = {};
 
 		// watch for changes to clear out errors
 		$scope.$watch("data", function(newValue, oldValue){
@@ -29,7 +30,16 @@
 		$scope.forgot = function(data) {
 			$scope.$broadcast('show-errors-check-validity');
 			if ($scope.forgotForm.$valid) {
-				$scope.data.post();
+				$scope.service.post(data).
+				then(function() {
+					$scope.data.sent = true;
+				},function(res) {
+					// errors
+					if (res.data.errors) {
+						$scope.errors = res.data.errors;
+					}
+					return true;
+				})
 			}
 		};
 
@@ -39,28 +49,12 @@
 		
 		var ForgotService = function() {
 			
-			this.initialize = function() {
-				this.sent = false;
-			};
-
 			this.post = function(d) {
 				var self = this;
 				return $http
-					.post('/api/v1/forgot', d)
-					.then(function (res) {
-						angular.extend(self, res.data);
-						self.sent = true;
-						return true;
-					},function(res) {
-						// errors
-						if (res.data.errors) {
-							self.data.errors = res.data.errors;
-						}
-						return true;
-					});
+					.post('/api/v1/forgot', d);
 			};
 
-			this.initialize();
 		};
  
 		return (ForgotService);

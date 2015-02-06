@@ -13,6 +13,7 @@
 		"user",
 		"upload",
 		"login",
+		"reset",
 		"home",
 		"forgot", 
 		"chargebacks",

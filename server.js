@@ -45,6 +45,12 @@ app.use(expressValidator({
 app.use(device.capture());
 app.use(methodOverride());
 
+if(process.env.NODE_ENV == 'production') {
+	app.use('/', express.static('./dist', { maxAge: 10 }));
+} else {
+	app.use('/', express.static('./public', { maxAge: 10 }));
+}
+
 
 var le_log = false;
 if (process.env.NODE_ENV == "production" && process.env.LOGENTRIES) {
@@ -88,11 +94,7 @@ app.use(logger('combined', {stream: myStream}))
 
 
 
-if(process.env.NODE_ENV == 'production') {
-	app.use('/', express.static('./dist', { maxAge: 10 }));
-} else {
-	app.use('/', express.static('./public', { maxAge: 10 }));
-}
+
 
 
 

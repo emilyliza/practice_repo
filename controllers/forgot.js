@@ -19,8 +19,6 @@ module.exports = function(app) {
 		// clean data.
 		req.sanitize(req.body.email).trim();
 		
-		
-		
 		$()
 		.seq(function() {
 			var email = new RegExp('^' + req.body.email + '$', 'i');
@@ -37,18 +35,28 @@ module.exports = function(app) {
 
 			// sending user._id is not safe in itself, but we're also restricting based on
 			// forgotSent datetime, so this is minor security hole.
-			var encoded_id = new Buffer(existing._id+'++'+req.body.email).toString('base64'),
+			var top = this,
+				encoded_id = new Buffer(existing._id+'++'+req.body.email).toString('base64'),
 				link = "http://" + req.headers.host + "/reset/" + encoded_id;
 
-			mailer.send({
-				'to': {
-					'email': req.body.email
-				},
+			mailer.create({
+				'to': req.body.email,
+				'from': process.env.MAIL_FROM_EMAIL,
+				'fromname': process.env.MAIL_FROM_NAME,
 				'view': 'forgot',
-				'data': { user: existing, link: link },
+				'data': {
+					'user': existing, 
+					'link': link
+				},
 				'subject': "Reset Your Password",
-				'tag': 'ForgotPassword'
-			}, this);
+				'category': "forgot_password_email"
+			}, function(err, email) {
+				if (err) { return top(err); }
+				mailer.send(email, process.env.POSTMARK_API_KEY, function(err,status) {
+					if (err) { return top(err); }
+					top();	
+				});
+			});
 
 		})
 		.seq(function() {
