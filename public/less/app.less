@@ -258,32 +258,36 @@ footer {
 
 /* numbered buttons in chargeback form */
 #status-buttons {
-	a {
-		display:inline-block;
-		font-size:12px;
-		margin-right:10px;
-		text-align:center; 
-		text-transform:uppercase;
-		width: 90px;
-	}
-	a:hover {
-		text-decoration:none;
-	}
+	margin-top: 30px;
+	.col-xs-3 {
+		a {
+			display:inline-block;
+			font-size:12px;
+			margin-right:10px;
+			text-align:center; 
+			text-transform:uppercase;
+			width: 60px;
+			margin-bottom: 10px;
+		}
+		a:hover {
+			text-decoration:none;
+		}
 
-	/* we will style the span as the circled number */
-	span {
-		background:#080808;
-		display:block;
-		height:30px;
-		margin:0 auto 20px;
-		padding-top:5px;
-		width:30px; 
-    	border-radius:50%;
-    	color: white;
-    }
+		/* we will style the span as the circled number */
+		span {
+			background:#080808;
+			display:block;
+			height:30px;
+			margin:0 auto 5px;
+			padding-top:5px;
+			width:30px; 
+	    	border-radius:50%;
+	    	color: white;
+	    }
 
-	/* active buttons turn light green-blue*/
-	a.active span { background: @cbBlue; }
+		/* active buttons turn light green-blue*/
+		a.active span { background: @cbBlue; }
+	}
 }
 
 
@@ -417,9 +421,14 @@ footer {
 	background-color: @cbBlue;
 	padding: 8px;
 	color: white;
+	margin-top: 30px;
 	.side-cbinfo-head {
 		font-weight: bold;
 		margin-bottom: 10px;
+		text-align: center;
+	}
+	.row {
+		margin-bottom: 5px;
 	}
 }
 
@@ -474,8 +483,23 @@ footer {
 		margin-left: -15px;
 		margin-right: -15px;
 	}
-	
-
+	#status-buttons {
+		float: right;
+		margin-top: 0px;
+		position: fixed;
+		width: 230px;
+		a {
+			margin-bottom: 10px;
+		}
+	}
+	.cbFormRow {
+		margin-bottom: 50px;
+	}
+	.side-cbinfo {
+		margin-top: 38px;
+		position: fixed;
+		width: 230px;
+	}
 }
 
 
@@ -506,6 +530,11 @@ footer {
 	.dateRange {
 		text-align: right;
 	}
+	.side-cbinfo, #status-buttons {
+		width: 300px;
+	}
+	
+
 
 	
 }
@@ -514,6 +543,13 @@ footer {
 
 	.dateRange {
 		font-size: 24px;
+	}
+
+	.side-cbinfo, #status-buttons {
+		width: 360px;
+		a {
+			//width: 90px;
+		}
 	}
 	
 

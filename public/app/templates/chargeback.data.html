@@ -2,30 +2,61 @@
 	
 	<div class="col-sm-4 col-sm-push-8 form-sidebar">
 		
-		<div class="side-cbinfo" style="margin-top: 38px;">
-			<div class="side-cbinfo-head">IMPORTED CHARGEBACK DATA</div>
-			<div>
-				<div ng-if="data.portal_data.Portal">Portal: <span style="font-weight: bold;">{{data.portal_data.Portal}}</span></div>
-				<div>Shipped: <span style="font-weight: bold;">{{data.shipped}}</span></div>
-				<div>Refunded: <span style="font-weight: bold;">{{data.refunded}}</span></div>
-				<div>Recurring: <span style="font-weight: bold;">{{data.recurring}}</span></div>
-
-				<div ng-if="data.portal_data.CaseNumber">Case #: <span style="font-weight: bold;">{{data.portal_data.CaseNumber}}</span></div>
-				<div ng-if="data.portal_data.RefNumber">Referenece #: <span style="font-weight: bold;">{{data.portal_data.RefNumber}}</span></div>
-				<div ng-if="data.portal_data.CcPrefix">CC Prefix: <span style="font-weight: bold;">{{data.portal_data.CcPrefix}}</span></div>
-				<div ng-if="data.portal_data.CcSuffix">CC Suffix: <span style="font-weight: bold;">{{data.portal_data.CcSuffix}}</span></div>
-				<div ng-if="data.gateway_data.CcType">CC Type: <span style="font-weight: bold;">{{data.gateway_data.CcType}}</span></div>
-				<div ng-if="data.gateway_data.CcExpire">CC Expires: <span style="font-weight: bold;">{{data.gateway_data.CcExpire}}</span></div>
-				
-				<div ng-if="data.portal_data.ChargebackAmt">Amount: <span style="font-weight: bold;">{{data.portal_data.ChargebackAmt}}</span></div>
-				<div ng-if="data.portal_data.MidNumber">Mid #: <span style="font-weight: bold;">{{data.portal_data.MidNumber}}</span></div>
-				<div ng-if="data.portal_data.ReasonCode">Reason Code: <span style="font-weight: bold;">{{data.portal_data.ReasonCode}}</span></div>
-				<div ng-if="data.portal_data.ReasonText">Reason: <span style="font-weight: bold;">{{data.portal_data.ReasonText}}</span></div>
-
-				<div ng-if="data.gateway_data.AuthCode">Auth Code: <span style="font-weight: bold;">{{data.gateway_data.AuthCode}}</span></div>
-				<div ng-if="data.gateway_data.AvsStatus">AVS Status: <span style="font-weight: bold;">{{data.gateway_data.AvsStatus}}</span></div>
-				
+		<div class="side-cbinfo">
+			<div class="side-cbinfo-head">IMPORTED DATA</div>
+			
+			<div class="row" ng-if="data.portal_data.MidNumber">
+				<div class="col-xs-4" style="text-align: right;">Type:</div>
+				<div class="col-xs-8">
+					<span ng-if="data.type == 'cp'">Card Present</span>
+					<span ng-if="data.type == 'cnp'">Card Not Present</span>		
+				</div>
 			</div>
+
+			<div class="row" ng-if="data.portal_data.MidNumber">
+				<div class="col-xs-4" style="text-align: right;">MID:</div>
+				<div class="col-xs-8">{{data.portal_data.MidNumber}}</div>
+			</div>
+
+			<div class="row" ng-if="data.gateway_data.FullName">
+				<div class="col-xs-4" style="text-align: right;">Customer:</div>
+				<div class="col-xs-8">{{data.gateway_data.FullName}}</div>
+			</div>
+
+			<div class="row" ng-if="data.portal_data.MidNumber">
+				<div class="col-xs-4" style="text-align: right;">Amount:</div>
+				<div class="col-xs-8">{{data.portal_data.ChargebackAmt | currency}}</div>
+			</div>
+
+			<div class="row" ng-if="data.portal_data.CcPrefix || data.portal_data.CcSuffix">
+				<div class="col-xs-4" style="text-align: right;">Credit Card:</div>
+				<div class="col-xs-8">
+					<span ng-if="data.portal_data.CcPrefix">{{data.portal_data.CcPrefix}}</span><span ng-if="!data.portal_data.CcPrefix">XXXX</span>-XXXX-XXXX-<span ng-if="data.portal_data.CcSuffix">{{data.portal_data.CcSuffix}}</span><span ng-if="!data.portal_data.CcSuffix">XXXX</span>
+					<span ng-if="data.gateway_data.CcType">({{data.gateway_data.CcType}})</span>
+				</div>
+			</div>
+
+			<div class="row">
+				<div class="col-xs-4" style="text-align: right;">Shipped:</div>
+				<div class="col-xs-8">{{data.shipped}}</div>
+			</div>
+			<div class="row">
+				<div class="col-xs-4" style="text-align: right;">Refunded:</div>
+				<div class="col-xs-8">{{data.refunded}}</div>
+			</div>
+			<div class="row">
+				<div class="col-xs-4" style="text-align: right;">Recurring:</div>
+				<div class="col-xs-8">{{data.recurring}}</div>
+			</div>
+
+
+			<div class="row" ng-if="data.portal_data.ReasonCode || data.portal_data.ReasonText">
+				<div class="col-xs-4" style="text-align: right;">Reason:</div>
+				<div class="col-xs-8">
+					{{data.portal_data.ReasonText}} {{data.portal_data.ReasonCode}}
+				</div>
+			</div>
+
 		</div>
 	</div>
 	<div class="col-sm-8 col-sm-pull-4 jgs-form">
@@ -84,7 +115,7 @@
 				</div>
 			</div>
 		</div>
-		<div class="row" ng-if="!data.portal_data.CcPrefix || !data.portal_data.CcSuffix || !data.gateway_data.CcType || !data.gateway_data.CcExpire">
+		<div class="row" ng-if="!data.portal_data.CcPrefix || !data.portal_data.CcSuffix ">
 			<div class="col-md-3">
 				<div class="form-group" show-errors>
 					<label>CC Prefix</label>
@@ -110,7 +141,7 @@
 				</div>
 			</div>
 		</div>
-		<div style="margin-bottom: 100px;" ng-if="!data.portal_data.CaseNumber || !data.portal_data.ReasonCode || !data.portal_data.ChargebackAmt || !data.portal_data.MidNumber || !data.portal_data.CcPrefix || !data.portal_data.CcSuffix || !data.gateway_data.CcType || !data.gateway_data.CcExpire"></div>
+		<div style="margin-bottom: 100px;" ng-if="!data.portal_data.CaseNumber || !data.portal_data.ReasonCode || !data.portal_data.ChargebackAmt || !data.portal_data.MidNumber || !data.portal_data.CcPrefix || !data.portal_data.CcSuffix || !data.gateway_data.CcExpire"></div>
 
 		<h4 style="font-weight: bold;">Customer Information</h4>
 		<div class="row bt">

@@ -1,27 +1,17 @@
-
-
-<div class="row">
-	<div class="col-md-12">
-		<div class="pull-right" style="font-size: 16px; color: #999;" ng-if="state.current.url != '/card'">
-			<span ng-if="data.type == 'cp'">Card Present Chargeback</span>
-			<span ng-if="data.type == 'cnp'">Card Not Present Chargeback</span>
-		</div>
-
+<div class="row cbFormRow">
+	<div class="col-sm-8">
 		<h2 style="margin-top: 0px;">
-			<span style="color: #999;">Working on</span> Chargeback {{data.portal_data.CaseNumber}}
+			Chargeback {{data.portal_data.CaseNumber}}
 		</h2>
-
-		<div class="page-header text-center" style="border-bottom: none;" ng-if="state.current.url == '/data'">
-			<!-- the links to our nested states using relative paths -->
-			<!-- add the active class if the state matches our ui-sref -->
-			<div id="status-buttons" class="text-center">
-				<a ui-sref-active="active" ui-sref=".card"><span>1</span> Type</a>
-				<a ui-sref-active="active" ui-sref=".questions"><span>2</span> Questions</a>
-				<a ui-sref-active="active" ui-sref=".data"><span>3</span> Data</a>
-				<a ui-sref-active="active" ui-sref=".review"><span>4</span> Review</a>
-			</div>
+	</div>
+	<div class="col-sm-4">
+		<div id="status-buttons" class="row">
+			<div class="col-xs-3"><a ui-sref-active="active" ui-sref=".card"><span>1</span> Type</a></div>
+			<div class="col-xs-3"><a ui-sref-active="active" ui-sref=".questions"><span>2</span> Questions</a></div>
+			<div class="col-xs-3"><a ui-sref-active="active" ui-sref=".data"><span>3</span> Data</a></div>
+			<div class="col-xs-3"><a ui-sref-active="active" ui-sref=".review"><span>4</span> Review</a></div>
 		</div>
-
+		
 	</div>
 </div>
 
