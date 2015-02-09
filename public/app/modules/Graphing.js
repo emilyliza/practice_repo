@@ -72,6 +72,10 @@
 					percent = 80,
 					transition = 200;
 
+				function calcPercent(percent) {
+					return [percent, 100-percent];
+				}
+
 				var dataset = {
 					lower: calcPercent(0),
 					upper: calcPercent(percent)
@@ -92,7 +96,7 @@
 				var path = svg.selectAll("path")
 					.data(pie(dataset.lower))
 					.enter().append("path")
-					.attr("class", function(d, i) { return "color" + i })
+					.attr("class", function(d, i) { return "color" + i; })
 					.attr("d", arc)
 					.each(function(d) { this._current = d; }); // store the initial values
 
@@ -112,7 +116,7 @@
 							// Then, interpolate from _current to the new angles.
 							// During the transition, _current is updated in-place by d3.interpolate.
 							var i  = d3.interpolate(this._current, a);
-							var i2 = d3.interpolate(progress, percent)
+							var i2 = d3.interpolate(progress, percent);
 							this._current = i(0);
 							return function(t) {
 								text.text( format(i2(t) / 100) );
@@ -122,9 +126,7 @@
 					}, 200);
 				}
 				
-				function calcPercent(percent) {
-					return [percent, 100-percent];
-				};
+				
 			}
 		};
 	}])			// end percentage pie

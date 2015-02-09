@@ -39,7 +39,7 @@
 						$scope.errors = res.data.errors;
 					}
 					return true;
-				})
+				});
 			}
 		};
 
