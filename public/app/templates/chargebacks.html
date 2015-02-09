@@ -1,6 +1,6 @@
 
 <div class="row search" style="margin-bottom: 20px;">
-	<div class="col-md-3">
+	<div class="col-md-4">
 		<h2>My Chargebacks</h2>
 	</div>
 	
@@ -9,7 +9,7 @@
 		<a href="#" datepicker-popup="MM/dd/yyyy" ng-model="date.end.val" is-open="date.end.opened" ng-click="date.end.opened=true" isdate >{{date.end.val | date:'MM/dd/yyyy'}}</a>
 	</div>
 
-	<div class="col-md-4" style="padding-top: 20px;">
+	<div class="col-md-3" style="padding-top: 20px;">
 		<input ng-model="q" type="text" class="form-control pull-right" name="query" autocomplete="off" placeholder="Search" ng-keyup="cbs.search(q)">
 	</div>
 

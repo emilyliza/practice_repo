@@ -437,15 +437,20 @@ footer {
 }
 
 .side-cbinfo {
-	border-radius: 4px;
-	background-color: @cbBlue;
-	padding: 8px;
-	color: white;
+	background-color: #efefef;
+	color: black;
 	margin-top: 30px;
+	.border-top-radius(3px);
+	.border-bottom-radius(3px);
 	.side-cbinfo-head {
 		font-weight: bold;
+		color: white;
+		padding: 8px;
+		.border-top-radius(3px);
+		font-size: 16px;
 		margin-bottom: 10px;
 		text-align: center;
+		background-color: @cbDarkBlue;
 	}
 	.row {
 		margin-bottom: 5px;
