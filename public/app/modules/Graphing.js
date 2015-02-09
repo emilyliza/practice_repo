@@ -632,7 +632,7 @@
 					.scale(x)
 					.orient("bottom")
 					.ticks(d3.time.month, 1)
-					.tickFormat(d3.time.format('%b %y'));
+					.tickFormat(d3.time.format('%b'));
 
 				var yAxis = d3.svg.axis()
 					.scale(y)

@@ -302,25 +302,7 @@ footer {
 	width: 100%;
 }
 
-// large circles in reporting
-.reporting-status {
-	border: solid 1px black;
-	.clearfix();
-	.col-sm-4, .col-sm-3 {
-		height: 175px;
-		text-align: center;
-		padding-top: 60px;
-		font-size: 16px;
-		font-weight: bold;
-		background-color: @cbBlue;
-		div {
-			text-align: center;
-			width: auto;
-			font-size: 30px;
-		}
-		
-	}
-}
+
 
 
 // large circles in dash
@@ -344,9 +326,9 @@ footer {
 		background-color: @cbGreen;
 		.border-top-radius(3px);
 		color: white;
-		.stat-head {
-			background-color: @cbGreen;
-		}
+	}
+	.stat-head-green {
+		background-color: @cbGreen;
 	}
 	.stat {
 		padding-bottom: 20px;
@@ -358,6 +340,9 @@ footer {
 			.glyphicon {
 				width: 25px;
 			}
+		}
+		.highlight {
+			color: @cbOrange;
 		}
 	}
 	.video {

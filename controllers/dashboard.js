@@ -51,6 +51,31 @@ module.exports = function(app) {
 			Chargeback.aggregate(agg, this);
 
 		})
+		.par('tops', function() {
+			
+			var agg = [
+				{ $match: { 'user._id': mongoose.Types.ObjectId( req.user._id ) } },
+				{ $project: {
+					_id: 0,
+					amt: '$portal_data.ChargebackAmt',
+					mid: '$portal_data.MidNumber'
+				}},
+				{ $group: {
+					'_id': { 'mid': '$mid' },
+					'sum': { '$sum': '$amt' },
+					'count': { '$sum': 1 }
+				}},
+				{ $sort: {
+					'sum': -1
+				}},
+				{ $limit: 10 }
+			];
+			
+			log.log(agg);
+			Chargeback.aggregate(agg, this);
+
+		})
+
 		.seq(function() {
 			
 			// cache busting on static api end point
@@ -66,6 +91,13 @@ module.exports = function(app) {
 					sum: item.sum
 				};
 			});
+
+			var tops = [];
+			_.each(this.vars.tops, function(item) {
+				tops.push( { mid: item._id.mid, amt: item.sum } );
+			});
+			out.tops = tops;
+
 			
 			return res.json(out);
 

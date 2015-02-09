@@ -6,11 +6,15 @@
 </div>
 
 <div class="row">
-	<div class="col-sm-4">
+	<div class="col-sm-3">
 	
 		<div class="dash-stat">
-			<div class="stat-head">Total Chargeback Amount</div>
-			<div class="stat">{{data.totals.sum | currency:"$":0}}</div>
+			<div class="stat-head">Total Chargebacks</div>
+			<div class="stat">
+				<span class="highlight">{{data.totals.count | number}}</span><br/>
+				for<br/>
+				<span class="highlight">{{data.totals.sum | currency:"$":0}}</span>
+			</div>
 		</div>
 
 		<div class="dash-stat">
@@ -20,9 +24,25 @@
 
 	</div>
 
-	<div class="col-sm-8">
+	<div class="col-sm-3">
+		
+		<div class="dash-stat">
+			<div class="stat-head">Top Chargeback MIDs</div>
+			<div class="stat">
+				<div class="row"  ng-repeat="m in data.tops">
+					<div class="col-xs-6 col-xs-offset-1">
+						<a href="chargebacks?mids={{m.mid}}">{{m.mid}}</a>
+					</div>
+					<div class="col-xs-5">{{m.amt | currency:"$":0}}</div>
+				</div>
+			</div>
+		</div>
+
+	</div>
+
+	<div class="col-sm-6">
 		<div class="dash-stat dash-green">
-			<div class="stat-head">Chargeback Volume</div>
+			<div class="stat-head stat-head-green">Chargeback Volume</div>
 			<div class="stat">
 				<div graph-bar control="graphBarHistory"></div>
 			</div>	
