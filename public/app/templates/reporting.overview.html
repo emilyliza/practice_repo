@@ -2,30 +2,31 @@
 	<div class="pull-right merchantSelect">
     	<select  class="form-control pull-right" ng-model="selectedMerchant" ng-change="setMerchant(selectedMerchant)" ng-options="merchant.name for merchant in merchants"></select>
     </div>
+    <h3 style="margin-top: 10px;">Reporting</h3>
 </div>
 
-<div class="row reporting-status">
-	<div class="col-sm-4" style="background-color: #5cb85c;">
-		<div>{{data.sum | currency:"$":0}}</div>
-		Total Chargeback Amount
-		<!-- Successfully<br/>Recovered	-->
-	</div>
-
-	<div class="col-sm-4" style="background-color: #0d94c1;">
-		<div>Coming Soon</div>
-		Win Rate
-	</div>
-		
-	<div class="col-sm-4" style="background-color: #ffcc00; color: #333;">
-		<div>Coming Soon</div>
-		Average Days<br/>To Recover
-	</div>
-</div>
-
-<h3 style="margin-top: 40px;">{{selectedMerchant.name}} Chargeback Volume History</h3>
 <div class="row">
-	<div class="col-md-12" >
-		<div graph-bar control="graphBarHistory"></div>
+	<div class="col-sm-4">
+	
+		<div class="dash-stat">
+			<div class="stat-head">Total Chargeback Amount</div>
+			<div class="stat">{{data.totals.sum | currency:"$":0}}</div>
+		</div>
+
+		<div class="dash-stat">
+			<div class="stat-head">Days to Recover</div>
+			<div class="stat">24 days</div>
+		</div>
+
+	</div>
+
+	<div class="col-sm-8">
+		<div class="dash-stat dash-green">
+			<div class="stat-head">Chargeback Volume</div>
+			<div class="stat">
+				<div graph-bar control="graphBarHistory"></div>
+			</div>	
+		</div>
 	</div>
 </div>
 

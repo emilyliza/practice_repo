@@ -1,109 +1,84 @@
 
 
-<div class="row dashboard-status">
+<div class="row">
 		
-	<div class="col-sm-3">
-		<div class="img-circle" style="background-color: #5cb85c; padding-top: 40px;">
-			<span style="color: #666;">Chargebacks to  respond to</span>
-			<div>{{dbs.data_dashboard.count | number}}</div>
-			<span style="color: #666"></span>
+	<div class="col-sm-4">
+		
+		<div class="dash-stat">
+			<div class="stat-head">Status Summary</div>
+			<div class="stat">
+				<div class="row">
+					<div class="col-xs-7 col-xs-offset-1">
+						<span class="glyphicon glyphicon-inbox"></span>
+						<a href="chargebacks?status=New">New</a>
+					</div>
+					<div class="col-xs-4">{{dbs.data_dashboard.New.count | number}}</div>
+				</div>
+				<div class="row">
+					<div class="col-xs-7 col-xs-offset-1">
+						<span class="glyphicon glyphicon-circle-arrow-right"></span> 
+						<a href="chargebacks?status=In+Progress">In-Progress</a>
+					</div>
+					<div class="col-xs-4">
+						{{dbs.data_dashboard['In Progress'].count | number}}
+						<span ng-if="!dbs.data_dashboard['In Progress']">0</span>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-xs-7 col-xs-offset-1">
+						<span class="glyphicon glyphicon-send"></span>
+						<a href="chargebacks?status=Sent">Sent</a>
+					</div>
+					<div class="col-xs-4">
+						{{dbs.data_dashboard.Sent.count | number}}
+						<span ng-if="!dbs.data_dashboard.Sent">0</span>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-xs-7 col-xs-offset-1">
+						<span class="glyphicon glyphicon glyphicon-ok-circle"></span> 
+						<a href="chargebacks?status=Complete">Complete</a>
+					</div>
+					<div class="col-xs-4">
+						{{dbs.data_dashboard.Complete.count | number}}
+						<span ng-if="!dbs.data_dashboard.Complete">0</span>
+					</div>
+				</div>
+			</div>
 		</div>
 
-		<div class="img-circle" style="background-color: #5cb85c; padding-top: 40px; margin: 20px auto;">
-			<span style="color: #666">Amount you<br/>could recover</span>
-			<div style="font-size: 30px;">{{dbs.data_dashboard.sum | currency:"$":0}}</div>
-			<span style="color: #666"></span>
+		<div class="dash-stat dash-green" style="margin-bottom: 32px;">
+			<div class="stat-head">Amount to Win Back</div>
+			<div class="stat">{{dbs.data_dashboard.New.sum | currency:"$":0}}</div>
 		</div>
-		
-	</div>
 
-	<div class="col-sm-9">
-		
-		<h3 style="margin-top: 0px;">Ten Newest Chargebacks</h3>
-		<div class="animated-grid chargebacks">
-			<div class="row head">
-				<div class="col-sm-2">Date</div>
-				<div class="col-sm-1">Amt</div>
-				<div class="col-sm-2">MID</div>
-				<div class="col-sm-3">Reason (Code)</div>
-				<div class="col-sm-2">Case #</div>
-				<div class="col-sm-2"></div>
-			</div>
+		<a href="/chargebacks" class="btn btn-lg btn-cb-orange" style="width: 100%;">View All Chargebacks</a>
 
-			<div class="row" ng-repeat="cb in dbs.data_chargebacks">
-				<div class="col-sm-2">{{cb.chargebackDate | date:'MM/dd/yyyy'}}</div>
-				<div class="col-sm-1">{{cb.portal_data.ChargebackAmt | currency}}</div>
-				<div class="col-sm-2">{{cb.portal_data.MidNumber}}</div>
-				<div class="col-sm-3">
-					{{cb.portal_data.ReasonText}} <span style="color:#999;">({{cb.portal_data.ReasonCode}})</span>
-					<!--
-					<a class="btn btn-sm btn-success" href="/chargeback/{{cb.derived_data.uuid}}/upload">Get Started <span class="glyphicon glyphicon-chevron-right"></span></a>
-					-->
-				</div>
-				<div class="col-sm-2">{{cb.portal_data.CaseNumber}}</div>
-				<div class="col-sm-2">
-					<a class="btn btn-sm btn-success" href="/chargeback/{{cb._id}}/card">Work This Chargeback <span class="glyphicon glyphicon-chevron-right"></span></a>
-				</div>
-			</div>
 			
-			<div class="row" ng-if="dbs.loaded_chargebacks && dbs.data_chargebacks.length == 0">
-				<div class="col-sm-12"><h3>No chargebacks found</h3></div>
-			</div>	
-			<div class="row" ng-if="!dbs.loaded_chargebacks">
-				<div class="col-sm-12"><h3 style="color: #999;">Loading Chargebacks...</h3></div>
-			</div>	
+	</div>
+	<div class="col-sm-4">
+				
+		<div class="dash-stat">
+			<div class="stat-head">Win Rate</div>
+			<div class="percentage" percentage control="winloss" ></div>
 		</div>
 
-		<a class="btn btn-default pull-right" style="margin: 20px 60px 0px 0px;" href="/chargebacks">View All My Chargebacks</a>
-		
+	</div>
+
+	<div class="col-sm-4">
+		<div class="dash-stat">
+			<div class="video">Video Here</div>
+		</div>
+
+		<div class="dash-stat">
+			<div class="stat-head">Amount We've Won Back</div>
+			<div class="stat">None Yet!</div>
+		</div>
 
 	</div>
 
 </div>
 
-<!-- START THE FEATURETTES -->
-<hr class="featurette-divider" style="margin-top: 70px; display: none;">
 
-<h2 style="margin-top: 40px; display: none;">The Chargeback.com Process</h2>
-<div class="row dashboard-process" style=" display: none;">
-	<div class="col-sm-2">
-		<h4><span class="num">1</span>Upload</h4>
-		Upload screen shots of the products and terms of service.
-	</div>
-	<div class="col-sm-2">
-		<h4><span class="num">2</span>Portal</h4>
-		Portal information includes reference numbers, case numbers, amounts, and reasons.
-	</div>
-	<div class="col-sm-2">
-		<h4><span class="num">3</span>Gateway</h4>
-		Add gateway information including order #s, billing address, product information, and payment details.
-	</div>
-	<div class="col-sm-2">
-		<h4><span class="num">4</span>CRM</h4>
-		Include CRM data about the customer, product, address, etc.
-	</div>
-	<div class="col-sm-2">
-		<h4><span class="num">5</span>Shipping</h4>
-		Provide detailed shipping information concerning the chargeback.
-	</div>
-	<div class="col-sm-2">
-		<h4><span class="num">6</span>Comments</h4>
-		Add additional comments or information that will help win the chargeback.
-	</div>
-</div>
-
-<!-- START THE FEATURETTES -->
-<hr class="featurette-divider" style="margin-top: 60px; display: none;">
-
-<div class="row" style="margin-top: 60px; display: none;">
-	<div class="col-md-4">
-		<h3>Need to know more?</h3>
-		Watch our video to learn more about the chargeback process.
-	</div>
-	<div class="col-md-8" style="text-align: center;">
-		<img src="http://placehold.it/560x315&text=Video+Here" />
-		
-	</div>
-</div>
 
 

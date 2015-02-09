@@ -65,6 +65,12 @@ footer {
 	}
 }
 
+
+@border-radius-large: 3px;
+.btn-cb-orange {
+	.button-variant(white, @cbOrange, @cbOrange);
+}
+
 .dropdown-menu {
 	-webkit-transition:all linear 0.25s;
 	transition:all linear 0.25s;
@@ -318,24 +324,53 @@ footer {
 
 
 // large circles in dash
-.dashboard-status {
-	.clearfix();
-	div.img-circle { 
+.dash-stat {
+	width: 100%;
+	font-size: 30px;
+	text-align: center;
+	background-color: #efefef;
+	margin-bottom: 30px;
+	.border-bottom-radius(3px);
+	.stat-head {
+		.border-top-radius(3px);
+		background-color: @cbDarkBlue;
+		color: white;
+		font-size: 18px;
 		text-align: center;
-		padding-top: 40px;
-		font-size: 16px;
-		font-weight: bold;
-		width: 180px;
-		height: 180px;
-		margin: 0px auto;
-		background-color: @cbBlue;
-		line-height: 20px;
-		div {
-			text-align: center;
-			width: auto;
-			font-size: 45px;
-			padding-top: 14px;
+		margin-bottom: 15px;
+		padding: 10px 0px;
+	}
+	&.dash-green {
+		background-color: @cbGreen;
+		.border-top-radius(3px);
+		color: white;
+		.stat-head {
+			background-color: @cbGreen;
 		}
+	}
+	.stat {
+		padding-bottom: 20px;
+		width: 100%;
+		.row {
+			font-size: 16px;
+			text-align: left;
+			margin-bottom: 8px;
+			.glyphicon {
+				width: 25px;
+			}
+		}
+	}
+	.video {
+		width: 100%;
+		height: 250px; 
+		border-radius: 3px;
+		background-color: @cbBlue;
+		color: white;
+		font-size: 30px;
+		padding-top: 100px;
+	}
+	&.clickable {
+		cursor: pointer;
 	}
 }
 .dashboard-process {

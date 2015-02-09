@@ -13,10 +13,25 @@
 
 	}])
 
-	.controller('DashboardController', [ '$scope', 'DashboardService', function($scope, DashboardService) {
+	.controller('DashboardController', [ '$scope', 'DashboardService', '$timeout', function($scope, DashboardService, $timeout) {
 		$scope.dbs = new DashboardService();
 		$scope.dbs.loadDashboard();
-		$scope.dbs.loadChargebacks();
+		//$scope.dbs.loadChargebacks();
+		$scope.winloss = {};
+
+
+		$timeout(function() {
+			$scope.winloss.update({
+				"label": '',
+				"data_type": 'number',
+				"filtertype": '',
+				"data": [
+					{ name: 'Won', val: 90 },
+					{ name: 'Lost', val: 10 },
+				]
+			});
+		},500);
+
 	}])
 
 

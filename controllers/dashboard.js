@@ -17,10 +17,31 @@ module.exports = function(app) {
 				{ $match: { 'user._id': mongoose.Types.ObjectId( req.user._id ) } },
 				{ $project: {
 					_id: 0,
-					amt: '$portal_data.ChargebackAmt' 
+					amt: '$portal_data.ChargebackAmt',
+					status: '$status'
 				}},
 				{ $group: {
+					'_id': { 'status' : "$status" }, 
+					'sum': { '$sum': '$amt' },
+					'count': { '$sum': 1 }
+				}}
+			];
+			
+			log.log(agg);
+			Chargeback.aggregate(agg, this);
+
+		})
+		.par('totals', function() {
+			
+			var agg = [
+				{ $match: { 'user._id': mongoose.Types.ObjectId( req.user._id ) } },
+				{ $project: {
 					_id: 0,
+					amt: '$portal_data.ChargebackAmt',
+					status: '$status'
+				}},
+				{ $group: {
+					'_id': 0,
 					'sum': { '$sum': '$amt' },
 					'count': { '$sum': 1 }
 				}}
@@ -35,15 +56,18 @@ module.exports = function(app) {
 			// cache busting on static api end point
 			res.header('Content-Type', 'application/json');
 			res.header('Cache-Control', 'no-cache, private, no-store, must-revalidate, max-stale=0, post-check=0, pre-check=0');
-		
-			if (this.vars.amount && this.vars.amount[0]) {
-				return res.json({
-					count: this.vars.amount[0].count,
-					sum: this.vars.amount[0].sum
-				});
-			} else {
-				return res.json({});
-			}
+			
+			var out = {
+				'totals': this.vars.totals[0]
+			};
+			_.each(this.vars.amount, function(item) {
+				out[item._id.status] = {
+					count: item.count,
+					sum: item.sum
+				};
+			});
+			
+			return res.json(out);
 
 		})
 		.catch(next);
