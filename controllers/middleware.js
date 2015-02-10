@@ -5,6 +5,7 @@
 var middleware = module.exports = {},
 	$ = require('seq'),
 	_ = require('underscore'),
+	moment = require('moment'),
 	jwt = require('jsonwebtoken');
 
 
@@ -18,7 +19,7 @@ middleware.auth = function() {
 
 		var token = false;
 		if (req.headers.authorization) {
-			token = req.headers.authorization;
+			token = req.headers.authorization.replace('Bearer ', '');
 		} else if (req.query.cbkey) {
 			token = req.query.cbkey;
 		}

@@ -7,6 +7,7 @@ module.exports = function(app) {
 		mongoose = require('mongoose'),
 		User = app.Models.get('User'),
 		log = app.get('log'),
+		mw = require('./middleware'),
 		Chargeback = app.Models.get('Chargeback');
 
 		
@@ -114,7 +115,8 @@ module.exports = function(app) {
 			var obj = {
 				"_id": this.vars.user._id,
 				"name": this.vars.user.name,
-				"username": this.vars.user.username
+				"username": this.vars.user.username,
+				"email": this.vars.user.email
 			};
 
 			// store admin flag in session token
@@ -122,7 +124,7 @@ module.exports = function(app) {
 				obj.admin = true;
 			}
 			
-			var token = jwt.sign(obj, process.env.TOKEN_SECRET, { expiresInMinutes: 60*5 });
+			var token = jwt.sign(obj, process.env.TOKEN_SECRET, { expiresInMinutes: 60 });
 
 			var query_end = new Date().getTime();
 			log.log("Login Time: " + (query_end - query_start) + "ms");
@@ -142,6 +144,50 @@ module.exports = function(app) {
 			return res.json( _.omit(this.vars.user.toJSON(), ['password', 'admin', 'timestamps', 'meta', 'active', '__v']) );
 			
 
+		})
+		.catch(next);
+
+	});
+
+	
+	app.get('/api/v1/refresh',  mw.auth(), function(req, res, next) {
+
+		$()
+		.seq("user", function() {
+			User.findById(req.user._id, this);
+		})
+		.seq(function() {
+			
+			if (!this.vars.user) {
+				log.log('user not found.');
+				errors['username'] = "User does not exist.";
+				return res.json(404, errors);
+			}
+
+			// We are sending the profile inside the token
+			var obj = {
+				"_id": this.vars.user._id,
+				"name": this.vars.user.name,
+				"username": this.vars.user.username,
+				"email": this.vars.user.email
+			};
+
+			// store admin flag in session token
+			if (req.body.admin) {
+				obj.admin = true;
+			}
+			
+			// tokens live for 20 mintues. the angular app will check every 10
+			// minutes, during activity, and refresh the tokens to keep the user
+			// logged in.
+			var token = jwt.sign(obj, process.env.TOKEN_SECRET, { expiresInMinutes: 20 });
+
+			this.vars.user.set('authtoken', token, { strict: false });
+			
+			return res.json({
+				authtoken: token
+			});
+		
 		})
 		.catch(next);
 

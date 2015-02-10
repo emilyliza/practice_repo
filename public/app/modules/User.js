@@ -9,7 +9,7 @@
 		
 	}])
 
-	.service('UserService', ['$http', '$window', function ($http, $window) {
+	.service('UserService', ['$http', '$window', '$timeout', function ($http, $window, $timeout) {
 		
 		this.login = function(d) {
 			var self = this;
@@ -18,6 +18,7 @@
 				.then(function (res) {
 					
 					self.setToken(res.data.authtoken);
+					self.markTime();
 					delete res.data.authtoken;	// don't have token in current user
 					
 					// manually set current user (vs additional ajax request)
@@ -47,6 +48,32 @@
 				});
 		};
 		
+		this.markTime = function() {
+			$window.sessionStorage.lastAction = moment().valueOf();
+		};
+
+		this.sessionDuration = function() {
+			if (!$window.sessionStorage.lastAction) {
+				return ((60 * 60) * 24) * 1000;
+			}
+			return parseInt(moment().valueOf()) - parseInt($window.sessionStorage.lastAction);
+		};
+		
+		this.refreshSession = function() {
+			var top = this;
+			$timeout(function() {
+				$http
+					.get('/api/v1/refresh')
+					.then(function (res) {
+						top.setToken(res.data.authtoken);
+						top.markTime();
+						console.log('Session refreshed.');
+					},function(res) {
+						console.log('Problem refreshing session.');
+					});
+			},500);
+		};
+
 		this.setToken = function(token) {
 			$window.sessionStorage.token = token;
 			return true;

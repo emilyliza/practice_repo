@@ -73,8 +73,8 @@
 	
 	// check routes every time they change for authorized state
 	.run(
-		['$rootScope', 'AUTH_EVENTS', 'UserService', '$state', '$http',
-		function ($rootScope, AUTH_EVENTS, UserService, $state, $http) {
+		['$rootScope', 'AUTH_EVENTS', 'UserService', '$state',
+		function ($rootScope, AUTH_EVENTS, UserService, $state) {
 		
 		$rootScope.$on('$stateChangeStart', function (event, next) {
 			if (next.requiresAuth && !UserService.isAuthenticated()) {
@@ -100,24 +100,26 @@
 	}])
 
 
-	// look for any API requests that return 401, 403, 419, or 440 and broadcast appropriately
-	.config(['$httpProvider', function ($httpProvider) {
-		$httpProvider.interceptors.push([
-			'$injector',
-			function ($injector) {
-				return $injector.get('AuthInterceptor');
-			}
-		]);
-	}])
-	
-	.factory('AuthInterceptor', ['$rootScope', '$window', '$q', 'AUTH_EVENTS', function ($rootScope, $window, $q, AUTH_EVENTS) {
+	.factory('AuthInterceptor', ['$rootScope', '$window', '$q', '$injector', 'AUTH_EVENTS', function ($rootScope, $window, $q, $injector, AUTH_EVENTS) {
 		return {
 			request: function (config) {
 				config.headers = config.headers || {};
 				if ($window.sessionStorage.token) {
-					config.headers.Authorization = $window.sessionStorage.token;
+					config.headers.Authorization = 'Bearer ' + $window.sessionStorage.token;
 				}
 				return config;
+			},
+			response: function(response) {
+				if (response.config.url.match(/^\/api\/v1\//) && !response.config.url.match("refresh")) {
+					var UserService = $injector.get('UserService');
+					if (UserService.isAuthenticated() && UserService.sessionDuration() > ((60 * 10) * 1000)) {
+						// server tokens expire every 20 min. this will check every 10 min
+						// and refresh the token if the user is active, thus only logging
+						// someone out when there is 20 min of inactivity.
+						UserService.refreshSession();
+					}
+				}
+				return response;
 			},
 			responseError: function (response) { 
 				$rootScope.$broadcast({
@@ -129,6 +131,11 @@
 				return $q.reject(response);
 			}
 		};
+	}])
+
+	// look for any API requests that return 401, 403, 419, or 440 and broadcast appropriately
+	.config(['$httpProvider', function ($httpProvider) {
+		$httpProvider.interceptors.push('AuthInterceptor');
 	}]);
 
 })();
