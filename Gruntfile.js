@@ -58,7 +58,7 @@ module.exports = function(grunt) {
 			},
 			fonts: {
 				expand: true,
-				cwd: 'public/fonts',
+				cwd: 'public/bower_components/bootstrap/fonts',
 				src: '*', dest: 'dist/fonts/'
 			},
 			cssmin: {
@@ -183,6 +183,14 @@ module.exports = function(grunt) {
 				replacements: [{
 					from: /src=\/images/g,
 					to: "src=<%= aws.cloudfront %>/images"
+				}]
+			},
+			bower: {
+				src: ['dist/assets/*.css'],
+				overwrite: true,
+				replacements: [{
+					from: /\.\.\/bower_components\/bootstrap/g,
+					to: ""
 				}]
 			},
 			meta: {
