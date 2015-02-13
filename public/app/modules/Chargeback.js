@@ -48,6 +48,16 @@
 					$("html, body").animate({ scrollTop: 0 }, 200);
 				}
 			}
+		})
+		.state('chargeback.confirmation', {
+			url: '/confirmation',
+			requiresAuth: true,
+			templateUrl: '/app/templates/chargeback.confirmation.html',
+			resolve: {
+				scroll:  function() {
+					$("html, body").animate({ scrollTop: 0 }, 200);
+				}
+			}
 		});
 		
 	}])
@@ -84,6 +94,7 @@
 			$scope.shipped = false;
 		}
 
+		$scope.shipping_companies = ["USPS", "Fedex", "UPS", "DHL"];
 		
 		//$scope.uploaderTerms = UploadService.create(($scope.data.uploads.terms || {}), 10);
 		$scope.uploaderTerms = UploadService.create({}, 10);
@@ -151,6 +162,11 @@
 				});
 			}
 		};
+
+		$scope.download = function() {
+			window.open("/images/example.pdf", "_blank");
+		};
+
 
 		$scope.removeItem = function(item, el) {
 			angular.element(el).val('');	// have to clear out element value

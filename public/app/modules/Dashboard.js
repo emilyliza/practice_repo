@@ -17,20 +17,19 @@
 		$scope.dbs = new DashboardService();
 		$scope.dbs.loadDashboard();
 		//$scope.dbs.loadChargebacks();
-		$scope.winloss = {};
-
-
-		$timeout(function() {
-			$scope.winloss.update({
-				"label": '',
-				"data_type": 'number',
-				"filtertype": '',
-				"data": [
-					{ name: 'Won', val: 90 },
-					{ name: 'Lost', val: 10 },
-				]
-			});
-		},500);
+		
+		// $scope.winloss = {};
+		// $timeout(function() {
+		// 	$scope.winloss.update({
+		// 		"label": '',
+		// 		"data_type": 'number',
+		// 		"filtertype": '',
+		// 		"data": [
+		// 			{ name: 'Won', val: 90 },
+		// 			{ name: 'Lost', val: 10 },
+		// 		]
+		// 	});
+		// },500);
 
 	}])
 

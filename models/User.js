@@ -57,7 +57,7 @@ module.exports = function(app) {
 		var query = User.find();
 
 		if (params.query) {
-			var pattern = new RegExp('.*'+params.query+'.*', 'i');
+			var pattern = new RegExp('.*'+params.query.query+'.*', 'i');
 			query.or([
 				{ 'name': pattern },
 				{ 'username': pattern },
