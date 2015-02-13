@@ -2,53 +2,17 @@
 
 	angular.module('graphing', ['reporting'])
 
-	 .constant('GRAPHING_COLORS', [
-	 	"#1f77b4",
-		"#aec7e8",
-		"#ff7f0e",
-		"#ffbb78",
-		"#2ca02c",
-		"#98df8a",
-		"#d62728",
-		"#ff9896",
-		"#9467bd",
-		"#c5b0d5",
-		"#8c564b",
-		"#c49c94",
-		"#e377c2",
-		"#f7b6d2",
-		"#7f7f7f",
-		"#c7c7c7",
-		"#bcbd22",
-		"#dbdb8d",
-		"#17becf",
-		"#9edae5",
-		"#1f77b4",
-		"#aec7e8",
-		"#ff7f0e",
-		"#ffbb78",
-		"#2ca02c",
-		"#98df8a",
-		"#d62728",
-		"#ff9896",
-		"#9467bd",
-		"#c5b0d5",
-		"#8c564b",
-		"#c49c94",
-		"#e377c2",
-		"#f7b6d2",
-		"#7f7f7f",
-		"#c7c7c7",
-		"#bcbd22",
-		"#dbdb8d",
-		"#17becf",
-		"#9edae5"
-	])
+	 .constant('GRAPHING_COLORS', {
+	 	"In Progress": "#A7DBD8",
+	 	"Responded": "#6CBAA5",
+	 	"New": "#F38630",
+	 	"AMEX": "#6CBAA5",
+	 	"MASTERCARD": "#F38630",
+	 	"VISA": "#0d94c1",
+	 	"DISCOVER": "#E0E4CC"
+	})
 	
-	
-	
-
-	 .directive('percentage', 
+	.directive('percentage', 
 	 	[
 		'$window', '$http', '$filter', '$timeout', '$state',
 		function($window, $http, $filter, $timeout, $state) {
@@ -267,7 +231,7 @@
 					 	}
 					 });
 
-
+					scope.colors = {};
 					function filterData(element, index, array) {
 						element.name = res.data[index].name;
 						if (res.data_type == "currency") {
@@ -277,7 +241,11 @@
 							element.value = res.data[index].val;
 							element.pct = (res.data[index].val) / sum;
 						}
-						element.color = GRAPHING_COLORS[index];
+						
+						var ref = element.name;
+						if (!ref) { ref = 'null'; }
+
+						element.color = GRAPHING_COLORS[ ref ];
 						return (element.value > 0);
 					}
 					filteredPieData = pieData.filter(filterData);
@@ -345,8 +313,8 @@
 
 								if (res.grouptype == "mid") {
 									params['mids'] = [ res.label ];
-								} else if (res.grouptype == "merchant") {
-									params['merchant'] = [ res.label ];
+								} else if (res.grouptype == "portal") {
+									params['portal'] = res.label;
 								}
 
 								if (merchant && merchant.mids && merchant.mids.length) {
@@ -618,7 +586,7 @@
 				var parseDate = d3.time.format("%Y-%m-%d").parse;
 
 				// Width of bars, without padding. 
-				var barRawWidth = width / 14,
+				var barRawWidth = width / 12,
 					barPadding = 10,
 					xStart = barPadding + (barRawWidth/2),
 					barWidth = barRawWidth - (barPadding*2);
