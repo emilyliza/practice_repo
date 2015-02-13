@@ -1,59 +1,53 @@
-
-.drop-zone {
-	display: none;
-}
-.drop-zone-graphic {
-	z-index: 9;
-	position: relative;
-	background-color: @myOrange;
+// drag and drop zones in input pages.
+.ddzone {
+	background-color: @jgsDropZoneBack;
+	color: @jgsDropZoneText;
 	padding: 10px;
-	font-size: 16px;
-	color: #fff;
-	border-radius: 4px;
-	color: darken(@myOrange, 12%);
-	.glyphicon { 
-		position: relative;
-		float: left;
-		font-size: 55px;
-		color: darken(@myOrange, 12%);
-		margin-right: 5px;
+	font-size: 18px;
+	border-radius: 5px;
+	text-align: center;
+	line-height: 50px;
+	border: solid 4px @jgsDropZoneBack;
+	cursor: pointer;
+	&:hover, &.ddhover {
+		background-color: darken(@jgsDropZoneBack, 12%);
 	}
-	
-	.instruct {
-		position: relative;
-		color: darken(@myOrange, 12%);
-		padding: 0px 10px 0px 20px;
-		font-size: 18px;
-		display: block;
-		.clearfix();
+	.glyphicon {
+		font-size: 60px;
+	}
+	.subtext {
+		font-size: 12px;
+		color: @jgsDropZoneSubText;
+	}
+}
+
+// class for formatting uploaded images in  input forms
+.uploaded {
+	.img {
 		text-align: center;
-		button {
-			font-size: 11px;
-			margin: 10px 0px 0px 0px;
+		margin-bottom: 10px;
+		margin-top	: 20px;
+		padding: 10px 0px;
+		img {
+			max-width: 200px;
+			padding-left: 24px;	// counter measure to remove width
+			margin: 0px auto;
 		}
-		
-	}
-
-	&.hovering {
-		border: solid 2px @myBlack;
-	}
+		canvas {
+			width: auto;
+			padding-left: 24px;	// counter measure to remove width
+			margin: 0px auto;
+		}
+		&:hover {
+			background-color: #efefef;
+		}
 	
-
-}
-
-.drop-zone {
-	position: absolute;
-	z-index: 10;
-	width: 100%;
-	height: 110px;
-}
-
-
-/* Medium devices (desktops, 992px and up) */
-@media (min-width: @screen-md-min) {
-
-	.drop-zone {
-		display: block;
+		.remove {
+			cursor: pointer;
+			width: auto;
+			font-size: 24px;
+			color: #999;
+			margin-right: 10px;
+		}
 	}
-
 }

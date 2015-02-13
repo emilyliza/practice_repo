@@ -1,4 +1,7 @@
 @import "../bower_components/bootstrap/less/bootstrap.less";
+@icon-font-path: "../bower_components/bootstrap/fonts/";
+// this path is replaced during grunt build.
+
 @import "core.less";
 @import "jgsform.less";		// general form styling
 @import "popovers.less";	// for form popover error handling
@@ -6,19 +9,25 @@
 @import "loading.less";		// loading widget
 @import "bootstrap-switch.less";		// loading widget
 
-@icon-font-path:          "../fonts/";
-@icon-font-name:          "glyphicons-halflings-regular";
-@icon-font-svg-id:        "glyphicons_halflingsregular";
-@import "bootstrap-glyphicons.less";
-
 
 @navbar-height:             		65px;
 @navbar-inverse-color:      		@gray-light;
-@navbar-inverse-bg:         		@cbBlue;
+@navbar-inverse-bg:         		@jgsBlue;
 @navbar-inverse-border:     		darken(@navbar-inverse-bg, 10%);
 @navbar-inverse-link-color:         white;
 @navbar-inverse-link-hover-color:   #fff;
 @grid-float-breakpoint: 			@screen-md-min;
+
+
+@import "core.less";
+@import "jgsform.less";		// general form styling
+@import "popovers.less";	// for form popover error handling
+@import "loading.less";		// loading widget
+@import "dropzone.less";
+@import "graphs.less";		// for d3 formatting
+
+
+
 
 #pages {
 	margin-bottom: 250px;
@@ -38,7 +47,7 @@ footer {
 
 .navbar-inverse {
 	.navbar-text {
-		color: @cbRed;
+		color: @jgsRed;
 		font-weight: bold;
 	}
 }
@@ -68,7 +77,7 @@ footer {
 
 @border-radius-large: 3px;
 .btn-cb-orange {
-	.button-variant(white, @cbOrange, @cbOrange);
+	.button-variant(white, @jgsDarkOrange, @jgsDarkOrange);
 }
 
 .dropdown-menu {
@@ -102,17 +111,17 @@ footer {
 
 // drag and drop zones in chargeback input pages.
 .ddzone {
-	background-color: @cbBlue;
+	background-color: @jgsBlue;
 	color: white;
 	padding: 10px;
 	font-size: 18px;
 	border-radius: 5px;
 	text-align: center;
 	line-height: 50px;
-	border: solid 4px @cbBlue;
+	border: solid 4px @jgsBlue;
 	cursor: pointer;
 	&:hover, &.ddhover {
-		background-color: darken(@cbBlue, 12%);
+		background-color: darken(@jgsBlue, 12%);
 	}
 	&.ddhover {
 		border: solid 4px green;
@@ -177,7 +186,7 @@ footer {
 		padding-top: 15px;
 		font-size: 20px;
 		span {
-			color: @cbRed;
+			color: @jgsRed;
 		}
 	}
 }
@@ -186,7 +195,7 @@ footer {
 	.present, .notpresent {
 		cursor: pointer;
 		text-align: center;
-		color: @cbBlue;
+		color: @jgsBlue;
 		.glyphicon-credit-card {
 			font-size: 200px;
 		}
@@ -196,7 +205,7 @@ footer {
 			opacity: .6
 		}
 		&:hover {
-			color: darken(@cbBlue, 12%);
+			color: darken(@jgsBlue, 12%);
 		}
 	}	
 	.notpresent {
@@ -292,7 +301,7 @@ footer {
 	    }
 
 		/* active buttons turn light green-blue*/
-		a.active span { background: @cbBlue; }
+		a.active span { background: @jgsBlue; }
 	}
 }
 
@@ -315,7 +324,7 @@ footer {
 	.border-bottom-radius(3px);
 	.stat-head {
 		.border-top-radius(3px);
-		background-color: @cbDarkBlue;
+		background-color: @jgsDarkBlue;
 		color: white;
 		font-size: 18px;
 		text-align: center;
@@ -323,12 +332,12 @@ footer {
 		padding: 10px 0px;
 	}
 	&.dash-green {
-		background-color: @cbGreen;
+		background-color: @jgsGreen;
 		.border-top-radius(3px);
 		color: white;
 	}
 	.stat-head-green {
-		background-color: @cbGreen;
+		background-color: @jgsGreen;
 	}
 	.stat {
 		padding-bottom: 20px;
@@ -342,14 +351,14 @@ footer {
 			}
 		}
 		.highlight {
-			color: @cbOrange;
+			color: @jgsDarkOrange;
 		}
 	}
 	.video {
 		width: 100%;
 		height: 250px; 
 		border-radius: 3px;
-		background-color: @cbBlue;
+		background-color: @jgsBlue;
 		color: white;
 		font-size: 30px;
 		padding-top: 100px;
@@ -448,7 +457,7 @@ footer {
 		font-size: 16px;
 		margin-bottom: 10px;
 		text-align: center;
-		background-color: @cbDarkBlue;
+		background-color: @jgsDarkBlue;
 	}
 	.side-cbinfo-desc {
 		padding: 0px 15px 10px;
@@ -478,7 +487,7 @@ footer {
 	.nav-sidebar > .active > a:hover,
 	.nav-sidebar > .active > a:focus {
 		color: #fff;
-		background-color: @cbBlue;
+		background-color: @jgsBlue;
 	}
 }
 .main {

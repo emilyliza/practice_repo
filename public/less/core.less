@@ -1,10 +1,41 @@
 
 // http://www.colourlovers.com/palette/92095/Giant_Goldfish
-@cbBlue: #0d94c1;
-@cbDarkBlue: #373C47;
-@cbRed: #9d352f;
-@cbGreen: #6CBAA5;
-@cbOrange: #D7783C;
+@jgsBrightOrange: #FA6900;
+@jgsDarkOrange: #F38630;
+@jgsBeach: #E0E4CC;
+@jgsTeal: #A7DBD8;
+@jgsBlue: #0d94c1;
+@jgsRed: #9d352f;
+
+@jgsDarkBlue: #373C47;
+@jgsGreen: #6CBAA5;
+
+
+@brand-primary: @jgsBlue;
+@brand-success: @jgsDarkOrange;
+@brand-info: @jgsTeal;
+@brand-warning: @jgsBeach;
+@brand-danger: #d9534f;
+@body-bg: #fff;
+
+@btn-primary-color: #333;
+@btn-info-color: @jgsBrightOrange;
+@btn-warning-color: @jgsDarkOrange;
+
+// jgsform
+@jgsFormText: #dedede;
+@jgsFormErrorBack: #fbddd5;
+@jgsFormErrorPlace: #edb1a3;
+@jgsFormErrorLabel: #eb5635;
+
+// popovers
+@jgsPopColor: @jgsBrightOrange;
+
+// dropzone
+@jgsDropZoneBack: @jgsBlue;
+@jgsDropZoneText: @jgsBeach;
+@jgsDropZoneSubText: @jgsBeach;
+
 
 
 body {
@@ -15,27 +46,6 @@ body {
 
 
 @font-family-sans-serif: 'Open Sans', sans-serif; 	// override bootstrap font family
-
-
-
-.form-control {
-	&:focus {
-		-moz-box-shadow: none;
-		box-shadow: none !important;
-		outline: none !important;
-		border-color: #ccc;
-	}
-}
-.form-group {
-	.error-helper {
-		display: none;
-	}
-	// &.has-error {
-	// 	.error-helper {
-	// 		display: inline-block;
-	// 	}
-	// }	
-}
 
 
 
@@ -56,111 +66,14 @@ textarea {
 	box-sizing: border-box;
 }
 
-.twitter-typeahead {
-	width: 100%;	// makes typeaheads 100% to comply with other bootstrap input widths
-}
-.typeahead,
-.tt-query,
-.tt-hint {
-	
-}
 
-.tt-query {
 
-}
-
-.tt-hint {
-	color: #999;	
-}
-
-.tt-dropdown-menu {
-	width: 100%;
-	max-height: 170px;
-	overflow: scroll;
-	//margin-top: 6px;
-	padding: 0px 0;
-	background-color: #fff;
-	border: 1px solid #ccc;
-	border: 1px solid rgba(0, 0, 0, 0.2);
-	
-	.border-bottom-radius(6px);
-	.box-shadow(0 2px 7px 0 rgba(0,0,0,.15));
-
-}
-.tt-suggestion {
-  padding: 8px 20px;
-  font-size: 15px;
-	font-weight: 400;
-	color: #6e6e6e; 
-}
-.tt-suggestion.tt-is-under-cursor {
-  
-  background-color: #f8f8f8;
-
-}
-.tt-suggestion p {
-  margin: 0;
-}
 .placeholder {
 	.center-block();
 	.none {
 		font-size: 20px;
 		text-align: center;
 		padding-top: 80px;
-	}
-}
-
-
-
-
-
-.photos {
-	.clearfix();
-	.photo {
-		float: left;
-		margin: 0px 10px 20px 0px;
-		position: relative;
-		
-		.photo-holder {
-			float: left;
-			position: relative;
-			img {
-				width: 100%;
-				cursor: pointer;
-				border-radius: 3px;
-			}
-			.progress {
-				display: none;
-				position: absolute;
-				top: 15px;
-				width: 95%;
-				margin: 0px 5px;
-			}
-		}
-		&:hover {
-			.remove {
-				visibility: visible;
-			}
-		}
-		.filename {
-			text-align: center;
-			overflow: hidden;
-		}
-		.remove {
-			position: absolute;
-			z-index: 2000;
-			font-size: 28px;
-			visibility: hidden;
-			opacity: .6;
-			padding: 5px 5px;
-			right: 1px;
-			color: white;
-			&:hover {
-				cursor: pointer;
-				opacity: 1;
-
-			}
-		}
 	}
 }
 
