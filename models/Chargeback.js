@@ -92,11 +92,16 @@ module.exports = function(app) {
 			'extension': String,
 			'filename': String,	// original file name, pre _id naming
 			'mimetype': String,
-			'url': String
+			'processed': { 'type': Boolean, 'default': false },
+			'urls': {}
 		}],
 		'additional_comments': String
 	}, { strict: true })
-	
+	.pre('save', function (next) {
+		Upload.presave(this,function(err) {
+			return next(err);
+		});
+	})
 	.pre('save', function (next) {
 		// clean up name
 		if (!this.gateway_data.FullName && (this.gateway_data.FirstName || this.gateway_data.LastName)) {
@@ -122,6 +127,20 @@ module.exports = function(app) {
 	
 	db.model('Chargeback', ChargebackSchema);
 	var Chargeback = db.model('Chargeback');
+
+	Chargeback.loadDependencies = function() {
+		Upload = app.Models.get('Upload');
+	};
+
+	// used when processing thumbs
+	Chargeback.prototype.notify_url = process.env.CALLBACK_HOST + "/api/v1/processed/chargeback/";
+
+	// photo sizes used during msg creation and photo processing
+	Chargeback.prototype.sizes = [
+		{ key: 'small', format: "crop", strategy: "fill", width: 150, height: 150 },
+		{ key: 'medium', format: "crop", strategy: "fill", width: 450, height: 350 },
+		{ key: 'large', format: "resize", strategy: "bounded", width: 800, height: 10000 }
+	];
 
 	return Chargeback;
 };
