@@ -51,7 +51,10 @@
 						{ 'signature': response.data.signature }
 					];
 
-					item.url = response.data.path;	// get path from server as well
+					item.url = response.data.path;
+					item.urls = {
+						'orig': response.data.path
+					};
 					
 					item.onSuccess = function() {
 						upload_array.push(response.data.photo);
