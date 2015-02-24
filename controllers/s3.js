@@ -7,9 +7,8 @@ module.exports = function(app) {
 		moment = require('moment'),
 		mw = require('./middleware'),
 		log = app.get('log'),
-		crypto = require( "crypto" );
-
-	
+		crypto = require( "crypto" ),
+		S3Tracker = app.Models.get('S3Tracker');
 
 	/*
 		The s3 route creates a data object that includes a signature allowing a web client to 
@@ -17,7 +16,7 @@ module.exports = function(app) {
 	*/
 	app.get('/api/v1/s3?', mw.auth(), function(req, res, next) {
 
-		var expires = moment().add('minutes', 10).toISOString();
+		var expires = moment().add(10, 'minutes').toISOString();
 		//log.log(expires);
 
 		var filename = path.basename(req.query.filename),
@@ -38,7 +37,7 @@ module.exports = function(app) {
 		var policyBase64 = new Buffer( JSON.stringify(policy) ).toString('base64');
 		//log.log ( policyBase64 )
 
-		var signature = crypto.createHmac( "sha1", process.env.AWS_SECRET_ACCESS_KEY ).update( policyBase64 ).digest( "base64" );
+		var signature = crypto.createHmac( "sha1", process.env.AWS_SECRET ).update( policyBase64 ).digest( "base64" );
 		//log.log( signature);
 
 		var c_ext = "";
@@ -46,23 +45,41 @@ module.exports = function(app) {
 			c_ext = ".jpg";
 		}
 
-		return res.json({
-			'path': 'https://' + process.env.BUCKET + '.s3.amazonaws.com/',
-			'bucket': process.env.BUCKET,
-			'key': key,
-			'contentType': req.query.contentType,
-			'AWSAccessKeyId': process.env.AWS_ACCESS_KEY_ID,
-			'acl': acl,
-			'policy': policyBase64,
-			'signature': signature,
-			'photo': {
+		$()
+		.seq(function() {
+			// Save to tracker so we know what to delete, or basically
+			// lost file harvesting.
+			var n = new S3Tracker({
 				'_id': id,
-				'extension': extension,
-				'filename': filename,
-				'mimetype': req.query.contentType,
-				'url': process.env.CDN + "/vault/" + id + extension
-			}
-		});
+				'extension': extension
+			});
+			n.save(this);
+		})
+		.seq(function() {
+			
+			return res.json({
+				'path': 'https://' + process.env.BUCKET + '.s3.amazonaws.com/',
+				'bucket': process.env.BUCKET,
+				'key': key,
+				'contentType': req.query.contentType,
+				'AWSAccessKeyId': process.env.AWS_KEY,
+				'acl': acl,
+				'policy': policyBase64,
+				'signature': signature,
+				'photo': {
+					'_id': id,
+					'extension': extension,
+					'filename': filename,
+					'mimetype': req.query.contentType,
+					'processed': false,
+					'urls': {
+						'orig': process.env.CDN + "/vault/" + id + extension
+					}
+				}
+			});
+
+		})
+		.catch(next);
 
 	});
 
