@@ -393,7 +393,7 @@
 		<div style="font-size: 12px; color: #999; padding-bottom: 10px;">Here you can upload information relevant to the transaction.</div>
 
 		<div class="row bt" style="border: none;">
-			<div class="col-md-5" style="margin-bottom: 60px;">
+			<div class="col-md-5" style="margin-bottom: 60px; border: none;">
 
 				<div ng-show="uploaderProduct.isHTML5">
 					<div nv-file-drop="" uploader="uploaderProduct">
@@ -410,12 +410,13 @@
 				</div>
 				<div class="uploaded">
 
-					<div ng-repeat="saved_item in data.uploads | filter:{ type:'products'}">
+					<div ng-repeat="saved_item in data.attachments | filter:{ type:'product'}">
 						<div class="img">
 							<div class="remove pull-right" ng-click="removeItem(saved_item, '#productFile')">
 								<span class="glyphicon glyphicon-remove-circle"></span>
 							</div>
-							<img ng-src="{{saved_item.urls.orig}}">
+							<img ng-if="!saved_item.processed" ng-src="{{saved_item.urls.orig}}">
+							<img ng-if="saved_item.processed" ng-src="{{saved_item.urls.medium}}">
 						</div>
 						<div style="font-weight: bold; text-align: center;">{{ saved_item.filename }}</div>
 					</div>
@@ -439,7 +440,7 @@
 				</div>
 			</div>
 			<div class="col-md-2"></div>
-			<div class="col-md-5">
+			<div class="col-md-5" style="border: none;">
 
 				<div ng-show="uploaderTerms.isHTML5">
 					<div nv-file-drop="" uploader="uploaderTerms">
@@ -456,12 +457,13 @@
 
 				<div class="uploaded">
 
-					<div ng-repeat="saved_item in data.uploads | filter:{type:'terms'}">
+					<div ng-repeat="saved_item in data.attachments | filter:{type:'terms'}">
 						<div class="img">
 							<div class="remove pull-right" ng-click="removeItem(saved_item, '#termsFile')">
 								<span class="glyphicon glyphicon-remove-circle"></span>
 							</div>
-							<img ng-src="{{saved_item.urls.orig}}">
+							<img ng-if="!saved_item.processed" ng-src="{{saved_item.urls.orig}}">
+							<img ng-if="saved_item.processed" ng-src="{{saved_item.urls.medium}}">
 						</div>
 						<div style="font-weight: bold; text-align: center;">{{ saved_item.filename }}</div>
 					</div>
@@ -489,7 +491,7 @@
 		</div>
 
 		<div class="row"  style="border: none;">
-			<div class="col-md-5" style="margin-bottom: 60px;">
+			<div class="col-md-5" style="margin-bottom: 60px; border: none;">
 
 				<div ng-show="uploaderShipping.isHTML5">
 					<div nv-file-drop="" uploader="uploaderShipping">
@@ -507,12 +509,13 @@
 
 				<div class="uploaded">
 
-					<div ng-repeat="saved_item in data.uploads | filter:{ type:'shipping' }">
+					<div ng-repeat="saved_item in data.attachments | filter:{ type:'shipping' }">
 						<div class="img">
 							<div class="remove pull-right" ng-click="removeItem(saved_item, '#shippingFile')">
 								<span class="glyphicon glyphicon-remove-circle"></span>
 							</div>
-							<img ng-src="{{saved_item.urls.orig}}">
+							<img ng-if="!saved_item.processed" ng-src="{{saved_item.urls.orig}}">
+							<img ng-if="saved_item.processed" ng-src="{{saved_item.urls.medium}}">
 						</div>
 						<div style="font-weight: bold; text-align: center;">{{ saved_item.filename }}</div>
 					</div>
@@ -537,7 +540,7 @@
 
 			</div>
 			<div class="col-md-2"></div>
-			<div class="col-md-5">
+			<div class="col-md-5"  style="border: none;">
 
 				<div ng-show="uploaderAdditional.isHTML5">
 					<div nv-file-drop="" uploader="uploaderAdditional">
@@ -555,12 +558,13 @@
 
 				<div class="uploaded">
 
-					<div ng-repeat="saved_item in data.uploads | filter:{type:'additions'}">
+					<div ng-repeat="saved_item in data.attachments | filter:{type:'additional'}">
 						<div class="img">
 							<div class="remove pull-right" ng-click="removeItem(saved_item, '#addFile')">
 								<span class="glyphicon glyphicon-remove-circle"></span>
 							</div>
-							<img ng-src="{{saved_item.urls.orig}}">
+							<img ng-if="!saved_item.processed" ng-src="{{saved_item.urls.orig}}">
+							<img ng-if="saved_item.processed" ng-src="{{saved_item.urls.medium}}">
 						</div>
 						<div style="font-weight: bold; text-align: center;">{{ saved_item.filename }}</div>
 					</div>

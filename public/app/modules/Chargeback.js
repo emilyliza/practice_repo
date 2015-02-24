@@ -97,7 +97,7 @@
 		};
 		$scope.uploaderTerms.onSuccessItem = function(item, res, status, header) {
 			item.data.type = "terms";
-			$scope.data.uploads.push(item.data);
+			$scope.data.attachments.push(item.data);
 			ds();
 		};
 
@@ -108,7 +108,7 @@
 		};
 		$scope.uploaderProduct.onSuccessItem = function(item, res, status, header) {
 			item.data.type = "product";
-			$scope.data.uploads.push(item.data);
+			$scope.data.attachments.push(item.data);
 			ds();
 		};
 
@@ -119,7 +119,7 @@
 		};
 		$scope.uploaderShipping.onSuccessItem = function(item, res, status, header) {
 			item.data.type = "shipping";
-			$scope.data.uploads.push(item.data);
+			$scope.data.attachments.push(item.data);
 			ds();
 		};
 
@@ -130,7 +130,7 @@
 		};
 		$scope.uploaderAdditional.onSuccessItem = function(item, res, status, header) {
 			item.data.type = "additional";
-			$scope.data.uploads.push(item.data);
+			$scope.data.attachments.push(item.data);
 			ds();
 		};
 
@@ -138,6 +138,7 @@
 		$scope.save = function() {
 			$scope.$broadcast('show-errors-check-validity');
 			if ($scope.cbForm.$valid) {
+				console.log('saving...');
 				ChargebackService.save($scope.data).then(function (data) {
 					
 				}, function (res) {
@@ -151,7 +152,6 @@
 		var ds = _.debounce($scope.save, 2000, { leading: false, trailing: true});
 		$scope.$watch("data", function(newValue, oldValue){
 			// if new value, save it.
-			console.log(newValue)
 			if ($scope.data && $scope.data._id && JSON.stringify(newValue) != JSON.stringify(oldValue)) {
 				ds();
 			}
@@ -172,18 +172,17 @@
 
 		$scope.removeItem = function(item, el) {
 			angular.element(el).val('');	// have to clear out element value
-			_.each([$scope.data.uploads.products, $scope.data.uploads.terms, $scope.data.uploads.shippings, $scope.data.uploads.adds], function(upload_array) {
+			_.each($scope.data.attachments, function(a) {
 				var i = 0;
-				_.each(upload_array, function(s) {
-					if (s && s._id == item._id) {
-						// remove from data store.
-						upload_array.splice(i,1);
-					}
-					i++;
-				});
+				if (a && a._id == item._id) {
+					// remove from data store.
+					$scope.data.attachments.splice(i,1);
+					ds();
+				}
 				if (_.isFunction(item.remove)) {
 					item.remove();
 				}
+				i++;
 			});
 		};
 

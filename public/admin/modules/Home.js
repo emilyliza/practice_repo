@@ -5,6 +5,11 @@
 	.config(['$stateProvider', function( $stateProvider ) {
 		
 		$stateProvider.state('home', {
+			url: '/admin',
+			controller: 'HomeController',
+			templateUrl: '/admin/templates/home.html'
+		})
+		.state('home-s', {
 			url: '/admin/',
 			controller: 'HomeController',
 			templateUrl: '/admin/templates/home.html'

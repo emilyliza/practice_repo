@@ -10,6 +10,7 @@ module.exports = function(app) {
 		ObjectId = Schema.ObjectId,
 		_ = require('underscore'),
 		log = app.get('log'),
+		Upload = app.Models.get('Upload'),
 		UserMicro = require('./UserMicro');
 
 	
@@ -86,22 +87,18 @@ module.exports = function(app) {
 			'TrackingNum'      : String,
 			'TrackingSum'      : String
 		},
-		'uploads': [{
-			'type': String,	
-			'_id': String ,
-			'extension': String,
-			'filename': String,	// original file name, pre _id naming
-			'mimetype': String,
-			'processed': { 'type': Boolean, 'default': false },
-			'urls': {}
-		}],
+		'attachments': [ Upload.schema ],
 		'additional_comments': String
-	}, { strict: true })
+	}, { autoIndex: false, strict: true })
+	
+	.plugin(UserMicro, { path: 'user', objectid: ObjectId })
+
 	.pre('save', function (next) {
 		Upload.presave(this,function(err) {
 			return next(err);
 		});
 	})
+
 	.pre('save', function (next) {
 		// clean up name
 		if (!this.gateway_data.FullName && (this.gateway_data.FirstName || this.gateway_data.LastName)) {
@@ -120,9 +117,7 @@ module.exports = function(app) {
 			this.gateway_data.LastName = name_chunks[name_chunks.length - 1];
 		}
 		next();
-	})
-
-	.plugin(UserMicro, { path: 'user', objectid: ObjectId });
+	});
 	
 	
 	db.model('Chargeback', ChargebackSchema);
@@ -131,6 +126,9 @@ module.exports = function(app) {
 	Chargeback.loadDependencies = function() {
 		Upload = app.Models.get('Upload');
 	};
+
+	Chargeback.prototype.field = false;
+	Chargeback.prototype.fields = 'attachments';
 
 	// used when processing thumbs
 	Chargeback.prototype.notify_url = process.env.CALLBACK_HOST + "/api/v1/processed/chargeback/";

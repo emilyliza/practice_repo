@@ -12,13 +12,16 @@ module.exports = function(app) {
 		_ = require('underscore'),
 		log = app.get('log');
 
+	// this schema is not really used, it is more for methods below. the 
+	// micro plugins are used instead to embed uploads into docs.
 	var UploadSchema = new Schema({
-		'_id': { 'type': String },
+		'_id': { 'type': ObjectId },
 		'extension': String,
 		'filename': String,     // original file name, pre _id naming
 		'mimetype': String,
-		'processed': { 'type': Boolean, 'default': false },
-		'urls': {}		// hardwood, carpet, tile
+		'processed': { 'type': Boolean },
+		'type': { 'type': String },
+		'urls': {}
 	}, { autoIndex: false, strict: true });
 	
 	db.model('Upload', UploadSchema);
@@ -29,21 +32,22 @@ module.exports = function(app) {
 	};
 
 	Upload.presave = function(doc, next) {	
-		if (!doc.isModified('photos')) {
+		
+		if (!doc.isModified(doc.fields)) {
 			log.log('not modified.');
 			return next();
 		}
 
-		if (!doc.photos || !doc.photos.length) {
-			doc.set('photo', undefined);
-			doc.set('photos', undefined);
+		if (!doc[doc.fields] || !doc[doc.fields].length) {
+			if (doc.field) { doc.set(doc.field, undefined); }
+			if (doc.fields) { doc.set(doc.fields, undefined); }
 			log.log('no photos clearing.');
 			next();
 		}
 			
 		// set all urls to orig as placeholder until they're processed.
 		var needs_processing = false;
-		_.each(doc.photos, function(p) {
+		_.each(doc[doc.fields], function(p) {
 			if (!p.processed) {
 				_.each(doc.sizes, function(s) {
 					p.urls[s.key] = p.urls.orig;
@@ -53,9 +57,9 @@ module.exports = function(app) {
 		});
 		
 		// if there isn't a photo, set it
-		if (!doc.photo._id && doc.photos && doc.photos.length) {
+		if (doc.field && !doc[doc.field]._id && doc[doc.fields] && doc[doc.fields].length) {
 			log.log('setting new main photo');
-			doc.photo = doc.photos[0];
+			doc[field] = doc[doc.fields][0];
 		}
 
 		if (!needs_processing) {
@@ -68,7 +72,7 @@ module.exports = function(app) {
 				Upload.createJob(doc, this);
 			})
 			.seq(function() {
-				S3Tracker.clear(doc.photos, next);	
+				S3Tracker.clear(doc[doc.fields], next);	
 			})
 			.catch(next);
 		}
@@ -78,28 +82,34 @@ module.exports = function(app) {
 
 	Upload.setProcessed = function(doc, fn) {
 		var c = _.clone(doc.toJSON());
-		_.each(c.photos, function(p) {
-			if (!p.urls) { p.urls = {}; }
-			_.each(doc.sizes, function(s) {
-				p.urls[s.key] = process.env.CDN + "/vault/" + p._id + "_" + s.key + ".jpg"
+		
+		if (doc.fields) {
+			_.each(c[doc.fields], function(p) {
+				if (!p.urls) { p.urls = {}; }
+				_.each(doc.sizes, function(s) {
+					p.urls[s.key] = process.env.CDN + "/vault/" + p._id + "_" + s.key + ".jpg"
+				});
+				p.processed = true;
 			});
-			p.processed = true;
-		});
-		doc.set('photos', c.photos, { strict: false });
+			doc.set(doc.fields, c[doc.fields], { strict: false });
+		}
 
-		if (!c.photo.urls) { c.photo.urls = {}; }
-		_.each(doc.sizes, function(s) {
-			c.photo.urls[s.key] = process.env.CDN + "/vault/" + c.photo._id + "_" + s.key + ".jpg"
-		});
-		doc.set('photo', c.photo, { strict: false });
-		doc.photo.processed = true;
+		if (doc.field) {
+			if (!c[doc.field].urls) { c[doc.field].urls = {}; }
+			_.each(doc.sizes, function(s) {
+				c[doc.field].urls[s.key] = process.env.CDN + "/vault/" + c[doc.field]._id + "_" + s.key + ".jpg"
+			});
+			doc.set(doc.field, c[doc.field], { strict: false });
+			doc.photo.processed = true;
+		}
+
 		doc.save(fn);
 	};
 
 
 	Upload.createJob = function(doc, fn) {
 		
-		if (!process.env.SQS_QUEUE || !doc.photos || !doc.photos.length) {
+		if (!process.env.SQS_QUEUE || !doc[doc.fields] || !doc[doc.fields].length) {
 			log.log('createJob: nothing to do.');
 			fn();
 		}
@@ -110,7 +120,7 @@ module.exports = function(app) {
 		$()
 		.seq('msgs', function() {
 			var msgs = [];
-			_.each(doc.photos, function(p) {
+			_.each(doc[doc.fields], function(p) {
 
 				var url = "";
 				if (doc.notify_url) {

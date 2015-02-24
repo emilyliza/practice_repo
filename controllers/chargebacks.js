@@ -8,6 +8,7 @@ module.exports = function(app) {
 		csv = require('express-csv'),
 		Chargeback = app.Models.get('Chargeback'),
 		User = app.Models.get('User'),
+		Upload = app.Models.get('Upload'),
 		log = app.get('log'),
 		Chance = require('chance'),
 		chrono = require('chrono-node');
@@ -328,22 +329,46 @@ module.exports = function(app) {
 		})
 		.seq(function(data) {
 
-			data.set('shipping_data', req.body.shipping_data);
-			data.set('crm_data', req.body.crm_data);
-			data.set('gateway_data', req.body.gateway_data);
-			data.set('portal_data', req.body.portal_data);
-			data.set('uploads', req.body.uploads);
-			data.set('additional_comments', req.body.additional_comments);
-			data.set('type', req.body.type);
-			data.set('refunded', req.body.refunded);
-			data.set('recurring', req.body.recurring);
-			data.set('shipped', req.body.shipped);
-
+			var updated = _.omit(req.body, ['_id', 'createdOn', 'chargebackDate', 'attachments']);
+			data.set(updated);
+			
 			if (!data.updatedOn) {
 				data.set('status', "In Progress");
 				data.set('updatedOn', new Date());
 			}
 
+			if (req.body.attachments && req.body.attachments.length) {
+				var existing = [],
+					keep = [];
+
+				// grab existing 
+				_.each(data.attachments, function(a) {
+					existing.push(a._id + '');
+				});
+				
+				// add new uploads (processed will be false)
+				_.each(req.body.attachments, function(a) {
+					console.log('search: ' + data.attachments.id(a._id));
+					if (!data.attachments.id(a._id)) {
+						data.attachments.push(new Upload(a));
+					} else {
+						// track ones to keep (weren't deleted)
+						keep.push(a._id);
+					}
+				});
+				
+				var remove = _.difference(existing, keep);	// take existing, omit ones to keep = ones to remove
+				
+				// use mongoose method to remove 
+				_.each(remove, function(r) {
+					data.attachments.id(r).remove();
+				});
+				
+			} else {
+				data.attachments = [];
+			}
+			
+			console.log(data);
 			data.save(this);
 
 		})

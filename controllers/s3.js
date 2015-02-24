@@ -2,7 +2,7 @@ module.exports = function(app) {
 
 	var _ = require('underscore'),
 		$ = require('seq'),
-		uuid = require('node-uuid'),
+		mongoose = require('mongoose'),
 		path = require('path'),
 		moment = require('moment'),
 		mw = require('./middleware'),
@@ -21,7 +21,7 @@ module.exports = function(app) {
 
 		var filename = path.basename(req.query.filename),
 			extension = path.extname(req.query.filename),
-			id = uuid.v1(),
+			id = new mongoose.Types.ObjectId,
 			acl = "public-read",
 			key = "vault/" + id + extension,
 			policy = { "expiration": expires,	//"2020-12-01T12:00:00.000Z",
