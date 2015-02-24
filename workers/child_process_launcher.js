@@ -38,7 +38,7 @@ var Launcher = {
 		var c = child_process.fork(p,opts, { silent: true });
 		c.stdout.on('data', function (data) {	
 			var b = new Buffer(data);
-			log.log(data.toString());
+			log.log(data.toString().trim());
 		});
 	}
 };

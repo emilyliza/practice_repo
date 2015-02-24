@@ -161,6 +161,7 @@ require('./controllers/graphing')(app);
 require('./controllers/login')(app);
 require('./controllers/reset')(app);
 require('./controllers/forgot')(app);
+require('./controllers/processed')(app);
 
 // for admin area
 app.get(/^\/admin(.*)$/, function(req, res, next) {
