@@ -37,7 +37,9 @@
     "le_node": "0.2.1",
     "chrono-node": "1.0.2",
     "newrelic": "1.15.1",
-    "chance": "0.7.3"
+    "chance": "0.7.3",
+    "thumbd": "2.16.0",
+    "aws-sdk": "2.1.13"
   },
   "devDependencies": {
     "protractor": "^1.1.1",
