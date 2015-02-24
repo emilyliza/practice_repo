@@ -9,6 +9,7 @@ var fs = require('fs'),
 	logger = require('morgan'),
     bodyParser = require('body-parser'),
 	methodOverride = require('method-override'),
+	launcher = require('./workers/child_process_launcher'),
 	app = module.exports = express();
 	
 
@@ -198,7 +199,8 @@ app.use(function(err, req, res, next) {
 });
 
 
-
+// start workers
+launcher.launch(__dirname + '/node_modules/thumbd/bin/thumbd', ['server'])
 
 
 var port = process.env.PORT || 5000;
