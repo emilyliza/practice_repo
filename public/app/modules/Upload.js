@@ -10,15 +10,8 @@
 			return $http.get('/api/v1/s3?filename=' + filename + "&contentType=" + type);
 		};
 
-		this.create = function(upload_array, limit) {
+		this.create = function(limit) {
 			
-			this.upload_array = upload_array;
-
-			if (!upload_array) {
-				console.log('must send upload_array to createUploader!');
-				return false;
-			}
-
 			var _this = this,
 				uploader = new FileUploader({
             		queueLimit: limit
@@ -56,10 +49,6 @@
 						'orig': response.data.path
 					};
 					
-					item.onSuccess = function() {
-						upload_array.push(response.data.photo);
-					};
-
 					item.data = response.data.photo;
 					item.removeAfterUpload = true;	// remove from upload queue becausae it'll show in data.uploads now
 					item.upload();	// start upload

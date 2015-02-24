@@ -84,76 +84,61 @@
 			$state.go('chargeback.data');
 		}
 
-		$scope.data.uploads = {
-			'adds': [],
-			'terms': [],
-			'products': [],
-			'shippings': []
-		};
 		if (!$scope.data.shipped) {
 			$scope.shipped = false;
 		}
 
 		$scope.shipping_companies = ["USPS", "Fedex", "UPS", "DHL"];
 		
-		//$scope.uploaderTerms = UploadService.create(($scope.data.uploads.terms || {}), 10);
-		$scope.uploaderTerms = UploadService.create({}, 10);
+		$scope.uploaderTerms = UploadService.create(10);
 		$scope.uploaderTerms.onWhenAddingFileFailed = function() {
 			// set UploadError to true to display error message in side bar
 			$scope.uploadError = true;
 		};
+		$scope.uploaderTerms.onSuccessItem = function(item, res, status, header) {
+			item.data.type = "terms";
+			$scope.data.uploads.push(item.data);
+			ds();
+		};
 
-		//$scope.uploaderScreen = UploadService.create($scope.data.uploads.screens, 10);
-		$scope.uploaderProduct = UploadService.create({}, 10);
+		$scope.uploaderProduct = UploadService.create(10);
 		$scope.uploaderProduct.onWhenAddingFileFailed = function() {
 			// set UploadError to true to display error message in side bar
 			$scope.uploadError = true;
 		};
+		$scope.uploaderProduct.onSuccessItem = function(item, res, status, header) {
+			item.data.type = "product";
+			$scope.data.uploads.push(item.data);
+			ds();
+		};
 
-		$scope.uploaderShipping = UploadService.create({}, 10);
+		$scope.uploaderShipping = UploadService.create(10);
 		$scope.uploaderShipping.onWhenAddingFileFailed = function() {
 			// set UploadError to true to display error message in side bar
 			$scope.uploadError = true;
 		};
+		$scope.uploaderShipping.onSuccessItem = function(item, res, status, header) {
+			item.data.type = "shipping";
+			$scope.data.uploads.push(item.data);
+			ds();
+		};
 
-		$scope.uploaderAdditional = UploadService.create({}, 10);
+		$scope.uploaderAdditional = UploadService.create(10);
 		$scope.uploaderAdditional.onWhenAddingFileFailed = function() {
 			// set UploadError to true to display error message in side bar
 			$scope.uploadError = true;
 		};
-			
-
-		$scope.$watch("data", function(newValue, oldValue){
-			
-			$scope.errors = {};
-			$scope.$broadcast('show-errors-reset');	
-			var popups = document.querySelectorAll('.popover');
-			_.each(popups, function(p) { p.remove(); });
-			
-			// if new value, save it.
-			if ($scope.data && $scope.data._id && JSON.stringify(newValue) != JSON.stringify(oldValue)) {
-				if ($scope.timeout) {
-					$timeout.cancel($scope.timeout);
-				}
-				$scope.timeout = $timeout(function() {
-					$scope.save(newValue);
-				}, 2000);
-			}
-
-		},true);
-		
-		// clicking drag-n-drop zones triggers old-school upload dialog
-		$scope.triggerUpload = function(el) {
-			angular.element(el).trigger('click');
+		$scope.uploaderAdditional.onSuccessItem = function(item, res, status, header) {
+			item.data.type = "additional";
+			$scope.data.uploads.push(item.data);
+			ds();
 		};
 
-		
-		$scope.timeout = null;
-		
-		$scope.save = function(data) {
+
+		$scope.save = function() {
 			$scope.$broadcast('show-errors-check-validity');
 			if ($scope.cbForm.$valid) {
-				ChargebackService.save(data).then(function (user) {
+				ChargebackService.save($scope.data).then(function (data) {
 					
 				}, function (res) {
 					if (res.data.errors) {
@@ -163,6 +148,23 @@
 			}
 		};
 
+		var ds = _.debounce($scope.save, 2000, { leading: false, trailing: true});
+		$scope.$watch("data", function(newValue, oldValue){
+			// if new value, save it.
+			console.log(newValue)
+			if ($scope.data && $scope.data._id && JSON.stringify(newValue) != JSON.stringify(oldValue)) {
+				ds();
+			}
+		}, true);
+
+
+		// clicking drag-n-drop zones triggers old-school upload dialog
+		$scope.triggerUpload = function(el) {
+			angular.element(el).trigger('click');
+		};
+
+		
+		
 		$scope.download = function() {
 			window.open("/images/example.pdf", "_blank");
 		};

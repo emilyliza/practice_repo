@@ -405,13 +405,12 @@
 					</div>
 				</div>
 				<div ng-hide="uploaderProduct.isHTML5" class="ddzone">
-					Upload Product Screenshot<br/><input id="productFile" type="file" nv-file-select="" uploader="uploaderProduct"  />
+					Upload Product Screenshot<br/>
+					<input id="productFile" type="file" nv-file-select="" uploader="uploaderProduct"  />
 				</div>
-
-
 				<div class="uploaded">
 
-					<div ng-repeat="saved_item in data.uploads.products">
+					<div ng-repeat="saved_item in data.uploads | filter:{ type:'products'}">
 						<div class="img">
 							<div class="remove pull-right" ng-click="removeItem(saved_item, '#productFile')">
 								<span class="glyphicon glyphicon-remove-circle"></span>
@@ -438,7 +437,6 @@
 					</div>
 
 				</div>
-
 			</div>
 			<div class="col-md-2"></div>
 			<div class="col-md-5">
@@ -458,7 +456,7 @@
 
 				<div class="uploaded">
 
-					<div ng-repeat="saved_item in data.uploads.terms">
+					<div ng-repeat="saved_item in data.uploads | filter:{type:'terms'}">
 						<div class="img">
 							<div class="remove pull-right" ng-click="removeItem(saved_item, '#termsFile')">
 								<span class="glyphicon glyphicon-remove-circle"></span>
@@ -509,7 +507,7 @@
 
 				<div class="uploaded">
 
-					<div ng-repeat="saved_item in data.uploads.shippings">
+					<div ng-repeat="saved_item in data.uploads | filter:{ type:'shipping' }">
 						<div class="img">
 							<div class="remove pull-right" ng-click="removeItem(saved_item, '#shippingFile')">
 								<span class="glyphicon glyphicon-remove-circle"></span>
@@ -551,12 +549,13 @@
 					</div>
 				</div>
 				<div ng-hide="uploaderAdditional.isHTML5" class="ddzone">
-					Upload Additional<br/><input id="addFile" type="file" nv-file-select="" uploader="uploaderAdditional"  />
+					Upload Additional<br/>
+					<input id="addFile" type="file" nv-file-select="" uploader="uploaderAdditional"  />
 				</div>
 
 				<div class="uploaded">
 
-					<div ng-repeat="saved_item in data.uploads.adds">
+					<div ng-repeat="saved_item in data.uploads | filter:{type:'additions'}">
 						<div class="img">
 							<div class="remove pull-right" ng-click="removeItem(saved_item, '#addFile')">
 								<span class="glyphicon glyphicon-remove-circle"></span>
