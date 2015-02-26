@@ -15,71 +15,13 @@ module.exports = function(app) {
 
 	app.get('/api/v1/chargebacks?', mw.auth(), function(req, res, next) {
 
-		var params = req.query;
-
-		if (!params.limit) { params.limit = 30; }
-		
 		$()
 		.seq(function() {
-			var query = Chargeback.find();
-
-			// restrict to just this user's chargebacks
-			query.or([
-				{ 'user._id': req.user._id },
-				{ 'parent._id': req.user._id }
-			]);
-
-			if (params.start) {
-				query.where('chargebackDate').gte( moment(parseInt(params.start)).toDate() );
-			}
-			if (params.end) {
-				query.where('chargebackDate').lte( moment(parseInt(params.end)).toDate() );
-			}
-
-			if (params.query && params.query.match(/[0-9\.]/)) {
-				query.or([
-					{ 'portal_data.ChargebackAmt': params.query }
-				]);
-			} else if (params.query) {
-				var pattern = new RegExp('.*'+params.query+'.*', 'i');
-				query.or([
-					{ 'derived_data.status.name': pattern },
-					{ 'gateway_data.FirstName': pattern },
-					{ 'gateway_data.LastName': pattern },
-					{ 'portal_data.ReasonText': pattern },
-					{ 'portal_data.ReasonCode': pattern },
-					{ 'portal_data.MidNumber': pattern },
-					{ 'portal_data.CaseNumber': pattern }
-				]);
-			}
-
-			if (params.mids) { 
-				mid_array = params.mids.split(',')
-				query.where('portal_data.MidNumber').in( mid_array );
-			}
-        	
-			if (params.cctype) {
-				query.where('gateway_data.CcType').equals( params.cctype );
-			}
-
-			if (params.status) {
-				query.where('status').equals( params.status );
-			}
-
-			query.skip( (params.page ? ((+params.page - 1) * params.limit) : 0) );
-			query.limit((params.limit ? params.limit : 30));
-
-			query.sort('-chargebackDate');
-			
-			log.log('Chargeback Query...');
-			log.log(query._conditions);
-			log.log(query.options);
-
-			query.exec(this);
+			Chargeback.search(req, this);
 		})
 		.seq(function(data) {
 
-			if (params.export) {
+			if (req.query.export) {
 				
 				res.header('content-disposition', 'attachment; filename=chargebacks.csv');
 				var b = [];

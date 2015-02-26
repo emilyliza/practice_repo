@@ -10,6 +10,7 @@ module.exports = function(app) {
 		ObjectId = Schema.ObjectId,
 		_ = require('underscore'),
 		log = app.get('log'),
+		moment = require('moment'),
 		chrono = require('chrono-node'),
 		Upload = app.Models.get('Upload'),
 		UserMicro = require('./UserMicro');
@@ -105,10 +106,8 @@ module.exports = function(app) {
 
 	.pre('save', function(next) {
 
-		if (!this.isNew) { return next(); }
-
 		// get Card type
-		if (!this.gateway_data || !this.gateway_data.CcType) {
+		if (!this.gateway_data || !this.gateway_data.CcType || this.isModified('portal_data.CcPrefix') || this.isModified('portal_data.CcSuffix')) {
 			if (this.portal_data.CardNumber) {
 				this.gateway_data.CcType = Util.detectCardType( this.portal_data.CardNumber + '' );
 				this.gateway_data.CcPrefix = this.portal_data.CardNumber.substr(0,4);
@@ -244,6 +243,67 @@ module.exports = function(app) {
 		{ key: 'medium', format: "crop", strategy: "fill", width: 450, height: 350 },
 		{ key: 'large', format: "resize", strategy: "bounded", width: 800, height: 10000 }
 	];
+
+	Chargeback.search = function(req, fn) {
+
+		var query = Chargeback.find(),
+			params = req.query;
+
+		// restrict to just this user's chargebacks
+		query.or([
+			{ 'user._id': req.user._id },
+			{ 'parent._id': req.user._id }
+		]);
+
+		if (params.start) {
+			query.where('chargebackDate').gte( moment(parseInt(params.start)).toDate() );
+		}
+		if (params.end) {
+			query.where('chargebackDate').lte( moment(parseInt(params.end)).toDate() );
+		}
+
+		if (params.query && params.query.match(/[0-9\.]/)) {
+			query.or([
+				{ 'portal_data.ChargebackAmt': params.query }
+			]);
+		} else if (params.query) {
+			var pattern = new RegExp('.*'+params.query+'.*', 'i');
+			query.or([
+				{ 'derived_data.status.name': pattern },
+				{ 'gateway_data.FirstName': pattern },
+				{ 'gateway_data.LastName': pattern },
+				{ 'portal_data.ReasonText': pattern },
+				{ 'portal_data.ReasonCode': pattern },
+				{ 'portal_data.MidNumber': pattern },
+				{ 'portal_data.CaseNumber': pattern }
+			]);
+		}
+
+		if (params.mids) { 
+			mid_array = params.mids.split(',')
+			query.where('portal_data.MidNumber').in( mid_array );
+		}
+    	
+		if (params.cctype) {
+			query.where('gateway_data.CcType').equals( params.cctype );
+		}
+
+		if (params.status) {
+			query.where('status').equals( params.status );
+		}
+
+		query.skip( (params.page ? ((+params.page - 1) * params.limit) : 0) );
+		query.limit((params.limit ? params.limit : 30));
+
+		query.sort('-chargebackDate');
+		
+		// log.log('Chargeback Query...');
+		// log.log(query._conditions);
+		// log.log(query.options);
+
+		query.exec(fn);
+
+	};
 
 	return Chargeback;
 };
