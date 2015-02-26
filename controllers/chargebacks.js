@@ -9,9 +9,8 @@ module.exports = function(app) {
 		Chargeback = app.Models.get('Chargeback'),
 		User = app.Models.get('User'),
 		Upload = app.Models.get('Upload'),
-		log = app.get('log'),
-		Chance = require('chance'),
-		chrono = require('chrono-node');
+		log = app.get('log');
+		
 		
 
 	app.get('/api/v1/chargebacks?', mw.auth(), function(req, res, next) {
@@ -25,7 +24,10 @@ module.exports = function(app) {
 			var query = Chargeback.find();
 
 			// restrict to just this user's chargebacks
-			query.where('user._id', req.user._id);
+			query.or([
+				{ 'user._id': req.user._id },
+				{ 'parent._id': req.user._id }
+			]);
 
 			if (params.start) {
 				query.where('chargebackDate').gte( moment(parseInt(params.start)).toDate() );
@@ -174,7 +176,14 @@ module.exports = function(app) {
 
 		$()
 		.seq(function() {
-			Chargeback.findById(req.params._id, this);	
+			// instead of findById, add query parameters to ensure privacy
+			var q = Chargeback.findOne();
+			q.where('_id', req.params._id);
+			q.or([
+				{ 'user._id': req.user._id },
+				{ 'parent._id': req.user._id }
+			]);
+			q.exec(this);
 		})
 		.seq(function(data) {
 
@@ -205,14 +214,33 @@ module.exports = function(app) {
 			return res.json(401, { 'chargebacks': 'an array of chargebacks is required.'});
 		}
 
-		if (!req.user.admin) {
-			return res.json(401, { 'admin': 'admin permissions required'});
+		// if (!req.user.admin) {
+		// 	return res.json(401, { 'admin': 'admin permissions required'});
+		// }
+
+		var cc = false;
+		if (req.body.createChildren) {
+			cc = req.body.createChildren;
+		}
+		if (cc && (!req.body.chargebacks[0].portal_data || !req.body.chargebacks[0].portal_data.MidNumber)) {
+			return res.json(401, { 'createChildren': 'portal_data.MidNumber is required to createChildren accounts'});	
 		}
 
 
 		$()
-		.seq('user', function() {
+		.par('parent', function() {
 			User.findById( req.body.user._id , this);	
+		})
+		.par('users', function() {
+			var top = this;
+			User.find({ 'parent._id': req.body.user._id }, function(err, data) {
+				if (err) { return top(err); }
+				var keyed_users = {};
+				_.each(data, function(d) {
+					keyed_users[ d.username ] = d;
+				});	
+				top(null, keyed_users);
+			});	
 		})
 		.seq(function() {
 			this(null, req.body.chargebacks);
@@ -220,92 +248,62 @@ module.exports = function(app) {
 		.flatten()
 		.seqEach(function(cb) {
 
-			_.each(cb.crm_data, function(v,k) {
-				v = v.trim();
-				if (!v || _.isNull(v) || v == "NULL" || v == "null" || v == "Null") {
-					delete cb.crm_data[k];
-				}
-			});
-			_.each(cb.gateway_data, function(v,k) {
-				v = v.trim();
-				if (!v || _.isNull(v) || v == "NULL" || v == "null" || v == "Null") {
-					delete cb.gateway_data[k];
-				}
-			});
-			_.each(cb.shipping_data, function(v,k) {
-				v = v.trim();
-				if (!v || _.isNull(v) || v == "NULL" || v == "null" || v == "Null") {
-					delete cb.shipping_data[k];
-				}
-			});
-			_.each(cb.portal_data, function(v,k) {
-				v = v.trim();
-				if (!v || _.isNull(v) || v == "NULL" || v == "null" || v == "Null") {
-					delete cb.portal_data[k];
-				}
-			});
-
-
-			// date conversions
-			if (cb.chargebackDate) { cb.chargebackDate = chrono.parseDate(cb.chargebackDate); }
-			if (cb.gateway_data) {
-				if (cb.gateway_data.TransDate) { cb.gateway_data.TransDate = chrono.parseDate(cb.gateway_data.TransDate); }
-			}
-			if (cb.crm_data) {
-				if (cb.crm_data.OrderDate) { cb.crm_data.OrderDate = chrono.parseDate(cb.crm_data.OrderDate); }
-				if (cb.crm_data.CancelDateSystem) { cb.crm_data.CancelDateSystem = chrono.parseDate(cb.crm_data.CancelDateSystem); }
-				if (cb.crm_data.RefundDateFull) { cb.crm_data.RefundDateFull = chrono.parseDate(cb.crm_data.RefundDateFull); }
-				if (cb.crm_data.RefundDatePartial) { cb.crm_data.RefundDatePartial = chrono.parseDate(cb.crm_data.RefundDatePartial); }
-			}
-			if (cb.shipping_data) {
-				if (cb.shipping_data.ShippingDate) { cb.shipping_data.ShippingDate = chrono.parseDate(cb.shipping_data.ShippingDate); }
+			var top = this,
+				merchant = req.user.name;
+			if (cb.merchant) {
+				merchant = cb.merchant;
 			}
 
-			if (!cb.gateway_data || !cb.gateway_data.CcType) {
-				if (cb.portal_data.CardNumber) {
-					cb.gateway_data.CcType = Util.detectCardType( cb.portal_data.CardNumber + '' );
-					cb.gateway_data.CcPrefix = cb.portal_data.CardNumber.substr(0,4);
-					cb.gateway_data.CcSuffix = cb.portal_data.CardNumber.substr(-4);
-				} else if (cb.portal_data.CcPrefix && cb.portal_data.CcSuffix) {
-					var chance = new Chance(),
-						middle = chance.integer({min: 10000000, max: 99999999}) + '';
-					cb.gateway_data.CcType = Util.detectCardType( cb.portal_data.CcPrefix + middle + cb.portal_data.CcSuffix );
-				}
+			// if user does not exist, create it and add to ref array
+			if (!this.vars.users[ cb.portal_data.MidNumber ]) {
+				var user = new User({
+					'name': merchant,
+					'username': cb.portal_data.MidNumber,
+					'timestamps.createdOn': new Date(),
+					'parent': User.toMicro(top.vars.parent)
+				});
+				user.save(function(err,data) {
+					if (err) { return top(err); }
+					top.vars.users[ cb.portal_data.MidNumber ] = data;
+					top();
+				});
+			} else {
+				top();
 			}
-			
-			// determine if it was shipped...
-			cb.shipped = false;
-			if (cb.crm_data && (cb.crm_data.DeliveryAddr1 || cb.crm_data.DeliveryPostal || cb.crm_data.DeliveryCity)) {
-				cb.shipped = true;
-			} else if (cb.shipping_data && (cb.shipping_data.has_tracking || cb.shipping_data.ShippingDate || cb.shipping_data.TrackingNum || cb.shipping_data.TrackingSum)) {
-				cb.shipped = true;
+		
+		})
+		.seq(function() {
+			this(null, req.body.chargebacks);
+		})
+		.flatten()
+		.seqEach(function(cb) {
+
+			if (!cb.portal_data) {
+				cb.portal_data = {};
+			}
+			if (!cb.portal_data.Portal) {
+				// sort of redundant, as it'll also be the parent, however import may set
+				// Portal if we're importing more than one Acquirer at once?
+				cb.portal_data.Portal = this.vars.parent.name;
 			}
 
-			// determine if it was refunded
-			cb.refunded = false;
-			if (cb.crm_data && (cb.crm_data.CancelDateSystem || cb.crm_data.RefundAmount || cb.crm_data.RefundDateFull || cb.crm_data.RefundDatePartial)) {
-				cb.refunded = true;
-			}
-			
-			// determine if it is recurring
-			cb.recurring = false;
-			if (cb.crm_data && cb.crm_data.IsRecurring) {
-				cb.recurring = true;
-			}
-
-			var chargeback = new Chargeback(cb);
+			var chargeback = new Chargeback();
+			chargeback.crm_data = cb.crm_data;
+			chargeback.portal_data = cb.portal_data;
+			chargeback.shipping_data = cb.shipping_data;
+			chargeback.gateway_data = cb.gateway_data;
 			chargeback.status = "New";
-			chargeback.user = User.toMicro(this.vars.user);
-			if (!chargeback.merchant) {
-				chargeback.merchant = req.user.name;	
-			}
-
-			if (!chargeback.chargebackDate) {
-				chargeback.chargebackDate = new Date();
+			
+			if (req.body.createChildren) {
+				chargeback.user = User.toMicro( this.vars.users[ cb.portal_data.MidNumber ] );
+			
+				// parent user is one sent via post body
+				chargeback.parent = User.toMicro(this.vars.parent);
+			} else {
+				// if not creating children, set user to req.body.user, no parent
+				chargeback.user = User.toMicro(this.vars.parent);	
 			}
 			
-			console.log(chargeback);
-
 			chargeback.save(this);
 
 		})
@@ -325,7 +323,14 @@ module.exports = function(app) {
 
 		$()
 		.seq(function() {
-			Chargeback.findById( req.params._id , this);	
+			// instead of findById, add query parameters to ensure privacy
+			var q = Chargeback.findOne();
+			q.where('_id', req.params._id);
+			q.or([
+				{ 'user._id': req.user._id },
+				{ 'parent._id': req.user._id }
+			]);
+			q.exec(this);
 		})
 		.seq(function(data) {
 
