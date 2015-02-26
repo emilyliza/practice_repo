@@ -10,13 +10,14 @@ module.exports = function(app) {
 		log = app.get('log'),
 		db = app.settings.db,
 		Schema = db.Schema,
-		ObjectId = Schema.ObjectId;
+		ObjectId = Schema.ObjectId,
+		UserMicro = require('./UserMicro');
 
 
 	var UserSchema = new Schema({
 		'name': { type: String, required: true },
 		'username': { type: String, required: true, index: true },
-		'email': { type: String, required: true, unique: true, index: true },
+		'email': { type: String, index: true },
 		'password': { type: String, set: Util.hash_password },
 		'active': { type: Boolean, default: true },
 		'admin': { type: Boolean, default: false },
@@ -31,7 +32,8 @@ module.exports = function(app) {
 			'lastIp': {type: String},
 			'registeredIp': {type: String}
 		}
-	}, {strict: true});
+	}, {strict: true})
+	.plugin(UserMicro, { path: 'parent', objectid: ObjectId })
 
 
 	db.model('User', UserSchema);
@@ -56,12 +58,19 @@ module.exports = function(app) {
 
 		var query = User.find();
 
-		if (params.query) {
+		if (params.query.query) {
 			var pattern = new RegExp('.*'+params.query.query+'.*', 'i');
 			query.or([
 				{ 'name': pattern },
 				{ 'username': pattern },
 				{ 'email': pattern }
+			]);
+		}
+
+		if (!params.user.admin) {
+			query.or([
+				{ '_id': params.user._id },
+				{ 'parent._id': params.user._id }
 			]);
 		}
 

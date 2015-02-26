@@ -10,10 +10,6 @@ module.exports = function(app) {
 
 	app.get('/api/v1/users', mw.auth(), function(req, res, next) {
 
-		if (!req.user.admin) {
-			return res.json(401, { 'admin': 'admin permissions required'});
-		}
-		
 		$()
 		.seq(function() {
 			User.search(req, this);
@@ -58,7 +54,12 @@ module.exports = function(app) {
 		req.sanitize(req.body.name).trim();
 
 		$()
+		.seq(function() {
+			User.findOne({'username': req.body.username}, this);
+		})
 		.seq(function(user) {
+			if (user) { return res.json(400, { 'username': 'already exists' }); }
+
 			var user = new User({
 				'name': req.body.name,
 				'username': req.body.username,
