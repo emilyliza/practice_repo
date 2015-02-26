@@ -36,7 +36,6 @@
     "le_node": "0.2.1",
     "chrono-node": "1.0.2",
     "newrelic": "1.15.1",
-    "chance": "0.7.3",
     "thumbd": "2.16.0",
     "aws-sdk": "2.1.13"
   },
@@ -67,12 +66,14 @@
     "karma": "0.12.24",
     "commander": "1.0.x",
     "nodemon": "1.2.1",
-    "karma-ng-html2js-preprocessor": "^0.1.2"
+    "karma-ng-html2js-preprocessor": "^0.1.2",
+    "should": "5.0.1",
+    "nconf": "0.7.1"
   },
   "scripts": {
     "postinstall": "node postNpmInstall.js",
     "start": "env $(cat .env-local) node_modules/nodemon/bin/nodemon.js server.js",
-    "test": "node_modules/karma/bin/karma start karma.dev.conf.js",
+    "test": "mocha --watch",
     "test-single-run": "node_modules/karma/bin/karma start karma.dev.conf.js  --single-run",
     "preupdate-webdriver": "npm install",
     "update-webdriver": "webdriver-manager update",

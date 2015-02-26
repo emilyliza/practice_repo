@@ -81,7 +81,6 @@ $()
 		top(null, v);
 	});
 })
-"54cfbf7003c7351b4e892004"
 .seq('config_obj', function() {
 	var config = fs.readFileSync(__dirname + '/../' + this.vars.config_file, 'utf8'),
 		config_obj = {};
