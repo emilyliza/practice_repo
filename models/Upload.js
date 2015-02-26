@@ -34,7 +34,7 @@ module.exports = function(app) {
 	Upload.presave = function(doc, next) {	
 		
 		if (!doc.isModified(doc.fields)) {
-			log.log('not modified.');
+			//log.log('not modified.');
 			return next();
 		}
 

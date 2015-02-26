@@ -17,6 +17,7 @@
 	"chargebacks": [
 		{
 			"portal_data": {
+				"Portal": "null",
 				"CaseNumber": "12456465546",
 				"RefNumber": "124677",
 				"CcPrefix": "4123",
@@ -32,7 +33,6 @@
 				"FirstName": "John",
 				"MiddleName": "L",
 				"LastName": "Wayne",
-				"FullName": "John Wayne",
 				"BillingAddr1": "12 Main St",
 				"BillingAddr2": "Suite 10",
 				"BillingCity": "San Francisco",
@@ -60,7 +60,7 @@
 				"Email": "larry@chargeback.com",
 				"IpAddress": "129.89.76.11",
 				"PricePoint": 9.00,
-				"ProductCrmName": "Jacket",
+				"ProductCrmName": null,
 				"ProductName": "Sports Jacket",
 				"IsFraud": false,
 				"IsRecurring": false,
