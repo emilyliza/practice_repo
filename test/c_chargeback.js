@@ -58,7 +58,7 @@ describe('Test Chargebacks',function(){
 			cb.set('portal_data', c.portal_data);
 			cb.set('shipping_data', c.shipping_data);
 			cb.set('gateway_data', c.gateway_data);
-			cb.set('parent', login);
+			cb.set('user', login);
 			cb.set('status', 'New');
 			cb.save(function(err,d) {
 				if (err) { throw err; }
@@ -134,8 +134,12 @@ describe('Test Chargebacks',function(){
 			done();
 		});
 		it('should have parent with parent.name and parent._id', function(done){
-			db_cb.should.have.property('parent').with.property('_id');
-			db_cb.should.have.property('parent').with.property('name', config.get('users')[0].name);
+			db_cb.should.not.have.property('parent');
+			done();
+		});
+		it('should have parent with parent.name and parent._id', function(done){
+			db_cb.should.have.property('user').with.property('_id');
+			db_cb.should.have.property('user').with.property('name', config.get('users')[0].name);
 			done();
 		});
 	});
@@ -238,7 +242,8 @@ describe('Test Chargebacks',function(){
 
 	
 	describe('Test new data', function(){
-		var users;
+		var users,
+			other;
 		it('current users should now be 2', function(done){
 			var options = {
 					uri: "http://" + config.get('host') + "/api/v1/users",
@@ -256,6 +261,13 @@ describe('Test Chargebacks',function(){
 				done();
 			});
 		});
+		it('total users should be 3', function(done){
+			User.count(function(err,c) {
+				if (err) { throw err; }
+				c.should.equal(3);
+				done();
+			});
+		});
 		it('should return array with length=2', function(done){
 			Chargeback.search({
 				user: login,
@@ -267,7 +279,6 @@ describe('Test Chargebacks',function(){
 			});
 		});
 		it('new user should return array with length=1', function(done){
-			var other;
 			_.each(users, function(u) {
 				if (u._id + '' != login._id + '') {
 					other = u._id;
@@ -278,6 +289,18 @@ describe('Test Chargebacks',function(){
 					'_id': other
 				},
 				query: {}
+			}, function(err,data) {
+				if (err) { throw err; }
+				data.should.be.instanceof(Array).and.have.lengthOf(1);
+				done();
+			});
+		});
+		it('chargeback query with user param should return array with length=1', function(done){
+			Chargeback.search({
+				user: login,
+				query: {
+					user: other
+				}
 			}, function(err,data) {
 				if (err) { throw err; }
 				data.should.be.instanceof(Array).and.have.lengthOf(1);

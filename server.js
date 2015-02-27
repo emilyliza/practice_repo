@@ -137,7 +137,7 @@ if (process.env.MONGO_URI_2) {
 		if (mongo[1]) {
 			log.log('MONGODB CONNECTED - ' + mongo[1]);
 		} else {
-			log.log('MONGODB CONNECTED - localhost');	
+			log.log('MONGODB CONNECTED - ' + mongo);	
 		}
 	});
 }
@@ -157,7 +157,6 @@ require('./controllers/user')(app);
 require('./controllers/reporting')(app);
 require('./controllers/s3')(app);
 require('./controllers/dashboard')(app);
-require('./controllers/graphing')(app);
 require('./controllers/login')(app);
 require('./controllers/reset')(app);
 require('./controllers/forgot')(app);

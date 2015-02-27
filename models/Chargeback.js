@@ -279,10 +279,10 @@ module.exports = function(app) {
 			]);
 		}
 
-		if (params.mids) { 
-			mid_array = params.mids.split(',')
-			query.where('portal_data.MidNumber').in( mid_array );
+		if (params.user) {
+			query.where('user._id').equals(params.user);
 		}
+		
     	
 		if (params.cctype) {
 			query.where('gateway_data.CcType').equals( params.cctype );

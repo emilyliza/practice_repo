@@ -6,21 +6,30 @@ module.exports = function(app) {
 		mongoose = require('mongoose'),
 		moment = require('moment'),
 		log = app.get('log'),
-		Chargeback = app.Models.get('Chargeback');
+		Chargeback = app.Models.get('Chargeback'), 
+		User = app.Models.get('User');
 		
 
 
 	app.get("/api/v1/history?", mw.auth(), function(req, res, next) {
 
-		var start_date = moment().subtract(1, 'year').toDate(),
+		var start_date = moment().subtract(1, 'year').toDate();
 			match = {
 				'chargebackDate': { '$gte': start_date },
-				'user._id': mongoose.Types.ObjectId( req.user._id )
+				'$or': [
+					{ 'parent._id': mongoose.Types.ObjectId( req.user._id ) },
+					{ 'user._id': mongoose.Types.ObjectId( req.user._id ) }
+				]
 			};	
 		
-		if (req.query.mids) {
-			var mid_array = req.query.mids.split(',')
-			match['portal_data.MidNumber'] = { '$in': mid_array }
+		if (req.query.user) {
+			match = {
+				'chargebackDate': { '$gte': start_date },
+				'$or': [
+					{ 'parent._id': mongoose.Types.ObjectId( req.query.user ) },
+					{ 'user._id': mongoose.Types.ObjectId( req.query.user ) }
+				]
+			};
 		}
 		
 		var search = [{
@@ -43,7 +52,18 @@ module.exports = function(app) {
 
 		$()
 		.seq(function() {
+			if (!req.query.user) { return this(); }
+			User.findById(req.query.user, this);
+		})
+		.seq(function(u) {
 			
+			if (u && u.parent._id + '' != req.user._id) {
+				// if current user is not parent of filtered user, then we 
+				// have a security problem, so dump out...
+				log.log(req.user._id + ' trying to accsss ' + req.query.user);
+				return res.json(401, 'Unauthorized');
+			}
+
 			log.log(search);
 			Chargeback.aggregate(search, this);
 
@@ -189,21 +209,47 @@ module.exports = function(app) {
 
 	});
 
-	app.get('/api/v1/report/processorStatus?', mw.auth(), function(req, res, next) {
+	app.get('/api/v1/report/parentStatus?', mw.auth(), function(req, res, next) {
 		
-		var params = req.query,
-			project = {
-				'_id': 0,
-				'status': "$status",
-				'processor': "$merchant",
-				'merchant': "$merchant",
-				'amt': '$portal_data.ChargebackAmt'
-			},
-			group = { 'key': '$processor', 'status' : "$status" };
+		// this used to be by processor, but new data model will group by user,
+		// querying by parent.
 
-		pie(params, req.user._id, project, group, 'status', 'merchant', function(err, data) {
-			res.json(data);
-		});
+		var params = req.query,
+			search = [
+				{ '$match': {
+					'chargebackDate': {
+						'$gte': moment( parseInt(params.start) ).toDate(),
+						'$lte': moment( parseInt(params.end) ).toDate()
+					},
+					'parent._id': mongoose.Types.ObjectId( req.user._id )
+				}},
+				{ '$project': {
+					'_id': 0,
+					'status': "$status",
+					'parent': "$user.name",
+					'parent_id': '$user._id',
+					'amt': '$portal_data.ChargebackAmt'
+				}},
+				{ '$group': {
+					'_id': { 'key': '$parent_id', 'status' : "$status" }, 
+					'count': { '$sum': 1 },
+					'sum': { '$sum': '$amt' }
+				}},
+				{ '$sort' : { '_id': 1 } }
+			];
+
+		log.log(search);
+
+		$()
+		.seq(function() {
+			Chargeback.aggregate(search, this);
+		})
+		.seq(function(data) {
+			var out = pieData(data, 'status', 'parent');
+			return res.json(out);
+		})
+		.catch(next);
+
 
 	});
 
@@ -225,21 +271,43 @@ module.exports = function(app) {
 
 	});
 
-	app.get('/api/v1/report/processorTypes?', mw.auth(), function(req, res, next) {
+	app.get('/api/v1/report/parentTypes?', mw.auth(), function(req, res, next) {
 		
 		var params = req.query,
-			project = {
-				'_id': 0,
-				'cctype': "$gateway_data.CcType",
-				'processor': "$merchant",
-				'merchant': "$merchant",
-				'amt': '$portal_data.ChargebackAmt'
-			},
-			group = { 'key': '$processor', 'cctype' : "$cctype" };
+			search = [
+				{ '$match': {
+					'chargebackDate': {
+						'$gte': moment( parseInt(params.start) ).toDate(),
+						'$lte': moment( parseInt(params.end) ).toDate()
+					},
+					'parent._id': mongoose.Types.ObjectId( req.user._id )
+				}},
+				{ '$project': {
+					'_id': 0,
+					'cctype': "$gateway_data.CcType",
+					'parent': "$user.name",
+					'parent_id': '$user._id',
+					'amt': '$portal_data.ChargebackAmt'
+				}},
+				{ '$group': {
+					'_id': { 'key': '$parent_id', 'cctype' : "$cctype" }, 
+					'count': { '$sum': 1 },
+					'sum': { '$sum': '$amt' }
+				}},
+				{ '$sort' : { '_id': 1 } }
+			];
 
-		pie(params, req.user._id, project, group, 'cctype', 'merchant', function(err, data) {
-			res.json(data);
-		});
+		log.log(search);
+
+		$()
+		.seq(function() {
+			Chargeback.aggregate(search, this);
+		})
+		.seq(function(data) {
+			var out = pieData(data, 'cctype', 'parent');
+			return res.json(out);
+		})
+		.catch(next);
 
 	});
 
@@ -321,42 +389,48 @@ module.exports = function(app) {
 			Chargeback.aggregate(search, this);
 		})
 		.seq(function(data) {
-			var result = {};
-			_.each(data, function(row) {
-				log.log(_.keys(row._id));
-				if (_.contains( _.keys(row._id), val_field)) {
-					n = row._id[val_field];
-				} else {
-					n = "";
-				}
-
-				if ( result[ row._id.key ] ) {
-					result[ row._id.key ]['data'].push( { "name": n, "val": row.total } );
-				} else {
-					result[ row._id.key ] = {
-						"data": [
-							{ "name": n, "val": row.total }
-						]
-					};
-				}
-			});
-
-			var out = [];
-			_.each(result, function(value, key) {
-				out.push({
-					"label": key,
-					"data_type": 'currency',
-					"filtertype": val_field,
-					'grouptype': group_type,
-					"data": value.data
-				});
-			});
-
+			var out = pieData(data, val_field, grouptype);
 			next(null, out);
-
 		})
 		.catch(next);
 		
+	};
+
+	function pieData(data, val_field, grouptype) {
+		
+		var result = {};
+		_.each(data, function(row) {
+			log.log(_.keys(row._id));
+			if (_.contains( _.keys(row._id), val_field)) {
+				n = row._id[val_field];
+			} else {
+				n = "";
+			}
+
+			if ( result[ row._id.key ] ) {
+				result[ row._id.key ]['data'].push( { "name": n, "val": row.total } );
+			} else {
+				result[ row._id.key ] = {
+					"data": [
+						{ "name": n, "val": row.total }
+					]
+				};
+			}
+		});
+
+		var out = [];
+		_.each(result, function(value, key) {
+			out.push({
+				"label": key,
+				"data_type": 'currency',
+				"filtertype": val_field,
+				'grouptype': grouptype,
+				"data": value.data
+			});
+		});
+
+		return out;
+
 	};
 
 
