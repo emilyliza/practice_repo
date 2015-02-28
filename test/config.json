@@ -1,5 +1,4 @@
 {
-	"host": "localhost:5000",
 	"users": [
 		{
 			"name": "CompanyName",

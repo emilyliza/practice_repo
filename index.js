@@ -1,6 +1,5 @@
 
 var fs = require('fs'),
-	newrelic = require('newrelic'),
 	express = require('express'),
 	device = require('express-device'),
 	path = require('path'),
@@ -9,11 +8,11 @@ var fs = require('fs'),
 	logger = require('morgan'),
     bodyParser = require('body-parser'),
 	methodOverride = require('method-override'),
-	launcher = require('./workers/child_process_launcher'),
 	app = module.exports = express();
-	
 
-
+if (process.env.NODE_ENV == "production") {
+	var newrelic = require('newrelic');
+}
 
 // Config
 //app.engine('.ejs', require('ejs').__express);
@@ -131,15 +130,17 @@ if (process.env.MONGO_URI_2) {
 		log.log('MONGODB CONNECTED - ' + mongo[1]);
 	});
 } else {
-	app.settings.db.connect(process.env.MONGO_URI, function(err,db) {
-		if (err) { throw err; }
-		var mongo = process.env.MONGO_URI.split(/@/);
-		if (mongo[1]) {
-			log.log('MONGODB CONNECTED - ' + mongo[1]);
-		} else {
-			log.log('MONGODB CONNECTED - ' + mongo);	
-		}
-	});
+	if (process.env.NODE_ENV != "test") {
+		app.settings.db.connect(process.env.MONGO_URI, function(err,db) {
+			if (err) { throw err; }
+			var mongo = process.env.MONGO_URI.split(/@/);
+			if (mongo[1]) {
+				log.log('MONGODB CONNECTED - ' + mongo[1]);
+			} else {
+				log.log('MONGODB CONNECTED - ' + mongo);	
+			}
+		});
+	}
 }
 
 
@@ -198,12 +199,5 @@ app.use(function(err, req, res, next) {
 
 });
 
-
-// start workers
-launcher.launch(__dirname + '/node_modules/thumbd/bin/thumbd', ['server'])
-
-
-var port = process.env.PORT || 5000;
-app.listen(port, function() {
-	log.log("Listening on " + port);
-});
+// export app so we can test it
+exports = module.exports = app;
