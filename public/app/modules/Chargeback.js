@@ -168,7 +168,7 @@
 		
 		
 		$scope.download = function(file) {
-			window.open(file, "_blank");
+			window.open( "http://dksl2s5vm2cnl.cloudfront.net" + file, "_blank");
 		};
 		
 
