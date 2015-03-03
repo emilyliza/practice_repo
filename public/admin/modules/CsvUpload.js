@@ -91,7 +91,7 @@
 
 		$scope.service = CsvService;
 		
-		$scope.blowItUp = function(ff) {
+		$scope.blowItUp = function() {
 			var f = CsvService.mapAll($scope.json, $scope.map);
 			$scope.chargebacks = f;
 		};
@@ -117,6 +117,13 @@
 				$scope.json = JSON.parse(newValue);
 				if ($scope.json.length) {
 					_.each($scope.json[0], function(value, key) {
+						var regex = new RegExp(key + '$', "i");
+						_.each($scope.cbFields, function(test) {
+							if (test.match(regex)) {
+								$scope.map[key] = test;
+								$scope.blowItUp();
+							}
+						})
 						$scope.fields.push( { 'field': key, 'example': value });
 					});
 					processed = true;

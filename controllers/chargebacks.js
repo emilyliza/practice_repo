@@ -160,7 +160,7 @@ module.exports = function(app) {
 		// 	return res.json(401, { 'admin': 'admin permissions required'});
 		// }
 
-		var cc = false;
+		var cc = true;
 		if (req.body.createChildren) {
 			cc = req.body.createChildren;
 		}
@@ -189,6 +189,9 @@ module.exports = function(app) {
 		})
 		.flatten()
 		.seqEach(function(cb) {
+
+			// don't create children
+			if (!cc) { return this(); }
 
 			var top = this,
 				merchant = req.user.name;
@@ -229,6 +232,12 @@ module.exports = function(app) {
 				cb.portal_data.Portal = this.vars.parent.name;
 			}
 
+			Chargeback.clearNulls(cb, 'crm_data');
+			Chargeback.clearNulls(cb, 'gateway_data');
+			Chargeback.clearNulls(cb, 'shipping_data');
+			Chargeback.clearNulls(cb, 'portal_data');
+			console.log(cb);
+
 			var chargeback = new Chargeback();
 			chargeback.crm_data = cb.crm_data;
 			chargeback.portal_data = cb.portal_data;
@@ -236,7 +245,7 @@ module.exports = function(app) {
 			chargeback.gateway_data = cb.gateway_data;
 			chargeback.status = "New";
 			
-			if (req.body.createChildren) {
+			if (cc) {
 				chargeback.user = User.toMicro( this.vars.users[ cb.portal_data.MidNumber ] );
 			
 				// parent user is one sent via post body

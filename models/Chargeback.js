@@ -96,15 +96,6 @@ module.exports = function(app) {
 	.plugin(UserMicro, { path: 'parent', objectid: ObjectId })
 
 	.pre('save', function(next) {
-		// clear out empty or null values
-		this.clearNulls('crm_data');
-		this.clearNulls('gateway_data');
-		this.clearNulls('shipping_data');
-		this.clearNulls('portal_data');
-		next();
-	})
-
-	.pre('save', function(next) {
 
 		// get Card type
 		if (!this.gateway_data || !this.gateway_data.CcType || this.isModified('portal_data.CcPrefix') || this.isModified('portal_data.CcSuffix')) {
@@ -219,13 +210,12 @@ module.exports = function(app) {
 	};
 
 	
-	Chargeback.prototype.clearNulls = function(key) {
-		var top = this;
-		_.each(this[key].toJSON(), function(v,k) {
+	Chargeback.clearNulls = function(d, key) {
+		_.each(d[key], function(v,k) {
 			if (_.isString(v)) {
 				v = v.trim();
 				if (!v || _.isNull(v) || v == "NULL" || v == "null" || v == "Null") {
-					delete top[key][k];
+					delete d[key][k];
 				}
 			}
 		});
