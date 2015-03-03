@@ -167,9 +167,10 @@
 
 		
 		
-		$scope.download = function() {
-			window.open("/images/example.pdf", "_blank");
+		$scope.download = function(file) {
+			window.open(file, "_blank");
 		};
+		
 
 
 		$scope.removeItem = function(item, el) {
