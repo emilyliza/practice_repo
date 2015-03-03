@@ -88,6 +88,8 @@
 			$scope.shipped = false;
 		}
 
+		$scope.data.chc = true;
+
 		$scope.shipping_companies = ["USPS", "Fedex", "UPS", "DHL"];
 		
 		$scope.uploaderTerms = UploadService.create(10);
