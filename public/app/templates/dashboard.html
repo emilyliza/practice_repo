@@ -60,7 +60,9 @@
 				
 		<div class="dash-stat">
 			<div class="stat-head">Win Rate</div>
-			<div class="percentage" percentage control="winloss" ></div>
+			<div class="percentage" percentage control="winloss"></div>
+			<div class="subtext" ng-if="dbs.data_dashboard.winloss.won">{{dbs.data_dashboard.winloss.won | number}} chargebacks won</div>
+			<div class="stat" style="padding-bottom: 40px;" ng-if="!dbs.data_dashboard.winloss.won">No win's<br/>reported yet!</div>
 		</div>
 
 	</div>
@@ -70,9 +72,12 @@
 			<div class="video">Video Here</div>
 		</div>
 
-		<div class="dash-stat">
-			<div class="stat-head">Amount We've Won Back</div>
-			<div class="stat">None Yet!</div>
+		<div class="dash-stat" style="margin-bottom: 32px;">
+			<div class="stat-head">Amount to Win Back</div>
+			<div class="stat">
+				{{dbs.data_dashboard.pending_amount | currency:"$":0}}
+				<span ng-if="!dbs.data_dashboard.pending_amount">None yet!</span>
+			</div>
 		</div>
 
 	</div>

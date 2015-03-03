@@ -15,10 +15,13 @@
 
 	.controller('DashboardController', [ '$scope', 'DashboardService', '$timeout', function($scope, DashboardService, $timeout) {
 		$scope.dbs = new DashboardService();
-		$scope.dbs.loadDashboard();
-		//$scope.dbs.loadChargebacks();
+		$scope.winloss = {};
+		$scope.dbs.loadDashboard().then(function(data) {
+			if (data.hwl) {
+				$scope.winloss.update(data.winloss);	
+			}
+		});
 		
-		// $scope.winloss = {};
 		// $timeout(function() {
 		// 	$scope.winloss.update({
 		// 		"label": '',
@@ -52,9 +55,16 @@
 		};
 		DashboardService.prototype.loadDashboard = function() {
 			var _this = this;
-			$http.get('/api/v1/dashboard')
-			.success(function (data) {
-				_this.data_dashboard = data;
+			return $http.get('/api/v1/dashboard')
+			.then(function (res) {
+				
+				res.data.hwl = true;
+				if (_.isNaN(res.data.winloss.won / res.data.winloss.total)) {
+					res.data.hwl = false;
+				}
+				
+				_this.data_dashboard = res.data;
+				return res.data;
 			});
 		};
 

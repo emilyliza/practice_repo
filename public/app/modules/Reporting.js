@@ -19,15 +19,25 @@
 			templateUrl: '/app/templates/reporting.overview.html',
 			controller: [ '$scope', '$timeout', function($scope, $timeout) {
 				$timeout(function() {
-					$scope.getReports();
+					$scope.getReports().then(function(data) {
+						$scope.data = data;
+						if ($scope.data.hwl) {
+							$scope.winloss.update(data.winloss);		
+						}
+					});
+					$scope.getHistory();
 				});
 			}]
+		})
+		.state('reporting.mids', {
+			url: '/mids',
+			requiresAuth: true,
+			templateUrl: '/app/templates/reporting.mids.html'
 		})
 		.state('reporting.status', {
 			url: '/status',
 			requiresAuth: true,
 			templateUrl: '/app/templates/reporting.status.html'
-
 		})
 		.state('reporting.status.overview', {
 			url: '/overview',
@@ -114,6 +124,31 @@
 					}]
 				}
 			}
+		})
+		.state('reporting.billing', {
+			url: '/billing',
+			requiresAuth: true,
+			templateUrl: '/app/templates/reporting.billing.html',
+			controller: [ '$http', '$scope', '$stateParams', 'ReportingService', function($http, $scope, $stateParams, ReportingService){
+				$scope.loaded = false;
+				$scope.billing = [];
+				ReportingService.getBilling().then(function(res) {
+					$scope.loaded = true;
+					var d = _.sortBy(res.data, function(n) {
+						mon = n.month_num.toString();
+						if (n.month_num < 10) {
+							mon = "0" + mon;
+						}
+						if (n.half == "a") {
+							mon += "1";
+						} else {
+							mon += "2";
+						}
+						return n.year + mon;
+					});
+					$scope.billing = d.reverse();
+				});
+			}]
 		});
 
 	
@@ -125,7 +160,8 @@
 		$scope.data = null;
 		$scope.last = null;
 		$scope.$state = $state;	// for navigation active to work		
-		
+		$scope.winloss = {};
+
 		// hack to fix auto activation of first tab
 		if ($state.current.url != "/overview") {
 			setTimeout(function() {
@@ -174,9 +210,9 @@
 		angular.element('#pages').removeClass("container");
 
 		
-		var cu = UserService.getCurrentUser();
+		$scope.cu = UserService.getCurrentUser();
 		$scope.merchants = [{'name': 'All'}];
-		_.each(cu.merchants, function(m) {
+		_.each($scope.cu.merchants, function(m) {
 			$scope.merchants.push(m);
 		});
 		
@@ -203,11 +239,16 @@
 			$scope.last = 'getReports';
 			$scope.clearOtherData($scope.last);
 			$scope.setSelected( ReportingService.getMerchant() );
-			ReportingService.getReports().then(function(data) {
-				$scope.data = data;
-			});
+			
+			return ReportingService.getReports();
+		};
 
-			ReportingService.getHistory().then(function(res) {
+		$scope.getHistory = function() {
+			$scope.last = 'getReports';
+			$scope.clearOtherData($scope.last);
+			$scope.setSelected( ReportingService.getMerchant() );
+
+			return ReportingService.getHistory().then(function(res) {
 				$scope.graphBarHistory.update(res.data);
 			});
 
@@ -324,6 +365,10 @@
 			return $http
 			.get('/api/v1/dashboard')
 			.then(function (res) {
+				res.data.hwl = true;
+				if (_.isNaN(res.data.winloss.won / res.data.winloss.total)) {
+					res.data.hwl = false;
+				}
 				return res.data;
 			});
 		};
@@ -332,9 +377,13 @@
 			var mids_str = "";
 			_.each(merchants[merchant].mids, function(mid) {
 				if (mids_str) { mids_str += ","; }
-				mids_str += mid;
+				mids_str += mid.mid;
 			});
 			return mids_str;
+		};
+
+		reportingService.getBilling = function() {
+			return $http.get('/api/v1/billing');
 		};
 
 		reportingService.getHistory = function() {
@@ -364,6 +413,7 @@
 		reportingService.getProcessorStatusData = function() {
 			return $http.get('/api/v1/report/processorStatus?start=' + start + "&end=" + end + "&mids=" + this.getMidString() );
 		};
+
 
 
 		return reportingService;

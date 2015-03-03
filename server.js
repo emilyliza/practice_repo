@@ -1,5 +1,6 @@
 #!/usr/bin/env node
-var app = require("./index");
+var app = require("./index"),
+	log = app.get('log');
 
 // start workers
 var launcher = require('./workers/child_process_launcher');

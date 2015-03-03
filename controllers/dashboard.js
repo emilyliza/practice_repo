@@ -98,6 +98,24 @@ module.exports = function(app) {
 			});
 			out.tops = tops;
 
+			out.billing = {
+				count: 40,
+				sum: 900
+			};
+			out.won_amount = 3678.90;
+			out.pending_amount = 10897.40;
+			out.hwl = true;
+			out.winloss = {
+				"won": 75,
+				"pending": 25,
+                "lost": 25,
+                "total": 100
+			};
+			out.total = {
+				'count': 467,
+				'sum': 7890.00
+			};
+
 			
 			return res.json(out);
 

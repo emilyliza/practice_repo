@@ -33,62 +33,72 @@
 					ir = r - 50,
 					text_y = ".25em",
 					duration = 500,
-					percent = 80,
+					percent = 0,
 					transition = 200;
 
 				function calcPercent(percent) {
 					return [percent, 100-percent];
 				}
 
-				var dataset = {
-					lower: calcPercent(0),
-					upper: calcPercent(percent)
-				},
-				pie = d3.layout.pie().sort(null),
-				format = d3.format(".0%");
+				scope.control.update = function(wl) {
+					
+					var percent = (wl.won / wl.total) * 100;
 
-				var arc = d3.svg.arc()
-				.innerRadius(r - 30)
-				.outerRadius(r);
+					if (_.isNaN(percent)) {
+						return;
+					}
+					
+					var dataset = {
+						lower: calcPercent(0),
+						upper: calcPercent(percent)
+					},
+					pie = d3.layout.pie().sort(null),
+					format = d3.format(".0%");
 
-				var svg = d3.select(container[0]).append("svg")
-					.attr("width", w)
-					.attr("height", h)
-					.append("g")
-					.attr("transform", "translate(" + w / 2 + "," + w / 2 + ")");
+					var arc = d3.svg.arc()
+					.innerRadius(r - 30)
+					.outerRadius(r);
 
-				var path = svg.selectAll("path")
-					.data(pie(dataset.lower))
-					.enter().append("path")
-					.attr("class", function(d, i) { return "color" + i; })
-					.attr("d", arc)
-					.each(function(d) { this._current = d; }); // store the initial values
+					var svg = d3.select(container[0]).append("svg")
+						.attr("width", w)
+						.attr("height", h)
+						.append("g")
+						.attr("transform", "translate(" + w / 2 + "," + w / 2 + ")");
 
-				var text = svg.append("text")
-					.attr("text-anchor", "middle")
-					.attr("dy", text_y);
+					var path = svg.selectAll("path")
+						.data(pie(dataset.lower))
+						.enter().append("path")
+						.attr("class", function(d, i) { return "color" + i; })
+						.attr("d", arc)
+						.each(function(d) { this._current = d; }); // store the initial values
 
-				if (typeof(percent) === "string") {
-					text.text(percent);
-				} else {
-					var progress = 0;
-					var timeout = setTimeout(function () {
-						clearTimeout(timeout);
-						path = path.data(pie(dataset.upper)); // update the data
-						path.transition().duration(duration).attrTween("d", function (a) {
-							// Store the displayed angles in _current.
-							// Then, interpolate from _current to the new angles.
-							// During the transition, _current is updated in-place by d3.interpolate.
-							var i  = d3.interpolate(this._current, a);
-							var i2 = d3.interpolate(progress, percent);
-							this._current = i(0);
-							return function(t) {
-								text.text( format(i2(t) / 100) );
-								return arc(i(t));
-							};
-						}); // redraw the arcs
-					}, 200);
-				}
+					var text = svg.append("text")
+						.attr("text-anchor", "middle")
+						.attr("dy", text_y);
+
+					if (typeof(percent) === "string") {
+						text.text(percent);
+					} else {
+						var progress = 0;
+						var timeout = setTimeout(function () {
+							clearTimeout(timeout);
+							path = path.data(pie(dataset.upper)); // update the data
+							path.transition().duration(duration).attrTween("d", function (a) {
+								// Store the displayed angles in _current.
+								// Then, interpolate from _current to the new angles.
+								// During the transition, _current is updated in-place by d3.interpolate.
+								var i  = d3.interpolate(this._current, a);
+								var i2 = d3.interpolate(progress, percent);
+								this._current = i(0);
+								return function(t) {
+									text.text( format(i2(t) / 100) );
+									return arc(i(t));
+								};
+							}); // redraw the arcs
+						}, 200);
+					}
+
+				};
 				
 				
 			}
@@ -205,6 +215,12 @@
 					.attr("text-anchor", "middle") // text-align: right
 					.text("Waiting...");
 
+				var countValue = center_group.append("svg:text")
+					.attr("class", "pcount")
+					.attr("dy", 45)
+					.attr("text-anchor", "middle") // text-align: right
+					.text("");
+
 				//UNITS LABEL
 				// var totalUnits = center_group.append("svg:text")
 				// 	.attr("class", "units")
@@ -222,13 +238,15 @@
 					oldPieData = filteredPieData;
 					pieData = donut(res.data);
 
-					var sum = 0;
+					var sum = 0,
+						pcount = 0;
 					 _.each(res.data, function(d) {
 					 	if (res.data_type == "currency") {
 					 		sum += (d.val);
 					 	} else {
 					 		sum += d.val;
 					 	}
+					 	pcount += d.count;
 					 });
 
 					scope.colors = {};
@@ -236,9 +254,11 @@
 						element.name = res.data[index].name;
 						if (res.data_type == "currency") {
 							element.value = res.data[index].val;
+							element.count = res.data[index].count;
 							element.pct = (res.data[index].val) / sum;
 						} else {
 							element.value = res.data[index].val;
+							element.count = res.data[index].count;
 							element.pct = (res.data[index].val) / sum;
 						}
 						
@@ -263,6 +283,16 @@
 							}
 						});
 
+						countValue.text(function(){
+							var out = $filter('number')(pcount, 0);
+							if (pcount == 1) {
+								 out += " chargeback";
+							} else if (pcount > 1) {
+								out += " chargebacks";
+							}
+							return out;
+						});
+
 
 						reportTypeLabel.text(function() {
 							return res.label;
@@ -284,6 +314,7 @@
 								var tt = '<b>' + d.name + '</b><br/><div>';
 								if (res.data_type == "currency") {
 									tt += $filter('currency')(d.value, '$', 2);
+
 								} else {
 									tt += $filter('number')(d.value);
 								}
@@ -321,7 +352,7 @@
 									mstr = '';
 									_.each(merchant.mids, function(m) {
 										if (mstr) { mstr += ","; }
-										mstr += m;
+										mstr += m.mid;
 									});
 									params['mids'] = mstr;
 								}
