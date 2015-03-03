@@ -1,22 +1,4 @@
-var request = require('request'),
-	_ = require('underscore'),
-	assert = require("assert"),
-	should = require('should'),
-	$ = require('seq'),
-	fs = require('fs');
 
-var configFile = __dirname + "/config.json";
-assert.ok(fs.existsSync(configFile), 'config file not found: ' + configFile);
-var config = require('nconf').env().argv().file({file: configFile});
-require('../lib/loadEnvs')();
-var app = require('../lib/createApp')();
-require('../lib/appExtensions')(app);
-
-
-
-// grab models
-var User = app.Models.get('User'),
-	Chargeback = app.Models.get('Chargeback');
 
 
 
@@ -30,21 +12,17 @@ describe('Test Chargebacks',function(){
 	describe('POST /api/v1/login valid', function(){
 		it('should return 200', function(done){
 			var user = config.get('users')[0];
-			var options = {
-					uri: "http://" + config.get('host') + "/api/v1/login",
-					method: 'POST',
-					headers: {
-						'Content-Type': 'application/json'
-					},
-					json: true,
-					body: user
-				};
-			request(options, function(e,res,data) {
-				if (e) { console.log(e); done(e); }
-				res.statusCode.should.equal(200);
-				login = data;
-				done();
-			});
+			request
+				.post('/api/v1/login')
+				.send(user)
+				.set('Content-Type', 'application/json')
+				.set('Accept', 'application/json')
+				.expect(200)
+				.end(function(e, res) {  
+					if (e) { console.log(e); done(e); }
+					login = res.body;
+					done();
+				});
 		});
 	});
 
@@ -218,25 +196,21 @@ describe('Test Chargebacks',function(){
 	describe('POST /api/v1/chargebacks', function(){
 		it('should return 200', function(done){
 			var cb = config.get('chargebacks');
-			var options = {
-					uri: "http://" + config.get('host') + "/api/v1/chargebacks",
-					method: 'POST',
-					headers: {
-						'Content-Type': 'application/json',
-						'authorization': login.authtoken
-					},
-					json: true,
-					body: {
-						'createChildren': true,
-						'user': login,
-						'chargebacks': cb
-					}
-				};
-			request(options, function(e,res,data) {
-				if (e) { console.log(e); done(e); }
-				res.statusCode.should.equal(200);
-				done();
-			});
+			request
+				.post('/api/v1/chargebacks')
+				.send({
+					'chargebacks': cb,
+					'createChildren': true,
+					'user': login
+				})
+				.set('Content-Type', 'application/json')
+				.set('Accept', 'application/json')
+				.set('authorization', login.authtoken)
+				.expect(200)
+				.end(function(e, res) {  
+					if (e) { console.log(e); done(e); }
+					done();
+				});
 		});
 	});
 
@@ -245,21 +219,18 @@ describe('Test Chargebacks',function(){
 		var users,
 			other;
 		it('current users should now be 2', function(done){
-			var options = {
-					uri: "http://" + config.get('host') + "/api/v1/users",
-					method: 'GET',
-					headers: {
-						'Content-Type': 'application/json',
-						'authorization': login.authtoken
-					}
-				};
-			request(options, function(e,res,data) {
-				if (e) { console.log(e); done(e); }
-				res.statusCode.should.equal(200);
-				users = JSON.parse(data);
-				users.should.be.instanceof(Array).and.have.lengthOf(2);
-				done();
-			});
+			request
+				.get('/api/v1/users')
+				.set('Content-Type', 'application/json')
+				.set('Accept', 'application/json')
+				.set('authorization', login.authtoken)
+				.expect(200)
+				.end(function(e, res) {  
+					if (e) { console.log(e); done(e); }
+					users = JSON.parse(data);
+					users.should.be.instanceof(Array).and.have.lengthOf(2);
+					done();
+				});
 		});
 		it('total users should be 3', function(done){
 			User.count(function(err,c) {
