@@ -44,7 +44,8 @@ module.exports = function(app) {
 				},{
 					'$group': {
 						'_id': { 'year' : "$year", 'month' : "$month"}, 
-						'total': { '$sum': '$amt' }
+						'sum': { '$sum': '$amt' },
+						'count': { '$sum': 1 }
 					}
 				},
 				{ '$sort' : { '_id': 1 } }
@@ -80,7 +81,7 @@ module.exports = function(app) {
 				}
 				out.push({
 					'date': row._id.year + '-' + pre + row._id.month + '-01',
-					'total': row['total']
+					'count': row['count']
 				});
 			});
 
@@ -110,30 +111,32 @@ module.exports = function(app) {
 			},
 			group = { 'status' : "$status" };
 
-		pieOverview(params, req.user._id, project, group, function(err, out) {
+		pieOverview(params, req.user._id, project, group, function(err, data) {
 			if (err) { return next(err); }
-			log.log(out)
+			log.log(data);
 			
 			var result1 = [],
 				result2 = [];
-			_.each(out[0], function(row) {
-				result1.push( { 'name': row._id.status, "val": row.total } );
-			});
-			_.each(out[1], function(row) {
-				result2.push( { 'name': row._id.status, "val": row.total } );
+			_.each(data, function(row) {
+				result1.push( { 'name': row._id.status, "sum": row.sum, "count": row.count } );
+				result2.push( { 'name': row._id.status, "sum": row.sum, "count": row.count } );
 			});
 			
 			return res.json({
 				"byVolume": {
 					"label": 'Status By Volume',
 					"data_type": 'currency',
-					"filtertype": 'status',
+					"filter": {
+						'name': 'status'
+					},
 					"data": result2
 				},
 				"byCount": {
 					"label": 'Status By Count',
 					"data_type": 'number',
-					"filtertype": 'status',
+					"filter": {
+						'name': 'status'
+					},
 					"data": result1
 				}
 			});
@@ -159,30 +162,32 @@ module.exports = function(app) {
 			},
 			group = { 'cctype' : "$cctype" };
 
-		pieOverview(params, req.user._id, project, group, function(err, out) {
+		pieOverview(params, req.user._id, project, group, function(err, data) {
 			if (err) { return next(err); }
-			log.log(out)
+			log.log(data);
 			
 			var result1 = [],
 				result2 = [];
-			_.each(out[0], function(row) {
-				result1.push( { 'name': row._id.cctype, "val": row.total } );
-			});
-			_.each(out[1], function(row) {
-				result2.push( { 'name': row._id.cctype, "val": row.total } );
+			_.each(data, function(row) {
+				result1.push( { 'name': row._id.cctype, "sum": row.sum, "count": row.count } );
+				result2.push( { 'name': row._id.cctype, "sum": row.sum, "count": row.count } );
 			});
 			
 			return res.json({
 				"byVolume": {
 					"label": 'Card Type By Volume',
 					"data_type": 'currency',
-					"filtertype": 'cctype',
+					"filter": {
+						'name': 'cctype'
+					},
 					"data": result2
 				},
 				"byCount": {
 					"label": 'Card Type By Count',
 					"data_type": 'number',
-					"filtertype": 'cctype',
+					"filter": {
+						'name': 'cctype'
+					},
 					"data": result1
 				}
 			});
@@ -195,17 +200,57 @@ module.exports = function(app) {
 	app.get('/api/v1/report/midStatus?', mw.auth(), function(req, res, next) {
 		
 		var params = req.query,
-			project = {
-				'_id': 0,
-				'status': "$status",
-				'mid': "$portal_data.MidNumber",
-				'amt': '$portal_data.ChargebackAmt'
-			},
-			group = { 'key': '$mid', 'status' : "$status" };
+			search = [
+				{ '$match': {
+					'chargebackDate': {
+						'$gte': moment( parseInt(params.start) ).toDate(),
+						'$lte': moment( parseInt(params.end) ).toDate()
+					},
+					'parent._id': mongoose.Types.ObjectId( req.user._id )
+				}},
+				{ '$group': { 
+					"_id": {
+						'mid': '$portal_data.MidNumber', 'status': '$status'
+					},
+					"count": { '$sum': 1 },
+					'sum': { '$sum': '$portal_data.ChargebackAmt'}
+				}},
+				{ "$group": {
+					"_id": "$_id.mid",
+					"data": { 
+						"$push": { 
+							"name": "$_id.status",
+							"count": "$count",
+							"sum": "$sum"
+						},
+					},
+					"total_count": { "$sum": "$count" },
+					"total_sum": { "$sum": "$sum" },
+				}}
+			];
 
-		pie(params, req.user._id, project, group, 'status', 'mid', function(err, data) {
-			res.json(data);
-		});
+		log.log(search);
+
+		$()
+		.seq(function() {
+			Chargeback.aggregate(search, this);
+		})
+		.seq(function(data) {
+			var out = [];
+			_.each(data, function(d) {
+				out.push({
+					"label": d._id,
+					"data_type": 'currency',
+					"filter": {					// filter is for filtering chargeback list upon click (in pie charts)
+						"name": "portal_data.MidNumber",
+						"_id": d._id
+					},
+					"data": d.data
+				});
+			});
+			return res.json(out);
+		})
+		.catch(next);
 
 	});
 
@@ -223,19 +268,25 @@ module.exports = function(app) {
 					},
 					'parent._id': mongoose.Types.ObjectId( req.user._id )
 				}},
-				{ '$project': {
-					'_id': 0,
-					'status': "$status",
-					'parent': "$user.name",
-					'parent_id': '$user._id',
-					'amt': '$portal_data.ChargebackAmt'
+				{ '$group': { 
+					"_id": {
+						'user': '$user', 'status': '$status'
+					},
+					"count": { '$sum': 1 },
+					'sum': { '$sum': '$portal_data.ChargebackAmt'}
 				}},
-				{ '$group': {
-					'_id': { 'key': '$parent_id', 'status' : "$status" }, 
-					'count': { '$sum': 1 },
-					'sum': { '$sum': '$amt' }
-				}},
-				{ '$sort' : { '_id': 1 } }
+				{ "$group": {
+					"_id": "$_id.user",
+					"data": { 
+						"$push": { 
+							"name": "$_id.status",
+							"count": "$count",
+							"sum": "$sum"
+						},
+					},
+					"total_count": { "$sum": "$count" },
+					"total_sum": { "$sum": "$sum" },
+				}}
 			];
 
 		log.log(search);
@@ -245,7 +296,18 @@ module.exports = function(app) {
 			Chargeback.aggregate(search, this);
 		})
 		.seq(function(data) {
-			var out = pieData(data, 'status', 'parent');
+			var out = [];
+			_.each(data, function(d) {
+				out.push({
+					"label": d._id.name,
+					"data_type": 'currency',
+					"filter": {					// filter is for filtering chargeback list upon click (in pie charts)
+						"name": "user",
+						"_id": d._id._id
+					},
+					"data": d.data
+				});
+			});
 			return res.json(out);
 		})
 		.catch(next);
@@ -257,17 +319,57 @@ module.exports = function(app) {
 	app.get('/api/v1/report/midTypes?', mw.auth(), function(req, res, next) {
 		
 		var params = req.query,
-			project = {
-				'_id': 0,
-				'cctype': "$gateway_data.CcType",
-				'mid': "$portal_data.MidNumber",
-				'amt': '$portal_data.ChargebackAmt'
-			},
-			group = { 'key': '$mid', 'cctype' : "$cctype" };
+			search = [
+				{ '$match': {
+					'chargebackDate': {
+						'$gte': moment( parseInt(params.start) ).toDate(),
+						'$lte': moment( parseInt(params.end) ).toDate()
+					},
+					'parent._id': mongoose.Types.ObjectId( req.user._id )
+				}},
+				{ '$group': { 
+					"_id": {
+						'mid': '$portal_data.MidNumber', 'cctype': '$gateway_data.CcType'
+					},
+					"count": { '$sum': 1 },
+					'sum': { '$sum': '$portal_data.ChargebackAmt'}
+				}},
+				{ "$group": {
+					"_id": "$_id.mid",
+					"data": { 
+						"$push": { 
+							"name": "$_id.cctype",
+							"count": "$count",
+							"sum": "$sum"
+						},
+					},
+					"total_count": { "$sum": "$count" },
+					"total_sum": { "$sum": "$sum" },
+				}}
+			];
 
-		pie(params, req.user._id, project, group, 'cctype', 'mid', function(err, data) {
-			res.json(data);
-		});
+		log.log(search);
+
+		$()
+		.seq(function() {
+			Chargeback.aggregate(search, this);
+		})
+		.seq(function(data) {
+			var out = [];
+			_.each(data, function(d) {
+				out.push({
+					"label": d._id,
+					"data_type": 'currency',
+					"filter": {					// filter is for filtering chargeback list upon click (in pie charts)
+						"name": "portal_data.MidNumber",
+						"_id": d._id
+					},
+					"data": d.data
+				});
+			});
+			return res.json(out);
+		})
+		.catch(next);
 
 	});
 
@@ -282,19 +384,25 @@ module.exports = function(app) {
 					},
 					'parent._id': mongoose.Types.ObjectId( req.user._id )
 				}},
-				{ '$project': {
-					'_id': 0,
-					'cctype': "$gateway_data.CcType",
-					'parent': "$user.name",
-					'parent_id': '$user._id',
-					'amt': '$portal_data.ChargebackAmt'
+				{ '$group': { 
+					"_id": {
+						'user': '$user', 'cctype': '$gateway_data.CcType'
+					},
+					"count": { '$sum': 1 },
+					'sum': { '$sum': '$portal_data.ChargebackAmt'}
 				}},
-				{ '$group': {
-					'_id': { 'key': '$parent_id', 'cctype' : "$cctype" }, 
-					'count': { '$sum': 1 },
-					'sum': { '$sum': '$amt' }
-				}},
-				{ '$sort' : { '_id': 1 } }
+				{ "$group": {
+					"_id": "$_id.user",
+					"data": { 
+						"$push": { 
+							"name": "$_id.cctype",
+							"count": "$count",
+							"sum": "$sum"
+						},
+					},
+					"total_count": { "$sum": "$count" },
+					"total_sum": { "$sum": "$sum" },
+				}}
 			];
 
 		log.log(search);
@@ -304,7 +412,18 @@ module.exports = function(app) {
 			Chargeback.aggregate(search, this);
 		})
 		.seq(function(data) {
-			var out = pieData(data, 'cctype', 'parent');
+			var out = [];
+			_.each(data, function(d) {
+				out.push({
+					"label": d._id.name,
+					"data_type": 'currency',
+					"filter": {					// filter is for filtering chargeback list upon click (in pie charts)
+						"name": "user",
+						"_id": d._id._id
+					},
+					"data": d.data
+				});
+			});
 			return res.json(out);
 		})
 		.catch(next);
@@ -314,122 +433,32 @@ module.exports = function(app) {
 
 	function pieOverview(params, user_id, project, group, next) {
 
-		search1 = [
+		search = [
 			{ '$match': {
 				'chargebackDate': {
 					'$gte': moment( parseInt(params.start) ).toDate(),
 					'$lte': moment( parseInt(params.end) ).toDate()
 				},
-				'user._id': mongoose.Types.ObjectId( user_id )
+				'parent._id': mongoose.Types.ObjectId( user_id )
 			}},
 			{ '$project': project },
 			{ '$group': {
 				'_id': group, 
-				'total': { '$sum': 1 }
-			}},
-			{ '$sort' : { '_id': 1 } }
-		];
-
-		search2 = [
-			{ '$match': {
-				'chargebackDate': {
-					'$gte': moment( parseInt(params.start) ).toDate(),
-					'$lte': moment( parseInt(params.end) ).toDate()
-				},
-				'user._id': mongoose.Types.ObjectId( user_id )
-			}},
-			{ '$project': project },
-			{ '$group': {
-				'_id': group, 
-				'total': { '$sum': "$amt" }
-			}},
-			{ '$sort' : { '_id': 1 } }
-		];
-
-		log.log(search1);
-		log.log(search2);
-
-		$()
-		.par('a', function() {
-			Chargeback.aggregate(search1, this);
-		})
-		.par('b', function() {
-			Chargeback.aggregate(search2, this);
-		})
-		.seq(function() {
-			return next(null, [this.vars.a,this.vars.b]);
-		})
-		.catch(next);
-
-	};
-
-
-	function pie(params, user_id, project, group, val_field, group_type, next) {
-		
-		var search = [
-			{ '$match': {
-				'chargebackDate': {
-					'$gte': moment( parseInt(params.start) ).toDate(),
-					'$lte': moment( parseInt(params.end) ).toDate()
-				},
-				'user._id': mongoose.Types.ObjectId( user_id )
-			}},
-			{ '$project': project },
-			{ '$group': {
-				'_id': group, 
-				'total': { '$sum': 1 }
-			}},
-			{ '$sort' : { '_id': 1 } }
+				'count': { '$sum': 1 },
+				'sum': { '$sum': '$amt' }
+			}}
 		];
 
 		log.log(search);
-
+		
 		$()
 		.seq(function() {
 			Chargeback.aggregate(search, this);
 		})
-		.seq(function(data) {
-			var out = pieData(data, val_field, grouptype);
-			next(null, out);
+		.seq(function(d) {
+			return next(null, d);
 		})
 		.catch(next);
-		
-	};
-
-	function pieData(data, val_field, grouptype) {
-		
-		var result = {};
-		_.each(data, function(row) {
-			log.log(_.keys(row._id));
-			if (_.contains( _.keys(row._id), val_field)) {
-				n = row._id[val_field];
-			} else {
-				n = "";
-			}
-
-			if ( result[ row._id.key ] ) {
-				result[ row._id.key ]['data'].push( { "name": n, "val": row.total } );
-			} else {
-				result[ row._id.key ] = {
-					"data": [
-						{ "name": n, "val": row.total }
-					]
-				};
-			}
-		});
-
-		var out = [];
-		_.each(result, function(value, key) {
-			out.push({
-				"label": key,
-				"data_type": 'currency',
-				"filtertype": val_field,
-				'grouptype': grouptype,
-				"data": value.data
-			});
-		});
-
-		return out;
 
 	};
 

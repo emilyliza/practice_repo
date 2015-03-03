@@ -42,7 +42,7 @@
 
 				scope.control.update = function(wl) {
 					
-					var percent = (wl.won / wl.total) * 100;
+					var percent = (wl.won / wl.count) * 100;
 
 					if (_.isNaN(percent)) {
 						return;
@@ -136,7 +136,7 @@
 
 				//D3 helper function to populate pie slice parameters from array data
 				var donut = d3.layout.pie().value(function(d){
-					return d.val;
+					return d.sum;
 				});
 
 				
@@ -242,9 +242,9 @@
 						pcount = 0;
 					 _.each(res.data, function(d) {
 					 	if (res.data_type == "currency") {
-					 		sum += (d.val);
+					 		sum += (d.sum);
 					 	} else {
-					 		sum += d.val;
+					 		sum += d.count;
 					 	}
 					 	pcount += d.count;
 					 });
@@ -252,14 +252,15 @@
 					scope.colors = {};
 					function filterData(element, index, array) {
 						element.name = res.data[index].name;
+						element.user = res.data[index].user_id;
 						if (res.data_type == "currency") {
-							element.value = res.data[index].val;
+							element.value = res.data[index].sum;
 							element.count = res.data[index].count;
-							element.pct = (res.data[index].val) / sum;
+							element.pct = (res.data[index].sum) / sum;
 						} else {
-							element.value = res.data[index].val;
+							element.value = res.data[index].count;
 							element.count = res.data[index].count;
-							element.pct = (res.data[index].val) / sum;
+							element.pct = (res.data[index].count) / sum;
 						}
 						
 						var ref = element.name;
@@ -342,6 +343,8 @@
 								params['start'] = dates.start;
 								params['end'] = dates.end;
 
+								console.log(res.grouptype);
+								console.log(d);
 								if (res.grouptype == "mid") {
 									params['mids'] = [ res.label ];
 								} else if (res.grouptype == "portal") {
@@ -357,7 +360,7 @@
 									params['mids'] = mstr;
 								}
 									
-								$state.go('chargebacks', params );
+								//$state.go('chargebacks', params );
 							});
 						paths
 							.transition()
@@ -666,8 +669,8 @@
 					
 					data.forEach(function(d) {
 						//d.date = parseDate(d.date);
-						d.total = +d.total;
-						test_months[ moment(d.date, "YYYY-MM-DD").month() ] = +d.total;
+						d.count = +d.count;
+						test_months[ moment(d.date, "YYYY-MM-DD").month() ] = +d.count;
 					});
 
 					var build_months = [],
@@ -681,7 +684,7 @@
 						}
 						build_months.push({
 							date: parseDate( moment( year_ago + "-" + (month_year_ago + 1) + "-01", "YYYY-MM-DD" ).utc().format('YYYY-MM-DD') ),
-							total: t
+							count: t
 						});
 						
 						month_year_ago++;
@@ -695,7 +698,7 @@
 					
 
 					x.domain(d3.extent(data, function(d) { return d.date; }));
-					y.domain([0, d3.max(data, function(d) { return d.total; })]);
+					y.domain([0, d3.max(data, function(d) { return d.count; })]);
 
 					// y-axis
 					chart.select(".y.axis").remove();
@@ -716,14 +719,14 @@
 					bar.enter().append("rect")
 						.attr("class", "bar")
 						.attr("x", function(d) { return x(d.date) - (barWidth/2); })
-						.attr("y", function(d) { return y(d.total); })
+						.attr("y", function(d) { return y(d.count); })
 						.attr("width", barWidth)
-						.attr("height", function(d) { return height - y(d.total); });
+						.attr("height", function(d) { return height - y(d.count); });
 					bar
 						.transition()
 						.duration(750)
-						.attr("y", function(d) { return y(d.total); })
-						.attr("height", function(d) { return height - y(d.total); });
+						.attr("y", function(d) { return y(d.count); })
+						.attr("height", function(d) { return height - y(d.count); });
 
 					// removed data:
 					bar.exit().transition().remove();
@@ -733,8 +736,8 @@
 					bar
 						.transition()
 						.duration(750)
-						.attr("y", function(d) { return y(d.total); })
-						.attr("height", function(d) { return height - y(d.total); });
+						.attr("y", function(d) { return y(d.count); })
+						.attr("height", function(d) { return height - y(d.count); });
 
 
 					chart.select(".x.axis").remove();

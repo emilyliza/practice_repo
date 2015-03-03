@@ -373,45 +373,36 @@
 			});
 		};
 
-		reportingService.getMidString = function() {
-			var mids_str = "";
-			_.each(merchants[merchant].mids, function(mid) {
-				if (mids_str) { mids_str += ","; }
-				mids_str += mid.mid;
-			});
-			return mids_str;
-		};
-
 		reportingService.getBilling = function() {
 			return $http.get('/api/v1/billing');
 		};
 
 		reportingService.getHistory = function() {
-			return $http.get('/api/v1/history?start=' + start + "&end=" + end + "&mids=" + this.getMidString() );
+			return $http.get('/api/v1/history?start=' + start + "&end=" + end  );
 		};
 
 		reportingService.getStatusData = function() {
-			return $http.get('/api/v1/report/status?start=' + start + "&end=" + end + "&mids=" + this.getMidString() );
+			return $http.get('/api/v1/report/status?start=' + start + "&end=" + end  );
 		};
 
 		reportingService.getMidStatusData = function() {
-			return $http.get('/api/v1/report/midStatus?start=' + start + "&end=" + end + "&mids=" + this.getMidString() );
+			return $http.get('/api/v1/report/midStatus?start=' + start + "&end=" + end );
 		};
 
 		reportingService.getTypeData = function() {
-			return $http.get('/api/v1/report/cctypes?start=' + start + "&end=" + end + "&mids=" + this.getMidString() );
+			return $http.get('/api/v1/report/cctypes?start=' + start + "&end=" + end  );
 		};
 
 		reportingService.getMidTypeData = function() {
-			return $http.get('/api/v1/report/midTypes?start=' + start + "&end=" + end + "&mids=" + this.getMidString() );
+			return $http.get('/api/v1/report/midTypes?start=' + start + "&end=" + end  );
 		};
 
 		reportingService.getProcessorTypeData = function() {
-			return $http.get('/api/v1/report/processorTypes?start=' + start + "&end=" + end + "&mids=" + this.getMidString() );
+			return $http.get('/api/v1/report/parentTypes?start=' + start + "&end=" + end );
 		};
 
 		reportingService.getProcessorStatusData = function() {
-			return $http.get('/api/v1/report/processorStatus?start=' + start + "&end=" + end + "&mids=" + this.getMidString() );
+			return $http.get('/api/v1/report/parentStatus?start=' + start + "&end=" + end );
 		};
 
 
