@@ -36,6 +36,8 @@ describe('Initializing Tests',function(){
 	describe('Starting Tests',function(){
 		require('./tests/clear')(app);
 		require('./tests/user')(app);
+		require('./tests/chargeback')(app);
+		require('./tests/reports')(app);
 	});
 	after(function (done) {
 		app.settings.db.connection.close();
