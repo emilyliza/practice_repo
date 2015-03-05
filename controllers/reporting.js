@@ -97,6 +97,7 @@ module.exports = function(app) {
 	app.get('/api/v1/report/status?', mw.auth(), function(req, res, next) {
 
 		var params = req.query;
+		
 		if (!params.start) {
 			return res.send(400, "No start");
 		}
@@ -104,15 +105,41 @@ module.exports = function(app) {
 			return res.send(400, "No end");
 		}
 
-		var project = {
+		var match = {
+			'chargebackDate': {
+				'$gte': moment( parseInt(params.start) ).toDate(),
+				'$lte': moment( parseInt(params.end) ).toDate()
+			},
+			'parent._id': mongoose.Types.ObjectId( req.user._id )
+		};
+
+		// filter by user: achieved via typeahead within reporting.
+		if (params.user) {
+			match['user._id'] = mongoose.Types.ObjectId( params.user );
+		}
+
+		var search = [
+			{ '$match': match },
+			{ '$project': {
 				'_id': 0,
 				'status': "$status",
 				'amt': '$portal_data.ChargebackAmt'
-			},
-			group = { 'status' : "$status" };
+			} },
+			{ '$group': {
+				'_id': { 'status' : "$status" }, 
+				'count': { '$sum': 1 },
+				'sum': { '$sum': '$amt' }
+			}}
+		];
 
-		pieOverview(params, req.user._id, project, group, function(err, data) {
-			if (err) { return next(err); }
+		log.log(search);
+		
+		$()
+		.seq(function() {
+			Chargeback.aggregate(search, this);
+		})
+		.seq(function(data) {
+			
 			log.log(data);
 			
 			var result1 = [],
@@ -139,31 +166,59 @@ module.exports = function(app) {
 					},
 					"data": result1
 				}
-			});
+			});	
 
-		});
+		})
+		.catch(next);
 
 	});
 
 	app.get('/api/v1/report/cctypes?', mw.auth(), function(req, res, next) {
 
 		var params = req.query;
+
 		if (!params.start) {
 			return res.send(400, "No start");
 		}
 		if (!params.end) {
 			return res.send(400, "No end");
+		}	
+
+		var match = {
+			'chargebackDate': {
+				'$gte': moment( parseInt(params.start) ).toDate(),
+				'$lte': moment( parseInt(params.end) ).toDate()
+			},
+			'parent._id': mongoose.Types.ObjectId( req.user._id )
+		};
+
+		// filter by user: achieved via typeahead within reporting.
+		if (params.user) {
+			match['user._id'] = mongoose.Types.ObjectId( params.user );
 		}
 
-		var project = {
+		var search = [
+			{ '$match': match },
+			{ '$project': {
 				'_id': 0,
 				'cctype': "$gateway_data.CcType",
 				'amt': '$portal_data.ChargebackAmt'
-			},
-			group = { 'cctype' : "$cctype" };
+			} },
+			{ '$group': {
+				'_id': { 'cctype' : "$cctype" }, 
+				'count': { '$sum': 1 },
+				'sum': { '$sum': '$amt' }
+			}}
+		];
 
-		pieOverview(params, req.user._id, project, group, function(err, data) {
-			if (err) { return next(err); }
+		log.log(search);
+		
+		$()
+		.seq(function() {
+			Chargeback.aggregate(search, this);
+		})
+		.seq(function(data) {
+			
 			log.log(data);
 			
 			var result1 = [],
@@ -190,44 +245,55 @@ module.exports = function(app) {
 					},
 					"data": result1
 				}
-			});
+			});	
 
-		});
+		})
+		.catch(next);
+
+		
 
 	});
 
 
 	app.get('/api/v1/report/midStatus?', mw.auth(), function(req, res, next) {
 		
-		var params = req.query,
-			search = [
-				{ '$match': {
-					'chargebackDate': {
-						'$gte': moment( parseInt(params.start) ).toDate(),
-						'$lte': moment( parseInt(params.end) ).toDate()
+		var params = req.query;
+
+		var match = {
+			'chargebackDate': {
+				'$gte': moment( parseInt(params.start) ).toDate(),
+				'$lte': moment( parseInt(params.end) ).toDate()
+			},
+			'parent._id': mongoose.Types.ObjectId( req.user._id )
+		};
+
+		// filter by user: achieved via typeahead within reporting.
+		if (params.user) {
+			match['user._id'] = mongoose.Types.ObjectId( params.user );
+		}
+		
+		var search = [
+			{ '$match': match },
+			{ '$group': { 
+				"_id": {
+					'mid': '$portal_data.MidNumber', 'status': '$status'
+				},
+				"count": { '$sum': 1 },
+				'sum': { '$sum': '$portal_data.ChargebackAmt'}
+			}},
+			{ "$group": {
+				"_id": "$_id.mid",
+				"data": { 
+					"$push": { 
+						"name": "$_id.status",
+						"count": "$count",
+						"sum": "$sum"
 					},
-					'parent._id': mongoose.Types.ObjectId( req.user._id )
-				}},
-				{ '$group': { 
-					"_id": {
-						'mid': '$portal_data.MidNumber', 'status': '$status'
-					},
-					"count": { '$sum': 1 },
-					'sum': { '$sum': '$portal_data.ChargebackAmt'}
-				}},
-				{ "$group": {
-					"_id": "$_id.mid",
-					"data": { 
-						"$push": { 
-							"name": "$_id.status",
-							"count": "$count",
-							"sum": "$sum"
-						},
-					},
-					"total_count": { "$sum": "$count" },
-					"total_sum": { "$sum": "$sum" },
-				}}
-			];
+				},
+				"total_count": { "$sum": "$count" },
+				"total_sum": { "$sum": "$sum" },
+			}}
+		];
 
 		log.log(search);
 
@@ -259,15 +325,23 @@ module.exports = function(app) {
 		// this used to be by processor, but new data model will group by user,
 		// querying by parent.
 
-		var params = req.query,
-			search = [
-				{ '$match': {
-					'chargebackDate': {
-						'$gte': moment( parseInt(params.start) ).toDate(),
-						'$lte': moment( parseInt(params.end) ).toDate()
-					},
-					'parent._id': mongoose.Types.ObjectId( req.user._id )
-				}},
+		var params = req.query;
+
+		var match = {
+			'chargebackDate': {
+				'$gte': moment( parseInt(params.start) ).toDate(),
+				'$lte': moment( parseInt(params.end) ).toDate()
+			},
+			'parent._id': mongoose.Types.ObjectId( req.user._id )
+		};
+
+		// filter by user: achieved via typeahead within reporting.
+		if (params.user) {
+			match['user._id'] = mongoose.Types.ObjectId( params.user );
+		}
+
+		var search = [
+				{ '$match': match },
 				{ '$group': { 
 					"_id": {
 						'user': '$user', 'status': '$status'
@@ -318,15 +392,23 @@ module.exports = function(app) {
 
 	app.get('/api/v1/report/midTypes?', mw.auth(), function(req, res, next) {
 		
-		var params = req.query,
-			search = [
-				{ '$match': {
-					'chargebackDate': {
-						'$gte': moment( parseInt(params.start) ).toDate(),
-						'$lte': moment( parseInt(params.end) ).toDate()
-					},
-					'parent._id': mongoose.Types.ObjectId( req.user._id )
-				}},
+		var params = req.query;
+
+		var match = {
+			'chargebackDate': {
+				'$gte': moment( parseInt(params.start) ).toDate(),
+				'$lte': moment( parseInt(params.end) ).toDate()
+			},
+			'parent._id': mongoose.Types.ObjectId( req.user._id )
+		};
+
+		// filter by user: achieved via typeahead within reporting.
+		if (params.user) {
+			match['user._id'] = mongoose.Types.ObjectId( params.user );
+		}
+
+		var search = [
+				{ '$match': match },
 				{ '$group': { 
 					"_id": {
 						'mid': '$portal_data.MidNumber', 'cctype': '$gateway_data.CcType'
@@ -375,15 +457,23 @@ module.exports = function(app) {
 
 	app.get('/api/v1/report/parentTypes?', mw.auth(), function(req, res, next) {
 		
-		var params = req.query,
-			search = [
-				{ '$match': {
-					'chargebackDate': {
-						'$gte': moment( parseInt(params.start) ).toDate(),
-						'$lte': moment( parseInt(params.end) ).toDate()
-					},
-					'parent._id': mongoose.Types.ObjectId( req.user._id )
-				}},
+		var params = req.query;
+
+		var match = {
+			'chargebackDate': {
+				'$gte': moment( parseInt(params.start) ).toDate(),
+				'$lte': moment( parseInt(params.end) ).toDate()
+			},
+			'parent._id': mongoose.Types.ObjectId( req.user._id )
+		};
+
+		// filter by user: achieved via typeahead within reporting.
+		if (params.user) {
+			match['user._id'] = mongoose.Types.ObjectId( params.user );
+		}
+
+		var search = [
+				{ '$match': match },
 				{ '$group': { 
 					"_id": {
 						'user': '$user', 'cctype': '$gateway_data.CcType'
@@ -431,36 +521,6 @@ module.exports = function(app) {
 	});
 
 
-	function pieOverview(params, user_id, project, group, next) {
-
-		search = [
-			{ '$match': {
-				'chargebackDate': {
-					'$gte': moment( parseInt(params.start) ).toDate(),
-					'$lte': moment( parseInt(params.end) ).toDate()
-				},
-				'parent._id': mongoose.Types.ObjectId( user_id )
-			}},
-			{ '$project': project },
-			{ '$group': {
-				'_id': group, 
-				'count': { '$sum': 1 },
-				'sum': { '$sum': '$amt' }
-			}}
-		];
-
-		log.log(search);
-		
-		$()
-		.seq(function() {
-			Chargeback.aggregate(search, this);
-		})
-		.seq(function(d) {
-			return next(null, d);
-		})
-		.catch(next);
-
-	};
-
+	
 
 };
