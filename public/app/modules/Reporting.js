@@ -18,16 +18,8 @@
 			url: '/overview',
 			requiresAuth: true,
 			templateUrl: '/app/templates/reporting.overview.html',
-			controller: [ '$scope', '$timeout', function($scope, $timeout) {
-				$timeout(function() {
-					$scope.getReports().then(function(data) {
-						$scope.data = data;
-						if ($scope.data.hwl) {
-							$scope.winloss.update(data.winloss);		
-						}
-					});
-					$scope.getHistory();
-				});
+			controller: [ '$scope', function($scope) {
+				$scope.getOverview();
 			}]
 		})
 		.state('reporting.mids', {
@@ -177,9 +169,7 @@
 		$scope.graphtype1 = {};
 		$scope.graphtype2 = {};
 		$scope.graphBarHistory = {};
-		$scope.list_data_types = [
-			'processorData', 'midData'
-		];
+		
 
 		$scope.date = {
 			start: {
@@ -193,8 +183,10 @@
 		};
 		ReportingService.setDates($scope.date);
 
+		
 		$scope.$watch("date.start.val", function(newValue, oldValue){
 			//@TODO: alert location for history option, like chargeback list
+			if (newValue == oldValue) { return; }
 			ReportingService.setDates($scope.date);
 			if ($scope.last) {
 				$scope[$scope.last]();
@@ -202,11 +194,13 @@
 		});
 		$scope.$watch("date.end.val", function(newValue, oldValue){
 			//@TODO: alert location for history option, like chargeback list
+			if (newValue == oldValue) { return; }
 			ReportingService.setDates($scope.date);
 			if ($scope.last) {
 				$scope[$scope.last]();
 			}
 		});
+		
 		
 		// go full screen inside reporting
 		angular.element('#pages').removeClass("container");
@@ -235,26 +229,28 @@
 		$scope.setMerchant = function(m) {
 			ReportingService.setMerchant(m._id);
 			if (m._id != $scope.last_merchant_id) {
+				console.log($scope.last_merchant_id)
 				$scope[$scope.last]();
 			}
 			$scope.last_merchant_id = m._id;
 		};
 
-		$scope.getReports = function() {
-			$scope.last = 'getReports';
-			$scope.clearOtherData($scope.last);
-			return ReportingService.getReports();
-		};
-
-		$scope.getHistory = function() {
-			$scope.last = 'getReports';
-			$scope.clearOtherData($scope.last);
-			
-			return ReportingService.getHistory().then(function(res) {
-				$scope.graphBarHistory.update(res.data);
+		$scope.getOverview = function() {
+			$scope.last = 'getOverview';
+			ReportingService.getDashboard().then(function(res) {
+				$scope.data = res;
+				if ($scope.data.hwl) {
+					$scope.winloss.update($scope.data.winloss);		
+				}	
 			});
-
+			$timeout(function() {
+				ReportingService.getHistory().then(function(res) {
+					$scope.graphBarHistory.update(res.data);
+				});	
+			},50);
 		};
+
+		
 
 		$scope.getStatusData = function() {
 			$scope.last = 'getStatusData';
@@ -306,14 +302,6 @@
 			});
 		};
 
-		$scope.clearOtherData = function(not) {
-			_.each($scope.list_data_types, function(t) {
-				if (t != not) {
-					$scope[t] = [];
-				}
-			});
-		};
-
 		$scope.showList = function() {
 			var ngModelCtrl = angular.element('input').controller('ngModel');
         	ngModelCtrl.$setViewValue(' ');
@@ -354,12 +342,12 @@
 			}
 		};
 
-		reportingService.getReports = function() {
+		reportingService.getDashboard = function() {
 			return $http
-			.get('/api/v1/dashboard')
+			.get('/api/v1/dashboard?user=' + reportingService.getMerchant() )
 			.then(function (res) {
 				res.data.hwl = true;
-				if (_.isNaN(res.data.winloss.won / res.data.winloss.total)) {
+				if (_.isNaN(res.data.winloss.won / res.data.winloss.count)) {
 					res.data.hwl = false;
 				}
 				return res.data;

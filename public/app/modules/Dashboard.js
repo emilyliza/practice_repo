@@ -59,7 +59,7 @@
 			.then(function (res) {
 				
 				res.data.hwl = true;
-				if (_.isNaN(res.data.winloss.won / res.data.winloss.total)) {
+				if (_.isNaN(res.data.winloss.won / res.data.winloss.count)) {
 					res.data.hwl = false;
 				}
 				
