@@ -66,14 +66,12 @@ module.exports = function(app) {
 				{ 'email': pattern }
 			]);
 		}
-
-		if (!params.user.admin) {
-			query.or([
-				{ '_id': params.user._id },
-				{ 'parent._id': params.user._id }
-			]);
-		}
-
+		
+		query.or([
+			{ '_id': params.user._id },
+			{ 'parent._id': params.user._id }
+		]);
+		
 		query.skip( (params.page ? ((+params.page - 1) * params.limit) : 0) );
 		query.limit((params.limit ? params.limit : 50));
 
