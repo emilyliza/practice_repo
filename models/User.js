@@ -54,6 +54,18 @@ module.exports = function(app) {
 	};
 
 
+	User.isChild = function(parent, child, next) {
+		var query = User.find();
+		query.where('_id').equals(child);
+		query.where('parent._id').equals(parent);
+
+		log.log('Child Query...');
+		log.log(query._conditions);
+		log.log(query.options);
+
+		query.exec(next);
+	};
+
 	User.search = function(params, next) {
 
 		var query = User.find();
@@ -66,7 +78,7 @@ module.exports = function(app) {
 				{ 'email': pattern }
 			]);
 		}
-		
+
 		query.or([
 			{ '_id': params.user._id },
 			{ 'parent._id': params.user._id }

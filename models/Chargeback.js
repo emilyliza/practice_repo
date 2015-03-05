@@ -221,6 +221,33 @@ module.exports = function(app) {
 		});
 	};
 
+	
+	Chargeback.setMatch = function(req) {
+
+		var params = req.query;
+		var match = {};
+
+		if (params.start && params.end) {
+			match.chargebackDate = {
+				'$gte': moment( parseInt(params.start) ).toDate(),
+				'$lte': moment( parseInt(params.end) ).toDate()
+			};
+		};
+
+		// filter by user: achieved via typeahead within reporting.
+		if (params.user) {
+			match['parent._id'] = db.Types.ObjectId( req.user._id );
+			match['user._id'] = db.Types.ObjectId( params.user );
+		} else {
+			match['$or'] = [
+				{ 'parent._id': db.Types.ObjectId( req.user._id ) },
+				{ 'user._id': db.Types.ObjectId( req.user._id ) }
+			];
+		}
+
+		return match;
+	};
+
 	Chargeback.prototype.field = false;
 	Chargeback.prototype.fields = 'attachments';
 

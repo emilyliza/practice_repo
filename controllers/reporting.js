@@ -13,27 +13,14 @@ module.exports = function(app) {
 
 	app.get("/api/v1/history?", mw.auth(), function(req, res, next) {
 
-		var start_date = moment().subtract(1, 'year').toDate();
-			match = {
-				'chargebackDate': { '$gte': start_date },
-				'$or': [
-					{ 'parent._id': mongoose.Types.ObjectId( req.user._id ) },
-					{ 'user._id': mongoose.Types.ObjectId( req.user._id ) }
-				]
-			};	
-		
-		if (req.query.user) {
-			match = {
-				'chargebackDate': { '$gte': start_date },
-				'$or': [
-					{ 'parent._id': mongoose.Types.ObjectId( req.query.user ) },
-					{ 'user._id': mongoose.Types.ObjectId( req.query.user ) }
-				]
-			};
-		}
+		var params = req.query;
+			
+		// // need to set these, there is no input for history, setMatch requires.
+		req.query.start = moment().utc().subtract(1, 'year').valueOf();
+		req.query.end = moment().utc().add(2, 'days').valueOf();
 		
 		var search = [{
-				'$match': match
+				'$match': Chargeback.setMatch(req)
 				},{
 					'$project': {
 						'_id': 0,
@@ -53,21 +40,24 @@ module.exports = function(app) {
 
 		$()
 		.seq(function() {
-			if (!req.query.user) { return this(); }
-			User.findById(req.query.user, this);
+			if (params.user) {
+				// if filtering by a user, ensure user is child of current user
+				User.isChild(req.user._id, params.user, this);
+			} else {
+				this(null,true);
+			}
 		})
-		.seq(function(u) {
-			
-			if (u && u.parent._id + '' != req.user._id) {
+		.seq(function(pass) {
+			if (!pass) {
 				// if current user is not parent of filtered user, then we 
 				// have a security problem, so dump out...
-				log.log(req.user._id + ' trying to accsss ' + req.query.user);
-				return res.json(401, 'Unauthorized');
+				log.log(req.user._id + ' trying to accsss ' + params.user);
+				return res.json(400, 'Unauthorized');
 			}
 
+			log.log('history query');
 			log.log(search);
 			Chargeback.aggregate(search, this);
-
 		})
 		.seq(function(data) {
 
@@ -105,21 +95,8 @@ module.exports = function(app) {
 			return res.send(400, "No end");
 		}
 
-		var match = {
-			'chargebackDate': {
-				'$gte': moment( parseInt(params.start) ).toDate(),
-				'$lte': moment( parseInt(params.end) ).toDate()
-			},
-			'parent._id': mongoose.Types.ObjectId( req.user._id )
-		};
-
-		// filter by user: achieved via typeahead within reporting.
-		if (params.user) {
-			match['user._id'] = mongoose.Types.ObjectId( params.user );
-		}
-
 		var search = [
-			{ '$match': match },
+			{ '$match': Chargeback.setMatch(req) },
 			{ '$project': {
 				'_id': 0,
 				'status': "$status",
@@ -136,6 +113,20 @@ module.exports = function(app) {
 		
 		$()
 		.seq(function() {
+			if (params.user) {
+				// if filtering by a user, ensure user is child of current user
+				User.isChild(req.user._id, params.user, next);
+			} else {
+				this(null,true);
+			}
+		})
+		.seq(function(pass) {
+			if (!pass) {
+				// if current user is not parent of filtered user, then we 
+				// have a security problem, so dump out...
+				log.log(req.user._id + ' trying to accsss ' + params.user);
+				return res.json(401, 'Unauthorized');
+			}
 			Chargeback.aggregate(search, this);
 		})
 		.seq(function(data) {
@@ -184,21 +175,8 @@ module.exports = function(app) {
 			return res.send(400, "No end");
 		}	
 
-		var match = {
-			'chargebackDate': {
-				'$gte': moment( parseInt(params.start) ).toDate(),
-				'$lte': moment( parseInt(params.end) ).toDate()
-			},
-			'parent._id': mongoose.Types.ObjectId( req.user._id )
-		};
-
-		// filter by user: achieved via typeahead within reporting.
-		if (params.user) {
-			match['user._id'] = mongoose.Types.ObjectId( params.user );
-		}
-
 		var search = [
-			{ '$match': match },
+			{ '$match': Chargeback.setMatch(req) },
 			{ '$project': {
 				'_id': 0,
 				'cctype': "$gateway_data.CcType",
@@ -215,6 +193,20 @@ module.exports = function(app) {
 		
 		$()
 		.seq(function() {
+			if (params.user) {
+				// if filtering by a user, ensure user is child of current user
+				User.isChild(req.user._id, params.user, next);
+			} else {
+				this(null,true);
+			}
+		})
+		.seq(function(pass) {
+			if (!pass) {
+				// if current user is not parent of filtered user, then we 
+				// have a security problem, so dump out...
+				log.log(req.user._id + ' trying to accsss ' + params.user);
+				return res.json(401, 'Unauthorized');
+			}
 			Chargeback.aggregate(search, this);
 		})
 		.seq(function(data) {
@@ -259,21 +251,8 @@ module.exports = function(app) {
 		
 		var params = req.query;
 
-		var match = {
-			'chargebackDate': {
-				'$gte': moment( parseInt(params.start) ).toDate(),
-				'$lte': moment( parseInt(params.end) ).toDate()
-			},
-			'parent._id': mongoose.Types.ObjectId( req.user._id )
-		};
-
-		// filter by user: achieved via typeahead within reporting.
-		if (params.user) {
-			match['user._id'] = mongoose.Types.ObjectId( params.user );
-		}
-		
 		var search = [
-			{ '$match': match },
+			{ '$match': Chargeback.setMatch(req) },
 			{ '$group': { 
 				"_id": {
 					'mid': '$portal_data.MidNumber', 'status': '$status'
@@ -299,6 +278,20 @@ module.exports = function(app) {
 
 		$()
 		.seq(function() {
+			if (params.user) {
+				// if filtering by a user, ensure user is child of current user
+				User.isChild(req.user._id, params.user, next);
+			} else {
+				this(null,true);
+			}
+		})
+		.seq(function(pass) {
+			if (!pass) {
+				// if current user is not parent of filtered user, then we 
+				// have a security problem, so dump out...
+				log.log(req.user._id + ' trying to accsss ' + params.user);
+				return res.json(401, 'Unauthorized');
+			}
 			Chargeback.aggregate(search, this);
 		})
 		.seq(function(data) {
@@ -327,21 +320,8 @@ module.exports = function(app) {
 
 		var params = req.query;
 
-		var match = {
-			'chargebackDate': {
-				'$gte': moment( parseInt(params.start) ).toDate(),
-				'$lte': moment( parseInt(params.end) ).toDate()
-			},
-			'parent._id': mongoose.Types.ObjectId( req.user._id )
-		};
-
-		// filter by user: achieved via typeahead within reporting.
-		if (params.user) {
-			match['user._id'] = mongoose.Types.ObjectId( params.user );
-		}
-
 		var search = [
-				{ '$match': match },
+				{ '$match': Chargeback.setMatch(req) },
 				{ '$group': { 
 					"_id": {
 						'user': '$user', 'status': '$status'
@@ -367,6 +347,20 @@ module.exports = function(app) {
 
 		$()
 		.seq(function() {
+			if (params.user) {
+				// if filtering by a user, ensure user is child of current user
+				User.isChild(req.user._id, params.user, next);
+			} else {
+				this(null,true);
+			}
+		})
+		.seq(function(pass) {
+			if (!pass) {
+				// if current user is not parent of filtered user, then we 
+				// have a security problem, so dump out...
+				log.log(req.user._id + ' trying to accsss ' + params.user);
+				return res.json(401, 'Unauthorized');
+			}
 			Chargeback.aggregate(search, this);
 		})
 		.seq(function(data) {
@@ -394,21 +388,8 @@ module.exports = function(app) {
 		
 		var params = req.query;
 
-		var match = {
-			'chargebackDate': {
-				'$gte': moment( parseInt(params.start) ).toDate(),
-				'$lte': moment( parseInt(params.end) ).toDate()
-			},
-			'parent._id': mongoose.Types.ObjectId( req.user._id )
-		};
-
-		// filter by user: achieved via typeahead within reporting.
-		if (params.user) {
-			match['user._id'] = mongoose.Types.ObjectId( params.user );
-		}
-
 		var search = [
-				{ '$match': match },
+				{ '$match': Chargeback.setMatch(req) },
 				{ '$group': { 
 					"_id": {
 						'mid': '$portal_data.MidNumber', 'cctype': '$gateway_data.CcType'
@@ -434,6 +415,20 @@ module.exports = function(app) {
 
 		$()
 		.seq(function() {
+			if (params.user) {
+				// if filtering by a user, ensure user is child of current user
+				User.isChild(req.user._id, params.user, next);
+			} else {
+				this(null,true);
+			}
+		})
+		.seq(function(pass) {
+			if (!pass) {
+				// if current user is not parent of filtered user, then we 
+				// have a security problem, so dump out...
+				log.log(req.user._id + ' trying to accsss ' + params.user);
+				return res.json(401, 'Unauthorized');
+			}
 			Chargeback.aggregate(search, this);
 		})
 		.seq(function(data) {
@@ -459,21 +454,8 @@ module.exports = function(app) {
 		
 		var params = req.query;
 
-		var match = {
-			'chargebackDate': {
-				'$gte': moment( parseInt(params.start) ).toDate(),
-				'$lte': moment( parseInt(params.end) ).toDate()
-			},
-			'parent._id': mongoose.Types.ObjectId( req.user._id )
-		};
-
-		// filter by user: achieved via typeahead within reporting.
-		if (params.user) {
-			match['user._id'] = mongoose.Types.ObjectId( params.user );
-		}
-
 		var search = [
-				{ '$match': match },
+				{ '$match': Chargeback.setMatch(req) },
 				{ '$group': { 
 					"_id": {
 						'user': '$user', 'cctype': '$gateway_data.CcType'
@@ -499,6 +481,20 @@ module.exports = function(app) {
 
 		$()
 		.seq(function() {
+			if (params.user) {
+				// if filtering by a user, ensure user is child of current user
+				User.isChild(req.user._id, params.user, next);
+			} else {
+				this(null,true);
+			}
+		})
+		.seq(function(pass) {
+			if (!pass) {
+				// if current user is not parent of filtered user, then we 
+				// have a security problem, so dump out...
+				log.log(req.user._id + ' trying to accsss ' + params.user);
+				return res.json(401, 'Unauthorized');
+			}
 			Chargeback.aggregate(search, this);
 		})
 		.seq(function(data) {
