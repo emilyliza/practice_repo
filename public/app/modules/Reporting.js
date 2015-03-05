@@ -229,7 +229,6 @@
 		$scope.setMerchant = function(m) {
 			ReportingService.setMerchant(m._id);
 			if (m._id != $scope.last_merchant_id) {
-				console.log($scope.last_merchant_id)
 				$scope[$scope.last]();
 			}
 			$scope.last_merchant_id = m._id;

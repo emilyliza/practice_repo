@@ -40,10 +40,34 @@
 					return [percent, 100-percent];
 				}
 
+				var pie = d3.layout.pie().sort(null),
+					format = d3.format(".0%");
+
+				var arc = d3.svg.arc()
+				.innerRadius(r - 30)
+				.outerRadius(r);
+
+				var svg = d3.select(container[0]).append("svg")
+					.attr("width", w)
+					.attr("height", h)
+					.append("g")
+					.attr("transform", "translate(" + w / 2 + "," + w / 2 + ")");
+
+				var path = svg.selectAll("path")
+					.data(pie([0,100]))
+					.enter().append("path")
+					.attr("class", function(d, i) { return "color" + i; })
+					.attr("d", arc)
+					.each(function(d) { this._current = d; }); // store the initial values
+
+				var text = svg.append("text")
+					.attr("text-anchor", "middle")
+					.attr("dy", text_y);				
+
 				scope.control.update = function(wl) {
 					
 					var percent = (wl.won / wl.count) * 100;
-
+					
 					if (_.isNaN(percent)) {
 						return;
 					}
@@ -51,30 +75,8 @@
 					var dataset = {
 						lower: calcPercent(0),
 						upper: calcPercent(percent)
-					},
-					pie = d3.layout.pie().sort(null),
-					format = d3.format(".0%");
-
-					var arc = d3.svg.arc()
-					.innerRadius(r - 30)
-					.outerRadius(r);
-
-					var svg = d3.select(container[0]).append("svg")
-						.attr("width", w)
-						.attr("height", h)
-						.append("g")
-						.attr("transform", "translate(" + w / 2 + "," + w / 2 + ")");
-
-					var path = svg.selectAll("path")
-						.data(pie(dataset.lower))
-						.enter().append("path")
-						.attr("class", function(d, i) { return "color" + i; })
-						.attr("d", arc)
-						.each(function(d) { this._current = d; }); // store the initial values
-
-					var text = svg.append("text")
-						.attr("text-anchor", "middle")
-						.attr("dy", text_y);
+					};
+					
 
 					if (typeof(percent) === "string") {
 						text.text(percent);

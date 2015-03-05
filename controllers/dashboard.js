@@ -121,8 +121,9 @@ module.exports = function(app) {
 			out.won_amount = 3678.90;
 			out.pending_amount = 10897.40;
 			out.hwl = true;
+			var rand = Math.round(Math.random() * 100);
 			out.winloss = {
-				"won": 75,
+				"won": rand,
 				"pending": 25,
                 "lost": 25,
                 "count": 100,
