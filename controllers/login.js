@@ -88,29 +88,6 @@ module.exports = function(app) {
 		})
 		.seq(function() {
 
-			var search = [
-				{ '$match': {
-					'user._id': mongoose.Types.ObjectId( this.vars.user._id )
-				}},
-				{ '$project': {
-					'_id': 0,
-					'merchant': "$merchant",
-					'mids': "$portal_data.MidNumber"
-				}},
-				{ '$group': {
-					'_id': { 'merchant': '$merchant' },
-					'mids': { '$addToSet': "$mids" }
-				}},
-				{ '$sort': {
-					"_id.merchant": 1
-				}}
-			];
-			log.log(search);
-			Chargeback.aggregate(search, this);
-
-		})
-		.seq(function(merchants) {
-
 			// We are sending the profile inside the token
 			var obj = {
 				"_id": this.vars.user._id,
@@ -131,16 +108,6 @@ module.exports = function(app) {
 
 			this.vars.user.set('authtoken', token, { strict: false });
 			
-			var merchs = [];
-			_.each(merchants, function(m) {
-				merchs.push({
-					name: m._id.merchant,
-					mids: m.mids
-				});
-			});
-
-			this.vars.user.set('merchants', merchs, { strict: false });
-
 			return res.json( _.omit(this.vars.user.toJSON(), ['password', 'admin', 'timestamps', 'meta', 'active', '__v']) );
 			
 
