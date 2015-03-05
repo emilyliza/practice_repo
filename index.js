@@ -69,17 +69,16 @@ processLog = function(m) {
 			le_log.info(m);
 		}
 	}
-	return console.log(m);	// always output to console
 }
 
 
 var	log = {
-	log: function(m) { processLog(m); },
-	info: function(m) { processLog(m); },
-	debug: function(m) { processLog(m); },
-	notice: function(m) { processLog(m); },
-	warning: function(m) { processLog(m); },
-	err: function(m) { processLog(m); }
+	log: function(m) { return console.dir(m, { colors: true, depth: null }); processLog(m); },
+	info: function(m) { return console.dir(m, { colors: true, depth: null }); processLog(m); },
+	debug: function(m) { return console.dir(m, { colors: true, depth: null }); processLog(m); },
+	notice: function(m) { return console.dir(m, { colors: true, depth: null }); processLog(m); },
+	warning: function(m) { return console.dir(m, { colors: true, depth: null }); processLog(m); },
+	err: function(m) { return console.dir(m, { colors: true, depth: null }); processLog(m); }
 };
 
 app.set('log', log);
