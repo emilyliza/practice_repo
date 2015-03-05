@@ -1,4 +1,5 @@
 (function() {
+	var secretEmptyKey = '[$empty$]';
 
 	angular.module('reporting', ['ui.router', 'ngAnimate', 'graphing', 'user'])
 	
@@ -153,9 +154,10 @@
 
 	
 	}])
-
 	
-	.controller('ReportingController', [ '$scope', '$rootScope', 'ReportingService', '$state', '$timeout', 'UserService', function($scope, $rootScope, ReportingService, $state, $timeout, UserService) {
+	.controller('ReportingController',
+		['$scope', '$rootScope', 'ReportingService', '$state', '$timeout', 'UserService',
+		function($scope, $rootScope, ReportingService, $state, $timeout, UserService) {
 		//$scope.data = res.data;
 		$scope.data = null;
 		$scope.last = null;
@@ -210,44 +212,44 @@
 		angular.element('#pages').removeClass("container");
 
 		
+		var all = {'_id': '', 'name': '- All'};
+		$scope.selectedMerchant = all;
 		$scope.cu = UserService.getCurrentUser();
-		$scope.merchants = [{'name': 'All'}];
-		_.each($scope.cu.merchants, function(m) {
-			$scope.merchants.push(m);
-		});
-		
-		ReportingService.setMerchants($scope.merchants);
-		
-		// default is first
-		ReportingService.setMerchant( (ReportingService.getMerchant() || 0) );
-		$scope.selectedMerchant = $scope.merchants[ ReportingService.getMerchant() ];
+		$scope.merchants = [all];
+		UserService.getChildren().then(function(res) {
+			var current = all;
+			_.each(res.data, function(m) {
+				$scope.merchants.push({ '_id': m._id , 'name': '- ' + m.name });
+				if (m._id == ReportingService.getMerchant()) {
+					current = { '_id': m._id , 'name': '- ' + m.name }
+				}
+			});
 
-		$scope.setSelected = function(i) {
-			$scope.selectedMerchant = $scope.merchants[ i ];
-		};
+			// default is first
+			ReportingService.setMerchant( (ReportingService.getMerchant() || $scope.merchants[0]._id) );
+			$scope.selectedMerchant = current;
+		});	
+		
 		
 		// ng-change will call setMerchant
 		$scope.setMerchant = function(m) {
-			var i = _.findIndex($scope.merchants, function(merch) {
-				return merch.name == m.name;
-			});
-			ReportingService.setMerchant(i);
-			$scope[$scope.last]();
+			ReportingService.setMerchant(m._id);
+			if (m._id != $scope.last_merchant_id) {
+				$scope[$scope.last]();
+			}
+			$scope.last_merchant_id = m._id;
 		};
 
 		$scope.getReports = function() {
 			$scope.last = 'getReports';
 			$scope.clearOtherData($scope.last);
-			$scope.setSelected( ReportingService.getMerchant() );
-			
 			return ReportingService.getReports();
 		};
 
 		$scope.getHistory = function() {
 			$scope.last = 'getReports';
 			$scope.clearOtherData($scope.last);
-			$scope.setSelected( ReportingService.getMerchant() );
-
+			
 			return ReportingService.getHistory().then(function(res) {
 				$scope.graphBarHistory.update(res.data);
 			});
@@ -257,7 +259,6 @@
 		$scope.getStatusData = function() {
 			$scope.last = 'getStatusData';
 			$scope.clearOtherData($scope.last);
-			$scope.setSelected( ReportingService.getMerchant() );
 			ReportingService.getStatusData().then(function(res) {
 				$scope.graphstatus1.update(res.data.byCount);
 				$scope.graphstatus2.update(res.data.byVolume);
@@ -267,7 +268,6 @@
 		$scope.getProcessorStatusData = function() {
 			$scope.last = 'getProcessorStatusData';
 			$scope.clearOtherData($scope.last);
-			$scope.setSelected( ReportingService.getMerchant() );
 			ReportingService.getProcessorStatusData().then(function(res) {
 				$scope.processorData = res.data;
 			});
@@ -276,7 +276,6 @@
 		$scope.getMidStatusData = function() {
 			$scope.last = 'getMidStatusData';
 			$scope.clearOtherData($scope.last);
-			$scope.setSelected( ReportingService.getMerchant() );
 			ReportingService.getMidStatusData().then(function(res) {
 				$scope.midData = res.data;
 			});
@@ -285,7 +284,6 @@
 		$scope.getTypeData = function() {
 			$scope.last = 'getTypeData';
 			$scope.clearOtherData($scope.last);
-			$scope.setSelected( ReportingService.getMerchant() );
 			ReportingService.getTypeData().then(function(res) {
 				$scope.graphtype1.update(res.data.byCount);
 				$scope.graphtype2.update(res.data.byVolume);
@@ -295,7 +293,6 @@
 		$scope.getProcessorTypeData = function() {
 			$scope.last = 'getProcessorTypeData';
 			$scope.clearOtherData($scope.last);
-			$scope.setSelected( ReportingService.getMerchant() );
 			ReportingService.getProcessorTypeData().then(function(res) {
 				$scope.processorData = res.data;
 			});
@@ -304,7 +301,6 @@
 		$scope.getMidTypeData = function() {
 			$scope.last = 'getMidTypeData';
 			$scope.clearOtherData($scope.last);
-			$scope.setSelected( ReportingService.getMerchant() );
 			ReportingService.getMidTypeData().then(function(res) {
 				$scope.midData = res.data;
 			});
@@ -317,9 +313,15 @@
 				}
 			});
 		};
-		
+
+		$scope.showList = function() {
+			var ngModelCtrl = angular.element('input').controller('ngModel');
+        	ngModelCtrl.$setViewValue(' ');
+		};
 		
 	}])
+
+	
 
 	
 	.factory('ReportingService', ['$http', '$window', function ($http, $window) {
@@ -348,17 +350,8 @@
 			if ($window.sessionStorage.merchant) {
 				return $window.sessionStorage.merchant;
 			} else {
-				return false;
+				return '';
 			}
-		};
-
-		reportingService.setMerchants = function(m){
-			merchants = m;
-			return;
-		};
-
-		reportingService.getMerchants = function(){
-			return merchants;
 		};
 
 		reportingService.getReports = function() {
@@ -378,31 +371,31 @@
 		};
 
 		reportingService.getHistory = function() {
-			return $http.get('/api/v1/history?start=' + start + "&end=" + end  );
+			return $http.get('/api/v1/history?start=' + start + "&end=" + end + '&user=' + reportingService.getMerchant() );
 		};
 
 		reportingService.getStatusData = function() {
-			return $http.get('/api/v1/report/status?start=' + start + "&end=" + end  );
+			return $http.get('/api/v1/report/status?start=' + start + "&end=" + end + '&user=' + reportingService.getMerchant()  );
 		};
 
 		reportingService.getMidStatusData = function() {
-			return $http.get('/api/v1/report/midStatus?start=' + start + "&end=" + end );
+			return $http.get('/api/v1/report/midStatus?start=' + start + "&end=" + end + '&user=' + reportingService.getMerchant() );
 		};
 
 		reportingService.getTypeData = function() {
-			return $http.get('/api/v1/report/cctypes?start=' + start + "&end=" + end  );
+			return $http.get('/api/v1/report/cctypes?start=' + start + "&end=" + end + '&user=' + reportingService.getMerchant()  );
 		};
 
 		reportingService.getMidTypeData = function() {
-			return $http.get('/api/v1/report/midTypes?start=' + start + "&end=" + end  );
+			return $http.get('/api/v1/report/midTypes?start=' + start + "&end=" + end + '&user=' + reportingService.getMerchant()  );
 		};
 
 		reportingService.getProcessorTypeData = function() {
-			return $http.get('/api/v1/report/parentTypes?start=' + start + "&end=" + end );
+			return $http.get('/api/v1/report/parentTypes?start=' + start + "&end=" + end + '&user=' + reportingService.getMerchant() );
 		};
 
 		reportingService.getProcessorStatusData = function() {
-			return $http.get('/api/v1/report/parentStatus?start=' + start + "&end=" + end );
+			return $http.get('/api/v1/report/parentStatus?start=' + start + "&end=" + end + '&user=' + reportingService.getMerchant() );
 		};
 
 

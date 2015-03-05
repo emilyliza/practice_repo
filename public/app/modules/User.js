@@ -104,16 +104,8 @@
 			return true;	
 		};
 
-		this.getMerchantFromMids = function(mids) {
-			var merchants = this.getCurrentUser().merchants,
-				found = false;
-			_.each(merchants, function(m) {
-				var baz = _.difference(mids.split(','), m.mids);
-				if (!baz.length) {
-					found = m.name;
-				}
-			});
-			return found;
+		this.getChildren = function() {
+			return $http.get('/api/v1/users');
 		};
 
 	}]);	

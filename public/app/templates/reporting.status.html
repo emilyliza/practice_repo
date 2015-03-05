@@ -9,7 +9,7 @@
 		<tab-heading>By MID</tab-heading>
     </tab>
     <div class="pull-right merchantSelect">
-    	<select class="form-control pull-right" ng-model="selectedMerchant" ng-change="setMerchant(selectedMerchant)" ng-options="merchant.name for merchant in merchants"></select>
+    	<input ng-model="selectedMerchant" typeahead="merchant as merchant.name for merchant in merchants | filter:$viewValue" class="form-control" placeholder="Filter By Merchant" ng-click="showList()" typeahead-on-select='setMerchant($item, $model, $label)' />
     </div>
 </tabset>
 
