@@ -14,7 +14,8 @@ module.exports = function(app) {
 				config = app.settings.config;
 
 		
-		var login = false;
+		var login = false,
+			other = false;
 		describe('POST /api/v1/login valid', function(){
 			it('should return 200', function(done){
 				var user = config.get('users')[0];
@@ -52,8 +53,8 @@ module.exports = function(app) {
 				data.should.be.instanceof(Array).and.have.lengthOf(1);
 				done();
 			});
-			it('should equal 17.96 (2 chargebacks at 8.98)', function(done) {
-				data[0].total.should.be.equal(17.96);
+			it('should equal to 2', function(done) {
+				data[0].count.should.be.equal(2);
 				done();
 			});
 		});
@@ -61,8 +62,7 @@ module.exports = function(app) {
 
 		describe('GET /api/v1/users', function(){
 			var data = [],
-				users,
-				other;
+				users;
 			it('current users should be 2', function(done){
 				request
 					.get('/api/v1/users')
@@ -99,8 +99,8 @@ module.exports = function(app) {
 				data.should.be.instanceof(Array).and.have.lengthOf(1);
 				done();
 			});
-			it('result should equal 8.98 (1 chargebacks at 8.98)', function(done) {
-				data[0].total.should.be.equal(8.98);
+			it('result should equal 1', function(done) {
+				data[0].count.should.be.equal(1);
 				done();
 			});
 		});
@@ -127,12 +127,38 @@ module.exports = function(app) {
 				done();
 			});
 			it('data length should equal 1 and volume should be 8.98', function(done) {
-				data.byVolume.data.should.be.instanceof(Array).and.have.lengthOf(1);
-				data.byCount.data.should.be.instanceof(Array).and.have.lengthOf(1);
-				data.byVolume.data[0].val.should.be.equal(8.98);
+				data.byVolume.data.should.be.instanceof(Array).and.have.lengthOf(2);
+				data.byCount.data.should.be.instanceof(Array).and.have.lengthOf(2);
+				data.byVolume.data[0].sum.should.be.equal(8.98);
 				done();
 			})
 		});
+
+
+		describe('GET /api/v1/report/status?user=other', function(){
+			var data;
+			it('should return 200', function(done){
+				request
+					.get('/api/v1/report/status?user=' + other + '&start=' + moment().subtract(2, 'day').valueOf() + "&end=" + moment().add(2, 'day').valueOf())
+					.set('Content-Type', 'application/json')
+					.set('Accept', 'application/json')
+					.set('authorization', login.authtoken)
+					.expect(200)
+					.end(function(e, res) {  
+						if (e) { console.log(e); done(e); }
+						data = res.body;
+						done();
+					});
+			});
+			it('should have object with data', function(done) {
+				console.log(data)
+				data.byVolume.should.be.an.instanceOf(Object).and.have.property('data');
+				data.byVolume.data[0].should.be.an.instanceOf(Object).and.have.property('sum', 8.98);
+				done();
+			});
+			
+		});
+
 	});
 
 };

@@ -115,7 +115,7 @@ module.exports = function(app) {
 		.seq(function() {
 			if (params.user) {
 				// if filtering by a user, ensure user is child of current user
-				User.isChild(req.user._id, params.user, next);
+				User.isChild(req.user._id, params.user, this);
 			} else {
 				this(null,true);
 			}
@@ -195,7 +195,7 @@ module.exports = function(app) {
 		.seq(function() {
 			if (params.user) {
 				// if filtering by a user, ensure user is child of current user
-				User.isChild(req.user._id, params.user, next);
+				User.isChild(req.user._id, params.user, this);
 			} else {
 				this(null,true);
 			}
@@ -280,7 +280,7 @@ module.exports = function(app) {
 		.seq(function() {
 			if (params.user) {
 				// if filtering by a user, ensure user is child of current user
-				User.isChild(req.user._id, params.user, next);
+				User.isChild(req.user._id, params.user, this);
 			} else {
 				this(null,true);
 			}
@@ -349,7 +349,7 @@ module.exports = function(app) {
 		.seq(function() {
 			if (params.user) {
 				// if filtering by a user, ensure user is child of current user
-				User.isChild(req.user._id, params.user, next);
+				User.isChild(req.user._id, params.user, this);
 			} else {
 				this(null,true);
 			}
@@ -417,7 +417,7 @@ module.exports = function(app) {
 		.seq(function() {
 			if (params.user) {
 				// if filtering by a user, ensure user is child of current user
-				User.isChild(req.user._id, params.user, next);
+				User.isChild(req.user._id, params.user, this);
 			} else {
 				this(null,true);
 			}
@@ -483,7 +483,7 @@ module.exports = function(app) {
 		.seq(function() {
 			if (params.user) {
 				// if filtering by a user, ensure user is child of current user
-				User.isChild(req.user._id, params.user, next);
+				User.isChild(req.user._id, params.user, this);
 			} else {
 				this(null,true);
 			}
