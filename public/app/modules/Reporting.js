@@ -268,7 +268,6 @@
 
 		$scope.getMidStatusData = function() {
 			$scope.last = 'getMidStatusData';
-			$scope.clearOtherData($scope.last);
 			ReportingService.getMidStatusData().then(function(res) {
 				$scope.midData = res.data;
 			});
@@ -276,7 +275,6 @@
 
 		$scope.getTypeData = function() {
 			$scope.last = 'getTypeData';
-			$scope.clearOtherData($scope.last);
 			ReportingService.getTypeData().then(function(res) {
 				$scope.graphtype1.update(res.data.byCount);
 				$scope.graphtype2.update(res.data.byVolume);
@@ -285,7 +283,6 @@
 
 		$scope.getProcessorTypeData = function() {
 			$scope.last = 'getProcessorTypeData';
-			$scope.clearOtherData($scope.last);
 			ReportingService.getProcessorTypeData().then(function(res) {
 				$scope.processorData = res.data;
 			});
@@ -293,7 +290,6 @@
 
 		$scope.getMidTypeData = function() {
 			$scope.last = 'getMidTypeData';
-			$scope.clearOtherData($scope.last);
 			ReportingService.getMidTypeData().then(function(res) {
 				$scope.midData = res.data;
 			});

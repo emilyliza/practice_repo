@@ -296,11 +296,14 @@ module.exports = function(app) {
 			]);
 		}
 
-		if (params.user) {
-			query.where('user._id').equals(params.user);
+		if (params.merchant) {
+			query.where('user._id').equals(params.merchant);
+		}
+
+		if (params.mid) {
+			query.where('portal_data.MidNumber').equals(params.mid);
 		}
 		
-    	
 		if (params.cctype) {
 			query.where('gateway_data.CcType').equals( params.cctype );
 		}

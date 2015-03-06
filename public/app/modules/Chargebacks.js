@@ -5,7 +5,7 @@
 	.config(['$stateProvider', function( $stateProvider ) {
 		
 		$stateProvider.state('chargebacks', {
-			url: '/chargebacks?status&start&end&cctype&mids&merchant',
+			url: '/chargebacks?status&start&end&cctype&mid&merchant',
 			templateUrl: '/app/templates/chargebacks.html',
 			requiresAuth: true,
 			controller: 'ChargebacksController'
@@ -40,14 +40,9 @@
 
 		$scope.filters = "";
 		_.forOwn($state.params, function(num,key) {
-			if ($state.params[key] && _.contains(['status', 'merchant', 'mids', 'cctype'], key)) {
+			if ($state.params[key] && _.contains(['status', 'merchant', 'mid', 'cctype'], key)) {
 				if ($scope.filters) { $scope.filters += ", "; }
-				if (key == "mids" && $state.params[key].split(',').length > 1) {
-					var m = UserService.getMerchantFromMids( $state.params[key] );
-					$scope.filters += "Merchant=" + m + " (all mids)";
-				} else {
-					$scope.filters += key + "=" + $state.params[key];	
-				}
+				$scope.filters += key + "=" + $state.params[key];
 			}
 		});
 		

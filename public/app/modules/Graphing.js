@@ -254,7 +254,7 @@
 					scope.colors = {};
 					function filterData(element, index, array) {
 						element.name = res.data[index].name;
-						element.user = res.data[index].user_id;
+						element.filter = res.filter;
 						if (res.data_type == "currency") {
 							element.value = res.data[index].sum;
 							element.count = res.data[index].count;
@@ -338,31 +338,18 @@
 							})
 							.on("click", function(d) {
 								var params = {},
-									dates = ReportingService.getDates(),
-									merchant = ReportingService.getMerchants()[ ReportingService.getMerchant() ];
+									dates = ReportingService.getDates();
 								
-								params[res.filtertype] = d.name;
+								console.log(d);
+								if (d.filter._id) {
+									params[d.filter.name] = d.filter._id;
+								} else {
+									params[d.filter.name] = d.name;
+								}
 								params['start'] = dates.start;
 								params['end'] = dates.end;
 
-								console.log(res.grouptype);
-								console.log(d);
-								if (res.grouptype == "mid") {
-									params['mids'] = [ res.label ];
-								} else if (res.grouptype == "portal") {
-									params['portal'] = res.label;
-								}
-
-								if (merchant && merchant.mids && merchant.mids.length) {
-									mstr = '';
-									_.each(merchant.mids, function(m) {
-										if (mstr) { mstr += ","; }
-										mstr += m.mid;
-									});
-									params['mids'] = mstr;
-								}
-									
-								//$state.go('chargebacks', params );
+								$state.go('chargebacks', params );
 							});
 						paths
 							.transition()

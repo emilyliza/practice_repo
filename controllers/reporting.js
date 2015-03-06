@@ -301,7 +301,7 @@ module.exports = function(app) {
 					"label": d._id,
 					"data_type": 'currency',
 					"filter": {					// filter is for filtering chargeback list upon click (in pie charts)
-						"name": "portal_data.MidNumber",
+						"name": "mid",
 						"_id": d._id
 					},
 					"data": d.data
@@ -370,7 +370,7 @@ module.exports = function(app) {
 					"label": d._id.name,
 					"data_type": 'currency',
 					"filter": {					// filter is for filtering chargeback list upon click (in pie charts)
-						"name": "user",
+						"name": "merchant",
 						"_id": d._id._id
 					},
 					"data": d.data
@@ -438,7 +438,7 @@ module.exports = function(app) {
 					"label": d._id,
 					"data_type": 'currency',
 					"filter": {					// filter is for filtering chargeback list upon click (in pie charts)
-						"name": "portal_data.MidNumber",
+						"name": "mid",
 						"_id": d._id
 					},
 					"data": d.data
@@ -504,7 +504,7 @@ module.exports = function(app) {
 					"label": d._id.name,
 					"data_type": 'currency',
 					"filter": {					// filter is for filtering chargeback list upon click (in pie charts)
-						"name": "user",
+						"name": "merchant",
 						"_id": d._id._id
 					},
 					"data": d.data
