@@ -215,7 +215,7 @@
 			_.each(res.data, function(m) {
 				$scope.merchants.push({ '_id': m._id , 'name': '- ' + m.name });
 				if (m._id == ReportingService.getMerchant()) {
-					current = { '_id': m._id , 'name': '- ' + m.name }
+					current = { '_id': m._id , 'name': '- ' + m.name };
 				}
 			});
 
@@ -253,7 +253,6 @@
 
 		$scope.getStatusData = function() {
 			$scope.last = 'getStatusData';
-			$scope.clearOtherData($scope.last);
 			ReportingService.getStatusData().then(function(res) {
 				$scope.graphstatus1.update(res.data.byCount);
 				$scope.graphstatus2.update(res.data.byVolume);
@@ -262,7 +261,6 @@
 
 		$scope.getProcessorStatusData = function() {
 			$scope.last = 'getProcessorStatusData';
-			$scope.clearOtherData($scope.last);
 			ReportingService.getProcessorStatusData().then(function(res) {
 				$scope.processorData = res.data;
 			});
