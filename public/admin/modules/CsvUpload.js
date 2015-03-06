@@ -123,7 +123,7 @@
 								$scope.map[key] = test;
 								$scope.blowItUp();
 							}
-						})
+						});
 						$scope.fields.push( { 'field': key, 'example': value });
 					});
 					processed = true;
