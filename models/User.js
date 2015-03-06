@@ -33,6 +33,20 @@ module.exports = function(app) {
 			'registeredIp': {type: String}
 		}
 	}, {strict: true})
+
+	.pre('save', function (next) {
+		if (this.isNew) { return next(); }
+		if (
+			this.isModified('username') ||
+			this.isModified('name') ||
+			this.isModified('email') ||
+			this.isModified('active')
+		) {
+			return this.propagateMicro(next);
+		}
+		next();
+	})
+
 	.plugin(UserMicro, { path: 'parent', objectid: ObjectId })
 
 
@@ -40,7 +54,7 @@ module.exports = function(app) {
 	var User = db.model('User');
 
 	User.loadDependencies = function() {
-		
+		Chargeback = app.Models.get('Chargeback');
 	};
 
 	User.toMicro = function(user) {
@@ -51,6 +65,31 @@ module.exports = function(app) {
 			'name': user.name,
 			'active': user.active
 		};
+	};
+
+	User.prototype.propagateMicro = function propagateMicro(next) {
+
+		var user = this,
+			options = {multi:true, safe:true},
+			user_obj = {
+				'_id': user._id,
+				'name': user.name,
+				'username': user.username,
+				'email': user.email,
+				'active': user.active
+			};
+
+		$()
+		.par(function() {
+			Chargeback.update(
+				{'user._id': prop._id},
+				{ '$set': { 'user': user_obj }}, options, this);
+		})
+		.seq(function() { 
+			next();
+		})
+		.catch(next);
+
 	};
 
 
