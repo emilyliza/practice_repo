@@ -32,7 +32,7 @@
 			<div class="stat" ng-if="data.tops">
 				<div class="row" style="font-size: 12px;" ng-repeat="m in data.tops">
 					<div class="col-xs-6 col-xs-offset-1">
-						<a href="chargebacks?mids={{m.mid}}">{{m.mid}}</a>
+						<a href="chargebacks?mid={{m.mid}}">{{m.mid}}</a>
 					</div>
 					<div class="col-xs-5">{{m.amt | currency:"$":0}}</div>
 				</div>
