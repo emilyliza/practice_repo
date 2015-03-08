@@ -1,626 +1,558 @@
-<div class="row">
-	
-	<div class="col-sm-4 col-sm-push-8 form-sidebar">
-		
-		<div class="side-cbinfo">
-			<div class="side-cbinfo-head">IMPORTED DATA</div>
-			
-			<div class="side-cbinfo-desc">This is the data that we have received regarding this chargeback case. You can use this information to look up any missing data and fill it in.</div>
 
-			<div class="row" ng-if="data.portal_data.MidNumber">
-				<div class="col-xs-4" style="text-align: right;">Type:</div>
-				<div class="col-xs-8">
-					<span ng-if="data.type == 'cp'">Card Present</span>
-					<span ng-if="data.type == 'cnp'">Card Not Present</span>		
-				</div>
-			</div>
+<div class="jgs-form">
 
-			<div class="row" ng-if="data.portal_data.MidNumber">
-				<div class="col-xs-4" style="text-align: right;">MID:</div>
-				<div class="col-xs-8">{{data.portal_data.MidNumber}}</div>
+	<div class="row" ng-if="!data.portal_data.CaseNumber">
+		<div class="col-md-6">
+			<div class="form-group" show-errors>
+				<label>Case Number</label>
+				<input name="CaseNumber" type="text" class="form-control" pop-show="{{errors.CaseNumber}}" pop="{{errors.CaseNumber}}" pop-placement="right" ng-model="data.portal_data.CaseNumber" placeholder="">
 			</div>
-
-			<div class="row" ng-if="data.gateway_data.FullName">
-				<div class="col-xs-4" style="text-align: right;">Customer:</div>
-				<div class="col-xs-8">{{data.gateway_data.FullName}}</div>
+		</div>
+		<div class="col-md-6">
+			<div class="form-group" show-errors>
+				<label>Reference Number</label>
+				<input name="Reference Number" type="text" class="form-control" pop-show="{{errors.RefNumber}}" pop="{{errors.RefNumber}}" pop-placement="right" ng-model="data.portal_data.RefNumber" placeholder="">
 			</div>
-
-			<div class="row" ng-if="data.portal_data.MidNumber">
-				<div class="col-xs-4" style="text-align: right;">Amount:</div>
-				<div class="col-xs-8">{{data.portal_data.ChargebackAmt | currency}}</div>
-			</div>
-
-			<div class="row" ng-if="data.portal_data.CcPrefix || data.portal_data.CcSuffix">
-				<div class="col-xs-4" style="text-align: right;">Credit Card:</div>
-				<div class="col-xs-8">
-					<span ng-if="data.portal_data.CcPrefix">{{data.portal_data.CcPrefix}}</span><span ng-if="!data.portal_data.CcPrefix">XXXX</span>-XXXX-XXXX-<span ng-if="data.portal_data.CcSuffix">{{data.portal_data.CcSuffix}}</span><span ng-if="!data.portal_data.CcSuffix">XXXX</span>
-					<span ng-if="data.gateway_data.CcType">({{data.gateway_data.CcType}})</span>
-				</div>
-			</div>
-
-			<div class="row">
-				<div class="col-xs-4" style="text-align: right;">Shipped:</div>
-				<div class="col-xs-8">{{data.shipped}}</div>
-			</div>
-			<div class="row">
-				<div class="col-xs-4" style="text-align: right;">Refunded:</div>
-				<div class="col-xs-8">{{data.refunded}}</div>
-			</div>
-			<div class="row">
-				<div class="col-xs-4" style="text-align: right;">Recurring:</div>
-				<div class="col-xs-8">{{data.recurring}}</div>
-			</div>
-
-
-			<div class="row" ng-if="data.portal_data.ReasonCode || data.portal_data.ReasonText">
-				<div class="col-xs-4" style="text-align: right;">Reason:</div>
-				<div class="col-xs-8">
-					{{data.portal_data.ReasonText}} {{data.portal_data.ReasonCode}}
-				</div>
-			</div>
-
 		</div>
 	</div>
-	<div class="col-sm-8 col-sm-pull-4 jgs-form">
-
-		<div class="row" ng-if="!data.portal_data.CaseNumber">
-			<div class="col-md-6">
-				<div class="form-group" show-errors>
-					<label>Case Number</label>
-					<input name="CaseNumber" type="text" class="form-control" pop-show="{{errors.CaseNumber}}" pop="{{errors.CaseNumber}}" pop-placement="right" ng-model="data.portal_data.CaseNumber" placeholder="">
-				</div>
+	<div class="row" ng-if="!data.portal_data.ReasonCode">
+		<div class="col-md-6">
+			<div class="form-group" show-errors>
+				<label>Reason Code</label>
+				<input name="ReasonCode" type="text" class="form-control" pop-show="{{errors.ReasonCode}}" pop="{{errors.ReasonCode}}" pop-placement="right" ng-model="data.portal_data.ReasonCode" placeholder="">
 			</div>
-			<div class="col-md-6">
-				<div class="form-group" show-errors>
-					<label>Reference Number</label>
-					<input name="Reference Number" type="text" class="form-control" pop-show="{{errors.RefNumber}}" pop="{{errors.RefNumber}}" pop-placement="right" ng-model="data.portal_data.RefNumber" placeholder="">
+		</div>
+		<div class="col-md-6">
+			<div class="form-group" show-errors>
+				<label>Reason Text</label>
+				<input name="ReasonText" type="text" class="form-control" pop-show="{{errors.ReasonText}}" pop="{{errors.ReasonText}}" pop-placement="right" ng-model="data.portal_data.ReasonText" placeholder="">
+			</div>
+		</div>
+	</div>
+	<div class="row" ng-if="!data.portal_data.ChargebackAmt || !data.portal_data.MidNumber">
+		<div class="col-md-3">
+			<div class="form-group" show-errors>
+				<label>Amount</label>
+				<input name="ChargebackAmt" type="text" class="form-control" pop-show="{{errors.ChargebackAmt}}" pop="{{errors.ChargebackAmt}}" pop-placement="right" ng-model="data.portal_data.ChargebackAmt" placeholder="">
+			</div>
+		</div>
+		<div class="col-md-3">
+			<div class="form-group" show-errors>
+				<label>Mid Number</label>
+				<input name="MidNumber" type="text" class="form-control" pop-show="{{errors.MidNumber}}" pop="{{errors.MidNumber}}" pop-placement="right" ng-model="data.portal_data.MidNumber" placeholder="">
+			</div>
+		</div>
+		<div class="col-md-3">
+			<div class="form-group" show-errors>
+				<label>Auth Code</label>
+				<input name="AuthCode" type="text" class="form-control" pop-show="{{errors.AuthCode}}" pop="{{errors.AuthCode}}" pop-placement="right" ng-model="data.gateway_data.AuthCode" placeholder="">
+			</div>
+		</div>
+		<div class="col-md-3">
+			<div class="form-group" show-errors>
+				<label>Avs Status</label>
+				<input name="AvsStatus" type="text" class="form-control" pop-show="{{errors.AvsStatus}}" pop="{{errors.AvsStatus}}" pop-placement="right" ng-model="data.gateway_data.AvsStatus" placeholder="">
+			</div>
+		</div>
+	</div>
+	<div class="row" ng-if="!data.portal_data.CcPrefix || !data.portal_data.CcSuffix ">
+		<div class="col-md-3">
+			<div class="form-group" show-errors>
+				<label>CC Prefix</label>
+				<input name="CcPrefix" type="text" class="form-control" pop-show="{{errors.CcPrefix}}" pop="{{errors.CcPrefix}}" pop-placement="right" ng-model="data.portal_data.CcPrefix" placeholder="">
+			</div>
+		</div>
+		<div class="col-md-3">
+			<div class="form-group" show-errors>
+				<label>CC Suffix</label>
+				<input name="CcSuffix" type="text" class="form-control" pop-show="{{errors.CcSuffix}}" pop="{{errors.CcSuffix}}" pop-placement="right" ng-model="data.portal_data.CcSuffix" placeholder="">
+			</div>
+		</div>
+		<div class="col-md-3">
+			<div class="form-group" show-errors>
+				<label>Cc Type</label>
+				<input name="CcType" type="text" class="form-control" pop-show="{{errors.CcType}}" pop="{{errors.CcType}}" pop-placement="right" ng-model="data.gateway_data.CcType" placeholder="">
+			</div>
+		</div>
+		<div class="col-md-3">
+			<div class="form-group" show-errors>
+				<label>Cc Expire</label>
+				<input name="CcExpire" type="text" class="form-control" pop-show="{{errors.CcExpire}}" pop="{{errors.CcExpire}}" pop-placement="right" ng-model="data.gateway_data.CcExpire" placeholder="">
+			</div>
+		</div>
+	</div>
+	<div style="margin-bottom: 100px;" ng-if="!data.portal_data.CaseNumber || !data.portal_data.ReasonCode || !data.portal_data.ChargebackAmt || !data.portal_data.MidNumber || !data.portal_data.CcPrefix || !data.portal_data.CcSuffix || !data.gateway_data.CcExpire"></div>
+
+	<h4 style="font-weight: bold;">Customer Information</h4>
+
+	<div style="font-size: 12px; color: #999; padding-bottom: 10px;">This information is typically found in your CRM or order information system.  You can use the transaction data to the right to look up the customer for this transaction.</div>
+
+	<div class="row bt">
+		<div class="col-md-6">
+			<div class="form-group" show-errors>
+				<label>First Name</label>
+				<input name="FirstName" type="text" class="form-control" pop-show="{{errors.FirstName}}" pop="{{errors.FirstName}}" pop-placement="right" ng-model="data.gateway_data.FirstName" placeholder="">
+			</div>
+		</div>
+		<div class="col-md-6">
+			<div class="form-group" show-errors>
+				<label>Last Name</label>
+				<input name="LastName" type="text" class="form-control" pop-show="{{errors.LastName}}" pop="{{errors.LastName}}" pop-placement="right" ng-model="data.gateway_data.LastName" placeholder="">
+			</div>
+		</div>
+	</div>
+	<div class="row" ng-if="data.type == 'cnp'">
+		<div class="col-md-6">
+			<div class="form-group" show-errors>
+				<label>Billing Address One</label>
+				<input name="BillingAddr1" type="text" class="form-control" pop-show="{{errors.BillingAddr1}}" pop="{{errors.BillingAddr1}}" pop-placement="right" ng-model="data.gateway_data.BillingAddr1" placeholder="">
+			</div>
+		</div>
+		<div class="col-md-6">
+			<div class="form-group" show-errors>
+				<label>Billing Address Two</label>
+				<input name="BillingAddr2" type="text" class="form-control" pop-show="{{errors.BillingAddr2}}" pop="{{errors.BillingAddr2}}" pop-placement="right" ng-model="data.gateway_data.BillingAddr2" placeholder="">
+			</div>
+		</div>
+	</div>
+	<div class="row" ng-if="data.type == 'cnp'">
+		<div class="col-md-3">
+			<div class="form-group" show-errors>
+				<label>Billing City</label>
+				<input name="BillingCity" type="text" class="form-control" pop-show="{{errors.BillingCity}}" pop="{{errors.BillingCity}}" pop-placement="right" ng-model="data.gateway_data.BillingCity" placeholder="">
+			</div>
+		</div>
+		<div class="col-md-3">
+			<div class="form-group" show-errors>
+				<label>Billing State</label>
+				<input name="BillingState" type="text" class="form-control" pop-show="{{errors.BillingState}}" pop="{{errors.BillingState}}" pop-placement="right" ng-model="data.gateway_data.BillingState" placeholder="">
+			</div>
+		</div>
+		<div class="col-md-3">
+			<div class="form-group" show-errors>
+				<label>Billing Postal</label>
+				<input name="BillingPostal" type="text" class="form-control" pop-show="{{errors.BillingPostal}}" pop="{{errors.BillingPostal}}" pop-placement="right" ng-model="data.gateway_data.BillingPostal" placeholder="">
+			</div>
+		</div>
+		<div class="col-md-3">
+			<div class="form-group" show-errors>
+				<label>Billing Country</label>
+				<input name="BillingCountry" type="text" class="form-control" pop-show="{{errors.BillingCountry}}" pop="{{errors.BillingCountry}}" pop-placement="right" ng-model="data.gateway_data.BillingCountry" placeholder="">
+			</div>
+		</div>
+	</div>
+	<div class="row" ng-if="data.type == 'cnp'">
+		<div class="col-md-3">	
+			<div class="form-group" show-errors>
+				<label>Middle Name</label>
+				<input name="MiddleName" type="text" class="form-control" pop-show="{{errors.MiddleName}}" pop="{{errors.MiddleName}}" pop-placement="right" ng-model="data.gateway_data.MiddleName" placeholder="">
+			</div>
+		</div>
+		<div class="col-md-3">
+			<div class="form-group" show-errors>
+				<label>Phone</label>
+				<input name="Phone" type="text" class="form-control" pop-show="{{errors.Phone}}" pop="{{errors.Phone}}" pop-placement="right" ng-model="data.gateway_data.Phone" placeholder="">
+			</div>
+		</div>
+		<div class="col-md-3">
+			<div class="form-group" show-errors>
+				<label>Email</label>
+				<input name="Email" type="text" class="form-control" pop-show="{{errors.Email}}" pop="{{errors.Email}}" pop-placement="right" ng-model="data.crm_data.Email" placeholder="">
+			</div>
+		</div>
+		<div class="col-md-3">
+			<div class="form-group" show-errors>
+				<label>IP Address</label>
+				<input name="IpAddress" type="text" class="form-control" pop-show="{{errors.IpAddress}}" pop="{{errors.IpAddress}}" pop-placement="right" ng-model="data.crm_data.IpAddress" placeholder="">
+			</div>
+		</div>
+	</div>
+
+
+
+
+	<h4 style="margin-top: 100px; font-weight: bold;" ng-if="data.shipped">Shipping Information</h4>
+
+	<div style="font-size: 12px; color: #999; padding-bottom: 10px;" ng-if="data.shipped">This information is typically found in your CRM or order information system.  You can use the transaction data to the right to look up the customer for this transaction. We will use the tracking number to gather the summary data from your shipping agent.</div>
+
+	<div class="row bt" ng-if="data.shipped">
+		<div class="col-md-6">
+			<div class="form-group" show-errors>
+				<label>Delivery Address One</label>
+				<input name="DeliveryAddr1" type="text" class="form-control" pop-show="{{errors.DeliveryAddr1}}" pop="{{errors.DeliveryAddr1}}" pop-placement="right" ng-model="data.crm_data.DeliveryAddr1" placeholder="">
+			</div>
+		</div>
+		<div class="col-md-6">
+			<div class="form-group" show-errors>
+				<label>Delivery Address Two</label>
+				<input name="DeliveryAddr2" type="text" class="form-control" pop-show="{{errors.DeliveryAddr2}}" pop="{{errors.DeliveryAddr2}}" pop-placement="right" ng-model="data.crm_data.DeliveryAddr2" placeholder="">
+			</div>
+		</div>
+	</div>
+	<div class="row" ng-if="data.shipped">
+		<div class="col-md-3">
+			<div class="form-group" show-errors>
+				<label>Delivery City</label>
+				<input name="DeliveryCity" type="text" class="form-control" pop-show="{{errors.DeliveryCity}}" pop="{{errors.DeliveryCity}}" pop-placement="right" ng-model="data.crm_data.DeliveryCity" placeholder="">
+			</div>
+		</div>
+		<div class="col-md-3">
+			<div class="form-group" show-errors>
+				<label>Delivery State</label>
+				<input name="DeliveryState" type="text" class="form-control" pop-show="{{errors.DeliveryState}}" pop="{{errors.DeliveryState}}" pop-placement="right" ng-model="data.crm_data.DeliveryState" placeholder="">
+			</div>
+		</div>
+		<div class="col-md-3">
+			<div class="form-group" show-errors>
+				<label>Delivery Postal</label>
+				<input name="DeliveryPostal" type="text" class="form-control" pop-show="{{errors.DeliveryPostal}}" pop="{{errors.DeliveryPostal}}" pop-placement="right" ng-model="data.crm_data.DeliveryPostal" placeholder="">
+			</div>
+		</div>
+		<div class="col-md-3">
+			<div class="form-group" show-errors>
+				<label>Delivery Country</label>
+				<input name="DeliveryCountry" type="text" class="form-control" pop-show="{{errors.DeliveryCountry}}" pop="{{errors.DeliveryCountry}}" pop-placement="right" ng-model="data.crm_data.DeliveryCountry" placeholder="">
+			</div>
+		</div>
+	</div>
+	<div class="row" ng-if="data.shipped">
+		<div class="col-md-3">
+			<div class="form-group" show-errors>
+				<label>Shipping Company</label>
+				<select class="form-control" ng-model="data.shipping_data.company" ng-options="s for s in shipping_companies"></select>
+			</div>
+		</div>
+		<div class="col-md-3">
+			<div class="form-group" show-errors>
+				<label>Tracking Number</label>
+				<input name="TrackingNum" type="text" class="form-control" pop-show="{{errors.TrackingNum}}" pop="{{errors.TrackingNum}}" pop-placement="right" ng-model="data.shipping_data.TrackingNum" placeholder="">
+			</div>
+		</div>
+	</div>
+	<div class="row" ng-if="data.shipped">
+		<div class="col-md-12">
+			<div class="form-group" show-errors>
+				<label>Tracking Summary</label>
+				<input name="TrackingSum" type="text" class="form-control" pop-show="{{errors.TrackingSum}}" pop="{{errors.TrackingSum}}" pop-placement="right" ng-model="data.shipping_data.TrackingSum" placeholder="">
+			</div>
+		</div>
+	</div>
+
+
+
+
+
+	<h4 style="margin-top: 100px; font-weight: bold;">Order Information</h4>
+
+	<div style="font-size: 12px; color: #999; padding-bottom: 10px;">This information is typically found in your CRM or order information system.  You can use the transaction data to the right to look up the customer for this transaction.</div>
+
+	<div class="row bt">
+		<div class="col-md-4">
+			<div class="form-group" show-errors>
+				<label>Transaction Date</label>
+				<input class="form-control" name="TransDate" type="text" class="form-control" datepicker-popup="MM/dd/yyyy" ng-model="data.gateway_data.TransDate" is-open="opened" ng-click="opened=true" isdate >
+			</div>
+		</div>
+		<div class="col-md-4">
+			<div class="form-group" show-errors>
+				<label>Transaction Id</label>
+				<input name="TransId" type="text" class="form-control" pop-show="{{errors.TransId}}" pop="{{errors.TransId}}" pop-placement="right" ng-model="data.gateway_data.TransId" placeholder="">
+			</div>
+		</div>
+		<div class="col-md-4">
+			<div class="form-group" show-errors>
+				<label>Order Date</label>
+				<input class="form-control" name="OrderDate" type="text" class="form-control" datepicker-popup="MM/dd/yyyy" ng-model="data.crm_data.OrderDate" is-open="opened1" ng-click="opened1=true" isdate >
+			</div>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-md-4">
+			<div class="form-group" show-errors>
+				<label>Product Name</label>
+				<input name="ProductName" type="text" class="form-control" pop-show="{{errors.ProductName}}" pop="{{errors.ProductName}}" pop-placement="right" ng-model="data.crm_data.ProductName" placeholder="">
+			</div>
+		</div>
+	</div>
+	<div class="row" ng-if="data.refunded">
+		<div class="col-md-4">
+			<div class="form-group" show-errors>
+				<label>Date Cancelled in System</label>
+				<input class="form-control" name="CancelDateSystem" type="text" class="form-control" datepicker-popup="MM/dd/yyyy" ng-model="data.crm_data.CancelDateSystem" is-open="opened2" ng-click="opened2=true" isdate>
+			</div>
+		</div>
+		<div class="col-md-4">
+			<div class="form-group" show-errors>
+				<label>Full Refund Date</label>
+				<input class="form-control" name="RefundDateFull" type="text" class="form-control" datepicker-popup="MM/dd/yyyy" ng-model="data.crm_data.RefundDateFull" is-open="opened3" ng-click="opened3=true" >
+			</div>
+		</div>
+		<div class="col-md-4">
+			<div class="form-group" show-errors>
+				<label>Partial Refund Date</label>
+				<input class="form-control" name="RefundDatePartial" type="text" class="form-control" datepicker-popup="MM/dd/yyyy" ng-model="data.crm_data.RefundDatePartial" is-open="opened4" ng-click="opened4=true" >
+			</div>
+		</div>
+	</div>
+	<div class="row" ng-if="data.refunded">
+		<div class="col-md-6">
+			<div class="form-group" show-errors>
+				<label>Refund Amount</label>
+				<input name="RefundAmount" type="text" class="form-control" pop-show="{{errors.RefundAmount}}" pop="{{errors.RefundAmount}}" pop-placement="right" ng-model="data.crm_data.RefundAmount" placeholder="">
+			</div>
+		</div>
+		<div class="col-md-6">
+			<div class="form-group" show-errors>
+				<label>RMA</label>
+				<input name="Rma" type="text" class="form-control" pop-show="{{errors.Rma}}" pop="{{errors.Rma}}" pop-placement="right" ng-model="data.crm_data.Rma" placeholder="">
+			</div>
+		</div>
+	</div>
+
+
+
+	<h4 style="margin-top: 100px; font-weight: bold;">Card Holder Correspondence</h4>
+
+	<div class="row bt">
+		<div class="col-md-6">
+			<div class="form-group">
+				<label>Available</label>
+				<div class="form-control-static">
+					<toggle-switch ng-model="data.chc" on-label="Yes" off-label="No"></toggle-switch>
 				</div>
 			</div>
 		</div>
-		<div class="row" ng-if="!data.portal_data.ReasonCode">
-			<div class="col-md-6">
-				<div class="form-group" show-errors>
-					<label>Reason Code</label>
-					<input name="ReasonCode" type="text" class="form-control" pop-show="{{errors.ReasonCode}}" pop="{{errors.ReasonCode}}" pop-placement="right" ng-model="data.portal_data.ReasonCode" placeholder="">
-				</div>
-			</div>
-			<div class="col-md-6">
-				<div class="form-group" show-errors>
-					<label>Reason Text</label>
-					<input name="ReasonText" type="text" class="form-control" pop-show="{{errors.ReasonText}}" pop="{{errors.ReasonText}}" pop-placement="right" ng-model="data.portal_data.ReasonText" placeholder="">
+		<div class="col-md-6">
+			<div class="form-group">
+				<label>Uploaded Correspondence</label>
+				<div class="form-control-static">
+					<span class="btn btn-link" ng-if="data.chc" ng-click="download('/images/ChargebackRequest.fdad00.pdf')">Chargeback Request</span>
+					<span ng-if="!data.chc">Not Available</span>
 				</div>
 			</div>
 		</div>
-		<div class="row" ng-if="!data.portal_data.ChargebackAmt || !data.portal_data.MidNumber">
-			<div class="col-md-3">
-				<div class="form-group" show-errors>
-					<label>Amount</label>
-					<input name="ChargebackAmt" type="text" class="form-control" pop-show="{{errors.ChargebackAmt}}" pop="{{errors.ChargebackAmt}}" pop-placement="right" ng-model="data.portal_data.ChargebackAmt" placeholder="">
-				</div>
-			</div>
-			<div class="col-md-3">
-				<div class="form-group" show-errors>
-					<label>Mid Number</label>
-					<input name="MidNumber" type="text" class="form-control" pop-show="{{errors.MidNumber}}" pop="{{errors.MidNumber}}" pop-placement="right" ng-model="data.portal_data.MidNumber" placeholder="">
-				</div>
-			</div>
-			<div class="col-md-3">
-				<div class="form-group" show-errors>
-					<label>Auth Code</label>
-					<input name="AuthCode" type="text" class="form-control" pop-show="{{errors.AuthCode}}" pop="{{errors.AuthCode}}" pop-placement="right" ng-model="data.gateway_data.AuthCode" placeholder="">
-				</div>
-			</div>
-			<div class="col-md-3">
-				<div class="form-group" show-errors>
-					<label>Avs Status</label>
-					<input name="AvsStatus" type="text" class="form-control" pop-show="{{errors.AvsStatus}}" pop="{{errors.AvsStatus}}" pop-placement="right" ng-model="data.gateway_data.AvsStatus" placeholder="">
-				</div>
+	</div>
+
+
+	<h4 style="margin-top: 100px; font-weight: bold;">Additional Information</h4>
+
+	<div style="font-size: 12px; color: #999; padding-bottom: 10px;">You can add any information that you think is relevant to the transaction.</div>
+
+	<div class="row bt">
+		<div class="col-md-12">
+			<div class="form-group" show-errors>
+				<label>Comments</label>
+				<textarea class="form-control" name="additional_comments" type="text" class="form-control" ng-model="data.additional_comments"></textarea>
 			</div>
 		</div>
-		<div class="row" ng-if="!data.portal_data.CcPrefix || !data.portal_data.CcSuffix ">
-			<div class="col-md-3">
-				<div class="form-group" show-errors>
-					<label>CC Prefix</label>
-					<input name="CcPrefix" type="text" class="form-control" pop-show="{{errors.CcPrefix}}" pop="{{errors.CcPrefix}}" pop-placement="right" ng-model="data.portal_data.CcPrefix" placeholder="">
-				</div>
-			</div>
-			<div class="col-md-3">
-				<div class="form-group" show-errors>
-					<label>CC Suffix</label>
-					<input name="CcSuffix" type="text" class="form-control" pop-show="{{errors.CcSuffix}}" pop="{{errors.CcSuffix}}" pop-placement="right" ng-model="data.portal_data.CcSuffix" placeholder="">
-				</div>
-			</div>
-			<div class="col-md-3">
-				<div class="form-group" show-errors>
-					<label>Cc Type</label>
-					<input name="CcType" type="text" class="form-control" pop-show="{{errors.CcType}}" pop="{{errors.CcType}}" pop-placement="right" ng-model="data.gateway_data.CcType" placeholder="">
-				</div>
-			</div>
-			<div class="col-md-3">
-				<div class="form-group" show-errors>
-					<label>Cc Expire</label>
-					<input name="CcExpire" type="text" class="form-control" pop-show="{{errors.CcExpire}}" pop="{{errors.CcExpire}}" pop-placement="right" ng-model="data.gateway_data.CcExpire" placeholder="">
-				</div>
-			</div>
-		</div>
-		<div style="margin-bottom: 100px;" ng-if="!data.portal_data.CaseNumber || !data.portal_data.ReasonCode || !data.portal_data.ChargebackAmt || !data.portal_data.MidNumber || !data.portal_data.CcPrefix || !data.portal_data.CcSuffix || !data.gateway_data.CcExpire"></div>
-
-		<h4 style="font-weight: bold;">Customer Information</h4>
-
-		<div style="font-size: 12px; color: #999; padding-bottom: 10px;">This information is typically found in your CRM or order information system.  You can use the transaction data to the right to look up the customer for this transaction.</div>
-
-		<div class="row bt">
-			<div class="col-md-6">
-				<div class="form-group" show-errors>
-					<label>First Name</label>
-					<input name="FirstName" type="text" class="form-control" pop-show="{{errors.FirstName}}" pop="{{errors.FirstName}}" pop-placement="right" ng-model="data.gateway_data.FirstName" placeholder="">
-				</div>
-			</div>
-			<div class="col-md-6">
-				<div class="form-group" show-errors>
-					<label>Last Name</label>
-					<input name="LastName" type="text" class="form-control" pop-show="{{errors.LastName}}" pop="{{errors.LastName}}" pop-placement="right" ng-model="data.gateway_data.LastName" placeholder="">
-				</div>
-			</div>
-		</div>
-		<div class="row" ng-if="data.type == 'cnp'">
-			<div class="col-md-6">
-				<div class="form-group" show-errors>
-					<label>Billing Address One</label>
-					<input name="BillingAddr1" type="text" class="form-control" pop-show="{{errors.BillingAddr1}}" pop="{{errors.BillingAddr1}}" pop-placement="right" ng-model="data.gateway_data.BillingAddr1" placeholder="">
-				</div>
-			</div>
-			<div class="col-md-6">
-				<div class="form-group" show-errors>
-					<label>Billing Address Two</label>
-					<input name="BillingAddr2" type="text" class="form-control" pop-show="{{errors.BillingAddr2}}" pop="{{errors.BillingAddr2}}" pop-placement="right" ng-model="data.gateway_data.BillingAddr2" placeholder="">
-				</div>
-			</div>
-		</div>
-		<div class="row" ng-if="data.type == 'cnp'">
-			<div class="col-md-3">
-				<div class="form-group" show-errors>
-					<label>Billing City</label>
-					<input name="BillingCity" type="text" class="form-control" pop-show="{{errors.BillingCity}}" pop="{{errors.BillingCity}}" pop-placement="right" ng-model="data.gateway_data.BillingCity" placeholder="">
-				</div>
-			</div>
-			<div class="col-md-3">
-				<div class="form-group" show-errors>
-					<label>Billing State</label>
-					<input name="BillingState" type="text" class="form-control" pop-show="{{errors.BillingState}}" pop="{{errors.BillingState}}" pop-placement="right" ng-model="data.gateway_data.BillingState" placeholder="">
-				</div>
-			</div>
-			<div class="col-md-3">
-				<div class="form-group" show-errors>
-					<label>Billing Postal</label>
-					<input name="BillingPostal" type="text" class="form-control" pop-show="{{errors.BillingPostal}}" pop="{{errors.BillingPostal}}" pop-placement="right" ng-model="data.gateway_data.BillingPostal" placeholder="">
-				</div>
-			</div>
-			<div class="col-md-3">
-				<div class="form-group" show-errors>
-					<label>Billing Country</label>
-					<input name="BillingCountry" type="text" class="form-control" pop-show="{{errors.BillingCountry}}" pop="{{errors.BillingCountry}}" pop-placement="right" ng-model="data.gateway_data.BillingCountry" placeholder="">
-				</div>
-			</div>
-		</div>
-		<div class="row" ng-if="data.type == 'cnp'">
-			<div class="col-md-3">	
-				<div class="form-group" show-errors>
-					<label>Middle Name</label>
-					<input name="MiddleName" type="text" class="form-control" pop-show="{{errors.MiddleName}}" pop="{{errors.MiddleName}}" pop-placement="right" ng-model="data.gateway_data.MiddleName" placeholder="">
-				</div>
-			</div>
-			<div class="col-md-3">
-				<div class="form-group" show-errors>
-					<label>Phone</label>
-					<input name="Phone" type="text" class="form-control" pop-show="{{errors.Phone}}" pop="{{errors.Phone}}" pop-placement="right" ng-model="data.gateway_data.Phone" placeholder="">
-				</div>
-			</div>
-			<div class="col-md-3">
-				<div class="form-group" show-errors>
-					<label>Email</label>
-					<input name="Email" type="text" class="form-control" pop-show="{{errors.Email}}" pop="{{errors.Email}}" pop-placement="right" ng-model="data.crm_data.Email" placeholder="">
-				</div>
-			</div>
-			<div class="col-md-3">
-				<div class="form-group" show-errors>
-					<label>IP Address</label>
-					<input name="IpAddress" type="text" class="form-control" pop-show="{{errors.IpAddress}}" pop="{{errors.IpAddress}}" pop-placement="right" ng-model="data.crm_data.IpAddress" placeholder="">
-				</div>
-			</div>
-		</div>
+	</div>
 
 
+	<h4 style="margin-top: 100px; font-weight: bold;">Uploads</h4>
 
+	<div style="font-size: 12px; color: #999; padding-bottom: 10px;">Here you can upload information relevant to the transaction.</div>
 
-		<h4 style="margin-top: 100px; font-weight: bold;" ng-if="data.shipped">Shipping Information</h4>
+	<div class="row bt" style="border: none;">
+		<div class="col-md-5" style="margin-bottom: 60px; border: none;">
 
-		<div style="font-size: 12px; color: #999; padding-bottom: 10px;" ng-if="data.shipped">This information is typically found in your CRM or order information system.  You can use the transaction data to the right to look up the customer for this transaction. We will use the tracking number to gather the summary data from your shipping agent.</div>
-
-		<div class="row bt" ng-if="data.shipped">
-			<div class="col-md-6">
-				<div class="form-group" show-errors>
-					<label>Delivery Address One</label>
-					<input name="DeliveryAddr1" type="text" class="form-control" pop-show="{{errors.DeliveryAddr1}}" pop="{{errors.DeliveryAddr1}}" pop-placement="right" ng-model="data.crm_data.DeliveryAddr1" placeholder="">
-				</div>
-			</div>
-			<div class="col-md-6">
-				<div class="form-group" show-errors>
-					<label>Delivery Address Two</label>
-					<input name="DeliveryAddr2" type="text" class="form-control" pop-show="{{errors.DeliveryAddr2}}" pop="{{errors.DeliveryAddr2}}" pop-placement="right" ng-model="data.crm_data.DeliveryAddr2" placeholder="">
-				</div>
-			</div>
-		</div>
-		<div class="row" ng-if="data.shipped">
-			<div class="col-md-3">
-				<div class="form-group" show-errors>
-					<label>Delivery City</label>
-					<input name="DeliveryCity" type="text" class="form-control" pop-show="{{errors.DeliveryCity}}" pop="{{errors.DeliveryCity}}" pop-placement="right" ng-model="data.crm_data.DeliveryCity" placeholder="">
-				</div>
-			</div>
-			<div class="col-md-3">
-				<div class="form-group" show-errors>
-					<label>Delivery State</label>
-					<input name="DeliveryState" type="text" class="form-control" pop-show="{{errors.DeliveryState}}" pop="{{errors.DeliveryState}}" pop-placement="right" ng-model="data.crm_data.DeliveryState" placeholder="">
-				</div>
-			</div>
-			<div class="col-md-3">
-				<div class="form-group" show-errors>
-					<label>Delivery Postal</label>
-					<input name="DeliveryPostal" type="text" class="form-control" pop-show="{{errors.DeliveryPostal}}" pop="{{errors.DeliveryPostal}}" pop-placement="right" ng-model="data.crm_data.DeliveryPostal" placeholder="">
-				</div>
-			</div>
-			<div class="col-md-3">
-				<div class="form-group" show-errors>
-					<label>Delivery Country</label>
-					<input name="DeliveryCountry" type="text" class="form-control" pop-show="{{errors.DeliveryCountry}}" pop="{{errors.DeliveryCountry}}" pop-placement="right" ng-model="data.crm_data.DeliveryCountry" placeholder="">
-				</div>
-			</div>
-		</div>
-		<div class="row" ng-if="data.shipped">
-			<div class="col-md-3">
-				<div class="form-group" show-errors>
-					<label>Shipping Company</label>
-					<select class="form-control" ng-model="data.shipping_data.company" ng-options="s for s in shipping_companies"></select>
-				</div>
-			</div>
-			<div class="col-md-3">
-				<div class="form-group" show-errors>
-					<label>Tracking Number</label>
-					<input name="TrackingNum" type="text" class="form-control" pop-show="{{errors.TrackingNum}}" pop="{{errors.TrackingNum}}" pop-placement="right" ng-model="data.shipping_data.TrackingNum" placeholder="">
-				</div>
-			</div>
-		</div>
-		<div class="row" ng-if="data.shipped">
-			<div class="col-md-12">
-				<div class="form-group" show-errors>
-					<label>Tracking Summary</label>
-					<input name="TrackingSum" type="text" class="form-control" pop-show="{{errors.TrackingSum}}" pop="{{errors.TrackingSum}}" pop-placement="right" ng-model="data.shipping_data.TrackingSum" placeholder="">
-				</div>
-			</div>
-		</div>
-
-
-
-
-
-		<h4 style="margin-top: 100px; font-weight: bold;">Order Information</h4>
-
-		<div style="font-size: 12px; color: #999; padding-bottom: 10px;">This information is typically found in your CRM or order information system.  You can use the transaction data to the right to look up the customer for this transaction.</div>
-
-		<div class="row bt">
-			<div class="col-md-4">
-				<div class="form-group" show-errors>
-					<label>Transaction Date</label>
-					<input class="form-control" name="TransDate" type="text" class="form-control" datepicker-popup="MM/dd/yyyy" ng-model="data.gateway_data.TransDate" is-open="opened" ng-click="opened=true" isdate >
-				</div>
-			</div>
-			<div class="col-md-4">
-				<div class="form-group" show-errors>
-					<label>Transaction Id</label>
-					<input name="TransId" type="text" class="form-control" pop-show="{{errors.TransId}}" pop="{{errors.TransId}}" pop-placement="right" ng-model="data.gateway_data.TransId" placeholder="">
-				</div>
-			</div>
-			<div class="col-md-4">
-				<div class="form-group" show-errors>
-					<label>Order Date</label>
-					<input class="form-control" name="OrderDate" type="text" class="form-control" datepicker-popup="MM/dd/yyyy" ng-model="data.crm_data.OrderDate" is-open="opened1" ng-click="opened1=true" isdate >
-				</div>
-			</div>
-		</div>
-		<div class="row">
-			<div class="col-md-4">
-				<div class="form-group" show-errors>
-					<label>Product Name</label>
-					<input name="ProductName" type="text" class="form-control" pop-show="{{errors.ProductName}}" pop="{{errors.ProductName}}" pop-placement="right" ng-model="data.crm_data.ProductName" placeholder="">
-				</div>
-			</div>
-		</div>
-		<div class="row" ng-if="data.refunded">
-			<div class="col-md-4">
-				<div class="form-group" show-errors>
-					<label>Date Cancelled in System</label>
-					<input class="form-control" name="CancelDateSystem" type="text" class="form-control" datepicker-popup="MM/dd/yyyy" ng-model="data.crm_data.CancelDateSystem" is-open="opened2" ng-click="opened2=true" isdate>
-				</div>
-			</div>
-			<div class="col-md-4">
-				<div class="form-group" show-errors>
-					<label>Full Refund Date</label>
-					<input class="form-control" name="RefundDateFull" type="text" class="form-control" datepicker-popup="MM/dd/yyyy" ng-model="data.crm_data.RefundDateFull" is-open="opened3" ng-click="opened3=true" >
-				</div>
-			</div>
-			<div class="col-md-4">
-				<div class="form-group" show-errors>
-					<label>Partial Refund Date</label>
-					<input class="form-control" name="RefundDatePartial" type="text" class="form-control" datepicker-popup="MM/dd/yyyy" ng-model="data.crm_data.RefundDatePartial" is-open="opened4" ng-click="opened4=true" >
-				</div>
-			</div>
-		</div>
-		<div class="row" ng-if="data.refunded">
-			<div class="col-md-6">
-				<div class="form-group" show-errors>
-					<label>Refund Amount</label>
-					<input name="RefundAmount" type="text" class="form-control" pop-show="{{errors.RefundAmount}}" pop="{{errors.RefundAmount}}" pop-placement="right" ng-model="data.crm_data.RefundAmount" placeholder="">
-				</div>
-			</div>
-			<div class="col-md-6">
-				<div class="form-group" show-errors>
-					<label>RMA</label>
-					<input name="Rma" type="text" class="form-control" pop-show="{{errors.Rma}}" pop="{{errors.Rma}}" pop-placement="right" ng-model="data.crm_data.Rma" placeholder="">
-				</div>
-			</div>
-		</div>
-
-
-
-		<h4 style="margin-top: 100px; font-weight: bold;">Card Holder Correspondence</h4>
-
-		<div class="row bt">
-			<div class="col-md-6">
-				<div class="form-group">
-					<label>Available</label>
-					<div class="form-control-static">
-						<toggle-switch ng-model="data.chc" on-label="Yes" off-label="No"></toggle-switch>
+			<div ng-show="uploaderProduct.isHTML5">
+				<div nv-file-drop="" uploader="uploaderProduct">
+					<div nv-file-over="" uploader="uploaderProduct" over-class="ddhover" class="ddzone" ng-click="triggerUpload('#productFile')">
+						Upload Product Screenshot<br/>
+						<span class="glyphicon glyphicon-picture"></span>
+						<div class="subtext">(drag here or click to upload)</div>
 					</div>
 				</div>
 			</div>
-			<div class="col-md-6">
-				<div class="form-group">
-					<label>Uploaded Correspondence</label>
-					<div class="form-control-static">
-						<span class="btn btn-link" ng-if="data.chc" ng-click="download('/images/ChargebackRequest.fdad00.pdf')">Chargeback Request</span>
-						<span ng-if="!data.chc">Not Available</span>
+			<div ng-hide="uploaderProduct.isHTML5" class="ddzone">
+				Upload Product Screenshot<br/>
+				<input id="productFile" type="file" nv-file-select="" uploader="uploaderProduct"  />
+			</div>
+			<div class="uploaded">
+
+				<div ng-repeat="saved_item in data.attachments | filter:{ type:'product'}">
+					<div class="img">
+						<div class="remove pull-right" ng-click="removeItem(saved_item, '#productFile')">
+							<span class="glyphicon glyphicon-remove-circle"></span>
+						</div>
+						<img ng-if="!saved_item.processed" ng-src="{{saved_item.urls.orig}}">
+						<img ng-if="saved_item.processed" ng-src="{{saved_item.urls.medium}}">
+					</div>
+					<div style="font-weight: bold; text-align: center;">{{ saved_item.filename }}</div>
+				</div>
+
+				<div ng-repeat="item in uploaderProduct.queue">
+					<div class="img" ng-show="uploaderProduct.isHTML5">
+						<div class="remove pull-right" ng-click="removeItem(item, '#productFile')">
+							<span class="glyphicon glyphicon-remove-circle"></span>
+						</div>
+						<div ng-thumb="{ file: item._file, width: 200 }"></div>
+					</div>
+					<div style="font-weight: bold; text-align: center;">{{ item.file.name }}</div>
+					<div ng-show="uploaderProduct.isHTML5" style="text-align: center;">
+						<div nowrap>{{ item.file.size/1024/1024|number:2 }} MB</div>
+						<div class="progress" style="margin-bottom: 0;">
+							<div class="progress-bar" role="progressbar" ng-style="{ 'width': item.progress + '%' }"></div>
+						</div>
 					</div>
 				</div>
+
 			</div>
 		</div>
+		<div class="col-md-2"></div>
+		<div class="col-md-5" style="border: none;">
 
-
-		<h4 style="margin-top: 100px; font-weight: bold;">Additional Information</h4>
-
-		<div style="font-size: 12px; color: #999; padding-bottom: 10px;">You can add any information that you think is relevant to the transaction.</div>
-
-		<div class="row bt">
-			<div class="col-md-12">
-				<div class="form-group" show-errors>
-					<label>Comments</label>
-					<textarea class="form-control" name="additional_comments" type="text" class="form-control" ng-model="data.additional_comments"></textarea>
+			<div ng-show="uploaderTerms.isHTML5">
+				<div nv-file-drop="" uploader="uploaderTerms">
+					<div nv-file-over="" uploader="uploaderTerms" over-class="ddhover" class="ddzone" ng-click="triggerUpload('#termsFile')">
+						Upload Terms of Service<br/>
+						<span class="glyphicon glyphicon-list-alt"></span>
+						<div class="subtext">(drag here or click to upload)</div>
+					</div>
 				</div>
 			</div>
-		</div>
-
-		
-		<h4 style="margin-top: 100px; font-weight: bold;">Uploads</h4>
-		
-		<div style="font-size: 12px; color: #999; padding-bottom: 10px;">Here you can upload information relevant to the transaction.</div>
-
-		<div class="row bt" style="border: none;">
-			<div class="col-md-5" style="margin-bottom: 60px; border: none;">
-
-				<div ng-show="uploaderProduct.isHTML5">
-					<div nv-file-drop="" uploader="uploaderProduct">
-						<div nv-file-over="" uploader="uploaderProduct" over-class="ddhover" class="ddzone" ng-click="triggerUpload('#productFile')">
-							Upload Product Screenshot<br/>
-							<span class="glyphicon glyphicon-picture"></span>
-							<div class="subtext">(drag here or click to upload)</div>
-						</div>
-					</div>
-				</div>
-				<div ng-hide="uploaderProduct.isHTML5" class="ddzone">
-					Upload Product Screenshot<br/>
-					<input id="productFile" type="file" nv-file-select="" uploader="uploaderProduct"  />
-				</div>
-				<div class="uploaded">
-
-					<div ng-repeat="saved_item in data.attachments | filter:{ type:'product'}">
-						<div class="img">
-							<div class="remove pull-right" ng-click="removeItem(saved_item, '#productFile')">
-								<span class="glyphicon glyphicon-remove-circle"></span>
-							</div>
-							<img ng-if="!saved_item.processed" ng-src="{{saved_item.urls.orig}}">
-							<img ng-if="saved_item.processed" ng-src="{{saved_item.urls.medium}}">
-						</div>
-						<div style="font-weight: bold; text-align: center;">{{ saved_item.filename }}</div>
-					</div>
-
-					<div ng-repeat="item in uploaderProduct.queue">
-						<div class="img" ng-show="uploaderProduct.isHTML5">
-							<div class="remove pull-right" ng-click="removeItem(item, '#productFile')">
-								<span class="glyphicon glyphicon-remove-circle"></span>
-							</div>
-							<div ng-thumb="{ file: item._file, width: 200 }"></div>
-						</div>
-						<div style="font-weight: bold; text-align: center;">{{ item.file.name }}</div>
-						<div ng-show="uploaderProduct.isHTML5" style="text-align: center;">
-							<div nowrap>{{ item.file.size/1024/1024|number:2 }} MB</div>
-							<div class="progress" style="margin-bottom: 0;">
-								<div class="progress-bar" role="progressbar" ng-style="{ 'width': item.progress + '%' }"></div>
-							</div>
-						</div>
-					</div>
-
-				</div>
+			<div ng-hide="uploaderTerms.isHTML5" class="ddzone">
+				Upload Terms of Service<br/><input id="termsFile" type="file" nv-file-select="" uploader="uploaderTerms"  />
 			</div>
-			<div class="col-md-2"></div>
-			<div class="col-md-5" style="border: none;">
 
-				<div ng-show="uploaderTerms.isHTML5">
-					<div nv-file-drop="" uploader="uploaderTerms">
-						<div nv-file-over="" uploader="uploaderTerms" over-class="ddhover" class="ddzone" ng-click="triggerUpload('#termsFile')">
-							Upload Terms of Service<br/>
-							<span class="glyphicon glyphicon-list-alt"></span>
-							<div class="subtext">(drag here or click to upload)</div>
+			<div class="uploaded">
+
+				<div ng-repeat="saved_item in data.attachments | filter:{type:'terms'}">
+					<div class="img">
+						<div class="remove pull-right" ng-click="removeItem(saved_item, '#termsFile')">
+							<span class="glyphicon glyphicon-remove-circle"></span>
 						</div>
+						<img ng-if="!saved_item.processed" ng-src="{{saved_item.urls.orig}}">
+						<img ng-if="saved_item.processed" ng-src="{{saved_item.urls.medium}}">
 					</div>
-				</div>
-				<div ng-hide="uploaderTerms.isHTML5" class="ddzone">
-					Upload Terms of Service<br/><input id="termsFile" type="file" nv-file-select="" uploader="uploaderTerms"  />
+					<div style="font-weight: bold; text-align: center;">{{ saved_item.filename }}</div>
 				</div>
 
-				<div class="uploaded">
-
-					<div ng-repeat="saved_item in data.attachments | filter:{type:'terms'}">
-						<div class="img">
-							<div class="remove pull-right" ng-click="removeItem(saved_item, '#termsFile')">
-								<span class="glyphicon glyphicon-remove-circle"></span>
-							</div>
-							<img ng-if="!saved_item.processed" ng-src="{{saved_item.urls.orig}}">
-							<img ng-if="saved_item.processed" ng-src="{{saved_item.urls.medium}}">
+				<div ng-repeat="item in uploaderTerms.queue">
+					<div class="img" ng-show="uploaderTerms.isHTML5">
+						<div class="remove pull-right" ng-click="removeItem(item, '#termsFile')">
+							<span class="glyphicon glyphicon-remove-circle"></span>
 						</div>
-						<div style="font-weight: bold; text-align: center;">{{ saved_item.filename }}</div>
+						<div ng-thumb="{ file: item._file, width: 200 }"></div>
 					</div>
-
-					<div ng-repeat="item in uploaderTerms.queue">
-						<div class="img" ng-show="uploaderTerms.isHTML5">
-							<div class="remove pull-right" ng-click="removeItem(item, '#termsFile')">
-								<span class="glyphicon glyphicon-remove-circle"></span>
-							</div>
-							<div ng-thumb="{ file: item._file, width: 200 }"></div>
-						</div>
-						<div style="font-weight: bold; text-align: center;">{{ item.file.name }}</div>
-						<div ng-show="uploaderTerms.isHTML5" style="text-align: center;">
-							<div nowrap>{{ item.file.size/1024/1024|number:2 }} MB</div>
-							<div class="progress" style="margin-bottom: 0;">
-								<div class="progress-bar" role="progressbar" ng-style="{ 'width': item.progress + '%' }"></div>
-							</div>
+					<div style="font-weight: bold; text-align: center;">{{ item.file.name }}</div>
+					<div ng-show="uploaderTerms.isHTML5" style="text-align: center;">
+						<div nowrap>{{ item.file.size/1024/1024|number:2 }} MB</div>
+						<div class="progress" style="margin-bottom: 0;">
+							<div class="progress-bar" role="progressbar" ng-style="{ 'width': item.progress + '%' }"></div>
 						</div>
 					</div>
-
 				</div>
 
 			</div>
 
 		</div>
-
-		<div class="row"  style="border: none;">
-			<div class="col-md-5" style="margin-bottom: 60px; border: none;">
-
-				<div ng-show="uploaderShipping.isHTML5">
-					<div nv-file-drop="" uploader="uploaderShipping">
-						<div nv-file-over="" uploader="uploaderShipping" over-class="ddhover" class="ddzone" ng-click="triggerUpload('#shippingFile')">
-							Upload Shipping Screenshot<br/>
-							<span class="glyphicon glyphicon-picture"></span>
-							<div class="subtext">(drag here or click to upload)</div>
-						</div>
-					</div>
-				</div>
-				<div ng-hide="uploaderShipping.isHTML5" class="ddzone">
-					Upload Shipping Screenshot<br/><input id="shippingFile" type="file" nv-file-select="" uploader="uploaderShipping"  />
-				</div>
-
-
-				<div class="uploaded">
-
-					<div ng-repeat="saved_item in data.attachments | filter:{ type:'shipping' }">
-						<div class="img">
-							<div class="remove pull-right" ng-click="removeItem(saved_item, '#shippingFile')">
-								<span class="glyphicon glyphicon-remove-circle"></span>
-							</div>
-							<img ng-if="!saved_item.processed" ng-src="{{saved_item.urls.orig}}">
-							<img ng-if="saved_item.processed" ng-src="{{saved_item.urls.medium}}">
-						</div>
-						<div style="font-weight: bold; text-align: center;">{{ saved_item.filename }}</div>
-					</div>
-
-					<div ng-repeat="item in uploaderShipping.queue">
-						<div class="img" ng-show="uploaderShipping.isHTML5">
-							<div class="remove pull-right" ng-click="removeItem(item, '#shippingFile')">
-								<span class="glyphicon glyphicon-remove-circle"></span>
-							</div>
-							<div ng-thumb="{ file: item._file, width: 200 }"></div>
-						</div>
-						<div style="font-weight: bold; text-align: center;">{{ item.file.name }}</div>
-						<div ng-show="uploaderShipping.isHTML5" style="text-align: center;">
-							<div nowrap>{{ item.file.size/1024/1024|number:2 }} MB</div>
-							<div class="progress" style="margin-bottom: 0;">
-								<div class="progress-bar" role="progressbar" ng-style="{ 'width': item.progress + '%' }"></div>
-							</div>
-						</div>
-					</div>
-
-				</div>
-
-			</div>
-			<div class="col-md-2"></div>
-			<div class="col-md-5"  style="border: none;">
-
-				<div ng-show="uploaderAdditional.isHTML5">
-					<div nv-file-drop="" uploader="uploaderAdditional">
-						<div nv-file-over="" uploader="uploaderAdditional" over-class="ddhover" class="ddzone" ng-click="triggerUpload('#addFile')">
-							Upload Additional Documents<br/>
-							<span class="glyphicon glyphicon-list-alt"></span>
-							<div class="subtext">(drag here or click to upload)</div>
-						</div>
-					</div>
-				</div>
-				<div ng-hide="uploaderAdditional.isHTML5" class="ddzone">
-					Upload Additional<br/>
-					<input id="addFile" type="file" nv-file-select="" uploader="uploaderAdditional"  />
-				</div>
-
-				<div class="uploaded">
-
-					<div ng-repeat="saved_item in data.attachments | filter:{type:'additional'}">
-						<div class="img">
-							<div class="remove pull-right" ng-click="removeItem(saved_item, '#addFile')">
-								<span class="glyphicon glyphicon-remove-circle"></span>
-							</div>
-							<img ng-if="!saved_item.processed" ng-src="{{saved_item.urls.orig}}">
-							<img ng-if="saved_item.processed" ng-src="{{saved_item.urls.medium}}">
-						</div>
-						<div style="font-weight: bold; text-align: center;">{{ saved_item.filename }}</div>
-					</div>
-
-					<div ng-repeat="item in uploaderAdditional.queue">
-						<div class="img" ng-show="uploaderAdditional.isHTML5">
-							<div class="remove pull-right" ng-click="removeItem(item, '#addFile')">
-								<span class="glyphicon glyphicon-remove-circle"></span>
-							</div>
-							<div ng-thumb="{ file: item._file, width: 200 }"></div>
-						</div>
-						<div style="font-weight: bold; text-align: center;">{{ item.file.name }}</div>
-						<div ng-show="uploaderAdditional.isHTML5" style="text-align: center;">
-							<div nowrap>{{ item.file.size/1024/1024|number:2 }} MB</div>
-							<div class="progress" style="margin-bottom: 0;">
-								<div class="progress-bar" role="progressbar" ng-style="{ 'width': item.progress + '%' }"></div>
-							</div>
-						</div>
-					</div>
-
-				</div>
-
-			</div>
-
-		</div>
-
-		
-		<div class="form-group btns">
-			<a ui-sref="chargeback.review" class="btn btn-success pull-right">Continue to Final Review</a>
-		</div>
-
-
-		
 
 	</div>
 
+	<div class="row"  style="border: none;">
+		<div class="col-md-5" style="margin-bottom: 60px; border: none;">
+
+			<div ng-show="uploaderShipping.isHTML5">
+				<div nv-file-drop="" uploader="uploaderShipping">
+					<div nv-file-over="" uploader="uploaderShipping" over-class="ddhover" class="ddzone" ng-click="triggerUpload('#shippingFile')">
+						Upload Shipping Screenshot<br/>
+						<span class="glyphicon glyphicon-picture"></span>
+						<div class="subtext">(drag here or click to upload)</div>
+					</div>
+				</div>
+			</div>
+			<div ng-hide="uploaderShipping.isHTML5" class="ddzone">
+				Upload Shipping Screenshot<br/><input id="shippingFile" type="file" nv-file-select="" uploader="uploaderShipping"  />
+			</div>
+
+
+			<div class="uploaded">
+
+				<div ng-repeat="saved_item in data.attachments | filter:{ type:'shipping' }">
+					<div class="img">
+						<div class="remove pull-right" ng-click="removeItem(saved_item, '#shippingFile')">
+							<span class="glyphicon glyphicon-remove-circle"></span>
+						</div>
+						<img ng-if="!saved_item.processed" ng-src="{{saved_item.urls.orig}}">
+						<img ng-if="saved_item.processed" ng-src="{{saved_item.urls.medium}}">
+					</div>
+					<div style="font-weight: bold; text-align: center;">{{ saved_item.filename }}</div>
+				</div>
+
+				<div ng-repeat="item in uploaderShipping.queue">
+					<div class="img" ng-show="uploaderShipping.isHTML5">
+						<div class="remove pull-right" ng-click="removeItem(item, '#shippingFile')">
+							<span class="glyphicon glyphicon-remove-circle"></span>
+						</div>
+						<div ng-thumb="{ file: item._file, width: 200 }"></div>
+					</div>
+					<div style="font-weight: bold; text-align: center;">{{ item.file.name }}</div>
+					<div ng-show="uploaderShipping.isHTML5" style="text-align: center;">
+						<div nowrap>{{ item.file.size/1024/1024|number:2 }} MB</div>
+						<div class="progress" style="margin-bottom: 0;">
+							<div class="progress-bar" role="progressbar" ng-style="{ 'width': item.progress + '%' }"></div>
+						</div>
+					</div>
+				</div>
+
+			</div>
+
+		</div>
+		<div class="col-md-2"></div>
+		<div class="col-md-5"  style="border: none;">
+
+			<div ng-show="uploaderAdditional.isHTML5">
+				<div nv-file-drop="" uploader="uploaderAdditional">
+					<div nv-file-over="" uploader="uploaderAdditional" over-class="ddhover" class="ddzone" ng-click="triggerUpload('#addFile')">
+						Upload Additional Documents<br/>
+						<span class="glyphicon glyphicon-list-alt"></span>
+						<div class="subtext">(drag here or click to upload)</div>
+					</div>
+				</div>
+			</div>
+			<div ng-hide="uploaderAdditional.isHTML5" class="ddzone">
+				Upload Additional<br/>
+				<input id="addFile" type="file" nv-file-select="" uploader="uploaderAdditional"  />
+			</div>
+
+			<div class="uploaded">
+
+				<div ng-repeat="saved_item in data.attachments | filter:{type:'additional'}">
+					<div class="img">
+						<div class="remove pull-right" ng-click="removeItem(saved_item, '#addFile')">
+							<span class="glyphicon glyphicon-remove-circle"></span>
+						</div>
+						<img ng-if="!saved_item.processed" ng-src="{{saved_item.urls.orig}}">
+						<img ng-if="saved_item.processed" ng-src="{{saved_item.urls.medium}}">
+					</div>
+					<div style="font-weight: bold; text-align: center;">{{ saved_item.filename }}</div>
+				</div>
+
+				<div ng-repeat="item in uploaderAdditional.queue">
+					<div class="img" ng-show="uploaderAdditional.isHTML5">
+						<div class="remove pull-right" ng-click="removeItem(item, '#addFile')">
+							<span class="glyphicon glyphicon-remove-circle"></span>
+						</div>
+						<div ng-thumb="{ file: item._file, width: 200 }"></div>
+					</div>
+					<div style="font-weight: bold; text-align: center;">{{ item.file.name }}</div>
+					<div ng-show="uploaderAdditional.isHTML5" style="text-align: center;">
+						<div nowrap>{{ item.file.size/1024/1024|number:2 }} MB</div>
+						<div class="progress" style="margin-bottom: 0;">
+							<div class="progress-bar" role="progressbar" ng-style="{ 'width': item.progress + '%' }"></div>
+						</div>
+					</div>
+				</div>
+
+			</div>
+
+		</div>
+
+	</div>
+
+
+	<div class="form-group btns">
+		<a ui-sref="chargeback.review" class="btn btn-success pull-right">Continue to Final Review</a>
+	</div>
 </div>

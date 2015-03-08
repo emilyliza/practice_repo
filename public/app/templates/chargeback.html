@@ -16,5 +16,78 @@
 </div>
 
 <form name="cbForm" role="form" novalidate >
-	<div id="form-views" ui-view></div>
+	
+	<div class="row">
+	
+	<div class="col-sm-4 col-sm-push-8 form-sidebar">
+		
+		<div class="side-cbinfo">
+			<div class="imported">
+				<div class="side-cbinfo-head">IMPORTED DATA</div>
+				
+				<div class="side-cbinfo-desc">This is the data that we have received regarding this chargeback case. You can use this information to look up any missing data and fill it in.</div>
+
+				<div class="row" ng-if="data.portal_data.MidNumber">
+					<div class="col-xs-4" style="text-align: right;">Type:</div>
+					<div class="col-xs-8">
+						<span ng-if="data.type == 'cp'">Card Present</span>
+						<span ng-if="data.type == 'cnp'">Card Not Present</span>		
+					</div>
+				</div>
+
+				<div class="row" ng-if="data.portal_data.MidNumber">
+					<div class="col-xs-4" style="text-align: right;">MID:</div>
+					<div class="col-xs-8">{{data.portal_data.MidNumber}}</div>
+				</div>
+
+				<div class="row" ng-if="data.gateway_data.FullName">
+					<div class="col-xs-4" style="text-align: right;">Customer:</div>
+					<div class="col-xs-8">{{data.gateway_data.FullName}}</div>
+				</div>
+
+				<div class="row" ng-if="data.portal_data.MidNumber">
+					<div class="col-xs-4" style="text-align: right;">Amount:</div>
+					<div class="col-xs-8">{{data.portal_data.ChargebackAmt | currency}}</div>
+				</div>
+
+				<div class="row" ng-if="data.portal_data.CcPrefix || data.portal_data.CcSuffix">
+					<div class="col-xs-4" style="text-align: right;">Credit Card:</div>
+					<div class="col-xs-8">
+						<span ng-if="data.portal_data.CcPrefix">{{data.portal_data.CcPrefix}}</span><span ng-if="!data.portal_data.CcPrefix">XXXX</span>-XXXX-XXXX-<span ng-if="data.portal_data.CcSuffix">{{data.portal_data.CcSuffix}}</span><span ng-if="!data.portal_data.CcSuffix">XXXX</span>
+						<span ng-if="data.gateway_data.CcType">({{data.gateway_data.CcType}})</span>
+					</div>
+				</div>
+
+				<div class="row">
+					<div class="col-xs-4" style="text-align: right;">Shipped:</div>
+					<div class="col-xs-8">{{data.shipped}}</div>
+				</div>
+				<div class="row">
+					<div class="col-xs-4" style="text-align: right;">Refunded:</div>
+					<div class="col-xs-8">{{data.refunded}}</div>
+				</div>
+				<div class="row">
+					<div class="col-xs-4" style="text-align: right;">Recurring:</div>
+					<div class="col-xs-8">{{data.recurring}}</div>
+				</div>
+
+
+				<div class="row" ng-if="data.portal_data.ReasonCode || data.portal_data.ReasonText">
+					<div class="col-xs-4" style="text-align: right;">Reason:</div>
+					<div class="col-xs-8">
+						{{data.portal_data.ReasonText}} {{data.portal_data.ReasonCode}}
+					</div>
+				</div>
+			</div>
+
+			<div class="form-group btns" style="text-align: center; margin-top: 40px;" ui-sref-active="active" ui-sref=".review">
+				<a ui-sref="chargeback.confirmation" class="btn btn-success" style="margin-right: 20px;">Submit</a>
+				<button type="button" ng-click="download('/images/example.0511cc.pdf')" class="btn btn-info">Download</button>
+			</div>
+
+		</div>
+	</div>
+	<div class="col-sm-8 col-sm-pull-4" ui-view>
+		
+	</div>
 </form>
