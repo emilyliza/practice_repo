@@ -177,7 +177,7 @@
 
 		service.getUsers = function(q) {
 			return $http
-				.get('/api/v1/users?query=' + q)
+				.get('/api/v1/admin/users?query=' + q)
 				.then(function(response){
 					return response.data;
 				});

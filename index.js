@@ -162,6 +162,10 @@ require('./controllers/reset')(app);
 require('./controllers/forgot')(app);
 require('./controllers/processed')(app);
 
+// Admin endpoints
+require('./controllers/admin/users')(app);
+
+
 // for admin area
 app.get(/^\/admin(.*)$/, function(req, res, next) {
 	if(process.env.NODE_ENV == 'production') {
