@@ -73,12 +73,12 @@ processLog = function(m) {
 
 
 var	log = {
-	log: function(m) { return console.dir(m, { colors: true, depth: null }); processLog(m); },
-	info: function(m) { return console.dir(m, { colors: true, depth: null }); processLog(m); },
-	debug: function(m) { return console.dir(m, { colors: true, depth: null }); processLog(m); },
-	notice: function(m) { return console.dir(m, { colors: true, depth: null }); processLog(m); },
-	warning: function(m) { return console.dir(m, { colors: true, depth: null }); processLog(m); },
-	err: function(m) { return console.dir(m, { colors: true, depth: null }); processLog(m); }
+	log: function(m) { console.dir(m, { colors: true, depth: null }); return processLog(m); },
+	info: function(m) { console.dir(m, { colors: true, depth: null }); return processLog(m); },
+	debug: function(m) { console.dir(m, { colors: true, depth: null }); return processLog(m); },
+	notice: function(m) { console.dir(m, { colors: true, depth: null }); return processLog(m); },
+	warning: function(m) { console.dir(m, { colors: true, depth: null }); return processLog(m); },
+	err: function(m) { console.dir(m, { colors: true, depth: null }); return processLog(m); }
 };
 
 app.set('log', log);
