@@ -38,6 +38,12 @@
 		};
 	})
 
+	.filter('ccexpires', function() {
+		return function (t) {
+			return t.substr(0,1) + "/" + t.substr(1,2);
+		};
+	})
+
 	.controller('ApplicationController', 
 		['$scope', '$rootScope', '$state', 'AUTH_EVENTS', 'UserService',
 		function ($scope, $rootScope, $state, AUTH_EVENTS, UserService) {
