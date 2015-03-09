@@ -65,7 +65,7 @@ processLog = function(m) {
 		if (_.isObject(m)) {
 			// need to clone so object info is not overwritten!
 			le_log.info(_.clone(m));
-		} else {
+		} else if (!m.match(/info wait for message on/)) {
 			le_log.info(m);
 		}
 	}
