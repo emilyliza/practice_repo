@@ -17,7 +17,7 @@ module.exports = function(app) {
 	var UserSchema = new Schema({
 		'name': { type: String, required: true },
 		'username': { type: String, required: true, index: true },
-		'email': { type: String, index: true },
+		'email': { type: String, index: true, sparse: true },
 		'password': { type: String, set: Util.hash_password },
 		'active': { type: Boolean, default: true },
 		'admin': { type: Boolean, default: false },
