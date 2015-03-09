@@ -61,24 +61,58 @@ if (process.env.NODE_ENV == "production" && process.env.LOGENTRIES) {
 }
 
 processLog = function(m) {
-	if (le_log) {
-		if (_.isObject(m)) {
-			// need to clone so object info is not overwritten!
-			le_log.info(_.clone(m));
-		} else if (!m.match(/info wait for message on/)) {
-			le_log.info(m);
-		}
+	if (_.isObject(m)) {
+		// need to clone so object info is not overwritten!
+		le_log.info(_.clone(m));
+	} else if (!m.match(/info wait for message on/)) {
+		le_log.info(m);
 	}
 }
 
 
 var	log = {
-	log: function(m) { console.dir(m, { colors: true, depth: null }); return processLog(m); },
-	info: function(m) { console.dir(m, { colors: true, depth: null }); return processLog(m); },
-	debug: function(m) { console.dir(m, { colors: true, depth: null }); return processLog(m); },
-	notice: function(m) { console.dir(m, { colors: true, depth: null }); return processLog(m); },
-	warning: function(m) { console.dir(m, { colors: true, depth: null }); return processLog(m); },
-	err: function(m) { console.dir(m, { colors: true, depth: null }); return processLog(m); }
+	log: function(m) {
+		if (le_log) {
+			 return processLog(m);
+		} else {
+			return console.dir(m, { colors: true, depth: null });
+		}
+	},
+	info: function(m) {
+		if (le_log) {
+			 return processLog(m);
+		} else {
+			return console.dir(m, { colors: true, depth: null });
+		}
+	},
+	debug: function(m) {
+		if (le_log) {
+			 return processLog(m);
+		} else {
+			return console.dir(m, { colors: true, depth: null });
+		}
+	},
+	notice: function(m) {
+		if (le_log) {
+			 return processLog(m);
+		} else {
+			return console.dir(m, { colors: true, depth: null });
+		}
+	},
+	warning: function(m) {
+		if (le_log) {
+			 return processLog(m);
+		} else {
+			return console.dir(m, { colors: true, depth: null });
+		}
+	},
+	err: function(m) {
+		if (le_log) {
+			 return processLog(m);
+		} else {
+			return console.dir(m, { colors: true, depth: null });
+		}
+	}
 };
 
 app.set('log', log);
