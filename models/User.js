@@ -82,7 +82,7 @@ module.exports = function(app) {
 		$()
 		.par(function() {
 			Chargeback.update(
-				{'user._id': prop._id},
+				{'user._id': user._id},
 				{ '$set': { 'user': user_obj }}, options, this);
 		})
 		.seq(function() { 

@@ -278,7 +278,7 @@ module.exports = function(app) {
 					}
 				}, function(err,data) {
 					if (err) { throw err; }
-					data.should.be.instanceof(Array).and.have.lengthOf(1);
+					data.should.be.instanceof(Array).and.have.lengthOf(2);
 					done();
 				});
 			});
