@@ -1,67 +1,66 @@
 
-		
-		<h4 style="font-weight: bold;">Customer Information</h4>
-		<div class="row">
 
-
-		
-		<div class="row" style="padding-top: 40px;">
-			<div class="col-sm-6 review-uploaded">
-				<h4>Copies of Terms of Service</h4>
-				<div ng-repeat="saved_item in data.uploads.terms">
-					<img ng-src="{{saved_item.url}}">
-				</div>
-				<div ng-if="data.uploads.terms.length == 0">
-					<div class="missing-upload">
-						<span class="glyphicon glyphicon-exclamation-sign"></span><br/>
-						Uploaded Terms Missing
-					</div>	
-				</div>
-			</div>
-			<div class="col-sm-6 review-uploaded">
-				<h4>Screenshots of Product</h4>
-				<div ng-repeat="saved_item in data.uploads.products">
-					<img ng-src="{{saved_item.url}}">
-				</div>
-				<div ng-if="data.uploads.products.length == 0">
-					<div class="missing-upload">
-						<span class="glyphicon glyphicon-exclamation-sign"></span><br/>
-						Uploaded Screen Shots Missing
-					</div>
-				</div>	
-			</div>
+<div class="review-block first-block">
+	<h4>Customer Information</h4>
+	<div class="row">
+		<div class="col-sm-2"><span class="glyphicon glyphicon-user"></span></div>
+		<div class="col-sm-5">
+			{{data.gateway_data.FullName}}<br/>
+			{{data.gateway_data.BillingAddr1}}<span ng-if="data.gateway_data.BillingAddr2">, {{data.gateway_data.BillingAddr2}}</span><br/>
+			{{data.gateway_data.BillingCity}}, {{data.gateway_data.BillingState}} {{data.gateway_data.BillingPostal}}<br/>
+			{{data.gateway_data.BillingCountry}}
 		</div>
-
-		<div class="row" style="margin-bottom: 40px;">
-			<div class="col-sm-6 review-uploaded">
-				<h4>Screenshot of Shipping</h4>
-				<div ng-repeat="saved_item in data.uploads.shippings">
-					<img ng-src="{{saved_item.url}}">
-				</div>
-				<div ng-if="data.uploads.shippings.length == 0">
-					<div class="missing-upload">
-						<span class="glyphicon glyphicon-exclamation-sign"></span><br/>
-						Shipping Screenshots Missing
-					</div>	
-				</div>
-			</div>
-			<div class="col-sm-6 review-uploaded">
-				<h4>Additional Documents</h4>
-				<div ng-repeat="saved_item in data.uploads.adds">
-					<img ng-src="{{saved_item.url}}">
-				</div>
-				<div ng-if="data.uploads.adds.length == 0">
-					<div class="missing-upload">
-						<span class="glyphicon glyphicon-exclamation-sign"></span><br/>
-						No Additional Documents
-					</div>
-				</div>	
-			</div>
+		<div class="col-sm-5">
+			{{data.crm_data.Email}}<br/>
+			{{data.gateway_data.Phone}}<br/>
+			IP: {{data.crm_data.IpAddress}}<br/>
 		</div>
+	</div>
+</div>
 
-		<div class="additional_comments">
-			<h4>Additional Comments</h4>
-			<div class="row">
-				<div class="col-md-12 details" style="white-space: pre-line;">{{data.additional_comments}}</div>
+<div class="review-block">
+	<h4>Transaction Information</h4>
+	<div class="row">
+		<div class="col-sm-2"><span class="glyphicon glyphicon-credit-card"></span></div>
+		<div class="col-sm-5">
+			<div ng-if="data.type == 'cp'">Card Present</div>
+			<div ng-if="data.type == 'cnp'">Card Not Present</div>
+			<div>
+				<span ng-if="data.portal_data.CcPrefix">{{data.portal_data.CcPrefix}}</span><span ng-if="!data.portal_data.CcPrefix">XXXX</span>-XXXX-XXXX-<span ng-if="data.portal_data.CcSuffix">{{data.portal_data.CcSuffix}}</span><span ng-if="!data.portal_data.CcSuffix">XXXX</span> <span ng-if="data.gateway_data.CcType">({{data.gateway_data.CcType}})</span>
 			</div>
+			<div>Expires: {{data.gateway_data.CcExpire}}</div>
 		</div>
+		<div class="col-sm-5">
+			<div>Auth Code: {{data.gateway_data.AuthCode}}</div>
+			<div>AVS Status: {{data.gateway_data.AvsStatus}}</div>
+			<div>CVV Status: {{data.gateway_data.CvvStatus}}</div>
+		</div>
+	</div>
+</div>
+
+
+<div class="review-block">
+	<h4>Chargeback Information</h4>
+	<div class="row">
+		<div class="col-sm-2"><span class="glyphicon glyphicon-credit-card"></span></div>
+		<div class="col-sm-5">
+			Chargeback Date: {{data.chargebackDate | date:'MMM dd, yyyy'}}
+		</div>
+		<div class="col-sm-5"></div>
+	</div>
+</div>
+
+
+<div class="review-block" ng-if="data.attachments.length">
+	<h4>Uploads</h4>
+	<div class="row" ng-repeat="item in data.attachments">
+		<div class="col-sm-12"><img ng-src="{{item.urls.large}}"></div>
+	</div>
+</div>
+
+<div class="review-block" ng-if="data.additional_comments">
+	<h4>Additional Comments</h4>
+	<div class="row">	
+		<div class="col-md-12 details" style="white-space: pre-line;">{{data.additional_comments}}</div>
+	</div>
+</div>

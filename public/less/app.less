@@ -401,26 +401,26 @@ footer {
 
 
 // final step in the chargeback process, review page
-.review {
-	.details {
-		.row {
-			.col-sm-1, .col-sm-2, .col-sm-3, .col-sm-4, .col-sm-5, .col-sm-6, .col-sm-7, .col-sm-8, .col-sm-9, .col-sm-10, .col-sm-11, .col-sm-12 {
-				color: #444;
-				&:first-child {
-					color: #999;
-				}
-			}
-			margin-bottom: 5px;
-		}
+.review-block {
+	margin-top: 100px;
+	&.first-block {
+		margin-top: 0px;
 	}
-	.gateway, .shipping {
-		border-left: solid 1px #333;
+	h4 {
+		font-weight: bold;
 	}
-	
-
-	.additional_comments {
-		padding: 20px;
-		margin-top: 40px;
+	> div:first-child {
+		 margin-top: 20px;
+	}
+	.col-sm-2 {
+		 text-align: center;
+		 span {
+		 	color: @jgsBeach;
+		 	font-size: 80px;
+		 }
+	}
+	img {
+		 width: 100%;
 	}
 }
 
