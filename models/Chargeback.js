@@ -83,6 +83,7 @@ module.exports = function(app) {
 			'Rma'                : String
 		},
 		'shipping_data' : {
+			'company'          : String,
 			'has_tracking'     : Boolean,
 			'ShippingDate'     : Date,
 			'TrackingNum'      : String,

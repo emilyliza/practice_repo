@@ -1,88 +1,6 @@
 
 <div class="jgs-form">
 
-	<div class="row" ng-if="!data.portal_data.CaseNumber">
-		<div class="col-md-6">
-			<div class="form-group" show-errors>
-				<label>Case Number</label>
-				<input name="CaseNumber" type="text" class="form-control" pop-show="{{errors.CaseNumber}}" pop="{{errors.CaseNumber}}" pop-placement="right" ng-model="data.portal_data.CaseNumber" placeholder="">
-			</div>
-		</div>
-		<div class="col-md-6">
-			<div class="form-group" show-errors>
-				<label>Reference Number</label>
-				<input name="Reference Number" type="text" class="form-control" pop-show="{{errors.RefNumber}}" pop="{{errors.RefNumber}}" pop-placement="right" ng-model="data.portal_data.RefNumber" placeholder="">
-			</div>
-		</div>
-	</div>
-	<div class="row" ng-if="!data.portal_data.ReasonCode">
-		<div class="col-md-6">
-			<div class="form-group" show-errors>
-				<label>Reason Code</label>
-				<input name="ReasonCode" type="text" class="form-control" pop-show="{{errors.ReasonCode}}" pop="{{errors.ReasonCode}}" pop-placement="right" ng-model="data.portal_data.ReasonCode" placeholder="">
-			</div>
-		</div>
-		<div class="col-md-6">
-			<div class="form-group" show-errors>
-				<label>Reason Text</label>
-				<input name="ReasonText" type="text" class="form-control" pop-show="{{errors.ReasonText}}" pop="{{errors.ReasonText}}" pop-placement="right" ng-model="data.portal_data.ReasonText" placeholder="">
-			</div>
-		</div>
-	</div>
-	<div class="row" ng-if="!data.portal_data.ChargebackAmt || !data.portal_data.MidNumber">
-		<div class="col-md-3">
-			<div class="form-group" show-errors>
-				<label>Amount</label>
-				<input name="ChargebackAmt" type="text" class="form-control" pop-show="{{errors.ChargebackAmt}}" pop="{{errors.ChargebackAmt}}" pop-placement="right" ng-model="data.portal_data.ChargebackAmt" placeholder="">
-			</div>
-		</div>
-		<div class="col-md-3">
-			<div class="form-group" show-errors>
-				<label>Mid Number</label>
-				<input name="MidNumber" type="text" class="form-control" pop-show="{{errors.MidNumber}}" pop="{{errors.MidNumber}}" pop-placement="right" ng-model="data.portal_data.MidNumber" placeholder="">
-			</div>
-		</div>
-		<div class="col-md-3">
-			<div class="form-group" show-errors>
-				<label>Auth Code</label>
-				<input name="AuthCode" type="text" class="form-control" pop-show="{{errors.AuthCode}}" pop="{{errors.AuthCode}}" pop-placement="right" ng-model="data.gateway_data.AuthCode" placeholder="">
-			</div>
-		</div>
-		<div class="col-md-3">
-			<div class="form-group" show-errors>
-				<label>Avs Status</label>
-				<input name="AvsStatus" type="text" class="form-control" pop-show="{{errors.AvsStatus}}" pop="{{errors.AvsStatus}}" pop-placement="right" ng-model="data.gateway_data.AvsStatus" placeholder="">
-			</div>
-		</div>
-	</div>
-	<div class="row" ng-if="!data.portal_data.CcPrefix || !data.portal_data.CcSuffix ">
-		<div class="col-md-3">
-			<div class="form-group" show-errors>
-				<label>CC Prefix</label>
-				<input name="CcPrefix" type="text" class="form-control" pop-show="{{errors.CcPrefix}}" pop="{{errors.CcPrefix}}" pop-placement="right" ng-model="data.portal_data.CcPrefix" placeholder="">
-			</div>
-		</div>
-		<div class="col-md-3">
-			<div class="form-group" show-errors>
-				<label>CC Suffix</label>
-				<input name="CcSuffix" type="text" class="form-control" pop-show="{{errors.CcSuffix}}" pop="{{errors.CcSuffix}}" pop-placement="right" ng-model="data.portal_data.CcSuffix" placeholder="">
-			</div>
-		</div>
-		<div class="col-md-3">
-			<div class="form-group" show-errors>
-				<label>Cc Type</label>
-				<input name="CcType" type="text" class="form-control" pop-show="{{errors.CcType}}" pop="{{errors.CcType}}" pop-placement="right" ng-model="data.gateway_data.CcType" placeholder="">
-			</div>
-		</div>
-		<div class="col-md-3">
-			<div class="form-group" show-errors>
-				<label>Cc Expire</label>
-				<input name="CcExpire" type="text" class="form-control" pop-show="{{errors.CcExpire}}" pop="{{errors.CcExpire}}" pop-placement="right" ng-model="data.gateway_data.CcExpire" placeholder="">
-			</div>
-		</div>
-	</div>
-	<div style="margin-bottom: 100px;" ng-if="!data.portal_data.CaseNumber || !data.portal_data.ReasonCode || !data.portal_data.ChargebackAmt || !data.portal_data.MidNumber || !data.portal_data.CcPrefix || !data.portal_data.CcSuffix || !data.gateway_data.CcExpire"></div>
-
 	<h4 style="font-weight: bold;">Customer</h4>
 
 	<div style="font-size: 12px; color: #999; padding-bottom: 10px;">This information is typically found in your CRM or order information system.  You can use the transaction data to the right to look up the customer for this transaction.</div>
@@ -171,6 +89,95 @@
 
 
 
+
+
+
+	<h4 style="margin-top: 100px; font-weight: bold;">Purchase</h4>
+
+	<div style="font-size: 12px; color: #999; padding-bottom: 10px;">This information is typically found in your CRM or order information system.  You can use the transaction data to the right to look up the customer for this transaction.</div>
+
+	<div class="row bt">
+		<div class="col-md-12">
+			<div class="form-group" show-errors>
+				<label>Product Name</label>
+				<input name="ProductName" type="text" class="form-control" pop-show="{{errors.ProductName}}" pop="{{errors.ProductName}}" pop-placement="right" ng-model="data.crm_data.ProductName" placeholder="">
+			</div>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-md-6">
+			<div class="form-group" show-errors>
+				<label>Transaction Id</label>
+				<input name="TransId" type="text" class="form-control" pop-show="{{errors.TransId}}" pop="{{errors.TransId}}" pop-placement="right" ng-model="data.gateway_data.TransId" placeholder="">
+			</div>
+		</div>
+		<div class="col-md-6">
+			<div class="form-group" show-errors>
+				<label>Order Id</label>
+				<input name="OrderId" type="text" class="form-control" pop-show="{{errors.OrderId}}" pop="{{errors.OrderId}}" pop-placement="right" ng-model="data.gateway_data.OrderId" placeholder="">
+			</div>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-md-6">
+			<div class="form-group" show-errors>
+				<label>Transaction Type</label>
+				<input name="TransType" type="text" class="form-control" pop-show="{{errors.TransType}}" pop="{{errors.TransType}}" pop-placement="right" ng-model="data.crm_data.TransType" placeholder="">
+			</div>
+		</div>
+		<div class="col-md-6">
+			<div class="form-group" show-errors>
+				<label>Transaction Status</label>
+				<input name="TransStatus" type="text" class="form-control" pop-show="{{errors.TransStatus}}" pop="{{errors.TransStatus}}" pop-placement="right" ng-model="data.crm_data.TransStatus" placeholder="">
+			</div>
+		</div>
+	</div>
+	<div class="row" ng-if="data.refunded">
+		<div class="col-md-6">
+			<div class="form-group" show-errors>
+				<label>Refund Date</label>
+				<input class="form-control" name="RefundDateFull" type="text" class="form-control" datepicker-popup="MM/dd/yyyy" ng-model="data.crm_data.RefundDateFull" is-open="opened" ng-click="opened=true" isdate >
+			</div>
+		</div>
+		<div class="col-md-6">
+			<div class="form-group" show-errors>
+				<label>Refund Amount</label>
+				<input name="RefundAmount" type="text" class="form-control" pop-show="{{errors.RefundAmount}}" pop="{{errors.RefundAmount}}" pop-placement="right" ng-model="data.crm_data.RefundAmount" placeholder="">
+			</div>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-md-6">
+			<div class="form-group" show-errors>
+				<label>Is Recurring</label>
+				<input name="IsRecurring" type="text" class="form-control" pop-show="{{errors.IsRecurring}}" pop="{{errors.IsRecurring}}" pop-placement="right" ng-model="data.crm_data.IsRecurring" placeholder="">
+			</div>
+		</div>
+		<div class="col-md-6">
+			<div class="form-group" show-errors>
+				<label>Is Fraud</label>
+				<input name="IsFraud" type="text" class="form-control" pop-show="{{errors.IsFraud}}" pop="{{errors.IsFraud}}" pop-placement="right" ng-model="data.crm_data.IsFraud" placeholder="">
+			</div>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-md-6">
+			<div class="form-group" show-errors>
+				<label>Product CRM Name</label>
+				<input name="ProductCrmName" type="text" class="form-control" pop-show="{{errors.ProductCrmName}}" pop="{{errors.ProductCrmName}}" pop-placement="right" ng-model="data.crm_data.ProductCrmName" placeholder="">
+			</div>
+		</div>
+		<div class="col-md-6">
+			<div class="form-group" show-errors>
+				<label>RMA</label>
+				<input name="Rma" type="text" class="form-control" pop-show="{{errors.Rma}}" pop="{{errors.Rma}}" pop-placement="right" ng-model="data.crm_data.Rma" placeholder="">
+			</div>
+		</div>
+	</div>
+	
+
+
+
 	<h4 style="margin-top: 100px; font-weight: bold;" ng-if="data.shipped">Shipping</h4>
 
 	<div style="font-size: 12px; color: #999; padding-bottom: 10px;" ng-if="data.shipped">This information is typically found in your CRM or order information system.  You can use the transaction data to the right to look up the customer for this transaction. We will use the tracking number to gather the summary data from your shipping agent.</div>
@@ -217,97 +224,27 @@
 	</div>
 	<div class="row" ng-if="data.shipped">
 		<div class="col-md-3">
-			<div class="form-group" show-errors>
+			<div class="form-group select" show-errors>
 				<label>Shipping Company</label>
 				<select class="form-control" ng-model="data.shipping_data.company" ng-options="s for s in shipping_companies"></select>
 			</div>
 		</div>
 		<div class="col-md-3">
 			<div class="form-group" show-errors>
+				<label>Shipping Date</label>
+				<input class="form-control" name="ShippingDate" type="text" datepicker-popup="MM/dd/yyyy" ng-model="data.shipping_data.ShippingDate" is-open="opened" ng-click="opened=true" isdate >
+				
+			</div>
+		</div>
+		<div class="col-md-6">
+			<div class="form-group" show-errors>
 				<label>Tracking Number</label>
 				<input name="TrackingNum" type="text" class="form-control" pop-show="{{errors.TrackingNum}}" pop="{{errors.TrackingNum}}" pop-placement="right" ng-model="data.shipping_data.TrackingNum" placeholder="">
 			</div>
 		</div>
 	</div>
-	<div class="row" ng-if="data.shipped">
-		<div class="col-md-12">
-			<div class="form-group" show-errors>
-				<label>Tracking Summary</label>
-				<input name="TrackingSum" type="text" class="form-control" pop-show="{{errors.TrackingSum}}" pop="{{errors.TrackingSum}}" pop-placement="right" ng-model="data.shipping_data.TrackingSum" placeholder="">
-			</div>
-		</div>
-	</div>
+	
 
-
-
-
-
-	<h4 style="margin-top: 100px; font-weight: bold;">Order</h4>
-
-	<div style="font-size: 12px; color: #999; padding-bottom: 10px;">This information is typically found in your CRM or order information system.  You can use the transaction data to the right to look up the customer for this transaction.</div>
-
-	<div class="row bt">
-		<div class="col-md-4">
-			<div class="form-group" show-errors>
-				<label>Transaction Date</label>
-				<input class="form-control" name="TransDate" type="text" class="form-control" datepicker-popup="MM/dd/yyyy" ng-model="data.gateway_data.TransDate" is-open="opened" ng-click="opened=true" isdate >
-			</div>
-		</div>
-		<div class="col-md-4">
-			<div class="form-group" show-errors>
-				<label>Transaction Id</label>
-				<input name="TransId" type="text" class="form-control" pop-show="{{errors.TransId}}" pop="{{errors.TransId}}" pop-placement="right" ng-model="data.gateway_data.TransId" placeholder="">
-			</div>
-		</div>
-		<div class="col-md-4">
-			<div class="form-group" show-errors>
-				<label>Order Date</label>
-				<input class="form-control" name="OrderDate" type="text" class="form-control" datepicker-popup="MM/dd/yyyy" ng-model="data.crm_data.OrderDate" is-open="opened1" ng-click="opened1=true" isdate >
-			</div>
-		</div>
-	</div>
-	<div class="row">
-		<div class="col-md-4">
-			<div class="form-group" show-errors>
-				<label>Product Name</label>
-				<input name="ProductName" type="text" class="form-control" pop-show="{{errors.ProductName}}" pop="{{errors.ProductName}}" pop-placement="right" ng-model="data.crm_data.ProductName" placeholder="">
-			</div>
-		</div>
-	</div>
-	<div class="row" ng-if="data.refunded">
-		<div class="col-md-4">
-			<div class="form-group" show-errors>
-				<label>Date Cancelled in System</label>
-				<input class="form-control" name="CancelDateSystem" type="text" class="form-control" datepicker-popup="MM/dd/yyyy" ng-model="data.crm_data.CancelDateSystem" is-open="opened2" ng-click="opened2=true" isdate>
-			</div>
-		</div>
-		<div class="col-md-4">
-			<div class="form-group" show-errors>
-				<label>Full Refund Date</label>
-				<input class="form-control" name="RefundDateFull" type="text" class="form-control" datepicker-popup="MM/dd/yyyy" ng-model="data.crm_data.RefundDateFull" is-open="opened3" ng-click="opened3=true" >
-			</div>
-		</div>
-		<div class="col-md-4">
-			<div class="form-group" show-errors>
-				<label>Partial Refund Date</label>
-				<input class="form-control" name="RefundDatePartial" type="text" class="form-control" datepicker-popup="MM/dd/yyyy" ng-model="data.crm_data.RefundDatePartial" is-open="opened4" ng-click="opened4=true" >
-			</div>
-		</div>
-	</div>
-	<div class="row" ng-if="data.refunded">
-		<div class="col-md-6">
-			<div class="form-group" show-errors>
-				<label>Refund Amount</label>
-				<input name="RefundAmount" type="text" class="form-control" pop-show="{{errors.RefundAmount}}" pop="{{errors.RefundAmount}}" pop-placement="right" ng-model="data.crm_data.RefundAmount" placeholder="">
-			</div>
-		</div>
-		<div class="col-md-6">
-			<div class="form-group" show-errors>
-				<label>RMA</label>
-				<input name="Rma" type="text" class="form-control" pop-show="{{errors.Rma}}" pop="{{errors.Rma}}" pop-placement="right" ng-model="data.crm_data.Rma" placeholder="">
-			</div>
-		</div>
-	</div>
 
 
 
@@ -349,7 +286,7 @@
 
 	<h4 style="margin-top: 100px; font-weight: bold;">Attachments</h4>
 
-	<div style="font-size: 12px; color: #999; padding-bottom: 10px;">Here you can upload information relevant to the transaction.</div>
+	<div style="font-size: 12px; color: #999; padding-bottom: 10px;">Upload information relevant to the transaction such as receipts, tracking information, or terms.</div>
 
 	<div class="row bt" style="border: none;">
 		<div class="col-md-12" style="margin-bottom: 60px; border: none;">
