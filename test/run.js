@@ -38,6 +38,7 @@ describe('Initializing Tests',function(){
 		require('./tests/user')(app);
 		require('./tests/chargeback')(app);
 		require('./tests/reports')(app);
+		require('./tests/cardTypes')(app);
 	});
 	after(function (done) {
 		app.settings.db.connection.close();
