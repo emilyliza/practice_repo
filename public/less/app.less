@@ -138,30 +138,40 @@ footer {
 // class for formatting uploaded images in chargeback input forms
 .uploaded {
 	.img {
+		width: 200px;
+  		float: left;
+  		margin-right: 5px;
 		text-align: center;
 		margin-bottom: 10px;
 		margin-top	: 20px;
 		padding: 10px 0px;
+		position: relative;
 		img {
 			max-width: 200px;
-			padding-left: 24px;	// counter measure to remove width
+			padding-left: 0px;	// counter measure to remove width
 			margin: 0px auto;
+			
 		}
 		canvas {
 			width: auto;
 			padding-left: 24px;	// counter measure to remove width
 			margin: 0px auto;
 		}
-		&:hover {
-			background-color: #efefef;
-		}
-	
+		
 		.remove {
+			display: none;
+			position: absolute;
 			cursor: pointer;
 			width: auto;
+			right: 0px;
 			font-size: 24px;
-			color: #999;
+			color: red;
 			margin-right: 10px;
+		}
+		&:hover {
+			.remove {
+				display: block;
+			}
 		}
 	}
 }
@@ -424,7 +434,9 @@ footer {
 	}
 
 	img {
-		 width: 100%;
+		width: 100%;
+		border: solid 1px #efefef;
+		border-radius: 5px;
 	}
 }
 

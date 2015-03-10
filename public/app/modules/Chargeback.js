@@ -92,57 +92,37 @@
 
 		$scope.shipping_companies = ["USPS", "Fedex", "UPS", "DHL"];
 		
-		$scope.uploaderTerms = UploadService.create(10);
-		$scope.uploaderTerms.onWhenAddingFileFailed = function() {
+
+		$scope.uploader = UploadService.create(10);
+		var temp_uploads = [];
+		$scope.uploader.onWhenAddingFileFailed = function() {
 			// set UploadError to true to display error message in side bar
 			$scope.uploadError = true;
 		};
-		$scope.uploaderTerms.onSuccessItem = function(item, res, status, header) {
-			item.data.type = "terms";
-			$scope.data.attachments.push(item.data);
+		$scope.uploader.onSuccessItem = function(item, res, status, header) {
+			if (item.data.extension == ".pdf") {
+				item.data.urls.orig = "/images/placeholder.png";
+			}
+			temp_uploads.push(item.data);
+		};
+		$scope.uploader.onCompleteAll = function() {
+			_.each(temp_uploads, function(item) {
+				if (_.isArray($scope.data.attachments)) {
+					$scope.data.attachments.push(item);
+				} else {
+					$scope.data.attachments = [item];
+				}
+			});
 			ds();
 		};
 
-		$scope.uploaderProduct = UploadService.create(10);
-		$scope.uploaderProduct.onWhenAddingFileFailed = function() {
-			// set UploadError to true to display error message in side bar
-			$scope.uploadError = true;
-		};
-		$scope.uploaderProduct.onSuccessItem = function(item, res, status, header) {
-			item.data.type = "product";
-			$scope.data.attachments.push(item.data);
-			ds();
-		};
-
-		$scope.uploaderShipping = UploadService.create(10);
-		$scope.uploaderShipping.onWhenAddingFileFailed = function() {
-			// set UploadError to true to display error message in side bar
-			$scope.uploadError = true;
-		};
-		$scope.uploaderShipping.onSuccessItem = function(item, res, status, header) {
-			item.data.type = "shipping";
-			$scope.data.attachments.push(item.data);
-			ds();
-		};
-
-		$scope.uploaderAdditional = UploadService.create(10);
-		$scope.uploaderAdditional.onWhenAddingFileFailed = function() {
-			// set UploadError to true to display error message in side bar
-			$scope.uploadError = true;
-		};
-		$scope.uploaderAdditional.onSuccessItem = function(item, res, status, header) {
-			item.data.type = "additional";
-			$scope.data.attachments.push(item.data);
-			ds();
-		};
-
-
+		
 		$scope.save = function() {
 			$scope.$broadcast('show-errors-check-validity');
 			if ($scope.cbForm.$valid) {
 				console.log('saving...');
-				ChargebackService.save($scope.data).then(function (data) {
-					
+				ChargebackService.save($scope.data).then(function (res) {
+					$scope.data = res.data;
 				}, function (res) {
 					if (res.data.errors) {
 						$scope.errors = res.data.errors;
@@ -172,15 +152,14 @@
 		};
 		
 
-
 		$scope.removeItem = function(item, el) {
 			angular.element(el).val('');	// have to clear out element value
+			var i = 0;
 			_.each($scope.data.attachments, function(a) {
-				var i = 0;
 				if (a && a._id == item._id) {
 					// remove from data store.
 					$scope.data.attachments.splice(i,1);
-					ds();
+					//ds();
 				}
 				if (_.isFunction(item.remove)) {
 					item.remove();
