@@ -50,7 +50,19 @@ div.jgs-form, form.jgs-form {
 						-o-transition: background-color .25s ease-out, color .25s ease-out;
 						transition: background-color .25s ease-out, color .25s ease-out;
 				}
+				&.select {
+					> label {
+						position: relative;
+					}
+					.form-control {
+						height: auto;
+						margin-top: -2px;
+						margin-left: 11px;
+						width: 90%;
+					}
+				}
 			}
+
 		}
 		.form-control-static {
 			min-height: 75px;
