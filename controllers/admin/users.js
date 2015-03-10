@@ -13,7 +13,7 @@ module.exports = function(app) {
 		var params = req.query,
 			query = User.find();
 
-		if (params.query.query) {
+		if (params.query) {
 			var pattern = new RegExp('.*'+params.query+'.*', 'i');
 			query.or([
 				{ 'name': pattern },
