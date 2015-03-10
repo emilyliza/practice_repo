@@ -80,16 +80,19 @@ module.exports = function(app) {
 	
 	};
 
-	Upload.setProcessed = function(doc, fn) {
-		var c = _.clone(doc.toJSON());
+	Upload.setProcessed = function(doc, prefix, fn) {
+		var c = _.clone(doc.toJSON()),
+			_id = prefix.replace(/\/vault\//, "");	// prefix is like this:  prefix: '/vault/54ff636d28c307b86f3ce936',
 		
 		if (doc.fields) {
 			_.each(c[doc.fields], function(p) {
-				if (!p.urls) { p.urls = {}; }
-				_.each(doc.sizes, function(s) {
-					p.urls[s.key] = process.env.CDN + "/vault/" + p._id + "_" + s.key + ".jpg"
-				});
-				p.processed = true;
+				if (p._id == _id) {
+					if (!p.urls) { p.urls = {}; }
+					_.each(doc.sizes, function(s) {
+						p.urls[s.key] = process.env.CDN + "/vault/" + p._id + "_" + s.key + ".jpg"
+					});
+					p.processed = true;
+				}
 			});
 			doc.set(doc.fields, c[doc.fields], { strict: false });
 		}

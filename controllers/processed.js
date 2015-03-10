@@ -16,7 +16,7 @@ module.exports = function(app) {
 			Chargeback.findById(req.params._id, this);
 		})
 		.seq(function(data) {
-			Upload.setProcessed(data, this);
+			Upload.setProcessed(data, req.body.prefix, this);
 		})
 		.seq(function() {
 			log.log('Processed Photos!');
