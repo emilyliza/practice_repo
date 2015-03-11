@@ -18,7 +18,7 @@
 
 		<div class="dash-stat">
 			<div class="stat-head">Win Rate</div>
-			<div class="percentage" percentage control="winloss"></div>
+			<div class="percentage" ng-if="data.hwl" percentage control="winloss"></div>
 			<div class="subtext" ng-if="data.hwl">{{data.winloss.won | number}} chargebacks won</div>
 			<div class="stat" style="padding-bottom: 40px;" ng-if="!data.hwl">No win's<br/>reported yet!</div>
 		</div>

@@ -17,7 +17,7 @@ module.exports = function(app) {
 
 	
 	var ChargebackSchema = new Schema({
-		"status": { "type": String, "required": true, "index": true },
+		"status": { "type": String, "required": true, "index": true },	// New, In-Progress, Sent, Won, Lost
 		'createdOn': { 'type': Date, 'required': true, 'default': new Date()},
 		"updatedOn": { "type": Date },
 		"chargebackDate": { "type": Date },
@@ -26,7 +26,7 @@ module.exports = function(app) {
 		"shipped": { "type": Boolean },
 		"recurring": { "type": Boolean },
 		'portal_data' : {
-			'Portal'           : String,
+			'Portal'           : String,	// prob don't need this field, now taken care of by parent/child users
 			'CaseNumber'       : String,
 			'RefNumber'        : String,
 			'CcPrefix'         : String,

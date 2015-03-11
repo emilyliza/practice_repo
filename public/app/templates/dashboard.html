@@ -17,11 +17,11 @@
 				<div class="row">
 					<div class="col-xs-7 col-xs-offset-1">
 						<span class="glyphicon glyphicon-circle-arrow-right"></span> 
-						<a href="chargebacks?status=In+Progress">In-Progress</a>
+						<a href="chargebacks?status=In-Progress">In-Progress</a>
 					</div>
 					<div class="col-xs-4">
 						{{dbs.data_dashboard['In Progress'].count | number}}
-						<span ng-if="!dbs.data_dashboard['In Progress']">0</span>
+						<span ng-if="!dbs.data_dashboard['In-Progress']">0</span>
 					</div>
 				</div>
 				<div class="row">
@@ -37,7 +37,7 @@
 				<div class="row">
 					<div class="col-xs-7 col-xs-offset-1">
 						<span class="glyphicon glyphicon glyphicon-ok-circle"></span> 
-						<a href="chargebacks?status=Complete">Complete</a>
+						<a href="chargebacks?status=Won">Complete</a>
 					</div>
 					<div class="col-xs-4">
 						{{dbs.data_dashboard.Complete.count | number}}
@@ -62,9 +62,9 @@
 
 		<div class="dash-stat">
 			<div class="stat-head">Win Rate</div>
-			<div class="percentage" percentage control="winloss"></div>
-			<div class="subtext" ng-if="dbs.data_dashboard.winloss.won">{{dbs.data_dashboard.winloss.won | number}} chargebacks won</div>
-			<div class="stat" style="padding-bottom: 40px;" ng-if="!dbs.data_dashboard.winloss.won">No win's<br/>reported yet!</div>
+			<div class="percentage" ng-if="dbs.data_dashboard.hwl" percentage control="winloss"></div>
+			<div class="subtext" ng-if="dbs.data_dashboard.hwl">{{dbs.data_dashboard.winloss.won | number}} chargebacks won</div>
+			<div class="stat" style="padding-bottom: 40px;" ng-if="!dbs.data_dashboard.hwl">No win's<br/>reported yet!</div>
 		</div>
 
 	</div>

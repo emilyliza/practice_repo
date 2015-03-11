@@ -94,6 +94,26 @@ module.exports = function(app) {
 			Chargeback.aggregate(agg, this);
 
 		})
+		.par('wonlost', function() {
+			
+			var search = [
+				{ '$match': Chargeback.setMatch(req) },
+				{ '$project': {
+					'_id': 0,
+					'status': "$status",
+					'amt': '$portal_data.ChargebackAmt'
+				} },
+				{ '$group': {
+					'_id': { 'status' : "$status" }, 
+					'count': { '$sum': 1 },
+					'sum': { '$sum': '$amt' }
+				}}
+			];
+
+			log.log(search);
+			Chargeback.aggregate(search, this);
+
+		})
 
 		.seq(function() {
 			
@@ -118,18 +138,34 @@ module.exports = function(app) {
 				count: 40,
 				sum: 900
 			};
-			out.won_amount = 3678.90;
-			out.pending_amount = 10897.40;
-			out.hwl = true;
-			var rand = Math.round(Math.random() * 100);
-			out.winloss = {
-				"won": rand,
-				"pending": 25,
-                "lost": 25,
-                "count": 100,
-			};
-			
 
+
+			out.won_amount = 0;
+			out.pending_amount = 0;
+			out.hwl = false;
+			out.winloss = {
+				"won": 0,
+				"pending": 0,
+                "lost": 0,
+                "count": 0
+			};
+
+			_.each(this.vars.wonlost, function(wl) {
+				if (wl._id.status == "Won" || wl._id.status == "Lost") {
+					out.winloss.count += wl.count;	// tally counts
+					if (wl._id.status == "Won") {
+						out.winloss.won = wl.count;
+						out.won_amount = wl.amount;
+						out.hwl = true;
+					} else if (wl._id.status == "Lost") {
+						out.winloss.lost = wl.count;
+						out.lost_amount = wl.amount;
+					}
+				} else {
+					out.winloss.pending += wl.count;
+				}
+			});
+			
 			
 			// cache busting on static api end point
 			res.header('Content-Type', 'application/json');
