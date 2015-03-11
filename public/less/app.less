@@ -37,9 +37,7 @@
 	}
 }
 
-.tooltip {
-	opacity: 1;
-}
+
 footer {
 	margin-top: 40px;
 	height: auto;
@@ -260,8 +258,17 @@ footer {
 			border-bottom: solid 1px #efefef;
 			padding-top: 10px;
 			padding-bottom: 10px;
+			cursor: pointer;
 			&.head {
 				font-weight: bold;
+			}
+			.actions {
+				a.work {
+					color: @jgsDarkOrange;
+				}
+				a.edit {
+					color: @jgsBlue;
+				}
 			}
 		}
 		.row:last-child {

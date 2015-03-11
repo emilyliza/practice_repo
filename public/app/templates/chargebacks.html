@@ -27,29 +27,20 @@
 <div class="animated-grid chargebacks" infinite-scroll="cbs.nextPage(q)" infinite-scroll-disabled="cbs.busy">
 	<div class="row head">
 		<div class="col-sm-2">Date</div>
-		<div class="col-sm-1">Amt</div>
-		<div class="col-sm-2">Customer</div>
-		<div class="col-sm-2">MID</div>
-		<div class="col-sm-3">Reason (Code)</div>
-		<div class="col-sm-2">Case #</div>
+		<div class="col-sm-2">Amount</div>
+		<div class="col-sm-4">Customer</div>
+		<div class="col-sm-2">Case Number</div>
+		<div class="col-sm-2">Status</div>
 	</div>
 
 	<div class="row" ng-repeat="cb in cbs.data">
-		<!-- <div class="col-sm-2"><a href="/chargeback/{{cb.derived_data.uuid}}">{{cb.portal_data.CaseNumber}}</a></div> -->
-		<!-- <div class="col-sm-4" style="color: {{cb.derived_data.status.color}}">{{cb.derived_data.status.name}}</div> -->
-		<div class="col-sm-2">{{cb.chargebackDate | date:'MMMM d, yyyy'}}</div>
-		<div class="col-sm-1">{{cb.portal_data.ChargebackAmt | currency}}</div>
-		<div class="col-sm-2">{{cb.gateway_data.FirstName}} {{cb.gateway_data.LastName}}</div>
-		<div class="col-sm-2">{{cb.portal_data.MidNumber}}</div>
-		<div class="col-sm-3">
-			{{cb.portal_data.ReasonText}} <span style="color:#999;">({{cb.portal_data.ReasonCode}})</span>
-			<!--
-			<a class="btn btn-sm btn-success" href="/chargeback/{{cb.derived_data.uuid}}">Get Started <span class="glyphicon glyphicon-chevron-right"></span></a>
-			-->
-		</div>
-		<div class="col-sm-2">
-			<a ng-if="cb.status == 'New'" class="btn btn-sm btn-success" href="/chargeback/{{cb._id}}/card">Work This Chargeback <span class="glyphicon glyphicon-chevron-right"></span></a>
-			<a ng-if="cb.status != 'New'" href="/chargeback/{{cb._id}}">{{cb.portal_data.CaseNumber}}</a>
+		<div class="col-sm-2" ui-sref="chargeback.card({ _id: cb._id })">{{cb.chargebackDate | date:'MMMM d, yyyy'}}</div>
+		<div class="col-sm-2" ui-sref="chargeback.card({ _id: cb._id })">{{cb.portal_data.ChargebackAmt | currency}}</div>
+		<div class="col-sm-4" ui-sref="chargeback.card({ _id: cb._id })">{{cb.gateway_data.FirstName}} {{cb.gateway_data.LastName}}&nbsp;</div>
+		<div class="col-sm-2" ui-sref="chargeback.card({ _id: cb._id })">{{cb.portal_data.CaseNumber}}</div>
+		<div class="col-sm-2 actions">
+			<a ng-if="cb.status == 'New'" class="work" href="/chargeback/{{cb._id}}/card"><b>New</b>: Work Chargeback</a>
+			<a ng-if="cb.status != 'New'" class="edit" href="/chargeback/{{cb._id}}/data">{{cb.status}}</a>
 		</div>
 
 	</div>
