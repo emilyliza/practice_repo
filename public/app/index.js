@@ -40,7 +40,10 @@
 
 	.filter('ccexpires', function() {
 		return function (t) {
-			return t.substr(0,1) + "/" + t.substr(1,2);
+			if (t) {
+				return t.substr(0,1) + "/" + t.substr(1,2);
+			}
+			return;
 		};
 	})
 
@@ -66,6 +69,16 @@
 			
 			
 		
-    }]);
+    }])
+
+    .controller('ModalInstanceCtrl', [ '$scope', '$modalInstance', 'data', function ($scope, $modalInstance, data) {
+		$scope.data = data;
+		$scope.confirm = function () {
+			$modalInstance.close(true);
+		};
+		$scope.cancel = function () {
+			$modalInstance.dismiss('cancel');
+		};
+	}]);
 	
 })();

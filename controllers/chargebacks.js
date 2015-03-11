@@ -293,7 +293,7 @@ module.exports = function(app) {
 			data.set(updated);
 			
 			if (!data.updatedOn) {
-				data.set('status', "In Progress");
+				data.set('status', "In-Progress");
 				data.set('updatedOn', new Date());
 			}
 

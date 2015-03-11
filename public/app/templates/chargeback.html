@@ -5,7 +5,7 @@
 		</h2>
 	</div>
 	<div class="col-sm-4">
-		<div id="status-buttons" class="row">
+		<div id="status-buttons" class="row" ng-if="data.status == 'New' || data.status == 'In-Progress'">
 			<div class="col-xs-3"><a ui-sref-active="active" ui-sref=".card"><span>1</span> Type</a></div>
 			<div class="col-xs-3"><a ui-sref-active="active" ui-sref=".questions"><span>2</span> Questions</a></div>
 			<div class="col-xs-3"><a ui-sref-active="active" ui-sref=".data"><span>3</span> Data</a></div>
@@ -21,11 +21,24 @@
 	
 	<div class="col-sm-4 col-sm-push-8 form-sidebar">
 		
-		<div class="side-cbinfo">
+		<div class="side-cbinfo" ng-if="state.current.name != 'chargeback.confirmation'">
 			<div class="imported">
 				<div class="side-cbinfo-head">IMPORTED DATA</div>
 				
 				<div class="side-cbinfo-desc">Data received regarding this chargeback case. Use this information to locate any missing data.</div>
+
+				<div class="row">
+					<div class="col-xs-4" style="text-align: right;">Status:</div>
+					<div class="col-xs-8 status-colors">
+						<span class="{{data.status}}">
+							{{data.status}} &nbsp;
+							<span ng-if="data.status == 'Sent'" class="glyphicon glyphicon-send"></span>
+							<span ng-if="data.status == 'In-Progress'" class="glyphicon glyphicon-circle-arrow-right"></span>
+							<span ng-if="data.status == 'Won'" class="glyphicon glyphicon-thumbs-up"></span>
+							<span ng-if="data.status == 'Lost'" class="glyphicon glyphicon-thumbs-down"></span>
+						</span>
+					</div>
+				</div>
 
 				<div class="row" ng-if="data.portal_data.MidNumber">
 					<div class="col-xs-4" style="text-align: right;">Type:</div>
@@ -78,12 +91,25 @@
 				</div>
 			</div>
 
-			<div class="form-group btns" style="text-align: center; margin-top: 40px;" ui-sref-active="active" ui-sref=".review">
-				<a ui-sref="chargeback.confirmation" class="btn btn-success" style="margin-right: 20px;">Submit</a>
-				<button type="button" ng-click="download('/images/example.0511cc.pdf')" class="btn btn-info">Download</button>
-			</div>
+			<div class="form-group btns" style="text-align: center; margin-top: 40px;" ng-if="state.current.name == 'chargeback.review'">
+				<button type="button" class="btn btn-success" ng-if="data.status == 'In-Progress'" style="margin-right: 20px;" ng-click="submit('Are you sure you want to submit this chargeback dispute?', 'Yes, submit it!', 'No, keep working.')" class="btn btn-danger">Submit Chargeback Dispute</button>
+				<button type="button" ng-if="data.status == 'Won' || data.status == 'Lost' || data.status == 'Sent'" ng-click="download('/images/example.0511cc.pdf')" class="btn btn-info">Download Chargeback PDF</button>
 
+			</div>
 		</div>
+
+		<div class="side-cbinfo" ng-if="state.current.name == 'chargeback.confirmation'">
+			<div class="side-main-head">KEEP IN MIND</div>
+			<div>
+				<ul>
+					<li>Processors may ask for additional information.</li>
+					<li>It usually takes about one week for processors to respond.</li>
+					<li>Not all processors will notify chargeback.com, so check with your processor directly in about one week.</li>
+				</ul>
+			</div>
+			
+		</div>
+
 	</div>
 	<div class="col-sm-8 col-sm-pull-4" ui-view>
 		

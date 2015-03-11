@@ -38,9 +38,15 @@
 		<div class="col-sm-2" ui-sref="chargeback.card({ _id: cb._id })">{{cb.portal_data.ChargebackAmt | currency}}</div>
 		<div class="col-sm-4" ui-sref="chargeback.card({ _id: cb._id })">{{cb.gateway_data.FirstName}} {{cb.gateway_data.LastName}}&nbsp;</div>
 		<div class="col-sm-2" ui-sref="chargeback.card({ _id: cb._id })">{{cb.portal_data.CaseNumber}}</div>
-		<div class="col-sm-2 actions">
-			<a ng-if="cb.status == 'New'" class="work" href="/chargeback/{{cb._id}}/card"><b>New</b>: Work Chargeback</a>
-			<a ng-if="cb.status != 'New'" class="edit" href="/chargeback/{{cb._id}}/data">{{cb.status}}</a>
+		<div class="col-sm-2 status-colors" ui-sref="chargeback.card({ _id: cb._id })">
+			<span ng-if="cb.status == 'New'" class="{{cb.status}}"><b>New</b>: Work Chargeback</span>
+			<span ng-if="cb.status != 'New'" class="{{cb.status}}">
+				{{cb.status}} &nbsp;
+				<span ng-if="cb.status == 'Sent'" class="glyphicon glyphicon-send"></span>
+				<span ng-if="cb.status == 'In-Progress'" class="glyphicon glyphicon-circle-arrow-right"></span>
+				<span ng-if="cb.status == 'Won'" class="glyphicon glyphicon-thumbs-up"></span>
+				<span ng-if="cb.status == 'Lost'" class="glyphicon glyphicon-thumbs-down"></span>
+			</span>
 		</div>
 
 	</div>

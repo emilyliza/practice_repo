@@ -12,7 +12,7 @@
 			templateUrl: '/app/templates/chargeback.html',
 			requiresAuth: true,
 			resolve: {
-				res: ['$http', '$stateParams', 'ChargebackService', function($http, $stateParams, ChargebackService){
+				res: ['$http', '$stateParams', '$state', 'ChargebackService', function($http, $stateParams, $state, ChargebackService){
 					if ($stateParams._id) {
 						return ChargebackService.get($stateParams._id);
 					} else {
@@ -36,7 +36,6 @@
 			url: '/card',
 			requiresAuth: true,
 			templateUrl: '/app/templates/chargeback.card.html'
-			
 		})
 		.state('chargeback.questions', {
 			url: '/questions',
@@ -78,13 +77,21 @@
 	}])
 
 	.controller('ChargebackController', 
-			['$scope', '$rootScope', 'ChargebackService', 'UploadService', '$timeout', 'res', '$state',
-			function ($scope, $rootScope, ChargebackService, UploadService, $timeout, res, $state) {
+			['$scope', '$rootScope', 'ChargebackService', 'UploadService', '$timeout', 'res', '$state', '$modal',
+			function ($scope, $rootScope, ChargebackService, UploadService, $timeout, res, $state, $modal) {
 		
 		// data is retrieved in resolve within route
 		$scope.data = (res ? res.data : ChargebackService.getDefaults());
-		$scope.us = UploadService;
+		
+		
+		if ($scope.data.status == "In-Progress" && $state.current.name != "chargeback.data" && $state.current.name != "chargeback.review" && $state.current.name != "chargeback.confirmation") {
+			$state.go('chargeback.data', { '_id': res.data._id }, { location: "replace"} );
+		} else if (_.indexOf(["Sent","Won","Lost"], $scope.data.status ) != -1 && $state.current.name != "chargeback.review") {
+			$state.go('chargeback.review', { '_id': res.data._id }, { location: "replace"} );
+		}
 
+		
+		$scope.us = UploadService;
 		$scope.state = $state;
 
 		$scope.setCard = function(c) {
@@ -94,10 +101,6 @@
 				$state.go('chargeback.questions');
 			}
 		};
-
-		if ($scope.data.type && $state.current.name == "chargeback.card") {
-			$state.go('chargeback.data');
-		}
 
 		if (!$scope.data.shipped) {
 			$scope.shipped = false;
@@ -198,6 +201,29 @@
 				i++;
 			});
 		};
+
+		$scope.submit = function(msg, confirmbtn, cancelbtn) {
+			var modalInstance = $modal.open({
+				templateUrl: '/app/templates/confirm-modal.html',
+				controller: 'ModalInstanceCtrl',
+				size: "md",
+				resolve: {
+					data: function () {
+						return {
+							'msg': msg,
+							'confirm': confirmbtn,
+							'cancel': cancelbtn
+						};
+					}
+				}
+			});
+			modalInstance.result.then(function (confirm) {
+				if (confirm) {
+					$state.go('chargeback.confirmation');
+				}
+			});
+		};
+		
 
 	}])
 
