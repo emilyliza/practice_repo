@@ -265,62 +265,79 @@ module.exports = function(app) {
 	Chargeback.search = function(req, fn) {
 
 		var query = Chargeback.find(),
-			params = req.query;
+			params = req.query,
+			ands = [];
 
 		// restrict to just this user's chargebacks
-		query.or([
-			{ 'user._id': req.user._id },
-			{ 'parent._id': req.user._id }
-		]);
+		ands.push({
+			'$or': [
+				{ 'user._id': req.user._id },
+				{ 'parent._id': req.user._id }
+			]	
+		});
 
 		if (params.start) {
-			query.where('chargebackDate').gte( moment(parseInt(params.start)).toDate() );
+			ands.push({
+				'chargebackDate': { '$gte': moment(parseInt(params.start)).toDate() }
+			});
 		}
 		if (params.end) {
-			query.where('chargebackDate').lte( moment(parseInt(params.end)).toDate() );
+			ands.push({
+				'chargebackDate': { '$lte': moment(parseInt(params.end)).toDate() }
+			});
 		}
 
-		if (params.query && params.query.match(/[0-9\.]/)) {
-			query.or([
-				{ 'portal_data.ChargebackAmt': params.query }
-			]);
-		} else if (params.query) {
+		if (params.query) {
 			var pattern = new RegExp('.*'+params.query+'.*', 'i');
-			query.or([
-				{ 'derived_data.status.name': pattern },
-				{ 'gateway_data.FirstName': pattern },
-				{ 'gateway_data.LastName': pattern },
-				{ 'portal_data.ReasonText': pattern },
-				{ 'portal_data.ReasonCode': pattern },
-				{ 'portal_data.MidNumber': pattern },
-				{ 'portal_data.CaseNumber': pattern }
-			]);
+			if (params.query.match(/[0-9\.]/)) {
+				ands.push({
+					'$or': [
+						{ 'portal_data.ChargebackAmt': params.query },
+						{ 'portal_data.MidNumber': pattern },
+						{ 'portal_data.CaseNumber': pattern}
+					]
+				});
+			} else {
+				ands.push({
+					'$or': [
+						{ 'derived_data.status.name': pattern },
+						{ 'gateway_data.FirstName': pattern },
+						{ 'gateway_data.LastName': pattern },
+						{ 'portal_data.ReasonText': pattern },
+						{ 'portal_data.ReasonCode': pattern },
+						{ 'portal_data.MidNumber': pattern },
+						{ 'portal_data.CaseNumber': pattern }
+					]
+				});
+			}
 		}
 
 		if (params.merchant) {
-			query.where('user._id').equals(params.merchant);
+			ands.push({'user._id': params.merchant });
 		}
 
 		if (params.mid) {
-			query.where('portal_data.MidNumber').equals(params.mid);
+			ands.push({'portal_data.MidNumber': params.mid });
 		}
 		
 		if (params.cctype) {
-			query.where('gateway_data.CcType').equals( params.cctype );
+			ands.push({'gateway_data.CcType': params.cctype });
 		}
 
 		if (params.status) {
-			query.where('status').equals( params.status );
+			ands.push({'status': params.status });
 		}
+
+		query.and(ands);
 
 		query.skip( (params.page ? ((+params.page - 1) * params.limit) : 0) );
 		query.limit((params.limit ? params.limit : 30));
 
 		query.sort('-chargebackDate');
 		
-		// log.log('Chargeback Query...');
-		// log.log(query._conditions);
-		// log.log(query.options);
+		log.log('Chargeback Query...');
+		log.log(query._conditions);
+		log.log(query.options);
 
 		query.exec(fn);
 
