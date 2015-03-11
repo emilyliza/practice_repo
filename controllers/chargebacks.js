@@ -236,8 +236,7 @@ module.exports = function(app) {
 			Chargeback.clearNulls(cb, 'gateway_data');
 			Chargeback.clearNulls(cb, 'shipping_data');
 			Chargeback.clearNulls(cb, 'portal_data');
-			console.log(cb);
-
+			
 			var chargeback = new Chargeback();
 			chargeback.crm_data = cb.crm_data;
 			chargeback.portal_data = cb.portal_data;
@@ -255,7 +254,12 @@ module.exports = function(app) {
 				chargeback.user = User.toMicro(this.vars.parent);	
 			}
 			
-			chargeback.save(this);
+			var top = this;
+			chargeback.save(function(err,data) {
+				if (err) { return top(err); }
+				if (!top.vars.first) { top.vars.first = data; }
+				top();
+			});
 
 		})
 		.seq(function() {
@@ -263,7 +267,7 @@ module.exports = function(app) {
 			// cache busting on static api end point
 			res.header('Content-Type', 'application/json');
 			res.header('Cache-Control', 'no-cache, private, no-store, must-revalidate, max-stale=0, post-check=0, pre-check=0');
-			return res.json({ 'success': true });
+			return res.json(this.vars.first);
 
 		})
 		.catch(next);

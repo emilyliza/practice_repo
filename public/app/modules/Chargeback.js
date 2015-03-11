@@ -13,7 +13,22 @@
 			requiresAuth: true,
 			resolve: {
 				res: ['$http', '$stateParams', 'ChargebackService', function($http, $stateParams, ChargebackService){
-					return ChargebackService.get($stateParams._id);
+					if ($stateParams._id) {
+						return ChargebackService.get($stateParams._id);
+					} else {
+						return false;
+					}
+				}]
+			}
+		})
+		.state('chargebacknew', {
+			url: '/chargeback',
+			controller: 'ChargebackController',
+			templateUrl: '/app/templates/chargeback.new.html',
+			requiresAuth: true,
+			resolve: {
+				res: ['$http', '$stateParams', 'ChargebackService', function($http, $stateParams, ChargebackService){
+					return false;
 				}]
 			}
 		})
@@ -67,7 +82,7 @@
 			function ($scope, $rootScope, ChargebackService, UploadService, $timeout, res, $state) {
 		
 		// data is retrieved in resolve within route
-		$scope.data = res.data;
+		$scope.data = (res ? res.data : ChargebackService.getDefaults());
 		$scope.us = UploadService;
 
 		$scope.state = $state;
@@ -116,7 +131,23 @@
 			ds();
 		};
 
-		
+		var _this = this;
+		$scope.saveNew = function(data) {
+			$scope.$broadcast('show-errors-check-validity');
+			if ($scope.cbNewForm.$valid) {
+				
+				$scope.newService = ChargebackService.save($scope.data).then(function (res) {
+					$scope.data = res.data;
+					$state.go('chargeback.card', { '_id': res.data._id });
+				}, function (res) {
+					if (res.data.errors) {
+						$scope.errors = res.data.errors;
+					}
+				});
+
+			}
+		};
+
 		$scope.save = function() {
 			$scope.$broadcast('show-errors-check-validity');
 			if ($scope.cbForm.$valid) {
@@ -170,14 +201,27 @@
 
 	}])
 
-	.service('ChargebackService', ['$http', function ($http) {
+	.service('ChargebackService', ['$http', 'UserService', function ($http, UserService) {
 		
 		this.get = function(_id) {
 			return $http.get('/api/v1/chargeback/' + _id);
 		};
 
 		this.save = function(data) {
-			return $http.put('/api/v1/chargeback/' + data._id, data);
+			if (data._id) {
+				return $http.put('/api/v1/chargeback/' + data._id, data);
+			} else {
+				var user = UserService.getCurrentUser();
+				return $http.post('/api/v1/chargebacks', { 'createChildren': false, 'user': user, 'chargebacks': [ data ] });
+			}	
+		};
+
+		this.getDefaults = function() {
+			return {
+				user_entered: true,
+				status: 'New',
+				chargebackDate: new Date()
+			};
 		};
 
 	}]);

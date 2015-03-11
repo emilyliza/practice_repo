@@ -1,0 +1,93 @@
+
+<div class="row cbFormRow">
+	<div class="col-sm-8">
+		<h2 style="margin-top: 0px;">
+			New Chargeback
+		</h2>
+	</div>
+	<div class="col-sm-4">
+		<!-- empty -->
+	</div>
+</div>
+
+<form name="cbNewForm" 
+	role="form" 
+	ng-submit="saveNew()" novalidate >
+	
+	<div class="row">
+		<div class="col-sm-4 col-sm-push-8 form-sidebar">
+			<!-- instructions here -->
+			<div class="side-main-head">NEW CHARGEBACK</div>
+			To add a new chargeback to the system, we'll need some basic information. Basic chargeback information can be found within your mechant portal.
+
+			<div style="margin-top: 20px;">You'll be able to enter additional chargeback information in the subsequent screens.</div>
+		</div>
+		<div class="col-sm-8 col-sm-pull-4">
+
+			<div class="jgs-form" cg-busy="{promise:newService,message:'Saving',backdrop:true}">
+
+				<div class="row bt">
+					<div class="col-md-6">
+						<div class="form-group" show-errors>
+							<label>Case Number</label>
+							<input name="CaseNumber" required type="text" class="form-control" pop-show="{{errors.CaseNumber}}" pop="{{errors.CaseNumber}}" pop-placement="right" ng-model="data.portal_data.CaseNumber" placeholder="">
+						</div>
+					</div>
+					<div class="col-md-6">
+						<div class="form-group" show-errors>
+							<label>Reference Number</label>
+							<input name="Reference Number" type="text" class="form-control" pop-show="{{errors.RefNumber}}" pop="{{errors.RefNumber}}" pop-placement="right" ng-model="data.portal_data.RefNumber" placeholder="">
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-md-6">
+						<div class="form-group" show-errors>
+							<label>CC Prefix</label>
+							<input name="CcPrefix" required type="text" class="form-control" pop-show="{{errors.CcPrefix}}" pop="{{errors.CcPrefix}}" pop-placement="right" ng-model="data.portal_data.CcPrefix" placeholder="">
+						</div>
+					</div>
+					<div class="col-md-6">
+						<div class="form-group" show-errors>
+							<label>CC Suffix</label>
+							<input name="CcSuffix" required type="text" class="form-control" pop-show="{{errors.CcSuffix}}" pop="{{errors.CcSuffix}}" pop-placement="right" ng-model="data.portal_data.CcSuffix" placeholder="">
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-md-6">
+						<div class="form-group" show-errors>
+							<label>Chargeback Amount</label>
+							<input name="ChargebackAmt" required type="text" class="form-control" pop-show="{{errors.ChargebackAmt}}" pop="{{errors.ChargebackAmt}}" pop-placement="right" ng-model="data.portal_data.ChargebackAmt" placeholder="">
+						</div>
+					</div>
+					<div class="col-md-6">
+						<div class="form-group" show-errors>
+							<label>Mid Number</label>
+							<input name="MidNumber" required type="text" class="form-control" pop-show="{{errors.MidNumber}}" pop="{{errors.MidNumber}}" pop-placement="right" ng-model="data.portal_data.MidNumber" placeholder="">
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-md-6">
+						<div class="form-group" show-errors>
+							<label>Reason Code</label>
+							<input name="ReasonCode" type="text" class="form-control" pop-show="{{errors.ReasonCode}}" pop="{{errors.ReasonCode}}" pop-placement="right" ng-model="data.portal_data.ReasonCode" placeholder="">
+						</div>
+					</div>
+					<div class="col-md-6">
+						<div class="form-group" show-errors>
+							<label>Reason Text</label>
+							<input name="ReasonText" type="text" class="form-control" pop-show="{{errors.ReasonText}}" pop="{{errors.ReasonText}}" pop-placement="right" ng-model="data.portal_data.ReasonText" placeholder="">
+						</div>
+					</div>
+				</div>
+
+				<div class="form-group btns">
+					<button type="submit" class="btn btn-success pull-right">Save New Chargeback</button>
+				</div>
+
+			</div>
+		</div>
+	</div>
+</form>

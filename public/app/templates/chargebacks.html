@@ -1,7 +1,7 @@
 
 <div class="row search" style="margin-bottom: 20px;">
-	<div class="col-md-4">
-		<h2>My Chargebacks</h2>
+	<div class="col-md-3">
+		<h2>Chargebacks</h2>
 	</div>
 	
 	<div class="col-md-4 dateRange" style="text-align: center; margin-top: 20px;">
@@ -13,8 +13,9 @@
 		<input ng-model="q" type="text" class="form-control pull-right" name="query" autocomplete="off" placeholder="Search" ng-keyup="cbs.search(q)">
 	</div>
 
-	<div class="col-md-1" style="padding-top: 20px; font-size: 32px;">
+	<div class="col-md-2" style="padding-top: 16px; font-size: 32px; text-align: right;">
 		<a href="#" ng-click="download()" tooltip="Download Chargebacks"><span class="glyphicon glyphicon-download"></span></a>
+		<a href="/chargeback" tooltip="Add Chargebacks"><span class="glyphicon glyphicon-plus-sign"></span></a>
 	</div>
 </div>
 
