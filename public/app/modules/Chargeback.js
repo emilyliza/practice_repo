@@ -219,7 +219,14 @@
 			});
 			modalInstance.result.then(function (confirm) {
 				if (confirm) {
-					$state.go('chargeback.confirmation');
+					ChargebackService.submit($scope.data).then(function (res) {
+						$scope.data = res.data;
+						$state.go('chargeback.confirmation');
+					}, function (res) {
+						if (res.data.errors) {
+							$scope.errors = res.data.errors;
+						}
+					});
 				}
 			});
 		};
@@ -240,6 +247,10 @@
 				var user = UserService.getCurrentUser();
 				return $http.post('/api/v1/chargebacks', { 'createChildren': false, 'user': user, 'chargebacks': [ data ] });
 			}	
+		};
+
+		this.submit = function(data) {
+			return $http.post('/api/v1/submitchargeback', data);
 		};
 
 		this.getDefaults = function() {
