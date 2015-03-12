@@ -195,6 +195,7 @@ require('./controllers/login')(app);
 require('./controllers/reset')(app);
 require('./controllers/forgot')(app);
 require('./controllers/processed')(app);
+require('./controllers/submitchargeback')(app);
 
 // Admin endpoints
 require('./controllers/admin/users')(app);
