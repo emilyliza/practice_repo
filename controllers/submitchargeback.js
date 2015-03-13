@@ -16,6 +16,7 @@ module.exports = function(app) {
 	app.post('/api/v1/submitchargeback?', mw.auth(), function(req, res, next) {
 
 		req.assert('_id', 'An _id for a chargebacks is required.').notEmpty();
+		req.assert('firstname', 'A firstname is required.').notEmpty();
 		var errors = req.validationErrors();
 		if (errors) {
 			return res.json(400, errors );

@@ -9,13 +9,13 @@
 		<div class="col-md-6">
 			<div class="form-group" show-errors>
 				<label>First Name</label>
-				<input name="FirstName" type="text" class="form-control" pop-show="{{errors.FirstName}}" pop="{{errors.FirstName}}" pop-placement="right" ng-model="data.gateway_data.FirstName" placeholder="">
+				<input name="FirstName" required type="text" class="form-control" pop-show="{{errors.FirstName}}" pop="{{errors.FirstName}}" pop-placement="right" ng-model="data.gateway_data.FirstName" placeholder="">
 			</div>
 		</div>
 		<div class="col-md-6">
 			<div class="form-group" show-errors>
 				<label>Last Name</label>
-				<input name="LastName" type="text" class="form-control" pop-show="{{errors.LastName}}" pop="{{errors.LastName}}" pop-placement="right" ng-model="data.gateway_data.LastName" placeholder="">
+				<input name="LastName" required type="text" class="form-control" pop-show="{{errors.LastName}}" pop="{{errors.LastName}}" pop-placement="right" ng-model="data.gateway_data.LastName" placeholder="">
 			</div>
 		</div>
 	</div>
@@ -97,6 +97,34 @@
 	<div style="font-size: 12px; color: #999; padding-bottom: 10px;">This information is typically found in your CRM or order information system.  You can use the transaction data to the right to look up the customer for this transaction.</div>
 
 	<div class="row bt">
+		<div class="col-md-6">
+			<div class="form-group" show-errors>
+				<label>Transaction Id</label>
+				<input name="TransId" required type="text" class="form-control" pop-show="{{errors.TransId}}" pop="{{errors.TransId}}" pop-placement="right" ng-model="data.gateway_data.TransId" placeholder="">
+			</div>
+		</div>
+		<div class="col-md-6">
+			<div class="form-group" show-errors>
+				<label>Order Id</label>
+				<input name="OrderId" required type="text" class="form-control" pop-show="{{errors.OrderId}}" pop="{{errors.OrderId}}" pop-placement="right" ng-model="data.gateway_data.OrderId" placeholder="">
+			</div>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-md-6">
+			<div class="form-group" show-errors>
+				<label>Transaction Type</label>
+				<input name="TransType" required type="text" class="form-control" pop-show="{{errors.TransType}}" pop="{{errors.TransType}}" pop-placement="right" ng-model="data.gateway_data.TransType" placeholder="">
+			</div>
+		</div>
+		<div class="col-md-6">
+			<div class="form-group" show-errors>
+				<label>Transaction Status</label>
+				<input name="TransStatus" required type="text" class="form-control" pop-show="{{errors.TransStatus}}" pop="{{errors.TransStatus}}" pop-placement="right" ng-model="data.gateway_data.TransStatus" placeholder="">
+			</div>
+		</div>
+	</div>
+	<div class="row">
 		<div class="col-md-12">
 			<div class="form-group" show-errors>
 				<label>Product Name</label>
@@ -106,57 +134,19 @@
 	</div>
 	<div class="row">
 		<div class="col-md-6">
-			<div class="form-group" show-errors>
-				<label>Transaction Id</label>
-				<input name="TransId" type="text" class="form-control" pop-show="{{errors.TransId}}" pop="{{errors.TransId}}" pop-placement="right" ng-model="data.gateway_data.TransId" placeholder="">
-			</div>
-		</div>
-		<div class="col-md-6">
-			<div class="form-group" show-errors>
-				<label>Order Id</label>
-				<input name="OrderId" type="text" class="form-control" pop-show="{{errors.OrderId}}" pop="{{errors.OrderId}}" pop-placement="right" ng-model="data.gateway_data.OrderId" placeholder="">
-			</div>
-		</div>
-	</div>
-	<div class="row">
-		<div class="col-md-6">
-			<div class="form-group" show-errors>
-				<label>Transaction Type</label>
-				<input name="TransType" type="text" class="form-control" pop-show="{{errors.TransType}}" pop="{{errors.TransType}}" pop-placement="right" ng-model="data.crm_data.TransType" placeholder="">
-			</div>
-		</div>
-		<div class="col-md-6">
-			<div class="form-group" show-errors>
-				<label>Transaction Status</label>
-				<input name="TransStatus" type="text" class="form-control" pop-show="{{errors.TransStatus}}" pop="{{errors.TransStatus}}" pop-placement="right" ng-model="data.crm_data.TransStatus" placeholder="">
-			</div>
-		</div>
-	</div>
-	<div class="row" ng-if="data.refunded">
-		<div class="col-md-6">
-			<div class="form-group" show-errors>
-				<label>Refund Date</label>
-				<input class="form-control" name="RefundDateFull" type="text" class="form-control" datepicker-popup="MM/dd/yyyy" ng-model="data.crm_data.RefundDateFull" is-open="opened" ng-click="opened=true" isdate >
-			</div>
-		</div>
-		<div class="col-md-6">
-			<div class="form-group" show-errors>
-				<label>Refund Amount</label>
-				<input name="RefundAmount" type="text" class="form-control" pop-show="{{errors.RefundAmount}}" pop="{{errors.RefundAmount}}" pop-placement="right" ng-model="data.crm_data.RefundAmount" placeholder="">
-			</div>
-		</div>
-	</div>
-	<div class="row">
-		<div class="col-md-6">
-			<div class="form-group" show-errors>
+			<div class="form-group">
 				<label>Is Recurring</label>
-				<input name="IsRecurring" type="text" class="form-control" pop-show="{{errors.IsRecurring}}" pop="{{errors.IsRecurring}}" pop-placement="right" ng-model="data.crm_data.IsRecurring" placeholder="">
+				<div class="form-control-static">
+					<input name="IsRecurring" type="checkbox" ng-model="data.crm_data.IsRecurring">
+				</div>
 			</div>
 		</div>
 		<div class="col-md-6">
-			<div class="form-group" show-errors>
+			<div class="form-group">
 				<label>Is Fraud</label>
-				<input name="IsFraud" type="text" class="form-control" pop-show="{{errors.IsFraud}}" pop="{{errors.IsFraud}}" pop-placement="right" ng-model="data.crm_data.IsFraud" placeholder="">
+				<div class="form-control-static">
+					<input name="IsFraud" type="checkbox" ng-model="data.crm_data.IsFraud">
+				</div>
 			</div>
 		</div>
 	</div>
@@ -176,9 +166,52 @@
 	</div>
 	
 
+	<div style="margin-top: 100px;" ng-if="data.refunded" >
+		<div class="pull-right" style="width: auto;">
+			<a href="" ng-click="data.refunded = false;">Hide Refund</a>
+		</div>
+		<h4 style="font-weight: bold;">Refund</h4>
+	</div>
+	<div style="margin-top: 100px; border: solid 1px #dedede; padding: 0px 0px 0px 10px;" ng-if="!data.refunded" >
+		<div class="pull-right" style="width: auto; padding: 9px 10px 0px 0px;">
+			<a href="" ng-click="data.refunded = true;">Include Refund</a>
+		</div>
+		<h4 style="font-weight: bold;">No Refund Issued</h4>
+	</div>
+
+	<div style="font-size: 12px; color: #999; padding-bottom: 10px;" ng-if="data.refunded">This information is typically found in your CRM or order information system.  You can use the transaction data to the right to look up the customer for this transaction.</div>
+
+	<div class="row bt" ng-if="data.refunded">
+		<div class="col-md-6">
+			<div class="form-group" show-errors>
+				<label>Refund Date</label>
+				<input class="form-control" name="RefundDateFull" type="text" class="form-control" datepicker-popup="MM/dd/yyyy" ng-model="data.crm_data.RefundDateFull" is-open="opened" ng-click="opened=true" isdate >
+			</div>
+		</div>
+		<div class="col-md-6">
+			<div class="form-group" show-errors>
+				<label>Refund Amount</label>
+				<input name="RefundAmount" type="number" class="form-control" pop-show="{{errors.RefundAmount}}" pop="{{errors.RefundAmount}}" pop-placement="right" ng-model="data.crm_data.RefundAmount" placeholder="">
+			</div>
+		</div>
+	</div>
 
 
-	<h4 style="margin-top: 100px; font-weight: bold;" ng-if="data.shipped">Shipping</h4>
+
+
+	<div style="margin-top: 100px;" ng-if="data.shipped" >
+		<div class="pull-right" style="width: auto;">
+			<a href="" ng-click="data.shipped = false;">Hide Shipping</a>
+		</div>
+		<h4 style="font-weight: bold;">Shipping</h4>
+	</div>
+	<div style="margin-top: 100px; border: solid 1px #dedede; padding: 0px 0px 0px 10px;" ng-if="!data.shipped" >
+		<div class="pull-right" style="width: auto; padding: 9px 10px 0px 0px;">
+			<a href="" ng-click="data.shipped = true;">Include Shipping</a>
+		</div>
+		<h4 style="font-weight: bold;">No Shipping</h4>
+	</div>
+	
 
 	<div style="font-size: 12px; color: #999; padding-bottom: 10px;" ng-if="data.shipped">This information is typically found in your CRM or order information system.  You can use the transaction data to the right to look up the customer for this transaction. We will use the tracking number to gather the summary data from your shipping agent.</div>
 
@@ -341,6 +374,9 @@
 
 
 	<div class="form-group btns">
-		<a ui-sref="chargeback.review" class="btn btn-success pull-right">Continue to Final Review</a>
+		<a ui-sref="chargeback.review" ng-class="{'disabled': disableReview}" class="btn btn-success pull-right">
+			<span ng-if="disableReview">Fix Errors Above to Continue</span>
+			<span ng-if="!disableReview">Continue to Final Review</span>
+		</a>
 	</div>
 </div>

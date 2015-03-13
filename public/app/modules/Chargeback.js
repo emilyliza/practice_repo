@@ -83,7 +83,6 @@
 		// data is retrieved in resolve within route
 		$scope.data = (res ? res.data : ChargebackService.getDefaults());
 		
-		
 		if ($scope.data.status == "In-Progress" && $state.current.name != "chargeback.data" && $state.current.name != "chargeback.review" && $state.current.name != "chargeback.confirmation") {
 			$state.go('chargeback.data', { '_id': res.data._id }, { location: "replace"} );
 		} else if (_.indexOf(["Sent","Won","Lost"], $scope.data.status ) != -1 && $state.current.name != "chargeback.review") {
@@ -93,12 +92,13 @@
 		
 		$scope.us = UploadService;
 		$scope.state = $state;
+		$scope.disableReview = true;
 
 		$scope.setCard = function(c) {
 			$scope.data.type = c;
 			$scope.save($scope.data);
 			if ($state.current.name == "chargeback.card") {
-				$state.go('chargeback.questions');
+				$state.go('chargeback.data');
 			}
 		};
 
@@ -139,6 +139,8 @@
 			$scope.$broadcast('show-errors-check-validity');
 			if ($scope.cbNewForm.$valid) {
 				
+				$scope.data.manual = true;
+
 				$scope.newService = ChargebackService.save($scope.data).then(function (res) {
 					$scope.data = res.data;
 					$state.go('chargeback.card', { '_id': res.data._id });
@@ -154,15 +156,19 @@
 		$scope.save = function() {
 			$scope.$broadcast('show-errors-check-validity');
 			if ($scope.cbForm.$valid) {
-				console.log('saving...');
-				ChargebackService.save($scope.data).then(function (res) {
-					$scope.data = res.data;
-				}, function (res) {
-					if (res.data.errors) {
-						$scope.errors = res.data.errors;
-					}
-				});
+				$scope.disableReview = false;
+			} else {
+				$scope.disableReview = true;
 			}
+
+			// save no matter what, but don't let user proceed without fixing errors!
+			ChargebackService.save($scope.data).then(function (res) {
+				$scope.data = res.data;
+			}, function (res) {
+				if (res.data.errors) {
+					$scope.errors = res.data.errors;
+				}
+			});
 		};
 
 		var ds = _.debounce($scope.save, 2000, { leading: false, trailing: true});
@@ -230,6 +236,15 @@
 				}
 			});
 		};
+
+		if (res.data) {
+			$timeout(function() {
+				$scope.$broadcast('show-errors-check-validity');	
+				if ($scope.cbForm.$valid) { 
+					$scope.disableReview = false;
+				}
+			},50);
+		}
 		
 
 	}])

@@ -6,10 +6,18 @@
 	</div>
 	<div class="col-sm-4">
 		<div id="status-buttons" class="row" ng-if="data.status == 'New' || data.status == 'In-Progress'">
-			<div class="col-xs-3"><a ui-sref-active="active" ui-sref=".card"><span>1</span> Type</a></div>
-			<div class="col-xs-3"><a ui-sref-active="active" ui-sref=".questions"><span>2</span> Questions</a></div>
-			<div class="col-xs-3"><a ui-sref-active="active" ui-sref=".data"><span>3</span> Data</a></div>
-			<div class="col-xs-3"><a ui-sref-active="active" ui-sref=".review"><span>4</span> Review</a></div>
+			<div class="col-xs-4" ui-sref-active="active" ui-sref=".card">
+				<span>1</span> Type
+			</div>
+			<div class="col-xs-4" ui-sref-active="active" ui-sref=".data">
+				<span>2</span> Data
+			</div>
+			<div class="col-xs-4 disabled" ng-if="disableReview" ui-sref-active="active">
+				<span>3</span> Review
+			</div>
+			<div class="col-xs-4" ng-if="!disableReview" ui-sref-active="active" ui-sref=".review">
+				<span>3</span> Review
+			</div>
 		</div>
 		
 	</div>

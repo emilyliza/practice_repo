@@ -22,6 +22,7 @@ module.exports = function(app) {
 		"updatedOn": { "type": Date },
 		"chargebackDate": { "type": Date },
 		"type": { "type": String },		// an enum of cp or cnp
+		"manual": { "type": Boolean, 'default': false },
 		"refunded": { "type": Boolean },
 		"shipped": { "type": Boolean },
 		"recurring": { "type": Boolean },

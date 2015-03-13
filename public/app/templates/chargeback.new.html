@@ -17,8 +17,9 @@
 	<div class="row">
 		<div class="col-sm-4 col-sm-push-8 form-sidebar">
 			<!-- instructions here -->
-			<div class="side-main-head">NEW CHARGEBACK</div>
-			To add a new chargeback to the system, we'll need some basic information. Basic chargeback information can be found within your mechant portal.
+			<div class="side-main-head">ADD NEW CHARGEBACK MANUALLY</div>
+			
+			<p>You can find this information in your merchant service providers online portal.</p>
 
 			<div style="margin-top: 20px;">You'll be able to enter additional chargeback information in the subsequent screens.</div>
 		</div>
@@ -29,14 +30,14 @@
 				<div class="row bt">
 					<div class="col-md-6">
 						<div class="form-group" show-errors>
-							<label>Case Number</label>
-							<input name="CaseNumber" required type="text" class="form-control" pop-show="{{errors.CaseNumber}}" pop="{{errors.CaseNumber}}" pop-placement="right" ng-model="data.portal_data.CaseNumber" placeholder="">
+							<label>Mid Number</label>
+							<input name="MidNumber" required type="text" class="form-control" pop-show="{{errors.MidNumber}}" pop="{{errors.MidNumber}}" pop-placement="right" ng-model="data.portal_data.MidNumber" placeholder="">
 						</div>
 					</div>
 					<div class="col-md-6">
 						<div class="form-group" show-errors>
-							<label>Reference Number</label>
-							<input name="Reference Number" type="text" class="form-control" pop-show="{{errors.RefNumber}}" pop="{{errors.RefNumber}}" pop-placement="right" ng-model="data.portal_data.RefNumber" placeholder="">
+							<label>Chargeback Amount</label>
+							<input name="ChargebackAmt" required type="text" class="form-control" pop-show="{{errors.ChargebackAmt}}" pop="{{errors.ChargebackAmt}}" pop-placement="right" ng-model="data.portal_data.ChargebackAmt" placeholder="">
 						</div>
 					</div>
 				</div>
@@ -57,32 +58,31 @@
 				<div class="row">
 					<div class="col-md-6">
 						<div class="form-group" show-errors>
-							<label>Chargeback Amount</label>
-							<input name="ChargebackAmt" required type="text" class="form-control" pop-show="{{errors.ChargebackAmt}}" pop="{{errors.ChargebackAmt}}" pop-placement="right" ng-model="data.portal_data.ChargebackAmt" placeholder="">
+							<label>Reason Code</label>
+							<input name="ReasonCode" required type="text" class="form-control" pop-show="{{errors.ReasonCode}}" pop="{{errors.ReasonCode}}" pop-placement="right" ng-model="data.portal_data.ReasonCode" placeholder="">
 						</div>
 					</div>
 					<div class="col-md-6">
 						<div class="form-group" show-errors>
-							<label>Mid Number</label>
-							<input name="MidNumber" required type="text" class="form-control" pop-show="{{errors.MidNumber}}" pop="{{errors.MidNumber}}" pop-placement="right" ng-model="data.portal_data.MidNumber" placeholder="">
+							<label>Reason Text</label>
+							<input name="ReasonText" required type="text" class="form-control" pop-show="{{errors.ReasonText}}" pop="{{errors.ReasonText}}" pop-placement="right" ng-model="data.portal_data.ReasonText" placeholder="">
 						</div>
 					</div>
 				</div>
 				<div class="row">
 					<div class="col-md-6">
 						<div class="form-group" show-errors>
-							<label>Reason Code</label>
-							<input name="ReasonCode" type="text" class="form-control" pop-show="{{errors.ReasonCode}}" pop="{{errors.ReasonCode}}" pop-placement="right" ng-model="data.portal_data.ReasonCode" placeholder="">
+							<label>Case Number</label>
+							<input name="CaseNumber" type="text" class="form-control" pop-show="{{errors.CaseNumber}}" pop="{{errors.CaseNumber}}" pop-placement="right" ng-model="data.portal_data.CaseNumber" placeholder="">
 						</div>
 					</div>
 					<div class="col-md-6">
 						<div class="form-group" show-errors>
-							<label>Reason Text</label>
-							<input name="ReasonText" type="text" class="form-control" pop-show="{{errors.ReasonText}}" pop="{{errors.ReasonText}}" pop-placement="right" ng-model="data.portal_data.ReasonText" placeholder="">
+							<label>Reference Number</label>
+							<input name="Reference Number" type="text" class="form-control" pop-show="{{errors.RefNumber}}" pop="{{errors.RefNumber}}" pop-placement="right" ng-model="data.portal_data.RefNumber" placeholder="">
 						</div>
 					</div>
 				</div>
-
 				<div class="form-group btns">
 					<button type="submit" class="btn btn-success pull-right">Save New Chargeback</button>
 				</div>
