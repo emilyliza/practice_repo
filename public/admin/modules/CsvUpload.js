@@ -32,7 +32,6 @@
 			"chargebackDate",
 			"type",
 			'portal_data.CardNumber',	// not stored, but used to determine prefix, suffix and type
-			'portal_data.Portal',
 			'portal_data.CaseNumber',
 			'portal_data.RefNumber',
 			'portal_data.CcPrefix',
@@ -74,9 +73,7 @@
 			'crm_data.Email',
 			'crm_data.IpAddress',
 			'crm_data.PricePoint',
-			'crm_data.ProductCrmName',
 			'crm_data.ProductName',
-			'crm_data.IsFraud',
 			'crm_data.IsRecurring',
 			'crm_data.CancelDateSystem',
 			'crm_data.RefundDateFull',
