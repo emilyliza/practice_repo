@@ -30,8 +30,8 @@ module.exports = function(app) {
 			'Portal'           : String,	// prob don't need this field, now taken care of by parent/child users
 			'CaseNumber'       : String,
 			'RefNumber'        : String,
-			'CcPrefix'         : String,
-			'CcSuffix'         : String,
+			'CcPrefix'         : Number,
+			'CcSuffix'         : Number,
 			'ChargebackAmt'    : Number,
 			'MidNumber'        : String,
 			'ReasonCode'       : String,

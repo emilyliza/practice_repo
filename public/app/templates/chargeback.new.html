@@ -28,58 +28,50 @@
 			<div class="jgs-form" cg-busy="{promise:newService,message:'Saving',backdrop:true}">
 
 				<div class="row bt">
-					<div class="col-md-6">
+					<div class="col-md-4">
 						<div class="form-group" show-errors>
 							<label>Mid Number</label>
 							<input name="MidNumber" required type="text" class="form-control" pop-show="{{errors.MidNumber}}" pop="{{errors.MidNumber}}" pop-placement="right" ng-model="data.portal_data.MidNumber" placeholder="">
 						</div>
 					</div>
-					<div class="col-md-6">
+					<div class="col-md-4">
 						<div class="form-group" show-errors>
 							<label>Chargeback Amount</label>
 							<input name="ChargebackAmt" required type="text" class="form-control" pop-show="{{errors.ChargebackAmt}}" pop="{{errors.ChargebackAmt}}" pop-placement="right" ng-model="data.portal_data.ChargebackAmt" placeholder="">
 						</div>
 					</div>
+					<div class="col-md-4">
+						<div class="form-group" show-errors>
+							<label>Chargeback Date</label>
+							<input class="form-control" required name="chargebackDate" type="text" class="form-control" datepicker-popup="MM/dd/yyyy" ng-model="data.chargebackDate" is-open="opened" ng-click="opened=true" isdate >
+						</div>
+					</div>
 				</div>
 				<div class="row">
-					<div class="col-md-6">
+					<div class="col-md-4">
 						<div class="form-group" show-errors>
 							<label>CC Prefix</label>
-							<input name="CcPrefix" required type="text" class="form-control" pop-show="{{errors.CcPrefix}}" pop="{{errors.CcPrefix}}" pop-placement="right" ng-model="data.portal_data.CcPrefix" placeholder="">
+							<input name="CcPrefix" ng-minlength="4" ng-maxlength="4" required type="number" class="form-control" pop-show="{{errors.CcPrefix}}" pop="{{errors.CcPrefix}}" pop-placement="right" ng-model="data.portal_data.CcPrefix" placeholder="">
 						</div>
 					</div>
-					<div class="col-md-6">
+					<div class="col-md-4">
 						<div class="form-group" show-errors>
 							<label>CC Suffix</label>
-							<input name="CcSuffix" required type="text" class="form-control" pop-show="{{errors.CcSuffix}}" pop="{{errors.CcSuffix}}" pop-placement="right" ng-model="data.portal_data.CcSuffix" placeholder="">
+							<input name="CcSuffix" ng-minlength="4" ng-maxlength="4" required type="number" class="form-control" pop-show="{{errors.CcSuffix}}" pop="{{errors.CcSuffix}}" pop-placement="right" ng-model="data.portal_data.CcSuffix" placeholder="">
 						</div>
 					</div>
-				</div>
-				<div class="row">
-					<div class="col-md-6">
+					<div class="col-md-4">
 						<div class="form-group" show-errors>
 							<label>Reason Code</label>
 							<input name="ReasonCode" required type="text" class="form-control" pop-show="{{errors.ReasonCode}}" pop="{{errors.ReasonCode}}" pop-placement="right" ng-model="data.portal_data.ReasonCode" placeholder="">
 						</div>
 					</div>
-					<div class="col-md-6">
+				</div>
+				<div class="row">
+					<div class="col-md-12">
 						<div class="form-group" show-errors>
 							<label>Reason Text</label>
 							<input name="ReasonText" required type="text" class="form-control" pop-show="{{errors.ReasonText}}" pop="{{errors.ReasonText}}" pop-placement="right" ng-model="data.portal_data.ReasonText" placeholder="">
-						</div>
-					</div>
-				</div>
-				<div class="row">
-					<div class="col-md-6">
-						<div class="form-group" show-errors>
-							<label>Case Number</label>
-							<input name="CaseNumber" type="text" class="form-control" pop-show="{{errors.CaseNumber}}" pop="{{errors.CaseNumber}}" pop-placement="right" ng-model="data.portal_data.CaseNumber" placeholder="">
-						</div>
-					</div>
-					<div class="col-md-6">
-						<div class="form-group" show-errors>
-							<label>Reference Number</label>
-							<input name="Reference Number" type="text" class="form-control" pop-show="{{errors.RefNumber}}" pop="{{errors.RefNumber}}" pop-placement="right" ng-model="data.portal_data.RefNumber" placeholder="">
 						</div>
 					</div>
 				</div>

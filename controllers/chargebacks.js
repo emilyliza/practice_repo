@@ -243,6 +243,7 @@ module.exports = function(app) {
 			chargeback.shipping_data = cb.shipping_data;
 			chargeback.gateway_data = cb.gateway_data;
 			chargeback.status = "New";
+			chargeback.manual = (cb.manual || false);
 			
 			if (cc) {
 				chargeback.user = User.toMicro( this.vars.users[ cb.portal_data.MidNumber ] );
@@ -289,7 +290,7 @@ module.exports = function(app) {
 		})
 		.seq(function(data) {
 
-			var updated = _.omit(req.body, ['_id', 'createdOn', 'chargebackDate', 'attachments']);
+			var updated = _.omit(req.body, ['_id', 'createdOn', 'attachments']);
 			data.set(updated);
 			
 			if (!data.updatedOn) {

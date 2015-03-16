@@ -34,7 +34,11 @@
 		
 		<div class="col-md-4 imported-col" ng-if="state.current.name != 'chargeback.confirmation'">
 			<div class="imported">
-				<div class="side-cbinfo-head">IMPORTED DATA</div>
+				<div class="side-cbinfo-head">
+					<span ng-if="data.manual">SUMMARY</span>
+					<span ng-if="!data.manual">IMPORTED DATA</span>
+					
+				</div>
 				
 				<div class="side-cbinfo-desc">Data received regarding this chargeback case. Use this information to locate any missing data.</div>
 

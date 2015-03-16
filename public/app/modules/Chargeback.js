@@ -153,12 +153,16 @@
 			}
 		};
 
-		$scope.save = function() {
+		$scope.save = function(halt_save_on_error) {
 			$scope.$broadcast('show-errors-check-validity');
 			if ($scope.cbForm.$valid) {
 				$scope.disableReview = false;
 			} else {
 				$scope.disableReview = true;
+			}
+
+			if (halt_save_on_error && $scope.cbForm[halt_save_on_error]['$invalid']) {
+				return;
 			}
 
 			// save no matter what, but don't let user proceed without fixing errors!
@@ -171,14 +175,8 @@
 			});
 		};
 
-		var ds = _.debounce($scope.save, 2000, { leading: false, trailing: true});
-		$scope.$watch("data", function(newValue, oldValue){
-			// if new value, save it.
-			if ($scope.data && $scope.data._id && JSON.stringify(newValue) != JSON.stringify(oldValue)) {
-				ds();
-			}
-		}, true);
-
+		$scope.ds = _.debounce($scope.save, 2000, { leading: false, trailing: true});
+		
 
 		// clicking drag-n-drop zones triggers old-school upload dialog
 		$scope.triggerUpload = function(el) {
@@ -272,7 +270,7 @@
 			return {
 				user_entered: true,
 				status: 'New',
-				chargebackDate: new Date()
+				manual: true
 			};
 		};
 
