@@ -36,7 +36,7 @@ module.exports = function(grunt) {
 			"region": process.env.REGION,
 			"bucket": process.env.BUCKET,
 			"cloudfront": process.env.CDN
-		}
+		},
 		clean: {
 			old: [
 				"dist/fonts",

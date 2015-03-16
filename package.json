@@ -75,7 +75,7 @@
   "scripts": {
     "postinstall": "node postNpmInstall.js",
     "start": "env $(cat .env-local) node_modules/nodemon/bin/nodemon.js server.js",
-    "test": "mocha --watch",
+    "test": "mocha",
     "test-single-run": "node_modules/karma/bin/karma start karma.dev.conf.js  --single-run",
     "preupdate-webdriver": "npm install",
     "update-webdriver": "webdriver-manager update",
