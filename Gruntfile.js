@@ -29,7 +29,14 @@ module.exports = function(grunt) {
 
 	grunt.initConfig({
 		pkg: grunt.file.readJSON('package.json'),
-		aws: grunt.file.readJSON("aws.json"),
+		//aws: grunt.file.readJSON("aws.json"),
+		aws: {
+			"accessKeyId": process.env.AWS_KEY,
+			"secretAccessKey": process.env.AWS_SECRET,
+			"region": process.env.REGION,
+			"bucket": process.env.BUCKET,
+			"cloudfront": process.env.CDN
+		}
 		clean: {
 			old: [
 				"dist/fonts",
@@ -258,7 +265,7 @@ module.exports = function(grunt) {
 	
 	grunt.registerTask('test', ['jshint', 'karma']);
 
-	grunt.registerTask('build', [
+	grunt.registerTask('default', [
 		'jshint',			// double check jshint
 		'clean:old',		// clean out old dist or reset build 
 		'copy:html',		// copy public/target.html to dist/target.html
