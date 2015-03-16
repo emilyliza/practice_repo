@@ -5,7 +5,7 @@ services:
 - mongodb
 before_install: npm install -g grunt-cli
 install: npm install
-before_script: 'grunt && grunt --target=admin'
+before_script: grunt && grunt --target=admin
 env:
   global:
   - NODE_ENV: test
@@ -18,3 +18,15 @@ env:
   - CDN: http://dksl2s5vm2cnl.cloudfront.net
   - secure: M3YSEJnWYdYGYDtCmv/y4rf7urHViaYBikGZsPiSAPDnq3nFEx5OY6J2PzDOoN2111b/VxS6Ec1ZmOULTkZ0OQsXt6XwWn+YKQsxj8nlLkrpoxpfRSX8fSBX/lvdInVQiRr0OtS3vbG4BkwTzFtu9y075G5fK4BDj1hAKgh4IqU=
   - secure: kvvLABsWT4BaTPbqvzj09L3nyeli+98dJp3woKP/SSnvtVxm45CDci7Uut4u0Nh1j/4THu9oeEsTOG3IPJp2W6RYNd0ZUzDhlJGtfD2forjyPx4D1OMGHj6UAeGYqM6Cm9ZcrbzrWqewYu0jvk4AN7K0Dd5azjSnc6tuTP7RcUk=
+deploy:
+  provider: codedeploy
+  access_key_id: AKIAIV2GJMSH3WICWGWA
+  secret_access_key:
+    secure: Fq2mv7v7CNg9uzmHlxQZsK6UbdapfHaL76Tq015Cbh2+2XZsYlGI1sgew0oHyOYpeBNJWRIa/25fO0zDq8O8b9z5dGPy2/n3PkYOCwFUdCAF30zqHS79tTzhWG7ysHrk7hOglcviuZnA5fEMvSsGbyPScihEyb0ZpX1M20hJkP8=
+  bucket: ''
+  key: ''
+  bundle_type: ''
+  application: chargeback-cart
+  deployment_group: cart-ec2-servers
+  on:
+    repo: justingshreve/chargeback
