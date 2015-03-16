@@ -5,7 +5,7 @@ services:
 - mongodb
 before_install: npm install -g grunt-cli
 install: npm install
-before_script: 'grunt build && grunt build --target=admin'
+before_script: 'grunt && grunt --target=admin'
 env:
   global:
   - NODE_ENV: test
