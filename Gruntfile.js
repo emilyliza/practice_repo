@@ -265,6 +265,7 @@ module.exports = function(grunt) {
 	
 	grunt.registerTask('test', ['jshint', 'karma']);
 
+	
 	grunt.registerTask('default', [
 		'jshint',			// double check jshint
 		'clean:old',		// clean out old dist or reset build 

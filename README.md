@@ -72,6 +72,7 @@ Now browse to the app at `http://localhost:5000/`.
 ## Directory Layout
 
 ```
+.env-local              --> ENV variables, including AWS credentials for builds (should not be in repo!!!)
 public/                 --> all of the source files for the client side application
   app/                  --> custom chargeback angular code
     modules/            --> Angular JS modules per view
@@ -87,7 +88,6 @@ dist/                   --> dir created by running npm build, stores compiled pr
 node_modules/           --> dir created by runnnig npm install, stores npm modules
 karma.conf.js           --> config file for running unit tests with Karma
 bower.json              --> bower install configuration, or all required libs
-aws.json                --> AWS credentials for deployments, json format (should not be in repo!!!)
 Gruntfile.js            --> build recipes to create production files, run via "npm build"
 e2e-tests/              --> end-to-end tests
   protractor-conf.js    --> Protractor config file
@@ -95,7 +95,11 @@ e2e-tests/              --> end-to-end tests
 lib/                    --> nodejs lib, for testing only
 models/                 --> nodejs mongoose model definitions - for test data only
 controllers/            --> nodejs files for servering fake REST API
-server.js               --> the main application file
+views/                  --> EJS templates for emails
+test/                   --> mocha server side unit tests, the main dir contains mostly config options
+  tests/                --> individual unit tests 
+index.js                --> the main application file
+server.js               --> the server launch file (separated out from index for testing purposes)
 ```
 
 
@@ -105,14 +109,16 @@ There are two kinds of tests in the application: Unit tests and End to End tests
 
 ### Running Unit Tests
 
-The app comes preconfigured with unit tests. These are written in
-[Jasmine][jasmine], which we run with the [Karma Test Runner][karma]. We provide a Karma
-configuration file to run them.
+The app comes preconfigured with unit tests for both the server and the web client.
+The client tests are written in [Jasmine][jasmine], which we run with the 
+[Karma Test Runner][karma]. We provide a Karma configuration file to run them.
 
 * the configuration is found at `karma.conf.js`
 * the unit tests are found in the public/app/tests folder
 
-The easiest way to run the unit tests is to use the supplied npm script:
+The server tests use Mocha. The Mocha dependancy is installed with "npm install".
+The individual tests are outlined in test/tests. The easiest way to run the server side
+unit tests is to use the supplied npm script:
 
 ```
 npm test
