@@ -10,6 +10,10 @@ var fs = require('fs'),
 	methodOverride = require('method-override'),
 	app = module.exports = express();
 
+if (!process.env.NODE_ENV) {
+	require('dotenv').load();
+}
+
 if (process.env.NODE_ENV == "production") {
 	var newrelic = require('newrelic');
 }
@@ -162,23 +166,18 @@ if (process.env.MONGO_URI_2) {
 		log.log('MONGODB REPLICA!');
 		log.log('MONGODB CONNECTED - ' + mongo[1]);
 	});
-} else {
-	if (process.env.NODE_ENV != "test") {
-		app.settings.db.connect(process.env.MONGO_URI, function(err,db) {
-			if (err) { throw err; }
-			var mongo = process.env.MONGO_URI.split(/@/);
-			if (mongo[1]) {
-				log.log('MONGODB CONNECTED - ' + mongo[1]);
-			} else {
-				log.log('MONGODB CONNECTED - ' + mongo);	
-			}
-		});
-	}
+} else if (process.env.NODE_ENV != "test") {
+	app.settings.db.connect(process.env.MONGO_URI, function(err,db) {
+		if (err) { throw err; }
+		var mongo = process.env.MONGO_URI.split(/@/);
+		if (mongo[1]) {
+			log.log('MONGODB CONNECTED - ' + mongo[1]);
+		} else {
+			log.log('MONGODB CONNECTED - ' + mongo);	
+		}
+	});
 }
 
-
-
-log.log('HEAD is ' + process.env.VERSION);
 
 
 require('./lib/appExtensions')(app);
