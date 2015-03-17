@@ -244,6 +244,13 @@ module.exports = function(app) {
 			chargeback.gateway_data = cb.gateway_data;
 			chargeback.status = "New";
 			chargeback.manual = (cb.manual || false);
+
+			if (!chargeback.gateway_data.TransType) {
+				chargeback.gateway_data.TransType = "Card Settle";
+			}
+			if (!chargeback.gateway_data.TransStatus) {
+				chargeback.gateway_data.TransStatus = "Complete";
+			}
 			
 			if (cc) {
 				chargeback.user = User.toMicro( this.vars.users[ cb.portal_data.MidNumber ] );

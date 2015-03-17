@@ -270,7 +270,11 @@
 			return {
 				user_entered: true,
 				status: 'New',
-				manual: true
+				manual: true,
+				gateway_data: {
+					TransType: "Card Settle",
+					TransStatus: "Complete"
+				}
 			};
 		};
 
