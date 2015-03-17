@@ -96,7 +96,7 @@
 
 		$scope.setCard = function(c) {
 			$scope.data.type = c;
-			$scope.save($scope.data);
+			$scope.save();
 			if ($state.current.name == "chargeback.card") {
 				$state.go('chargeback.data');
 			}
