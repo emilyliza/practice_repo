@@ -71,8 +71,8 @@
 	}])
 
 	.controller('ChargebackController', 
-			['$scope', '$rootScope', 'ChargebackService', 'UploadService', '$timeout', 'res', '$state', '$modal', 'UtilService',
-			function ($scope, $rootScope, ChargebackService, UploadService, $timeout, res, $state, $modal, UtilService) {
+			['$scope', '$rootScope', 'ChargebackService', 'FileUploader', '$timeout', 'res', '$state', '$modal', 'UtilService',
+			function ($scope, $rootScope, ChargebackService, FileUploader, $timeout, res, $state, $modal, UtilService) {
 		
 		// data is retrieved in resolve within route
 		$scope.data = (res ? res.data : ChargebackService.getDefaults());
@@ -161,8 +161,7 @@
 		};
 		
 
-		$scope.removeItem = function(item, el) {
-			angular.element(el).val('');	// have to clear out element value
+		$scope.removeItem = function(item) {
 			var i = 0;
 			_.each($scope.data.attachments, function(a) {
 				if (a && a._id == item._id) {
@@ -175,6 +174,7 @@
 				}
 				i++;
 			});
+			$scope.ds();
 		};
 
 		$scope.submit = function(msg, confirmbtn, cancelbtn) {
@@ -205,31 +205,34 @@
 		};
 
 
-		$scope.up_add = new UploadService(5);
-		$scope.up_add.failed = function() {
+		
+		$scope.uploaders = {};
+		$scope.uploaders['receipt'] = new FileUploader({ queueLimit: 5 });
+		$scope.uploaders['receipt'].onWhenAddingFileFailed = function() {
 			$scope.uploadError = true; // set UploadError to true to display error message in side bar
 		};
-		$scope.up_add.done = function(items) {
-			console.log(items);
-			_.each(items, function(item) {
-				item.type = 'additional';
+		$scope.uploaders['receipt'].onCompleteAll = function() {
+			_.each($scope.uploaders['receipt'].uploads, function(item) {
+				item.type = "receipt";
 				$scope.data.attachments.push(item);	
 			});
+			$scope.uploaders['receipt'].uploads = [];
 			$scope.ds();
 		};
 
-
-		$scope.up_receipt = new UploadService(5);
-		$scope.up_receipt.failed = function() {
+		$scope.uploaders['add'] = new FileUploader({ queueLimit: 5 });
+		$scope.uploaders['add'].onWhenAddingFileFailed = function() {
 			$scope.uploadError = true; // set UploadError to true to display error message in side bar
 		};
-		$scope.up_receipt.done = function(items) {
-			_.each(items, function(item) {
-				item.type = 'receipt';
+		$scope.uploaders['add'].onCompleteAll = function() {
+			_.each($scope.uploaders['add'].uploads, function(item) {
+				item.type = "additional";
 				$scope.data.attachments.push(item);	
 			});
+			$scope.uploaders['add'].uploads = [];
 			$scope.ds();
 		};
+
 		
 
 		$scope.checkForErrors = function(d) {

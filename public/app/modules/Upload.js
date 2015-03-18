@@ -2,43 +2,36 @@
 
 	angular.module('upload', ['angularFileUpload'])
 	
-	.factory('UploadService', ['$http', '$rootScope', 'FileUploader', function ($http, $rootScope, FileUploader) {
-		
-		var UploadService = function(limit) {
-			this.uploads = [];
-			this.uploader = false;
-			this.create(limit);
-		};
+	.config(['$provide', function($provide) {
+		$provide.decorator('FileUploader', ['$delegate', '$http', function(FileUploader, $http) {
+			// $delegate is FileUploader
 
-		UploadService.prototype.getS3Signature = function(filename,type) {
-			/* get signature block and key from server to securely upload file.
-			   returned signature block is attached to direct upload to S3 */
-			return $http.get('/api/v1/s3?filename=' + filename + "&contentType=" + type);
-		};
+			// add new method
+			//FileUploader.prototype.yourMethod = function() {/*code*/};
 
-		UploadService.prototype.create = function(limit) {
-			
-			this.uploader = new FileUploader({
-            	queueLimit: limit
-        	});
+			// override default over class ("nv-file-over")
+			//FileUploader.FileOver.prototype.overClass = 'your-class-name';
 
-			this.uploader.filters.push({
+			FileUploader.prototype.uploads = [];
+
+			FileUploader.prototype.filters = [{
             	name: 'imageFilter',
             	fn: function(item /*{File|FileLikeObject}*/, options) {
                 	var type = '|' + item.type.slice(item.type.lastIndexOf('/') + 1).toLowerCase() + '|';
                 	return '|jpg|png|jpeg|bmp|gif|pdf|'.indexOf(type) !== -1;
             	}
-        	});
-		
-			this.uploader.onWhenAddingFileFailed = function() {
-			
+        	}];
+
+			FileUploader.prototype.getS3Signature = function(filename,type) {
+				/* get signature block and key from server to securely upload file.
+				   returned signature block is attached to direct upload to S3 */
+				return $http.get('/api/v1/s3?filename=' + filename + "&contentType=" + type);
 			};
-			
-			_this = this;
-			this.uploader.onAfterAddingFile = function(item) {
+
+			FileUploader.prototype.onAfterAddingFile = function(item) {
 				
 				// first get signature from server.
-				_this.getS3Signature(item.file.name, item.file.type).then(function (response) {
+				this.getS3Signature(item.file.name, item.file.type).then(function (response) {
 					
 					// add form data for S3 authorization to upload directly
 					item.formData = [
@@ -64,40 +57,16 @@
 				});
 			};
 
-			this.uploader.onSuccessItem = function(item, res, status, header) {
-				_this.addToUploads(item.data);
+			FileUploader.prototype.onSuccessItem = function(item, res, status, header) {
+				if (item.data.extension == ".pdf") {
+					item.data.urls.orig = "/images/placeholder.png";
+				}
+				this.uploads.push(item.data);
 			};
 
-			this.uploader.onCompleteAll = function() {
-				_this.done(_this.uploads);
-			};
-
-			this.uploader.onWhenAddingFileFailed = function() {
-				_this.err();
-			};
-
-		};
-
-		UploadService.prototype.addToUploads = function(data) {
-			if (data.extension == ".pdf") {
-				data.urls.orig = "/images/placeholder.png";
-			}
-			this.uploads.push(data);
-		};
-
-		UploadService.prototype.getUploads = function() {
-			return this.uploads;
-		};
-
-		UploadService.prototype.done = function(uploads) {};
-		UploadService.prototype.err = function() { };
-
-
-		return UploadService;
-
-
+			return FileUploader;
+		}])
 	}])
-
 
 	.directive('ngThumb', ['$window', function($window) {
 		var helper = {

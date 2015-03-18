@@ -379,24 +379,24 @@
 		<div class="row bt" style="border: none;">
 			<div class="col-md-12" style="margin-bottom: 60px; border: none;">
 
-				<div ng-show="up_receipt.uploader.isHTML5">
-					<div nv-file-drop="" uploader="up_receipt.uploader">
-						<div nv-file-over="" uploader="up_receipt.uploader" over-class="ddhover" class="ddzone" ng-click="triggerUpload('#uploaderRFile')">
+				<div ng-show="uploaders.receipt.isHTML5">
+					<div nv-file-drop="" uploader="uploaders.receipt">
+						<div nv-file-over="" uploader="uploaders.receipt" over-class="ddhover" class="ddzone" ng-click="triggerUpload('#receiptFile')">
 							Upload Receipt<br/>
 							<span class="glyphicon glyphicon-picture"></span>
 							<div class="subtext">(drag here or click to upload)</div>
 						</div>
 					</div>
 				</div>
-				<div ng-hide="up_receipt.uploader.isHTML5" class="ddzone">
+				<div ng-hide="uploaders.receipt.isHTML5" class="ddzone">
 					Upload Receipt<br/>
-					<input id="uploaderRFile" type="file" nv-file-select="" uploader="up_receipt.uploader"  />
+					<input id="receiptFile" type="file" nv-file-select="" uploader="uploaders.receipt" multiple />
 				</div>
 				<div class="uploaded">
 
 					<div ng-repeat="saved_item in data.attachments | filter: { type:'receipt' }">
 						<div class="img">
-							<div class="remove" ng-click="removeItem(saved_item, '#uploaderRFile')">
+							<div class="remove" ng-click="removeItem(saved_item)">
 								<span class="glyphicon glyphicon-remove-circle"></span>
 							</div>
 							<img ng-if="!saved_item.processed" ng-src="{{saved_item.urls.orig}}">
@@ -405,11 +405,8 @@
 						</div>
 					</div>
 
-					<div ng-repeat="item in up_receipt.uploader.queue">
-						<div class="img" ng-show="up_receipt.uploader.isHTML5">
-							<div class="remove" ng-click="removeItem(item, '#uploaderRFile')">
-								<span class="glyphicon glyphicon-remove-circle"></span>
-							</div>
+					<div ng-repeat="item in uploaders.receipt.queue">
+						<div class="img" ng-show="uploaders.receipt.isHTML5">
 							<div ng-thumb="{ file: item._file, width: 200 }"></div>
 							<div style="font-weight: bold; text-align: center;">{{ item.file.name }}</div>
 							
@@ -435,24 +432,24 @@
 	<div class="row bt" style="border: none;">
 		<div class="col-md-12" style="margin-bottom: 60px; border: none;">
 
-			<div ng-show="up_add.uploader.isHTML5">
-				<div nv-file-drop="" uploader="up_add.uploader">
-					<div nv-file-over="" uploader="up_add.uploader" over-class="ddhover" class="ddzone" ng-click="triggerUpload('#uploaderAddFile')">
+			<div ng-show="uploaders.add.isHTML5">
+				<div nv-file-drop="" uploader="uploaders.add">
+					<div nv-file-over="" uploader="uploaders.add" over-class="ddhover" class="ddzone" ng-click="triggerUpload('#addFile')">
 						Upload Attachments<br/>
 						<span class="glyphicon glyphicon-picture"></span>
 						<div class="subtext">(drag here or click to upload)</div>
 					</div>
 				</div>
 			</div>
-			<div ng-hide="up_add.uploader.isHTML5" class="ddzone">
+			<div ng-hide="uploaders.add.isHTML5" class="ddzone">
 				Upload Attachments<br/>
-				<input id="uploaderAddFile" type="file" nv-file-select="" uploader="up_add.uploader"  />
+				<input id="addFile" type="file" nv-file-select="" uploader="uploaders.add" multiple />
 			</div>
 			<div class="uploaded">
 
 				<div ng-repeat="saved_item in data.attachments | filter: { type:'additional' }">
 					<div class="img">
-						<div class="remove" ng-click="removeItem(saved_item, '#uploaderAddFile')">
+						<div class="remove" ng-click="removeItem(saved_item)">
 							<span class="glyphicon glyphicon-remove-circle"></span>
 						</div>
 						<img ng-if="!saved_item.processed" ng-src="{{saved_item.urls.orig}}">
@@ -461,11 +458,8 @@
 					</div>
 				</div>
 
-				<div ng-repeat="item in up_add.uploader.queue">
-					<div class="img" ng-show="up_add.uploader.isHTML5">
-						<div class="remove" ng-click="removeItem(item, '#uploaderAddFile')">
-							<span class="glyphicon glyphicon-remove-circle"></span>
-						</div>
+				<div ng-repeat="item in uploaders.add.queue">
+					<div class="img" ng-show="uploaders.add.isHTML5">
 						<div ng-thumb="{ file: item._file, width: 200 }"></div>
 						<div style="font-weight: bold; text-align: center;">{{ item.file.name }}</div>
 						
