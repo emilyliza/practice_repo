@@ -255,7 +255,7 @@
 		if (res.data) {
 			$timeout(function() {
 				$scope.$broadcast('show-errors-check-validity');	
-				if ($scope.cbForm.$valid) { 
+				if ($scope.cbForm.$valid && $scope.data.type) { 
 					$scope.disableReview = false;
 				}
 			},50);
