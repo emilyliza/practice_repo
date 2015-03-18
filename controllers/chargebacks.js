@@ -142,11 +142,11 @@ module.exports = function(app) {
 	});
 
 
-	app.post('/api/v1/chargebacks?', mw.auth(), function(req, res, next) {
+	app.post('/api/v1/chargebacks', mw.auth(), function(req, res, next) {
 
 		req.assert('chargebacks', 'An array of chargebacks is required.').notEmpty();
 		req.assert('user', 'A user object is required.').notEmpty();
-		
+			
 		var errors = req.validationErrors();
 		if (errors) {
 			return res.json(400, errors );
@@ -156,9 +156,7 @@ module.exports = function(app) {
 			return res.json(401, { 'chargebacks': 'an array of chargebacks is required.'});
 		}
 
-		// if (!req.user.admin) {
-		// 	return res.json(401, { 'admin': 'admin permissions required'});
-		// }
+		
 
 		var cc = true;
 		if (req.body.createChildren) {
@@ -243,8 +241,7 @@ module.exports = function(app) {
 			chargeback.shipping_data = cb.shipping_data;
 			chargeback.gateway_data = cb.gateway_data;
 			chargeback.status = "New";
-			chargeback.manual = (cb.manual || false);
-
+			
 			if (!chargeback.gateway_data.TransType) {
 				chargeback.gateway_data.TransType = "Card Settle";
 			}
@@ -262,12 +259,7 @@ module.exports = function(app) {
 				chargeback.user = User.toMicro(this.vars.parent);	
 			}
 			
-			var top = this;
-			chargeback.save(function(err,data) {
-				if (err) { return top(err); }
-				if (!top.vars.first) { top.vars.first = data; }
-				top();
-			});
+			chargeback.save();
 
 		})
 		.seq(function() {
@@ -275,12 +267,91 @@ module.exports = function(app) {
 			// cache busting on static api end point
 			res.header('Content-Type', 'application/json');
 			res.header('Cache-Control', 'no-cache, private, no-store, must-revalidate, max-stale=0, post-check=0, pre-check=0');
-			return res.json(this.vars.first);
+			return res.json({'success': true});
 
 		})
 		.catch(next);
 
 	});
+
+	
+	// POSTING JUST ONE CHARGEBACK (MAUNAL ENTRY)
+	app.post('/api/v1/chargeback', mw.auth(), function(req, res, next) {
+
+		req.assert('portal_data.MidNumber', 'A mid number is required.').isAlphanumeric();
+		req.assert('portal_data.ChargebackAmt', 'An amount is required.').isFloat();
+		req.assert('portal_data.CcPrefix', 'A valid credit card prefix is required.').len(4,4).isNumeric();
+		req.assert('portal_data.CcSuffix', 'A valid credit card suffix is required.').len(4,4).isNumeric();
+		req.assert('portal_data.ReasonCode', 'A reason code is required.').isAlphanumeric();
+		req.assert('portal_data.ReasonText', 'Some reason text is required.').notEmpty();
+		req.assert('chargebackDate', 'A valid chargeback date is required.').isDate();
+
+		var errors = req.validationErrors();
+		if (errors) {
+			return res.json(400, errors );
+		}
+
+		if (!Util.detectCardType( req.body.portal_data.CcPrefix + "11010101" + req.body.portal_data.CcSuffix )) {
+			return res.json(400, { 'CcPrefix': 'Invalid credit card prefix.' });	
+		}
+		
+		$()
+		.seq(function() {
+			User.findById(req.user._id, this);
+		})
+		.seq(function(user) {
+
+			if (!user) { return res.json(400, {'user': 'User not found.'} ); }
+
+			var cb = req.body;
+
+			if (!cb.portal_data) {
+				cb.portal_data = {};
+			}
+			if (!cb.portal_data.Portal) {
+				// sort of redundant, as it'll also be the parent, however import may set
+				// Portal if we're importing more than one Acquirer at once?
+				cb.portal_data.Portal = req.user.name;
+			}
+
+			var chargeback = new Chargeback();
+			chargeback.crm_data = cb.crm_data;
+			chargeback.portal_data = cb.portal_data;
+			chargeback.shipping_data = cb.shipping_data;
+			chargeback.gateway_data = cb.gateway_data;
+			chargeback.status = "New";
+			chargeback.manual = true;
+
+			if (!chargeback.gateway_data.TransType) {
+				chargeback.gateway_data.TransType = "Card Settle";
+			}
+			if (!chargeback.gateway_data.TransStatus) {
+				chargeback.gateway_data.TransStatus = "Complete";
+			}
+			
+			if (user.parent) {
+				chargeback.parent = User.toMicro(user.parent);
+			} else {
+				chargeback.parent = User.toMicro(user);
+			}
+			
+			chargeback.user = User.toMicro(user);
+			
+			chargeback.save(this);
+
+		})
+		.seq(function(cb) {
+
+			// cache busting on static api end point
+			res.header('Content-Type', 'application/json');
+			res.header('Cache-Control', 'no-cache, private, no-store, must-revalidate, max-stale=0, post-check=0, pre-check=0');
+			return res.json(cb);
+
+		})
+		.catch(next);
+
+	});
+
 
 	app.put('/api/v1/chargeback/:_id', mw.auth(), function(req, res, next) {
 

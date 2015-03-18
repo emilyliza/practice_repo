@@ -66,8 +66,6 @@
 			$rootScope.$on(AUTH_EVENTS.loginSuccess, function() {
 				$scope.currentUser = UserService.getCurrentUser();
 			});
-			
-			
 		
     }])
 

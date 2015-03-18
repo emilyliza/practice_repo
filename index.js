@@ -39,8 +39,11 @@ app.use(bodyParser.urlencoded());
 app.use(bodyParser.json());
 app.use(expressValidator({
 	errorFormatter: function(param, msg) {
-		var ro = {};
-		ro[param] = msg;
+		var namespace = param.split('.'),
+      		v = namespace.pop();
+
+    	var ro = {};
+		ro[v] = msg;
 		return ro;
 	}
 }));

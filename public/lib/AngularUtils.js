@@ -2,6 +2,24 @@
 
 	angular.module('utils', [])
 
+	.factory("UtilService", ["$rootScope", function ($rootScope) {
+		return {
+			formatErrors: function (data) {
+				if (!data) { return {}; }
+				var errors = {};
+				if (_.isArray(data)) {
+					_.each(data, function(v) {
+						var k = _.keys(v)[0];
+						errors[k] = v[k];
+					});
+				} else {
+					errors = data;
+				}
+				return errors;
+			}
+    	};
+	}])
+
 	.directive('isdate', function() {
 		return {
 			require: 'ngModel',

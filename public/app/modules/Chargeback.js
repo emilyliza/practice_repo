@@ -71,11 +71,12 @@
 	}])
 
 	.controller('ChargebackController', 
-			['$scope', '$rootScope', 'ChargebackService', 'UploadService', '$timeout', 'res', '$state', '$modal',
-			function ($scope, $rootScope, ChargebackService, UploadService, $timeout, res, $state, $modal) {
+			['$scope', '$rootScope', 'ChargebackService', 'UploadService', '$timeout', 'res', '$state', '$modal', 'UtilService',
+			function ($scope, $rootScope, ChargebackService, UploadService, $timeout, res, $state, $modal, UtilService) {
 		
 		// data is retrieved in resolve within route
 		$scope.data = (res ? res.data : ChargebackService.getDefaults());
+		$scope.errors = {};
 		
 		if ($scope.data.status == "In-Progress" && $state.current.name != "chargeback.data" && $state.current.name != "chargeback.review" && $state.current.name != "chargeback.confirmation") {
 			$state.go('chargeback.data', { '_id': res.data._id }, { location: "replace"} );
@@ -103,25 +104,24 @@
 		$scope.shipping_companies = ["USPS", "Fedex", "UPS", "DHL"];
 		
 
+		$scope.$watch("data", function(newValue, oldValue){
+			$scope.errors = {};
+			$scope.$broadcast('show-errors-reset');	
+			var popups = document.querySelectorAll('.popover');
+			_.each(popups, function(p) { p.remove(); });
+		},true);
 
-		
 
 		var _this = this;
 		$scope.saveNew = function(data) {
 			$scope.$broadcast('show-errors-check-validity');
 			if ($scope.cbNewForm.$valid) {
-				
-				$scope.data.manual = true;
-
 				$scope.newService = ChargebackService.save($scope.data).then(function (res) {
 					$scope.data = res.data;
 					$state.go('chargeback.card', { '_id': res.data._id });
 				}, function (res) {
-					if (res.data.errors) {
-						$scope.errors = res.data.errors;
-					}
+					$scope.errors = UtilService.formatErrors(res.data);
 				});
-
 			}
 		};
 
@@ -274,8 +274,7 @@
 			if (data._id) {
 				return $http.put('/api/v1/chargeback/' + data._id, data);
 			} else {
-				var user = UserService.getCurrentUser();
-				return $http.post('/api/v1/chargebacks', { 'createChildren': false, 'user': user, 'chargebacks': [ data ] });
+				return $http.post('/api/v1/chargeback', data);
 			}	
 		};
 
