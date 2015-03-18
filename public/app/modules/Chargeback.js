@@ -231,7 +231,7 @@
 			_.each(items, function(item) {
 				item.type = 'additional';
 				$scope.data.attachments.push(item);	
-			})
+			});
 			$scope.ds();
 		};
 
@@ -245,7 +245,7 @@
 			_.each(items, function(item) {
 				item.type = 'receipt';
 				$scope.data.attachments.push(item);	
-			})
+			});
 			$scope.ds();
 		};
 		

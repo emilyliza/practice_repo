@@ -89,8 +89,8 @@
 			return this.uploads;
 		};
 
-		UploadService.prototype.done = function(uploads) {}
-		UploadService.prototype.err = function() { }
+		UploadService.prototype.done = function(uploads) {};
+		UploadService.prototype.err = function() { };
 
 
 		return UploadService;
