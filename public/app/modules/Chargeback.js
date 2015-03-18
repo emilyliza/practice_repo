@@ -42,7 +42,7 @@
 			requiresAuth: true,
 			templateUrl: '/app/templates/chargeback.data.html',
 			resolve: {
-				scroll:  function() {
+				scroll: function() {
 					$("html, body").animate({ scrollTop: 0 }, 200);
 				}
 			}
@@ -140,6 +140,7 @@
 			// save no matter what, but don't let user proceed without fixing errors!
 			ChargebackService.save($scope.data).then(function (res) {
 				$scope.data = res.data;
+				$scope.checkForErrors($scope.data);
 			}, function (res) {
 				$scope.errors = UtilService.formatErrors(res.data);
 			});
@@ -204,20 +205,6 @@
 		};
 
 
-		// var ups = [{
-		// 	'name': 'up_add',
-		// 	'type': 'additional'
-		// },{
-		// 	'name': 'up_terms',
-		// 	'type': 'terms'
-		// },{
-		// 	'name': 'up_receipt',
-		// 	'type': 'receipt'
-		// },{
-		// 	'name': 'up_agree',
-		// 	'type': 'agreement'
-		// }];
-
 		$scope.up_add = new UploadService(5);
 		$scope.up_add.failed = function() {
 			$scope.uploadError = true; // set UploadError to true to display error message in side bar
@@ -237,7 +224,6 @@
 			$scope.uploadError = true; // set UploadError to true to display error message in side bar
 		};
 		$scope.up_receipt.done = function(items) {
-			console.log(items);
 			_.each(items, function(item) {
 				item.type = 'receipt';
 				$scope.data.attachments.push(item);	
@@ -246,17 +232,20 @@
 		};
 		
 
-		
+		$scope.checkForErrors = function(d) {
+			if (d) {
+				$timeout(function() {
+					$scope.$broadcast('show-errors-check-validity');	
+					if ($scope.cbForm.$valid && $scope.data.type) { 
+						$scope.disableReview = false;
+					} else {
+						$scope.disableReview = true;
+					}
+				},500);
+			}
+		};
+		$scope.checkForErrors(res.data);
 
-		if (res.data) {
-			$timeout(function() {
-				$scope.$broadcast('show-errors-check-validity');	
-				if ($scope.cbForm.$valid && $scope.data.type) { 
-					$scope.disableReview = false;
-				}
-			},50);
-		}
-		
 
 	}])
 
