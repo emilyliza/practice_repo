@@ -10,9 +10,9 @@
 	
 		<div class="dash-stat dash-green">
 			<div class="stat-head">Amount Won Back</div>
-			<div class="stat">
-				{{data.won_amount | currency:"$":0}}
-				<span ng-if="!data.won_amount">None yet!</span>
+			<div class="stat" style="cursor: pointer;" ui-sref="chargebacks({status: 'Won'})">
+				{{data.Won.sum | currency:"$":0}}
+				<span ng-if="!data.Won.sum">None yet!</span>
 			</div>
 		</div>
 

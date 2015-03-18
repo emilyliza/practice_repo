@@ -48,8 +48,11 @@
 		</div>
 
 		<div class="dash-stat dash-green" style="margin-bottom: 32px;">
-			<div class="stat-head">Amount to Win Back</div>
-			<div class="stat">{{dbs.data_dashboard.New.sum | currency:"$":0}}</div>
+			<div class="stat-head">New Chargebacks to Win Back</div>
+			<div class="stat" style="cursor: pointer;" ui-sref="chargebacks({status: 'New'})">
+				{{dbs.data_dashboard.New.sum | currency:"$":0}}
+				<span ng-if="!dbs.data_dashboard.New.sum">None yet!</span>
+			</div>
 		</div>
 
 		<a href="/chargebacks" class="btn btn-lg btn-cb-orange" style="width: 100%;">View All Chargebacks</a>
@@ -78,10 +81,10 @@
 		</div>
 
 		<div class="dash-stat" style="margin-bottom: 32px;">
-			<div class="stat-head">Amount to Win Back</div>
-			<div class="stat">
-				{{dbs.data_dashboard.pending_amount | currency:"$":0}}
-				<span ng-if="!dbs.data_dashboard.pending_amount">None yet!</span>
+			<div class="stat-head">Pending Resolution</div>
+			<div class="stat" style="cursor: pointer;" ui-sref="chargebacks({status: 'Sent'})">
+				{{dbs.data_dashboard.Sent.sum | currency:"$":0}}
+				<span ng-if="!dbs.data_dashboard.Sent.sum">None yet!</span>
 			</div>
 		</div>
 

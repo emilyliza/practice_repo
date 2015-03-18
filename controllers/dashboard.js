@@ -141,7 +141,6 @@ module.exports = function(app) {
 
 
 			out.won_amount = 0;
-			out.pending_amount = 0;
 			out.hwl = false;
 			out.winloss = {
 				"won": 0,
