@@ -124,29 +124,30 @@ module.exports = function(app) {
 		.seq('msgs', function() {
 			var msgs = [];
 			_.each(doc[doc.fields], function(p) {
+				if (!p.processed) {
+					var url = "";
+					if (doc.notify_url) {
+						url = doc.notify_url + doc._id;
+					}
 
-				var url = "";
-				if (doc.notify_url) {
-					url = doc.notify_url + doc._id;
-				}
+					var data = {
+						"original": "/vault/" + p._id + p.extension,
+						"notify": url,
+						"descriptions": []
+					};
 
-				var data = {
-					"original": "/vault/" + p._id + p.extension,
-					"notify": url,
-					"descriptions": []
-				};
-
-				_.each(doc.sizes, function(v) {
-					data.descriptions.push({
-						"suffix":  v.key,
-						"width": v.width,
-						"height": v.height,
-						"strategy": v.strategy
+					_.each(doc.sizes, function(v) {
+						data.descriptions.push({
+							"suffix":  v.key,
+							"width": v.width,
+							"height": v.height,
+							"strategy": v.strategy
+						});
 					});
-				});
 
-				log.log('createJob: creating new msg');
-				msgs.push(data);
+					log.log('createJob: creating new msg');
+					msgs.push(data);
+				}
 			});
 			log.log(msgs);
 			this(null, msgs);
