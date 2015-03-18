@@ -146,10 +146,27 @@
 	</div>
 </div>
 
-
-<div class="review-block" ng-if="data.attachments.length">
+<div class="review-block" ng-show="(data.attachments | filter: { type:'additional' }).length">
+	<h4>Terms</h4>
+	<div class="row" ng-repeat="item in data.attachments | filter: { type:'additional' }">
+		<div class="col-sm-12"><img ng-src="{{item.urls.large}}"></div>
+	</div>
+</div>
+<div class="review-block" ng-show="(data.attachments | filter: { type:'checkout' }).length">
+	<h4>Checkout</h4>
+	<div class="row" ng-repeat="item in data.attachments | filter: { type:'checkout' }">
+		<div class="col-sm-12"><img ng-src="{{item.urls.large}}"></div>
+	</div>
+</div>
+<div class="review-block" ng-show="(data.attachments | filter: { type:'receipt' }).length">
+	<h4>Receipts</h4>
+	<div class="row" ng-repeat="item in data.attachments | filter: { type:'receipt' }">
+		<div class="col-sm-12"><img ng-src="{{item.urls.large}}"></div>
+	</div>
+</div>
+<div class="review-block" ng-show="(data.attachments | filter: { type:'additional' }).length">
 	<h4>Attachments</h4>
-	<div class="row" ng-repeat="item in data.attachments">
+	<div class="row" ng-repeat="item in data.attachments | filter: { type:'additional' }">
 		<div class="col-sm-12"><img ng-src="{{item.urls.large}}"></div>
 	</div>
 </div>
