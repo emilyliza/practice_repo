@@ -32,8 +32,8 @@
 	}])
 
 	.controller('LoginController', 
-		[ '$scope', '$rootScope', 'AUTH_EVENTS', 'UserService', '$state', '$window', 
-		function ($scope, $rootScope, AUTH_EVENTS, UserService, $state, $window) {
+		[ '$scope', '$rootScope', 'AUTH_EVENTS', 'UserService', '$state', '$window', 'UtilService',
+		function ($scope, $rootScope, AUTH_EVENTS, UserService, $state, $window, UtilService) {
 		
 		$scope.credentials = {};
 		$scope.errors = {};
@@ -56,9 +56,7 @@
 					$state.go('dashboard');
 				}, function (res) {
 					$rootScope.$broadcast(AUTH_EVENTS.loginFailed);
-					if (res.data) {
-						$scope.errors = res.data;
-					}
+					$scope.errors = UtilService.formatErrors(res.data);
 				});
 
 			}

@@ -24,7 +24,7 @@
 
 	}])
 
-	.controller('AccountController', ['$scope', '$rootScope', '$state', 'AUTH_EVENTS', 'AccountService', 'UserService', function ($scope, $rootScope, $state, AUTH_EVENTS, AccountService, UserService) {
+	.controller('AccountController', ['$scope', '$rootScope', '$state', 'AUTH_EVENTS', 'AccountService', 'UserService', 'UtilService', function ($scope, $rootScope, $state, AUTH_EVENTS, AccountService, UserService, UtilService) {
 		
 		$scope.user = {};
 		$scope.errors = {};
@@ -44,12 +44,10 @@
 			if ($scope.acctForm.$valid) {
 				
 				$scope.accountService = AccountService.save(data).then(function (user) {
-					$scope.setCurrentUser(user);
+					UserService.setUser(user);
 					$scope.saved = true;
 				}, function (res) {
-					if (res.data.errors) {
-						$scope.errors = res.data.errors;
-					}
+					$scope.errors = UtilService.formatErrors(res.data);
 				});
 
 			}
@@ -78,9 +76,7 @@
 					});
 
 				}, function (res) {
-					if (res.data.errors) {
-						$scope.errors = res.data.errors;
-					}
+					$scope.errors = UtilService.formatErrors(res.data);
 				});
 
 			}

@@ -12,7 +12,7 @@
 
 	}])
 
-	.controller('ForgotController', ['$scope', '$state', 'ForgotService', function($scope, $state, ForgotService) {
+	.controller('ForgotController', ['$scope', '$state', 'ForgotService', 'UtilService', function($scope, $state, ForgotService, UtilService) {
 
 		$scope.service = new ForgotService();
 		$scope.errors = {};
@@ -34,11 +34,7 @@
 				then(function() {
 					$scope.data.sent = true;
 				},function(res) {
-					// errors
-					if (res.data.errors) {
-						$scope.errors = res.data.errors;
-					}
-					return true;
+					$scope.errors = UtilService.formatErrors(res.data);
 				});
 			}
 		};

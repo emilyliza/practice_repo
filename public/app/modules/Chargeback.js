@@ -141,9 +141,7 @@
 			ChargebackService.save($scope.data).then(function (res) {
 				$scope.data = res.data;
 			}, function (res) {
-				if (res.data.errors) {
-					$scope.errors = res.data.errors;
-				}
+				$scope.errors = UtilService.formatErrors(res.data);
 			});
 		};
 
@@ -199,9 +197,7 @@
 						$scope.data = res.data;
 						$state.go('chargeback.confirmation');
 					}, function (res) {
-						if (res.data.errors) {
-							$scope.errors = res.data.errors;
-						}
+						$scope.errors = UtilService.formatErrors(res.data);
 					});
 				}
 			});

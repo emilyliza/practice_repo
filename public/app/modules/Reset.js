@@ -22,7 +22,7 @@
 
 	}])
 
-	.controller('ResetController', ['$scope', '$state', 'res', 'ResetService', function($scope, $state, res, ResetService) {
+	.controller('ResetController', ['$scope', '$state', 'res', 'ResetService', 'UtilService', function($scope, $state, res, ResetService, UtilService) {
 
 		$scope.service = new ResetService();
 		$scope.errors = {};
@@ -45,11 +45,7 @@
 					$scope.done = true;
 					$scope.data.reset_token = false;
 				},function(res) {
-					// errors
-					if (res.data.errors) {
-						$scope.errors = res.data.errors;
-					}
-					return true;
+					$scope.errors = UtilService.formatErrors(res.data);
 				});
 			}
 		};
