@@ -299,10 +299,10 @@ module.exports = function(app) {
 
 			var updated = _.omit(req.body, ['_id', 'createdOn', 'attachments']);
 			data.set(updated);
-			
+			data.set('updatedOn', new Date());
+
 			if (data.status == "New") {
-				data.set('status', "In-Progress");
-				data.set('updatedOn', new Date());
+				data.set('status', "In-Progress");	
 			}
 
 			if (req.body.attachments && req.body.attachments.length) {
