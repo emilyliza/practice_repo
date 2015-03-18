@@ -300,7 +300,7 @@ module.exports = function(app) {
 			var updated = _.omit(req.body, ['_id', 'createdOn', 'attachments']);
 			data.set(updated);
 			
-			if (!data.updatedOn) {
+			if (data.status == "New") {
 				data.set('status', "In-Progress");
 				data.set('updatedOn', new Date());
 			}
