@@ -2,22 +2,27 @@
 
 	angular.module('upload', ['angularFileUpload'])
 	
-	.service('UploadService', ['$http', 'FileUploader', function ($http, FileUploader) {
+	.factory('UploadService', ['$http', '$rootScope', 'FileUploader', function ($http, $rootScope, FileUploader) {
 		
-		this.getS3Signature = function(filename,type) {
+		var UploadService = function(limit) {
+			this.uploads = [];
+			this.uploader = false;
+			this.create(limit);
+		};
+
+		UploadService.prototype.getS3Signature = function(filename,type) {
 			/* get signature block and key from server to securely upload file.
 			   returned signature block is attached to direct upload to S3 */
 			return $http.get('/api/v1/s3?filename=' + filename + "&contentType=" + type);
 		};
 
-		this.create = function(limit) {
+		UploadService.prototype.create = function(limit) {
 			
-			var _this = this,
-				uploader = new FileUploader({
-            		queueLimit: limit
-        		});
+			this.uploader = new FileUploader({
+            	queueLimit: limit
+        	});
 
-			uploader.filters.push({
+			this.uploader.filters.push({
             	name: 'imageFilter',
             	fn: function(item /*{File|FileLikeObject}*/, options) {
                 	var type = '|' + item.type.slice(item.type.lastIndexOf('/') + 1).toLowerCase() + '|';
@@ -25,11 +30,12 @@
             	}
         	});
 		
-			uploader.onWhenAddingFileFailed = function() {
+			this.uploader.onWhenAddingFileFailed = function() {
 			
 			};
 			
-			uploader.onAfterAddingFile = function(item) {
+			_this = this;
+			this.uploader.onAfterAddingFile = function(item) {
 				
 				// first get signature from server.
 				_this.getS3Signature(item.file.name, item.file.type).then(function (response) {
@@ -58,11 +64,36 @@
 				});
 			};
 
-			return uploader;
+			this.uploader.onSuccessItem = function(item, res, status, header) {
+				_this.addToUploads(item.data);
+			};
+
+			this.uploader.onCompleteAll = function() {
+				_this.done(_this.uploads);
+			};
+
+			this.uploader.onWhenAddingFileFailed = function() {
+				_this.err();
+			};
 
 		};
 
-		
+		UploadService.prototype.addToUploads = function(data) {
+			if (data.extension == ".pdf") {
+				data.urls.orig = "/images/placeholder.png";
+			}
+			this.uploads.push(data);
+		};
+
+		UploadService.prototype.getUploads = function() {
+			return this.uploads;
+		};
+
+		UploadService.prototype.done = function(uploads) {}
+		UploadService.prototype.err = function() { }
+
+
+		return UploadService;
 
 
 	}])

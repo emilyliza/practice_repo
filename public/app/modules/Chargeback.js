@@ -37,12 +37,6 @@
 			requiresAuth: true,
 			templateUrl: '/app/templates/chargeback.card.html'
 		})
-		.state('chargeback.questions', {
-			url: '/questions',
-			requiresAuth: true,
-			templateUrl: '/app/templates/chargeback.questions.html'
-			
-		})
 		.state('chargeback.data', {
 			url: '/data',
 			requiresAuth: true,
@@ -88,9 +82,7 @@
 		} else if (_.indexOf(["Sent","Won","Lost"], $scope.data.status ) != -1 && $state.current.name != "chargeback.review") {
 			$state.go('chargeback.review', { '_id': res.data._id }, { location: "replace"} );
 		}
-
 		
-		$scope.us = UploadService;
 		$scope.state = $state;
 		$scope.disableReview = true;
 
@@ -111,28 +103,8 @@
 		$scope.shipping_companies = ["USPS", "Fedex", "UPS", "DHL"];
 		
 
-		$scope.uploader = UploadService.create(10);
-		var temp_uploads = [];
-		$scope.uploader.onWhenAddingFileFailed = function() {
-			// set UploadError to true to display error message in side bar
-			$scope.uploadError = true;
-		};
-		$scope.uploader.onSuccessItem = function(item, res, status, header) {
-			if (item.data.extension == ".pdf") {
-				item.data.urls.orig = "/images/placeholder.png";
-			}
-			temp_uploads.push(item.data);
-		};
-		$scope.uploader.onCompleteAll = function() {
-			_.each(temp_uploads, function(item) {
-				if (_.isArray($scope.data.attachments)) {
-					$scope.data.attachments.push(item);
-				} else {
-					$scope.data.attachments = [item];
-				}
-			});
-			ds();
-		};
+
+		
 
 		var _this = this;
 		$scope.saveNew = function(data) {
@@ -234,6 +206,51 @@
 				}
 			});
 		};
+
+
+		// var ups = [{
+		// 	'name': 'up_add',
+		// 	'type': 'additional'
+		// },{
+		// 	'name': 'up_terms',
+		// 	'type': 'terms'
+		// },{
+		// 	'name': 'up_receipt',
+		// 	'type': 'receipt'
+		// },{
+		// 	'name': 'up_agree',
+		// 	'type': 'agreement'
+		// }];
+
+		$scope.up_add = new UploadService(5);
+		$scope.up_add.failed = function() {
+			$scope.uploadError = true; // set UploadError to true to display error message in side bar
+		};
+		$scope.up_add.done = function(items) {
+			console.log(items);
+			_.each(items, function(item) {
+				item.type = 'additional';
+				$scope.data.attachments.push(item);	
+			})
+			$scope.ds();
+		};
+
+
+		$scope.up_receipt = new UploadService(5);
+		$scope.up_receipt.failed = function() {
+			$scope.uploadError = true; // set UploadError to true to display error message in side bar
+		};
+		$scope.up_receipt.done = function(items) {
+			console.log(items);
+			_.each(items, function(item) {
+				item.type = 'receipt';
+				$scope.data.attachments.push(item);	
+			})
+			$scope.ds();
+		};
+		
+
+		
 
 		if (res.data) {
 			$timeout(function() {
