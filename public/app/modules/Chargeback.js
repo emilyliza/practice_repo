@@ -233,6 +233,32 @@
 			$scope.ds();
 		};
 
+		$scope.uploaders['terms'] = new FileUploader({ queueLimit: 5 });
+		$scope.uploaders['terms'].onWhenAddingFileFailed = function() {
+			$scope.uploadError = true; // set UploadError to true to display error message in side bar
+		};
+		$scope.uploaders['terms'].onCompleteAll = function() {
+			_.each($scope.uploaders['terms'].uploads, function(item) {
+				item.type = "terms";
+				$scope.data.attachments.push(item);	
+			});
+			$scope.uploaders['terms'].uploads = [];
+			$scope.ds();
+		};
+
+		$scope.uploaders['checkout'] = new FileUploader({ queueLimit: 5 });
+		$scope.uploaders['checkout'].onWhenAddingFileFailed = function() {
+			$scope.uploadError = true; // set UploadError to true to display error message in side bar
+		};
+		$scope.uploaders['checkout'].onCompleteAll = function() {
+			_.each($scope.uploaders['checkout'].uploads, function(item) {
+				item.type = "checkout";
+				$scope.data.attachments.push(item);	
+			});
+			$scope.uploaders['checkout'].uploads = [];
+			$scope.ds();
+		};
+
 		
 
 		$scope.checkForErrors = function(d) {

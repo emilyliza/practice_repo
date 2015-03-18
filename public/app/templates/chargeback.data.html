@@ -426,6 +426,111 @@
 
 
 
+	<div ng-if="data.type == 'cnp'">
+		<h4 style="margin-top: 100px; font-weight: bold;">Terms</h4>
+		<div style="font-size: 12px; color: #999; padding-bottom: 10px;">Upload a copy of your terms and conditions.</div>
+		<div class="row bt" style="border: none;">
+			<div class="col-md-12" style="margin-bottom: 60px; border: none;">
+
+				<div ng-show="uploaders.terms.isHTML5">
+					<div nv-file-drop="" uploader="uploaders.terms">
+						<div nv-file-over="" uploader="uploaders.terms" over-class="ddhover" class="ddzone" ng-click="triggerUpload('#termsFile')">
+							Upload Terms<br/>
+							<span class="glyphicon glyphicon-picture"></span>
+							<div class="subtext">(drag here or click to upload)</div>
+						</div>
+					</div>
+				</div>
+				<div ng-hide="uploaders.terms.isHTML5" class="ddzone">
+					Upload Terms<br/>
+					<input id="termsFile" type="file" nv-file-select="" uploader="uploaders.terms" multiple />
+				</div>
+				<div class="uploaded">
+
+					<div ng-repeat="saved_item in data.attachments | filter: { type:'terms' }">
+						<div class="img">
+							<div class="remove" ng-click="removeItem(saved_item)">
+								<span class="glyphicon glyphicon-remove-circle"></span>
+							</div>
+							<img ng-if="!saved_item.processed" ng-src="{{saved_item.urls.orig}}">
+							<img ng-if="saved_item.processed" ng-src="{{saved_item.urls.medium}}">
+							<div style="font-weight: bold; overflow: hidden; text-align: center;">{{ saved_item.filename }}</div>
+						</div>
+					</div>
+
+					<div ng-repeat="item in uploaders.terms.queue">
+						<div class="img" ng-show="uploaders.terms.isHTML5">
+							<div ng-thumb="{ file: item._file, width: 200 }"></div>
+							<div style="font-weight: bold; text-align: center;">{{ item.file.name }}</div>
+							
+							<div style="text-align: center;">
+								<div nowrap>{{ item.file.size/1024/1024|number:2 }} MB</div>
+								<div class="progress" style="margin-bottom: 0;">
+									<div class="progress-bar" role="progressbar" ng-style="{ 'width': item.progress + '%' }"></div>
+								</div>
+							</div>
+						</div>
+					</div>
+
+				</div>
+			</div>
+		</div>
+	</div>
+
+
+	<div ng-if="data.type == 'cnp'">
+		<h4 style="margin-top: 100px; font-weight: bold;">Checkout</h4>
+		<div style="font-size: 12px; color: #999; padding-bottom: 10px;">Upload a screenshot of your checkout page, which shows the customer's agreement to terms.</div>
+		<div class="row bt" style="border: none;">
+			<div class="col-md-12" style="margin-bottom: 60px; border: none;">
+
+				<div ng-show="uploaders.checkout.isHTML5">
+					<div nv-file-drop="" uploader="uploaders.checkout">
+						<div nv-file-over="" uploader="uploaders.checkout" over-class="ddhover" class="ddzone" ng-click="triggerUpload('#checkoutFile')">
+							Upload Checkout Screenshot<br/>
+							<span class="glyphicon glyphicon-picture"></span>
+							<div class="subtext">(drag here or click to upload)</div>
+						</div>
+					</div>
+				</div>
+				<div ng-hide="uploaders.checkout.isHTML5" class="ddzone">
+					Upload Checkout Screenshot<br/>
+					<input id="checkoutFile" type="file" nv-file-select="" uploader="uploaders.checkout" multiple />
+				</div>
+				<div class="uploaded">
+
+					<div ng-repeat="saved_item in data.attachments | filter: { type:'checkout' }">
+						<div class="img">
+							<div class="remove" ng-click="removeItem(saved_item)">
+								<span class="glyphicon glyphicon-remove-circle"></span>
+							</div>
+							<img ng-if="!saved_item.processed" ng-src="{{saved_item.urls.orig}}">
+							<img ng-if="saved_item.processed" ng-src="{{saved_item.urls.medium}}">
+							<div style="font-weight: bold; overflow: hidden; text-align: center;">{{ saved_item.filename }}</div>
+						</div>
+					</div>
+
+					<div ng-repeat="item in uploaders.checkout.queue">
+						<div class="img" ng-show="uploaders.checkout.isHTML5">
+							<div ng-thumb="{ file: item._file, width: 200 }"></div>
+							<div style="font-weight: bold; text-align: center;">{{ item.file.name }}</div>
+							
+							<div style="text-align: center;">
+								<div nowrap>{{ item.file.size/1024/1024|number:2 }} MB</div>
+								<div class="progress" style="margin-bottom: 0;">
+									<div class="progress-bar" role="progressbar" ng-style="{ 'width': item.progress + '%' }"></div>
+								</div>
+							</div>
+						</div>
+					</div>
+
+				</div>
+			</div>
+		</div>
+	</div>
+
+
+
 	
 	<h4 style="margin-top: 100px; font-weight: bold;">Attachments</h4>
 	<div style="font-size: 12px; color: #999; padding-bottom: 10px;">Upload any additional information relevant to the transaction.</div>
