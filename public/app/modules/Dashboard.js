@@ -18,7 +18,10 @@
 		$scope.winloss = {};
 		$scope.dbs.loadDashboard().then(function(data) {
 			if (data.hwl) {
-				$scope.winloss.update(data.winloss);	
+				$timeout(function() {
+					$scope.winloss.update(data.winloss);		
+				},150);
+				
 			}
 		});
 		

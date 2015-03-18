@@ -239,7 +239,9 @@
 			ReportingService.getDashboard().then(function(res) {
 				$scope.data = res;
 				if ($scope.data.hwl) {
-					$scope.winloss.update($scope.data.winloss);		
+					$timeout(function() {
+						$scope.winloss.update($scope.data.winloss);		
+					},150);
 				}	
 			});
 			$timeout(function() {
