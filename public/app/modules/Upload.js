@@ -65,7 +65,7 @@
 			};
 
 			return FileUploader;
-		}])
+		}]);
 	}])
 
 	.directive('ngThumb', ['$window', function($window) {

@@ -38,11 +38,12 @@ module.exports = function(app) {
 			return next();
 		}
 
+		
 		if (!doc[doc.fields] || !doc[doc.fields].length) {
 			if (doc.field) { doc.set(doc.field, undefined); }
 			if (doc.fields) { doc.set(doc.fields, undefined); }
 			log.log('no photos clearing.');
-			next();
+			return next();
 		}
 			
 		// set all urls to orig as placeholder until they're processed.

@@ -195,7 +195,7 @@ module.exports = function(app) {
 		next();
 	})
 
-	.pre('save', function (next) {
+	.pre('save', function(next) {
 		Upload.presave(this,function(err) {
 			return next(err);
 		});
