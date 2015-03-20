@@ -1,4 +1,3 @@
-
 var fs = require('fs'),
 	express = require('express'),
 	device = require('express-device'),
@@ -12,10 +11,6 @@ var fs = require('fs'),
 
 if (!process.env.NODE_ENV) {
 	require('dotenv').load();
-}
-
-if (process.env.NODE_ENV == "production") {
-	var newrelic = require('newrelic');
 }
 
 // Config

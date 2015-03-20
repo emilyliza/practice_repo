@@ -1,6 +1,7 @@
 module.exports = function(grunt) {
 
 	var path = require('path');
+	require('dotenv').load();
 
 	var lessCreateConfig = function (context, block) {
 		var cfg = {files: []},
@@ -29,7 +30,6 @@ module.exports = function(grunt) {
 
 	grunt.initConfig({
 		pkg: grunt.file.readJSON('package.json'),
-		//aws: grunt.file.readJSON("aws.json"),
 		aws: {
 			"accessKeyId": process.env.AWS_KEY,
 			"secretAccessKey": process.env.AWS_SECRET,

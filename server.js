@@ -1,4 +1,9 @@
 #!/usr/bin/env node
+
+if (process.env.NODE_ENV == "production") {
+	var newrelic = require('newrelic');
+}
+
 var app = require("./index"),
 	log = app.get('log');
 
