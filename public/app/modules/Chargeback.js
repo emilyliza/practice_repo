@@ -84,8 +84,12 @@
 			$state.go('chargeback.review', { '_id': res.data._id }, { location: "replace"} );
 		}
 		
-		$scope.state = $state;
-		$scope.disableReview = true;
+		$scope.settings = {
+			openeda: false,
+			openedb: false
+		};
+		$scope.settings.state = $state;
+		$scope.settings.disableReview = true;
 
 		$scope.setCard = function(c) {
 			$scope.data.type = c;
@@ -96,13 +100,16 @@
 		};
 
 		if (!$scope.data.shipped) {
-			$scope.shipped = false;
+			$scope.settings.shipped = false;
 		}
 
 		$scope.data.chc = true;
+		if (!$scope.data.gateway_data.TransDate) {
+			$scope.data.gateway_data.TransDate = "";
+		}
 
-		$scope.shipping_companies = ["USPS", "Fedex", "UPS", "DHL"];
-		$scope.cctypes = [
+		$scope.settings.shipping_companies = ["USPS", "Fedex", "UPS", "DHL"];
+		$scope.settings.cctypes = [
 			"",
 			"VISA",
 			"MASTERCARD",
@@ -141,9 +148,9 @@
 		$scope.save = function(halt_save_on_error) {
 			$scope.$broadcast('show-errors-check-validity');
 			if ($scope.cbForm.$valid) {
-				$scope.disableReview = false;
+				$scope.settings.disableReview = false;
 			} else {
-				$scope.disableReview = true;
+				$scope.settings.disableReview = true;
 			}
 
 			if (halt_save_on_error && $scope.cbForm[halt_save_on_error]['$invalid']) {
@@ -273,9 +280,9 @@
 				$timeout(function() {
 					$scope.$broadcast('show-errors-check-validity');	
 					if ($scope.cbForm.$valid && $scope.data.type) { 
-						$scope.disableReview = false;
+						$scope.settings.disableReview = false;
 					} else {
-						$scope.disableReview = true;
+						$scope.settings.disableReview = true;
 					}
 				},500);
 			}
