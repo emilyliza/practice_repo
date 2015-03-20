@@ -5,8 +5,6 @@
 		</h2>
 	</div>
 	<div class="col-md-4">
-		
-		
 		<div class="row step-circles" ng-if="data.status == 'New' || data.status == 'In-Progress'" data-spy="affix" data-offset-top="140">
 			<div class="col-xs-4" ui-sref-active="active" ui-sref=".card">
 				<span>1</span> Type
@@ -24,14 +22,10 @@
 				<span>3</span> Review
 			</div>
 		</div>
-	
-		
 	</div>
 </div>
 
-<form name="cbForm" role="form" novalidate >
-	
-	<div class="row">
+<div class="row">
 	
 	<div class="col-md-4 col-md-push-8 form-sidebar">
 		
@@ -129,7 +123,9 @@
 		</div>
 
 	</div>
-	<div class="col-md-8 col-md-pull-4" ui-view>
-		
+	<div class="col-md-8 col-md-pull-4">
+		<form name="cbForm" role="form" novalidate>
+			<div ui-view></div>
+		</form>
 	</div>
-</form>
+</div>

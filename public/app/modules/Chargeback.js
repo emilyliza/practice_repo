@@ -102,7 +102,20 @@
 		$scope.data.chc = true;
 
 		$scope.shipping_companies = ["USPS", "Fedex", "UPS", "DHL"];
-		
+		$scope.cctypes = [
+			"",
+			"VISA",
+			"MASTERCARD",
+			"AMEX",
+			"DISCOVER",
+			"ELECTRON",
+			"MAESTRO",
+			"DANKORT",
+			"INTERPAYMENT",
+			"UNIONPAY",
+			"DINERS",
+			"JCB"
+		];
 
 		$scope.$watch("data", function(newValue, oldValue){
 			$scope.errors = {};
@@ -142,7 +155,9 @@
 				$scope.data = res.data;
 				$scope.checkForErrors($scope.data);
 			}, function (res) {
+				console.log(res);
 				$scope.errors = UtilService.formatErrors(res.data);
+				console.log($scope.errors)
 			});
 		};
 
