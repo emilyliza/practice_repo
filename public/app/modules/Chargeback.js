@@ -57,14 +57,19 @@
 				}
 			}
 		})
-		.state('chargeback.confirmation', {
-			url: '/confirmation',
+		.state('chargebackconfirmation', {
+			url: '/chargeback/{_id}/confirmation',
 			requiresAuth: true,
 			templateUrl: '/app/templates/chargeback.confirmation.html',
+			controller: 'ChargebackController',
 			resolve: {
-				scroll:  function() {
-					$("html, body").animate({ scrollTop: 0 }, 200);
-				}
+				res: ['$http', '$stateParams', '$state', 'ChargebackService', function($http, $stateParams, $state, ChargebackService){
+					if ($stateParams._id) {
+						return ChargebackService.get($stateParams._id);
+					} else {
+						return false;
+					}
+				}]
 			}
 		});
 		
@@ -78,9 +83,9 @@
 		$scope.data = (res ? res.data : ChargebackService.getDefaults());
 		$scope.errors = {};
 		
-		if ($scope.data.status == "In-Progress" && $state.current.name != "chargeback.data" && $state.current.name != "chargeback.review" && $state.current.name != "chargeback.confirmation") {
+		if ($scope.data.status == "In-Progress" && $state.current.name != "chargeback.data" && $state.current.name != "chargeback.review" && $state.current.name != "chargebackconfirmation") {
 			$state.go('chargeback.data', { '_id': res.data._id }, { location: "replace"} );
-		} else if (_.indexOf(["Sent","Won","Lost"], $scope.data.status ) != -1 && $state.current.name != "chargeback.review") {
+		} else if (_.indexOf(["Sent","Won","Lost"], $scope.data.status ) != -1 && ($state.current.name != "chargeback.review" && $state.current.name != "chargebackconfirmation")) {
 			$state.go('chargeback.review', { '_id': res.data._id }, { location: "replace"} );
 		}
 		
@@ -217,7 +222,7 @@
 				if (confirm) {
 					ChargebackService.submit($scope.data).then(function (res) {
 						$scope.data = res.data;
-						$state.go('chargeback.confirmation');
+						$state.go('chargebackconfirmation', { '_id': res.data._id });
 					}, function (res) {
 						$scope.errors = UtilService.formatErrors(res.data);
 					});
