@@ -146,9 +146,9 @@
 	</div>
 </div>
 
-<div class="review-block" ng-show="(data.attachments | filter: { type:'additional' }).length">
+<div class="review-block" ng-show="(data.attachments | filter: { type:'terms' }).length">
 	<h4>Terms</h4>
-	<div class="row" ng-repeat="item in data.attachments | filter: { type:'additional' }">
+	<div class="row" ng-repeat="item in data.attachments | filter: { type:'terms' }">
 		<div class="col-sm-12"><img ng-src="{{item.urls.large}}"></div>
 	</div>
 </div>

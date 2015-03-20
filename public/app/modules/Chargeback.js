@@ -154,6 +154,7 @@
 			ChargebackService.save($scope.data).then(function (res) {
 				$scope.data = res.data;
 				$scope.checkForErrors($scope.data);
+				$scope.addUploaders();
 			}, function (res) {
 				console.log(res);
 				$scope.errors = UtilService.formatErrors(res.data);
@@ -220,59 +221,52 @@
 		};
 
 
-		
-		$scope.uploaders = {};
-		$scope.uploaders['receipt'] = new FileUploader({ queueLimit: 5 });
-		$scope.uploaders['receipt'].onWhenAddingFileFailed = function() {
-			$scope.uploadError = true; // set UploadError to true to display error message in side bar
-		};
-		$scope.uploaders['receipt'].onCompleteAll = function() {
-			_.each($scope.uploaders['receipt'].uploads, function(item) {
-				item.type = "receipt";
-				$scope.data.attachments.push(item);	
+		$scope.addUploaders = function() {
+			if ($scope.uploaders) {
+				$scope.uploaders['receipt'].setUploads($scope.data.attachments);
+				$scope.uploaders['add'].setUploads($scope.data.attachments);
+				$scope.uploaders['terms'].setUploads($scope.data.attachments);
+				$scope.uploaders['checkout'].setUploads($scope.data.attachments);
+				return;
+			}
+			$scope.uploaders = {};
+			$scope.uploaders['receipt'] = new FileUploader({
+				queueLimit: 5,
+				type: "receipt"
 			});
-			$scope.uploaders['receipt'].uploads = [];
-			$scope.ds();
-		};
+			$scope.uploaders['receipt'].setUploads($scope.data.attachments);
+			$scope.uploaders['receipt'].onCompleteAll = function() {
+				$scope.ds();
+			};
 
-		$scope.uploaders['add'] = new FileUploader({ queueLimit: 5 });
-		$scope.uploaders['add'].onWhenAddingFileFailed = function() {
-			$scope.uploadError = true; // set UploadError to true to display error message in side bar
-		};
-		$scope.uploaders['add'].onCompleteAll = function() {
-			_.each($scope.uploaders['add'].uploads, function(item) {
-				item.type = "additional";
-				$scope.data.attachments.push(item);	
+			$scope.uploaders['add'] = new FileUploader({
+				queueLimit: 5,
+				type: "additional"
 			});
-			$scope.uploaders['add'].uploads = [];
-			$scope.ds();
-		};
+			$scope.uploaders['add'].setUploads($scope.data.attachments);
+			$scope.uploaders['add'].onCompleteAll = function() {
+				$scope.ds();
+			};
+			
+			$scope.uploaders['terms'] = new FileUploader({
+				queueLimit: 5, 
+				type: "terms"
+			});
+			$scope.uploaders['terms'].setUploads($scope.data.attachments);
+			$scope.uploaders['terms'].onCompleteAll = function() {
+				$scope.ds();
+			};
 
-		$scope.uploaders['terms'] = new FileUploader({ queueLimit: 5 });
-		$scope.uploaders['terms'].onWhenAddingFileFailed = function() {
-			$scope.uploadError = true; // set UploadError to true to display error message in side bar
-		};
-		$scope.uploaders['terms'].onCompleteAll = function() {
-			_.each($scope.uploaders['terms'].uploads, function(item) {
-				item.type = "terms";
-				$scope.data.attachments.push(item);	
+			$scope.uploaders['checkout'] = new FileUploader({
+				queueLimit: 5, 
+				type: "checkout"
 			});
-			$scope.uploaders['terms'].uploads = [];
-			$scope.ds();
+			$scope.uploaders['checkout'].setUploads($scope.data.attachments);
+			$scope.uploaders['checkout'].onCompleteAll = function() {
+				$scope.ds();
+			};
 		};
-
-		$scope.uploaders['checkout'] = new FileUploader({ queueLimit: 5 });
-		$scope.uploaders['checkout'].onWhenAddingFileFailed = function() {
-			$scope.uploadError = true; // set UploadError to true to display error message in side bar
-		};
-		$scope.uploaders['checkout'].onCompleteAll = function() {
-			_.each($scope.uploaders['checkout'].uploads, function(item) {
-				item.type = "checkout";
-				$scope.data.attachments.push(item);	
-			});
-			$scope.uploaders['checkout'].uploads = [];
-			$scope.ds();
-		};
+		$scope.addUploaders();
 
 		
 

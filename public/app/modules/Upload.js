@@ -11,8 +11,7 @@
 
 			// override default over class ("nv-file-over")
 			//FileUploader.FileOver.prototype.overClass = 'your-class-name';
-
-			FileUploader.prototype.uploads = [];
+			
 
 			FileUploader.prototype.filters = [{
             	name: 'imageFilter',
@@ -61,8 +60,16 @@
 				if (item.data.extension == ".pdf") {
 					item.data.urls.orig = "/images/placeholder.png";
 				}
+				if (this.type) {
+					item.data.type = this.type;
+				}
+				console.log(item.data);
 				this.uploads.push(item.data);
 			};
+
+			FileUploader.prototype.setUploads = function(uploads) {
+				this.uploads = uploads;
+			}
 
 			return FileUploader;
 		}]);
