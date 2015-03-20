@@ -48,13 +48,39 @@
 			</div>
 		</div>
 		<div class="row">
-			<div class="col-md-6">
+			<div class="col-md-4">
+				<div class="form-group" show-errors>
+					<label>CC Expires</label>
+					<input name="CcExpire" type="text" class="form-control" pop-show="{{errors.CcExpire}}" pop="{{errors.CcExpire}}" pop-placement="right" ng-model="data.gateway_data.CcExpire" placeholder="Format: MMYYYY" ng-change="ds()">
+				</div>
+			</div>
+			<div class="col-md-4">
+				<div class="form-group" show-errors>
+					<label>AVS Status</label>
+					<input name="AvsStatus" type="text" class="form-control" pop-show="{{errors.AvsStatus}}" pop="{{errors.AvsStatus}}" pop-placement="right" ng-model="data.gateway_data.AvsStatus" placeholder="" ng-change="ds()">
+				</div>
+			</div>
+			<div class="col-md-4">
+				<div class="form-group" show-errors>
+					<label>CVV Status</label>
+					<input name="CvvStatus" type="text" class="form-control" pop-show="{{errors.CvvStatus}}" pop="{{errors.CvvStatus}}" pop-placement="right" ng-model="data.gateway_data.CvvStatus" placeholder="" ng-change="ds()">
+				</div>
+			</div>
+		</div>	
+		<div class="row">
+			<div class="col-md-4">
+				<div class="form-group" show-errors>
+					<label>Transaction Date</label>
+					<input class="form-control" name="TransDate" type="text" class="form-control" datepicker-popup="MM/dd/yyyy" ng-model="data.gateway_data.TransDate" is-open="opened" ng-click="opened=true" isdate ng-change="ds()">
+				</div>
+			</div>
+			<div class="col-md-4">
 				<div class="form-group" show-errors>
 					<label>Case Number</label>
 					<input name="CaseNumber" type="text" class="form-control" pop-show="{{errors.CaseNumber}}" pop="{{errors.CaseNumber}}" pop-placement="right" ng-model="data.portal_data.CaseNumber" placeholder="" ng-change="ds()">
 				</div>
 			</div>
-			<div class="col-md-6">
+			<div class="col-md-4">
 				<div class="form-group" show-errors>
 					<label>Reference Number</label>
 					<input name="RefNumber" type="text" class="form-control" pop-show="{{errors.RefNumber}}" pop="{{errors.RefNumber}}" pop-placement="right" ng-model="data.portal_data.RefNumber" placeholder="" ng-change="ds()">
