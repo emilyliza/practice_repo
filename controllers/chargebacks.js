@@ -156,8 +156,6 @@ module.exports = function(app) {
 			return res.json(401, { 'chargebacks': 'an array of chargebacks is required.'});
 		}
 
-		
-
 		var cc = true;
 		if (req.body.createChildren) {
 			cc = req.body.createChildren;
@@ -259,7 +257,7 @@ module.exports = function(app) {
 				chargeback.user = User.toMicro(this.vars.parent);	
 			}
 			
-			chargeback.save();
+			chargeback.save(this);
 
 		})
 		.seq(function() {
