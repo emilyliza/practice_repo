@@ -189,6 +189,7 @@ require('./controllers/submitchargeback')(app);
 
 // Admin endpoints
 require('./controllers/admin/users')(app);
+require('./controllers/admin/login')(app);
 
 
 // for admin area
