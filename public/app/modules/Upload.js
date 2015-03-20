@@ -69,7 +69,7 @@
 
 			FileUploader.prototype.setUploads = function(uploads) {
 				this.uploads = uploads;
-			}
+			};
 
 			return FileUploader;
 		}]);

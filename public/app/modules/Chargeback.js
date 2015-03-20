@@ -156,9 +156,7 @@
 				$scope.checkForErrors($scope.data);
 				$scope.addUploaders();
 			}, function (res) {
-				console.log(res);
 				$scope.errors = UtilService.formatErrors(res.data);
-				console.log($scope.errors)
 			});
 		};
 
