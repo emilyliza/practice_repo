@@ -177,20 +177,24 @@ module.exports = function(app) {
 		if (!this.chargebackDate) {
 			this.chargebackDate = new Date();
 		}
-		if (!this.gateway_data.FullName && (this.gateway_data.FirstName || this.gateway_data.LastName)) {
-			if (this.gateway_data.FirstName) {
-				this.gateway_data.FullName = this.gateway_data.FirstName;
-			}
-			if (this.gateway_data.LastName) {
+		if (this.isNew) {
+			if (!this.gateway_data.FullName && (this.gateway_data.FirstName || this.gateway_data.LastName)) {
 				if (this.gateway_data.FirstName) {
-					this.gateway_data.FullName += " ";
+					this.gateway_data.FullName = this.gateway_data.FirstName;
 				}
-				this.gateway_data.FullName += this.gateway_data.LastName;
+				if (this.gateway_data.LastName) {
+					if (this.gateway_data.FirstName) {
+						this.gateway_data.FullName += " ";
+					}
+					this.gateway_data.FullName += this.gateway_data.LastName;
+				}
+			} else if (this.gateway_data.FullName && (!this.gateway_data.FirstName || !this.gateway_data.LastName)) {
+				var name_chunks = this.gateway_data.FullName.split(" ");
+				this.gateway_data.FirstName = name_chunks[0];
+				this.gateway_data.LastName = name_chunks[name_chunks.length - 1];
 			}
-		} else if (this.gateway_data.FullName && (!this.gateway_data.FirstName || !this.gateway_data.LastName)) {
-			var name_chunks = this.gateway_data.FullName.split(" ");
-			this.gateway_data.FirstName = name_chunks[0];
-			this.gateway_data.LastName = name_chunks[name_chunks.length - 1];
+		} else {
+			this.gateway_data.FullName = this.gateway_data.FirstName + ' ' + this.gateway_data.LastName;
 		}
 		next();
 	})
