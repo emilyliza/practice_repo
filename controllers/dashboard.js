@@ -135,8 +135,8 @@ module.exports = function(app) {
 
 			//@TODO: billing and win-loss
 			out.billing = {
-				count: 40,
-				sum: 900
+				count: out.total.count / 2,
+				sum: out.total.sum / 2
 			};
 
 
