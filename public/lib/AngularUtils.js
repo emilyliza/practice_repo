@@ -67,10 +67,13 @@
 		tooltip.compile = function (element, attrs) {      
 			var first = true;
 			attrs.$observe('popShow', function (val) {
+				if (val.match(/^\{\{/)) { return; }
 				if (!first || val || false) {
 					$timeout(function () {
-						element.triggerHandler('event');
-					});
+						var el = angular.element('[name=' + attrs.name + ']');
+						el.triggerHandler('event');
+						el.parent().addClass('has-error');
+					},0);
 				}
 				first = false;
 			});
