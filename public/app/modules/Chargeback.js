@@ -109,7 +109,7 @@
 		}
 
 		$scope.data.chc = true;
-		if (!$scope.data.gateway_data.TransDate) {
+		if ($scope.data.gateway_data && !$scope.data.gateway_data.TransDate) {
 			$scope.data.gateway_data.TransDate = "";
 		}
 
