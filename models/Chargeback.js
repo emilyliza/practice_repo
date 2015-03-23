@@ -89,6 +89,7 @@ module.exports = function(app) {
 			'TrackingSum'      : String
 		},
 		'attachments': [ Upload.schema ],
+		'deleted_attachments': [ Upload.schema ],
 		'additional_comments': String
 	}, { autoIndex: false, strict: true })
 	
@@ -96,7 +97,7 @@ module.exports = function(app) {
 	.plugin(UserMicro, { path: 'parent', objectid: ObjectId })
 
 	.pre('save', function(next) {
-
+		console.log('saving')
 		// get Card type
 		if (!this.gateway_data || !this.gateway_data.CcType || this.isModified('portal_data.CcPrefix') || this.isModified('portal_data.CcSuffix')) {
 			if (this.portal_data.CardNumber) {
@@ -265,14 +266,13 @@ module.exports = function(app) {
 		{ key: 'large', format: "resize", strategy: "bounded", width: 800, height: 10000 }
 	];
 
-	Chargeback.search = function(req, fn) {
+	Chargeback.search = function(req) {
 
-		var query = Chargeback.find(),
-			params = req.query,
-			ands = [];
+		var query = [],
+			params = req.query;
 
 		// restrict to just this user's chargebacks
-		ands.push({
+		query.push({
 			'$or': [
 				{ 'user._id': req.user._id },
 				{ 'parent._id': req.user._id }
@@ -280,12 +280,12 @@ module.exports = function(app) {
 		});
 
 		if (params.start) {
-			ands.push({
+			query.push({
 				'chargebackDate': { '$gte': moment(parseInt(params.start)).toDate() }
 			});
 		}
 		if (params.end) {
-			ands.push({
+			query.push({
 				'chargebackDate': { '$lte': moment(parseInt(params.end)).toDate() }
 			});
 		}
@@ -293,7 +293,7 @@ module.exports = function(app) {
 		if (params.query) {
 			var pattern = new RegExp('.*'+params.query+'.*', 'i');
 			if (params.query.match(/[0-9\.]/)) {
-				ands.push({
+				query.push({
 					'$or': [
 						{ 'portal_data.ChargebackAmt': params.query },
 						{ 'portal_data.MidNumber': pattern },
@@ -301,7 +301,7 @@ module.exports = function(app) {
 					]
 				});
 			} else {
-				ands.push({
+				query.push({
 					'$or': [
 						{ 'derived_data.status.name': pattern },
 						{ 'gateway_data.FirstName': pattern },
@@ -316,33 +316,25 @@ module.exports = function(app) {
 		}
 
 		if (params.merchant) {
-			ands.push({'user._id': params.merchant });
+			query.push({'user._id': params.merchant });
 		}
 
 		if (params.mid) {
-			ands.push({'portal_data.MidNumber': params.mid });
+			query.push({'portal_data.MidNumber': params.mid });
 		}
 		
 		if (params.cctype) {
-			ands.push({'gateway_data.CcType': params.cctype });
+			query.push({'gateway_data.CcType': params.cctype });
 		}
 
 		if (params.status) {
-			ands.push({'status': params.status });
-		}
+			query.push({'status': params.status });
+		}	
 
-		query.and(ands);
-
-		query.skip( (params.page ? ((+params.page - 1) * params.limit) : 0) );
-		query.limit((params.limit ? params.limit : 30));
-
-		query.sort('-chargebackDate');
-		
 		log.log('Chargeback Query...');
-		log.log(query._conditions);
-		log.log(query.options);
+		log.log(query);
 
-		query.exec(fn);
+		return query;
 
 	};
 

@@ -1,6 +1,7 @@
 module.exports = function(app) {
 
-	var _ = require('underscore'),
+	var _ = require('highland'),
+		lodash = require('lodash'),
 		$ = require('seq'),
 		mw = require('./middleware'),
 		moment = require('moment'),
@@ -15,128 +16,146 @@ module.exports = function(app) {
 
 	app.get('/api/v1/chargebacks?', mw.auth(), function(req, res, next) {
 
-		$()
-		.seq(function() {
-			Chargeback.search(req, this);
-		})
-		.seq(function(data) {
-
-			if (req.query.export) {
-				
-				res.header('content-disposition', 'attachment; filename=chargebacks.csv');
-				var b = [];
-				b.push([
-					'MID',
-					'CaseNum',
-					'ChargebackDate',
-					'CbAmount',
-					'ReasonCode',
-					'ReasonText',
-					'CcPrefix',
-					'CcSuffix',
-					'TransId',
-					'TransAmt',
-					'TransDate',
-					'FirstName',
-					'LastName',
-					'BillingAddr1',
-					'BillingAddr2',
-					'BillingCity',
-					'BillingCountry',
-					'BillingPostal',
-					'BillingState',
-					'AVS',
-					'CVV',
-					'Email',
-					'TrackingNumber',
-					'TrackingSummary',
-					'IPAddress',
-					'DeliveryAddr1',
-					'DeliveryAddr2',
-					'DeliveryCity',
-					'DeliveryCountry',
-					'DeliveryPostal',
-					'DeliveryState'
-				]);
-				
-				_.each(data, function(dd) {
-					var d = dd.toJSON(),
-						x = [
-							dd.portal_data.MidNumber,
-			                dd.portal_data.CaseNumber,
-			                dd.chargebackDate,
-			                dd.portal_data.ChargebackAmt,
-			                dd.portal_data.ReasonCode,
-			                dd.portal_data.ReasonText,
-			                dd.portal_data.CcPrefix,
-			                dd.portal_data.CcSuffix,
-			                dd.gateway_data.TransId,
-			                dd.gateway_data.TransAmount,
-			                dd.gateway_data.TransDate,
-			                dd.gateway_data.FirstName,
-			                dd.gateway_data.LastName,
-			                dd.gateway_data.BillingAddr1,
-			                dd.gateway_data.BillingAddr2,
-			                dd.gateway_data.BillingCity,
-			                dd.gateway_data.BillingCountry,
-			                dd.gateway_data.BillingPostal,
-			                dd.gateway_data.BillingState,
-			                dd.gateway_data.AvsStatus,
-			                dd.gateway_data.CvvStatus,
-			                dd.crm_data.Email,
-			                dd.shipping_data.TrackingNum,
-			                dd.shipping_data.TrackingSum,
-			                dd.crm_data.IpAddress,
-			                dd.crm_data.DeliveryAddr1,
-			                dd.crm_data.DeliveryAddr2,
-			                dd.crm_data.DeliveryCity,
-			                dd.crm_data.DeliveryCountry,
-			                dd.crm_data.DeliveryPostal,
-			                dd.crm_data.DeliveryState,
-						];
-					b.push(x);
-				});
-				return res.csv(b);
+		// build query...
+		var query = Chargeback.search(req);
+		
+		if (req.query.export) {
 			
-			} else {
+			var headers = [
+				'MID',
+				'CaseNum',
+				'ChargebackDate',
+				'CbAmount',
+				'ReasonCode',
+				'ReasonText',
+				'CcPrefix',
+				'CcSuffix',
+				'TransId',
+				'TransAmt',
+				'TransDate',
+				'FirstName',
+				'LastName',
+				'BillingAddr1',
+				'BillingAddr2',
+				'BillingCity',
+				'BillingCountry',
+				'BillingPostal',
+				'BillingState',
+				'AVS',
+				'CVV',
+				'Email',
+				'TrackingNumber',
+				'TrackingSummary',
+				'IPAddress',
+				'DeliveryAddr1',
+				'DeliveryAddr2',
+				'DeliveryCity',
+				'DeliveryCountry',
+				'DeliveryPostal',
+				'DeliveryState'
+			];
 
-				// cache busting on static api end point
-				res.header('Content-Type', 'application/json');
-				res.header('Cache-Control', 'no-cache, private, no-store, must-revalidate, max-stale=0, post-check=0, pre-check=0');
-				return res.json(data);
-
+			var testAndClean = function(data, v1, v2) {
+				if (v2) {
+					if (data[v1] && data[v1][v2]) {
+						return data[v1][v2] + "";
+					} else {
+						return "";
+					}
+				} else {
+					if (data[v1]) {
+						return data[v1] + "";
+					} else {
+						return "";
+					}
+				}
 			}
+			
+			_( Chargeback.find()
+				.and(query)
+				.sort('-chargebackDate')
+				.lean()
+				.stream() )
+			.stopOnError(next)
+			.map(function(dd) {
+				// only pass certain values
+				return [
+					testAndClean(dd, 'portal_data', 'MidNumber'),
+					testAndClean(dd, 'portal_data', 'CaseNumber'),
+					testAndClean(dd, 'chargebackDate'),
+					testAndClean(dd, 'portal_data', 'ChargebackAmt'),
+					testAndClean(dd, 'portal_data', 'ReasonCode'),
+					testAndClean(dd, 'portal_data', 'ReasonText'),
+					testAndClean(dd, 'portal_data', 'CcPrefix'),
+					testAndClean(dd, 'portal_data', 'CcSuffix'),
+					testAndClean(dd, 'gateway_data', 'TransId'),
+					testAndClean(dd, 'gateway_data', 'TransAmount'),
+					testAndClean(dd, 'gateway_data', 'TransDate'),
+					testAndClean(dd, 'gateway_data', 'FirstName'),
+					testAndClean(dd, 'gateway_data', 'LastName'),
+					testAndClean(dd, 'gateway_data', 'BillingAddr1'),
+					testAndClean(dd, 'gateway_data', 'BillingAddr2'),
+					testAndClean(dd, 'gateway_data', 'BillingCity'),
+					testAndClean(dd, 'gateway_data', 'BillingCountry'),
+					testAndClean(dd, 'gateway_data', 'BillingPostal'),
+					testAndClean(dd, 'gateway_data', 'BillingState'),
+					testAndClean(dd, 'gateway_data', 'AvsStatus'),
+					testAndClean(dd, 'gateway_data', 'CvvStatus'),
+					testAndClean(dd, 'crm_data', 'Email'),
+					testAndClean(dd, 'shipping_data', 'TrackingNum'),
+					testAndClean(dd, 'shipping_data', 'TrackingSum'),
+					testAndClean(dd, 'crm_data', 'IpAddress'),
+					testAndClean(dd, 'crm_data', 'DeliveryAddr1'),
+					testAndClean(dd, 'crm_data', 'DeliveryAddr2'),
+					testAndClean(dd, 'crm_data', 'DeliveryCity'),
+					testAndClean(dd, 'crm_data', 'DeliveryCountry'),
+					testAndClean(dd, 'crm_data', 'DeliveryPostal'),
+					testAndClean(dd, 'crm_data', 'DeliveryState')
+				];
+			})
+			.toArray(function(d) {
+				res.header('content-disposition', 'attachment; filename=chargebacks.csv');
+				d.unshift(headers);
+				return res.csv(d);
+			});
+		
+		} else {
+
+			_( Chargeback.find()
+				.and(query)
+				.skip( (req.query.page ? ((+req.query.page - 1) * req.query.limit) : 0) )
+				.limit((req.query.limit ? req.query.limit : 30))
+				.sort('-chargebackDate')
+				.lean()
+				.stream() )
+			.stopOnError(next)
+			.toArray(function(data) {
+				res.header('Content-Type', 'application/json');
+				res.send(data);
+			});
+
+		}
+		
+		
 
 			
 
-		})
-		.catch(next);
+		
 
 	});
 
 	app.get('/api/v1/chargeback/:_id', mw.auth(), function(req, res, next) {
 
-		$()
-		.seq(function() {
-			// instead of findById, add query parameters to ensure privacy
-			var q = Chargeback.findOne();
-			q.where('_id', req.params._id);
-			q.or([
+		res.header('Content-Type', 'application/json');
+		var query = {
+			'_id': req.params._id,
+			'$or': [
 				{ 'user._id': req.user._id },
 				{ 'parent._id': req.user._id }
-			]);
-			q.exec(this);
-		})
-		.seq(function(data) {
-
-			// cache busting on static api end point
-			res.header('Content-Type', 'application/json');
-			res.header('Cache-Control', 'no-cache, private, no-store, must-revalidate, max-stale=0, post-check=0, pre-check=0');
-				
-			return res.json(data);
-
-		})
-		.catch(next);
+			]};
+		_(Chargeback.findOne(query).lean().stream({ transform: JSON.stringify }))
+			.stopOnError(next)
+			.pipe(res);
 
 
 	});
@@ -374,20 +393,19 @@ module.exports = function(app) {
 			return res.json(400, { 'CcPrefix': 'Enter 4 digits or select a credit card type.' });	
 		}
 
-		$()
-		.seq(function() {
-			// instead of findById, add query parameters to ensure privacy
-			var q = Chargeback.findOne();
-			q.where('_id', req.params._id);
-			q.or([
+
+		// instead of findById, add query parameters to ensure privacy
+		var to_remove = false;
+		_( Chargeback.findOne()
+			.where('_id', req.params._id)
+			.or([
 				{ 'user._id': req.user._id },
 				{ 'parent._id': req.user._id }
-			]);
-			q.exec(this);
-		})
-		.seq(function(data) {
-
-			var updated = _.omit(req.body, ['_id', 'createdOn', 'attachments']);
+			])
+			.stream() )
+		.map(function( data ) {
+			
+			var updated = lodash.omit(req.body, ['__v', '_id', 'createdOn', 'attachments']);
 			data.set(updated);
 			data.set('updatedOn', new Date());
 
@@ -395,51 +413,14 @@ module.exports = function(app) {
 				data.set('status', "In-Progress");	
 			}
 
-			if (req.body.attachments && req.body.attachments.length) {
-				var existing = [],
-					keep = [];
-
-				// grab existing 
-				_.each(data.attachments, function(a) {
-					existing.push(a._id + '');
-				});
-				
-				// add new uploads (processed will be false)
-				_.each(req.body.attachments, function(a) {
-					console.log('search: ' + data.attachments.id(a._id));
-					if (!data.attachments.id(a._id)) {
-						data.attachments.push(new Upload(a));
-					} else {
-						// track ones to keep (weren't deleted)
-						keep.push(a._id);
-					}
-				});
-				
-				var remove = _.difference(existing, keep);	// take existing, omit ones to keep = ones to remove
-				
-				// use mongoose method to remove 
-				_.each(remove, function(r) {
-					data.attachments.id(r).remove();
-				});
-				
-			} else {
-				data.attachments = [];
-			}
+			// adds new ones and removes non-existent to data.attachments
+			Upload.updateUploadArray(req.body.attachments, data.attachments, data.deleted_attachments);
+			return data;
 			
-			console.log(data);
-			data.save(this);
-
 		})
-		.seq(function(data) {
-
-			// cache busting on static api end point
-			res.header('Content-Type', 'application/json');
-			res.header('Cache-Control', 'no-cache, private, no-store, must-revalidate, max-stale=0, post-check=0, pre-check=0');
-				
-			return res.json(data);
-
-		})
-		.catch(next);
+		.flatMap(Util.saveStream)
+		.map( JSON.stringify )
+		.pipe(res);
 
 	});
 
