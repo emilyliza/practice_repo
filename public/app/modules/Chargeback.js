@@ -105,10 +105,7 @@
 			}
 		};
 
-		if (!$scope.data.shipped) {
-			$scope.settings.shipped = false;
-		}
-
+		
 		$scope.data.chc = true;
 		if ($scope.data.gateway_data && !$scope.data.gateway_data.TransDate) {
 			$scope.data.gateway_data.TransDate = "";
@@ -290,6 +287,17 @@
 			};
 		};
 		addUploaders();
+
+
+		$scope.methods.copyBilling = function() {
+			$scope.data.crm_data.DeliveryAddr1 = $scope.data.gateway_data.BillingAddr1;
+			$scope.data.crm_data.DeliveryAddr2 = $scope.data.gateway_data.BillingAddr2;
+			$scope.data.crm_data.DeliveryCity = $scope.data.gateway_data.BillingCity;
+			$scope.data.crm_data.DeliveryState = $scope.data.gateway_data.BillingState;
+			$scope.data.crm_data.DeliveryPostal = $scope.data.gateway_data.BillingPostal;
+			$scope.data.crm_data.DeliveryCountry = $scope.data.gateway_data.BillingCountry;
+			save();
+		}
 
 		
 

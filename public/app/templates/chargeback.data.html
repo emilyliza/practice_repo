@@ -255,13 +255,13 @@
 
 	<div style="margin-top: 100px;" ng-if="data.refunded" >
 		<div class="pull-right" style="width: auto;">
-			<a href="" ng-click="data.refunded = false;">Hide Refund</a>
+			<a href="" ng-click="data.refunded = false; methods.ds();">Hide Refund</a>
 		</div>
 		<h4 style="font-weight: bold;">Refund</h4>
 	</div>
 	<div style="margin-top: 100px; border: solid 1px #dedede; padding: 0px 0px 0px 10px;" ng-if="!data.refunded" >
 		<div class="pull-right" style="width: auto; padding: 9px 10px 0px 0px;">
-			<a href="" ng-click="data.refunded = true;">Include Refund</a>
+			<a href="" ng-click="data.refunded = true; methods.ds();">Include Refund</a>
 		</div>
 		<h4 style="font-weight: bold;">No Refund Issued</h4>
 	</div>
@@ -286,23 +286,27 @@
 
 
 
-	<div style="margin-top: 100px;" ng-if="data.settings.shipped" >
+	<div style="margin-top: 100px;" ng-if="data.shipped" >
 		<div class="pull-right" style="width: auto;">
-			<a href="" ng-click="data.settings.shipped = false;">Hide Shipping</a>
+			<a href="" ng-click="data.shipped = false; methods.ds();">Hide Shipping</a>
 		</div>
 		<h4 style="font-weight: bold;">Shipping</h4>
 	</div>
-	<div style="margin-top: 100px; border: solid 1px #dedede; padding: 0px 0px 0px 10px;" ng-if="!data.settings.shipped" >
+	<div style="margin-top: 100px; border: solid 1px #dedede; padding: 0px 0px 0px 10px;" ng-if="!data.shipped" >
 		<div class="pull-right" style="width: auto; padding: 9px 10px 0px 0px;">
-			<a href="" ng-click="data.settings.shipped = true;">Include Shipping</a>
+			<a href="" ng-click="data.shipped = true; methods.ds();">Include Shipping</a>
 		</div>
 		<h4 style="font-weight: bold;">No Shipping</h4>
 	</div>
 	
 
-	<div style="font-size: 12px; color: #999; padding-bottom: 10px;" ng-if="data.settings.shipped">This information is typically found in your CRM or order information system.  You can use the transaction data to the right to look up the customer for this transaction. We will use the tracking number to gather the summary data from your shipping agent.</div>
+	<div style="font-size: 12px; color: #999; padding-bottom: 10px;" ng-if="data.shipped">This information is typically found in your CRM or order information system.  You can use the transaction data to the right to look up the customer for this transaction. We will use the tracking number to gather the summary data from your shipping agent.</div>
 
-	<div class="row bt" ng-if="data.settings.shipped">
+	<div ng-if="data.shipped" style="margin-bottom: 10px;">
+		[ <a ng-click="methods.copyBilling();">Copy Billing Address to Delivery Address</a> ]
+	</div>
+
+	<div class="row bt" ng-if="data.shipped">
 		<div class="col-md-6">
 			<div class="form-group" show-errors>
 				<label>Delivery Address One</label>
@@ -316,7 +320,7 @@
 			</div>
 		</div>
 	</div>
-	<div class="row" ng-if="data.settings.shipped">
+	<div class="row" ng-if="data.shipped">
 		<div class="col-md-3">
 			<div class="form-group" show-errors>
 				<label>Delivery City</label>
@@ -342,7 +346,7 @@
 			</div>
 		</div>
 	</div>
-	<div class="row" ng-if="data.settings.shipped">
+	<div class="row" ng-if="data.shipped">
 		<div class="col-md-3">
 			<div class="form-group select">
 				<label>Shipping Company</label>
