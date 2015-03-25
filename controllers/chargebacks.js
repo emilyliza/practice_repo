@@ -157,7 +157,6 @@ module.exports = function(app) {
 			.stopOnError(next)
 			.pipe(res);
 
-
 	});
 
 

@@ -8,6 +8,7 @@
 		"angulartics",
 		"angulartics.google.analytics",
 		"toggle-switch",
+		"ngIdle",
 		"cgBusy",
 		"utils",
 		"user",
@@ -23,10 +24,17 @@
 		"dashboard"
 	])
 
-	.config(['$locationProvider', '$urlRouterProvider', 'datepickerPopupConfig', function( $locationProvider, $urlRouterProvider, $datepickerPopupConfig) {
+	.config([
+		'$locationProvider', '$urlRouterProvider', 'datepickerPopupConfig', 'KeepaliveProvider', 'IdleProvider',
+		function( $locationProvider, $urlRouterProvider, $datepickerPopupConfig, KeepaliveProvider, IdleProvider) {
+		
 		moment.defaultFormat = "YYYY-MM-DDTHH:mm:ss.SSS\\Z";
 		$locationProvider.html5Mode(true).hashPrefix('!');
 		$datepickerPopupConfig.appendToBody = true;
+
+		IdleProvider.idle(1080);
+		IdleProvider.timeout(20);
+		KeepaliveProvider.interval(10);
 	}])
 
 	.directive('nav', function() {
@@ -48,8 +56,8 @@
 	})
 
 	.controller('ApplicationController', 
-		['$scope', '$rootScope', '$state', 'AUTH_EVENTS', 'UserService',
-		function ($scope, $rootScope, $state, AUTH_EVENTS, UserService) {
+		['$scope', '$rootScope', '$state', 'AUTH_EVENTS', 'UserService', 'Idle', '$modal',
+		function ($scope, $rootScope, $state, AUTH_EVENTS, UserService, Idle, $modal) {
 			
 			$scope.$state = $state;	// for navigation active to work
 			$scope.isCollapsed = true;
@@ -61,11 +69,41 @@
 					return UserService.logout();
 				}
 				$scope.currentUser = user;
+				closeModals();
+				Idle.watch();
 			}
+
+			function closeModals() {
+				if ($scope.warning) {
+					$scope.warning.close();
+					$scope.warning = null;
+				}
+			};
+
+			$scope.$on('IdleStart', function() {
+				closeModals();
+				$scope.warning = $modal.open({
+					templateUrl: '/app/templates/warning-dialog.html',
+					windowClass: 'modal-danger'
+				});
+			});
+
+			$scope.$on('IdleEnd', function() {
+				UserService.refreshSession();
+				closeModals();
+			});
+
+			$scope.$on('IdleTimeout', function() {
+				closeModals();
+				$rootScope.$broadcast(AUTH_EVENTS.notAuthenticated);
+			});
 
 			$rootScope.$on(AUTH_EVENTS.loginSuccess, function() {
 				$scope.currentUser = UserService.getCurrentUser();
+				closeModals();
+				Idle.watch();
 			});
+        	
 		
     }])
 
