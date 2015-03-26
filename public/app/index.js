@@ -32,9 +32,9 @@
 		$locationProvider.html5Mode(true).hashPrefix('!');
 		$datepickerPopupConfig.appendToBody = true;
 
-		IdleProvider.idle(1080);
-		IdleProvider.timeout(20);
-		KeepaliveProvider.interval(10);
+		IdleProvider.idle(1080);	// 18 min of idle
+		IdleProvider.timeout(20);	// 20 seconds to check in.
+		KeepaliveProvider.interval(1140);	// refresh token every 19 min
 	}])
 
 	.directive('nav', function() {
@@ -80,8 +80,6 @@
 				Idle.watch();
 			}
 
-			
-
 			$scope.$on('IdleStart', function() {
 				closeModals();
 				$scope.warning = $modal.open({
@@ -91,13 +89,17 @@
 			});
 
 			$scope.$on('IdleEnd', function() {
-				UserService.refreshSession();
 				closeModals();
 			});
 
 			$scope.$on('IdleTimeout', function() {
 				closeModals();
 				$rootScope.$broadcast(AUTH_EVENTS.notAuthenticated);
+			});
+
+			$scope.$on('Keepalive', function() {
+				console.log('Refreshing token');
+				UserService.refreshSession();	// to keep it current and valid on server.
 			});
 
 			$rootScope.$on(AUTH_EVENTS.loginSuccess, function() {
