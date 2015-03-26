@@ -14,6 +14,7 @@ if (!process.env.NODE_ENV) {
 	require('dotenv').load();
 }
 
+
 // Config
 //app.engine('.ejs', require('ejs').__express);
 //app.set('view engine', 'ejs');
@@ -149,6 +150,8 @@ if (process.env.NODE_ENV == "local") {
 } else if (process.env.NODE_ENV == "production") {
 	log.info('======= Production Environment =======');
 }
+
+log.info('Node Version: ' + process.version);
 
 if (process.env.MONGO_URI_2) {
 	app.settings.db.connect(process.env.MONGO_URI + "," + process.env.MONGO_URI_2, function(err,db) {

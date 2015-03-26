@@ -1,16 +1,22 @@
 // postInstall.js
-var env = process.env.NODE_ENV;
+var env = process.env.NODE_ENV,
+	exec = require('child_process').exec;
 
 if (env !== 'production') {
-    var exec = require('child_process').exec;
     
-	exec('bower install', function(err, stdout, stderr) {
+    exec('bower install', function(err, stdout, stderr) {
 		console.log(stdout);
 		console.log(stderr);
 		return process.exit(0);
 	});
     
-} else {
-	console.error('No task for environment:', env);
-	process.exit(0);
+} else if (env == "production") {
+
+	// use "n" to install and use proper node version.
+	exec("npm install -g n && n 0.12.0 && n use 0.12.0", function(err, stdout, stderr) {
+		console.log(stdout);
+		console.log(stderr);	
+		return process.exit(0);
+	});
+
 }
