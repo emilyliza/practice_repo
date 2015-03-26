@@ -13,21 +13,19 @@
 	
 	}])
 
-	.controller('UsersController', ['$scope', '$timeout', 'UserService', 'UsersService', '$state', '$location', function($scope, $timeout, UserService, UsersService, $state, $location) {
+	.controller('UsersController', ['$scope', '$timeout', 'UsersService', '$state', '$location', function($scope, $timeout, UsersService, $state, $location) {
 		
 		$scope.users = new UsersService();	
 		
 		$scope.load_start = false;
 		$scope.load_end = false;
 		
-		
-		$scope.login = function(username) {
-			UserService.alogin({'username':username}).then(function (user) {
-				window.location = "/dashboard";
-			}, function (res) {
-				console.log(res);
-			});
-		}
+		$scope.$on(
+			"$destroy",
+			function( event ) {
+				$timeout.cancel( $scope.cbs.filterTextTimeout );
+			}
+		);
 
 	}])
 

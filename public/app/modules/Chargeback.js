@@ -89,7 +89,6 @@
 			$state.go('chargeback.review', { '_id': res.data._id }, { location: "replace"} );
 		}
 		
-		$scope.methods = {};
 		$scope.settings = {
 			openeda: false,
 			openedb: false
@@ -97,17 +96,20 @@
 		$scope.settings.state = $state;
 		$scope.settings.disableReview = true;
 
-		$scope.methods.setCard = function(c) {
+		$scope.setCard = function(c) {
 			$scope.data.type = c;
-			save();
+			$scope.save();
 			if ($state.current.name == "chargeback.card") {
 				$state.go('chargeback.data');
 			}
 		};
 
-		
+		if (!$scope.data.shipped) {
+			$scope.settings.shipped = false;
+		}
+
 		$scope.data.chc = true;
-		if ($scope.data.gateway_data && !$scope.data.gateway_data.TransDate) {
+		if (!$scope.data.gateway_data.TransDate) {
 			$scope.data.gateway_data.TransDate = "";
 		}
 
@@ -135,20 +137,8 @@
 		},true);
 
 
-		$scope.methods.getCardType = function() {
-			ChargebackService.getCardType( ($scope.data.portal_data.CcPrefix || '') + "11010101" + ($scope.data.portal_data.CcSuffix || '') ).then(function(res) {
-				if (res.data.cctype) {
-					$scope.data.gateway_data.CcType = res.data.cctype;
-				} else {
-					$scope.data.gateway_data.CcType = "";
-				}
-
-			});
-		};
-
-
 		var _this = this;
-		$scope.methods.saveNew = function(data) {
+		$scope.saveNew = function(data) {
 			$scope.$broadcast('show-errors-check-validity');
 			if ($scope.cbNewForm.$valid) {
 				$scope.newService = ChargebackService.save($scope.data).then(function (res) {
@@ -160,7 +150,7 @@
 			}
 		};
 
-		var save = function(halt_save_on_error) {
+		$scope.save = function(halt_save_on_error) {
 			$scope.$broadcast('show-errors-check-validity');
 			if ($scope.cbForm.$valid) {
 				$scope.settings.disableReview = false;
@@ -175,29 +165,29 @@
 			// save no matter what, but don't let user proceed without fixing errors!
 			ChargebackService.save($scope.data).then(function (res) {
 				$scope.data = res.data;
-				$scope.methods.checkForErrors($scope.data);
-				$scope.methods.addUploaders();
+				$scope.checkForErrors($scope.data);
+				$scope.addUploaders();
 			}, function (res) {
 				$scope.errors = UtilService.formatErrors(res.data);
 			});
 		};
 
-		$scope.methods.ds = _.debounce(save, 2000, { leading: false, trailing: true});
+		$scope.ds = _.debounce($scope.save, 2000, { leading: false, trailing: true});
 		
 
 		// clicking drag-n-drop zones triggers old-school upload dialog
-		$scope.methods.triggerUpload = function(el) {
+		$scope.triggerUpload = function(el) {
 			angular.element(el).trigger('click');
 		};
 
 		
 		
-		$scope.methods.download = function(file) {
+		$scope.download = function(file) {
 			window.open( "http://dksl2s5vm2cnl.cloudfront.net" + file, "_blank");
 		};
 		
 
-		$scope.methods.removeItem = function(item) {
+		$scope.removeItem = function(item) {
 			var i = 0;
 			_.each($scope.data.attachments, function(a) {
 				if (a && a._id == item._id) {
@@ -213,7 +203,7 @@
 			$scope.ds();
 		};
 
-		$scope.methods.submit = function(msg, confirmbtn, cancelbtn) {
+		$scope.submit = function(msg, confirmbtn, cancelbtn) {
 			var modalInstance = $modal.open({
 				templateUrl: '/app/templates/confirm-modal.html',
 				controller: 'ModalInstanceCtrl',
@@ -241,7 +231,7 @@
 		};
 
 
-		var addUploaders = function() {
+		$scope.addUploaders = function() {
 			if ($scope.uploaders) {
 				$scope.uploaders['receipt'].setUploads($scope.data.attachments);
 				$scope.uploaders['add'].setUploads($scope.data.attachments);
@@ -286,22 +276,11 @@
 				$scope.ds();
 			};
 		};
-		addUploaders();
-
-
-		$scope.methods.copyBilling = function() {
-			$scope.data.crm_data.DeliveryAddr1 = $scope.data.gateway_data.BillingAddr1;
-			$scope.data.crm_data.DeliveryAddr2 = $scope.data.gateway_data.BillingAddr2;
-			$scope.data.crm_data.DeliveryCity = $scope.data.gateway_data.BillingCity;
-			$scope.data.crm_data.DeliveryState = $scope.data.gateway_data.BillingState;
-			$scope.data.crm_data.DeliveryPostal = $scope.data.gateway_data.BillingPostal;
-			$scope.data.crm_data.DeliveryCountry = $scope.data.gateway_data.BillingCountry;
-			save();
-		};
+		$scope.addUploaders();
 
 		
 
-		$scope.methods.checkForErrors = function(d) {
+		$scope.checkForErrors = function(d) {
 			if (d) {
 				$timeout(function() {
 					$scope.$broadcast('show-errors-check-validity');	
@@ -313,7 +292,7 @@
 				},500);
 			}
 		};
-		$scope.methods.checkForErrors(res.data);
+		$scope.checkForErrors(res.data);
 
 
 	}])
@@ -322,10 +301,6 @@
 		
 		this.get = function(_id) {
 			return $http.get('/api/v1/chargeback/' + _id);
-		};
-
-		this.getCardType = function(card) {
-			return $http.get('/api/v1/cctype/' + card);
 		};
 
 		this.save = function(data) {

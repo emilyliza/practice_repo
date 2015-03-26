@@ -21,8 +21,6 @@ module.exports = function(app) {
 		'password': { type: String, set: Util.hash_password },
 		'active': { type: Boolean, default: true },
 		'admin': { type: Boolean, default: false },
-		'response_email': { type: String },
-		'response_fax': { type: String },
 		'timestamps': {
 			'createdOn': { 'type': Date, 'required': true, 'default': new Date()},
 			'lastLogin': { type: Date },

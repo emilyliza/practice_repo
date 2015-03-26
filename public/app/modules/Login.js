@@ -107,6 +107,18 @@
 				}
 				return config;
 			},
+			response: function(response) {
+				if (response.config.url.match(/^\/api\/v1\//) && !response.config.url.match("refresh")) {
+					var UserService = $injector.get('UserService');
+					if (UserService.isAuthenticated() && UserService.sessionDuration() > ((60 * 10) * 1000)) {
+						// server tokens expire every 20 min. this will check every 10 min
+						// and refresh the token if the user is active, thus only logging
+						// someone out when there is 20 min of inactivity.
+						UserService.refreshSession();
+					}
+				}
+				return response;
+			},
 			responseError: function (response) { 
 				$rootScope.$broadcast({
 					401: AUTH_EVENTS.notAuthenticated,

@@ -11,16 +11,14 @@
 
 <div class="animated-grid chargebacks" infinite-scroll="users.nextPage(q)" infinite-scroll-disabled="users.busy">
 	<div class="row head">
-		<div class="col-sm-3">Username</div>
-		<div class="col-sm-3">Name</div>
-		<div class="col-sm-3">Email</div>
-		<div class="col-sm-3">Email</div>
+		<div class="col-sm-4">Username</div>
+		<div class="col-sm-4">Name</div>
+		<div class="col-sm-4">Email</div>
 	</div>
 	<div class="row" ng-repeat="user in users.data">
-		<div class="col-sm-3">{{user.username}}</div>
-		<div class="col-sm-3">{{user.name}}</div>
-		<div class="col-sm-3">{{user.email}}</div>
-		<div class="col-sm-3"><a ng-click="login(user.username);">login as {{user.username}}</a></div>
+		<div class="col-sm-4">{{user.username}}</div>
+		<div class="col-sm-4">{{user.name}}</div>
+		<div class="col-sm-4">{{user.email}}</div>
 	</div>
 
 	<div class="row" ng-if="users.loaded && users.data.length == 0">

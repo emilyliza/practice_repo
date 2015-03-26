@@ -186,11 +186,9 @@ require('./controllers/reset')(app);
 require('./controllers/forgot')(app);
 require('./controllers/processed')(app);
 require('./controllers/submitchargeback')(app);
-require('./controllers/cctype')(app);
 
 // Admin endpoints
 require('./controllers/admin/users')(app);
-require('./controllers/admin/login')(app);
 
 
 // for admin area

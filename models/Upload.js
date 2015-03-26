@@ -31,28 +31,6 @@ module.exports = function(app) {
 		S3Tracker = app.Models.get('S3Tracker')
 	};
 
-	Upload.updateUploadArray = function(new_attachments, existing_attachments, deleted_attachments) {
-
-		var to_add = _.filter(new_attachments, function(obj) { return !existing_attachments.id(obj._id); }),
-			to_keep = _.filter(new_attachments, function(obj) { return existing_attachments.id(obj._id); }),
-			to_remove = _.filter(existing_attachments, function(obj) { return !_.findWhere(new_attachments, { '_id': obj._id + '' }); });
-
-		// add new uploads (processed will be false)
-		_.each(to_add, function(a) {
-			existing_attachments.push( new Upload(a) );
-		});
-		
-		// use mongoose method to remove 
-		_.each(to_remove, function(r) {
-			existing_attachments.id(r).remove();
-			deleted_attachments.push(r);
-		});
-
-		return
-
-	};
-
-
 	Upload.presave = function(doc, next) {	
 		
 		if (!doc.isModified(doc.fields)) {
