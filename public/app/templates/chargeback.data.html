@@ -23,7 +23,7 @@
 			<div class="col-md-4">
 				<div class="form-group" show-errors>
 					<label>Chargeback Date</label>
-					<input class="form-control" required name="chargebackDate" type="text" class="form-control" datepicker-popup="MM/dd/yyyy" ng-model="data.chargebackDate" is-open="opened" ng-click="opened=true" isdate  ng-change="ds()">
+					<input class="form-control" required name="chargebackDate" type="text" class="form-control" datepicker-popup="MM/dd/yyyy" ng-model="data.chargebackDate" is-open="settings.openeda" ng-click="settings.openeda=true" isdate  ng-change="ds()">
 				</div>
 			</div>
 		</div>
@@ -43,7 +43,7 @@
 			<div class="col-md-4">
 				<div class="form-group select">
 					<label>CC Type</label>
-					<select ng-disabled="data.portal_data.CcPrefix.length >= 4" class="form-control" ng-model="data.gateway_data.CcType" ng-options="ct for ct in cctypes" ng-change="ds()"></select>
+					<select ng-disabled="data.portal_data.CcPrefix.length >= 4" class="form-control" ng-model="data.gateway_data.CcType" ng-options="ct for ct in settings.cctypes" ng-change="ds()"></select>
 				</div>
 			</div>
 		</div>
@@ -71,7 +71,7 @@
 			<div class="col-md-4">
 				<div class="form-group" show-errors>
 					<label>Transaction Date</label>
-					<input class="form-control" name="TransDate" type="text" class="form-control" datepicker-popup="MM/dd/yyyy" ng-model="data.gateway_data.TransDate" is-open="opened" ng-click="opened=true" isdate ng-change="ds()">
+					<input class="form-control" name="TransDate" type="text" class="form-control" datepicker-popup="MM/dd/yyyy" ng-model="data.gateway_data.TransDate" is-open="settings.openedb" ng-click="settings.openedb=true" isdate ng-change="ds()">
 				</div>
 			</div>
 			<div class="col-md-4">
@@ -286,23 +286,23 @@
 
 
 
-	<div style="margin-top: 100px;" ng-if="data.shipped" >
+	<div style="margin-top: 100px;" ng-if="data.settings.shipped" >
 		<div class="pull-right" style="width: auto;">
-			<a href="" ng-click="data.shipped = false;">Hide Shipping</a>
+			<a href="" ng-click="data.settings.shipped = false;">Hide Shipping</a>
 		</div>
 		<h4 style="font-weight: bold;">Shipping</h4>
 	</div>
-	<div style="margin-top: 100px; border: solid 1px #dedede; padding: 0px 0px 0px 10px;" ng-if="!data.shipped" >
+	<div style="margin-top: 100px; border: solid 1px #dedede; padding: 0px 0px 0px 10px;" ng-if="!data.settings.shipped" >
 		<div class="pull-right" style="width: auto; padding: 9px 10px 0px 0px;">
-			<a href="" ng-click="data.shipped = true;">Include Shipping</a>
+			<a href="" ng-click="data.settings.shipped = true;">Include Shipping</a>
 		</div>
 		<h4 style="font-weight: bold;">No Shipping</h4>
 	</div>
 	
 
-	<div style="font-size: 12px; color: #999; padding-bottom: 10px;" ng-if="data.shipped">This information is typically found in your CRM or order information system.  You can use the transaction data to the right to look up the customer for this transaction. We will use the tracking number to gather the summary data from your shipping agent.</div>
+	<div style="font-size: 12px; color: #999; padding-bottom: 10px;" ng-if="data.settings.shipped">This information is typically found in your CRM or order information system.  You can use the transaction data to the right to look up the customer for this transaction. We will use the tracking number to gather the summary data from your shipping agent.</div>
 
-	<div class="row bt" ng-if="data.shipped">
+	<div class="row bt" ng-if="data.settings.shipped">
 		<div class="col-md-6">
 			<div class="form-group" show-errors>
 				<label>Delivery Address One</label>
@@ -316,7 +316,7 @@
 			</div>
 		</div>
 	</div>
-	<div class="row" ng-if="data.shipped">
+	<div class="row" ng-if="data.settings.shipped">
 		<div class="col-md-3">
 			<div class="form-group" show-errors>
 				<label>Delivery City</label>
@@ -342,11 +342,11 @@
 			</div>
 		</div>
 	</div>
-	<div class="row" ng-if="data.shipped">
+	<div class="row" ng-if="data.settings.shipped">
 		<div class="col-md-3">
 			<div class="form-group select">
 				<label>Shipping Company</label>
-				<select class="form-control" ng-model="data.shipping_data.company" ng-options="s for s in shipping_companies" ng-change="ds()"></select>
+				<select class="form-control" ng-model="data.shipping_data.company" ng-options="s for s in settings.shipping_companies" ng-change="ds()"></select>
 			</div>
 		</div>
 		<div class="col-md-3">
@@ -653,9 +653,9 @@
 
 
 	<div class="form-group btns">
-		<a ui-sref="chargeback.review" ng-class="{'disabled': disableReview}" class="btn btn-success pull-right">
-			<span ng-if="disableReview">Fix Errors Above to Continue</span>
-			<span ng-if="!disableReview">Continue to Final Review</span>
+		<a ui-sref="chargeback.review" ng-class="{'disabled': settings.disableReview}" class="btn btn-success pull-right">
+			<span ng-if="settings.disableReview">Fix Errors Above to Continue</span>
+			<span ng-if="!settings.disableReview">Continue to Final Review</span>
 		</a>
 	</div>
 </div>

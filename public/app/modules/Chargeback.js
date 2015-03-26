@@ -57,14 +57,19 @@
 				}
 			}
 		})
-		.state('chargeback.confirmation', {
-			url: '/confirmation',
+		.state('chargebackconfirmation', {
+			url: '/chargeback/{_id}/confirmation',
 			requiresAuth: true,
 			templateUrl: '/app/templates/chargeback.confirmation.html',
+			controller: 'ChargebackController',
 			resolve: {
-				scroll:  function() {
-					$("html, body").animate({ scrollTop: 0 }, 200);
-				}
+				res: ['$http', '$stateParams', '$state', 'ChargebackService', function($http, $stateParams, $state, ChargebackService){
+					if ($stateParams._id) {
+						return ChargebackService.get($stateParams._id);
+					} else {
+						return false;
+					}
+				}]
 			}
 		});
 		
@@ -78,14 +83,18 @@
 		$scope.data = (res ? res.data : ChargebackService.getDefaults());
 		$scope.errors = {};
 		
-		if ($scope.data.status == "In-Progress" && $state.current.name != "chargeback.data" && $state.current.name != "chargeback.review" && $state.current.name != "chargeback.confirmation") {
+		if ($scope.data.status == "In-Progress" && $state.current.name != "chargeback.data" && $state.current.name != "chargeback.review" && $state.current.name != "chargebackconfirmation") {
 			$state.go('chargeback.data', { '_id': res.data._id }, { location: "replace"} );
-		} else if (_.indexOf(["Sent","Won","Lost"], $scope.data.status ) != -1 && $state.current.name != "chargeback.review") {
+		} else if (_.indexOf(["Sent","Won","Lost"], $scope.data.status ) != -1 && ($state.current.name != "chargeback.review" && $state.current.name != "chargebackconfirmation")) {
 			$state.go('chargeback.review', { '_id': res.data._id }, { location: "replace"} );
 		}
 		
-		$scope.state = $state;
-		$scope.disableReview = true;
+		$scope.settings = {
+			openeda: false,
+			openedb: false
+		};
+		$scope.settings.state = $state;
+		$scope.settings.disableReview = true;
 
 		$scope.setCard = function(c) {
 			$scope.data.type = c;
@@ -96,13 +105,16 @@
 		};
 
 		if (!$scope.data.shipped) {
-			$scope.shipped = false;
+			$scope.settings.shipped = false;
 		}
 
 		$scope.data.chc = true;
+		if (!$scope.data.gateway_data.TransDate) {
+			$scope.data.gateway_data.TransDate = "";
+		}
 
-		$scope.shipping_companies = ["USPS", "Fedex", "UPS", "DHL"];
-		$scope.cctypes = [
+		$scope.settings.shipping_companies = ["USPS", "Fedex", "UPS", "DHL"];
+		$scope.settings.cctypes = [
 			"",
 			"VISA",
 			"MASTERCARD",
@@ -141,9 +153,9 @@
 		$scope.save = function(halt_save_on_error) {
 			$scope.$broadcast('show-errors-check-validity');
 			if ($scope.cbForm.$valid) {
-				$scope.disableReview = false;
+				$scope.settings.disableReview = false;
 			} else {
-				$scope.disableReview = true;
+				$scope.settings.disableReview = true;
 			}
 
 			if (halt_save_on_error && $scope.cbForm[halt_save_on_error]['$invalid']) {
@@ -210,7 +222,7 @@
 				if (confirm) {
 					ChargebackService.submit($scope.data).then(function (res) {
 						$scope.data = res.data;
-						$state.go('chargeback.confirmation');
+						$state.go('chargebackconfirmation', { '_id': res.data._id });
 					}, function (res) {
 						$scope.errors = UtilService.formatErrors(res.data);
 					});
@@ -273,9 +285,9 @@
 				$timeout(function() {
 					$scope.$broadcast('show-errors-check-validity');	
 					if ($scope.cbForm.$valid && $scope.data.type) { 
-						$scope.disableReview = false;
+						$scope.settings.disableReview = false;
 					} else {
-						$scope.disableReview = true;
+						$scope.settings.disableReview = true;
 					}
 				},500);
 			}

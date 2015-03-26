@@ -1,16 +1,37 @@
 
-<div class="jgs-form">
+<div class="row">
+	
+	<div class="col-md-4 col-md-push-8 form-sidebar">
 
-	<h2 style="font-weight: bold;">Dispute Sent For {{data.portal_data.ChargebackAmt | currency}}</h2>
+		<div class="side-cbinfo" style="margin-top: 90px;">
+			<div class="side-main-head">KEEP IN MIND</div>
+			<div>
+				<ul>
+					<li>Processors may ask for additional information.</li>
+					<li>It usually takes about one week for processors to respond.</li>
+					<li>Not all processors will notify chargeback.com, so check with your processor directly in about one week.</li>
+				</ul>
+			</div>	
+		</div>
 
-	<div style="font-size: 16px; margin-top: 40px;">
-		We'll review the information you provided, create the dispute document and relay it to your processor. With the information you provided, you have an 80% chance of winning this chargeback.
 	</div>
-
-	<div style="margin-top: 50px;">
-		<a href="/chargebacks" class="btn btn-info">More Chargebacks</a>
-		&nbsp;
-		<button type="button" ng-click="download('/images/example.0511cc.pdf')" class="btn btn-warning">Download Chargeback PDF</button>
+	<div class="col-md-8 col-md-pull-4">
+		
+		<div class="jgs-form">
+		<h2 style="font-weight: bold;">Dispute Sent For {{data.portal_data.ChargebackAmt | currency}}</h2>
+			<div style="font-size: 16px; margin-top: 40px;">
+				We'll review the information you provided, create the dispute document and relay it to your processor. With the information you provided, you have an 80% chance of winning this chargeback.
+			</div>
+			<div style="margin-top: 50px;">
+				<a href="/chargebacks" class="btn btn-info">More Chargebacks</a>
+				&nbsp;
+				<button type="button" ng-click="download('/images/example.0511cc.pdf')" class="btn btn-warning">Download Chargeback PDF</button>
+			</div>
+		</div>
 	</div>
 
 </div>
+
+	
+
+
