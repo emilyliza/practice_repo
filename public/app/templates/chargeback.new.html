@@ -12,7 +12,7 @@
 
 <form name="cbNewForm" 
 	role="form" 
-	ng-submit="saveNew()" novalidate >
+	ng-submit="methods.saveNew()" novalidate >
 	
 	<div class="row">
 		<div class="col-sm-4 col-sm-push-8 form-sidebar">
@@ -51,19 +51,19 @@
 					<div class="col-md-4">
 						<div class="form-group" show-errors>
 							<label>CC Prefix</label>
-							<input name="CcPrefix" ng-minlength="1" ng-maxlength="6" required type="text" class="form-control" pop-show="{{errors.CcPrefix}}" pop="{{errors.CcPrefix}}" pop-placement="right" ng-model="data.portal_data.CcPrefix" placeholder="">
+							<input name="CcPrefix" ng-minlength="1" ng-maxlength="6" required type="text" class="form-control" pop-show="{{errors.CcPrefix}}" pop="{{errors.CcPrefix}}" pop-placement="right" ng-model="data.portal_data.CcPrefix" placeholder="" ng-blur="methods.getCardType()">
 						</div>
 					</div>
 					<div class="col-md-4">
 						<div class="form-group" show-errors>
 							<label>CC Suffix</label>
-							<input name="CcSuffix" ng-minlength="4" ng-maxlength="4" required type="text" class="form-control" pop-show="{{errors.CcSuffix}}" pop="{{errors.CcSuffix}}" pop-placement="right" ng-model="data.portal_data.CcSuffix" placeholder="">
+							<input name="CcSuffix" ng-minlength="4" ng-maxlength="4" required type="text" class="form-control" pop-show="{{errors.CcSuffix}}" pop="{{errors.CcSuffix}}" pop-placement="right" ng-model="data.portal_data.CcSuffix" placeholder="" ng-blur="methods.getCardType()">
 						</div>
 					</div>
 					<div class="col-md-4">
 						<div class="form-group select">
 							<label>CC Type</label>
-							<select ng-disabled="data.portal_data.CcPrefix.length >= 4" class="form-control" ng-model="data.gateway_data.CcType" ng-options="ct for ct in settings.cctypes" ng-change="ds()"></select>
+							<select ng-disabled="data.portal_data.CcPrefix.length >= 4" class="form-control" ng-model="data.gateway_data.CcType" ng-options="ct for ct in settings.cctypes"></select>
 						</div>
 					</div>
 				</div>

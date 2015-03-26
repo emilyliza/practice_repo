@@ -101,7 +101,7 @@ module.exports = function(app) {
 				obj.admin = true;
 			}
 			
-			var token = jwt.sign(obj, process.env.TOKEN_SECRET, { expiresInMinutes: 60 });
+			var token = jwt.sign(obj, process.env.TOKEN_SECRET, { expiresInMinutes: 20 });
 
 			var query_end = new Date().getTime();
 			log.log("Login Time: " + (query_end - query_start) + "ms");

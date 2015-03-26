@@ -11,19 +11,19 @@
 			<div class="col-md-4">
 				<div class="form-group" show-errors>
 					<label>Mid Number</label>
-					<input name="MidNumber" required type="text" class="form-control" pop-show="{{errors.MidNumber}}" pop="{{errors.MidNumber}}" pop-placement="right" ng-model="data.portal_data.MidNumber" placeholder="" ng-change="ds()">
+					<input name="MidNumber" required type="text" class="form-control" pop-show="{{errors.MidNumber}}" pop="{{errors.MidNumber}}" pop-placement="right" ng-model="data.portal_data.MidNumber" placeholder="" ng-change="methods.ds()">
 				</div>
 			</div>
 			<div class="col-md-4">
 				<div class="form-group" show-errors>
 					<label>Chargeback Amount</label>
-					<input name="ChargebackAmt" required type="text" class="form-control" pop-show="{{errors.ChargebackAmt}}" pop="{{errors.ChargebackAmt}}" pop-placement="right" ng-model="data.portal_data.ChargebackAmt" placeholder="" ng-change="ds()">
+					<input name="ChargebackAmt" required type="text" class="form-control" pop-show="{{errors.ChargebackAmt}}" pop="{{errors.ChargebackAmt}}" pop-placement="right" ng-model="data.portal_data.ChargebackAmt" placeholder="" ng-change="methods.ds()">
 				</div>
 			</div>
 			<div class="col-md-4">
 				<div class="form-group" show-errors>
 					<label>Chargeback Date</label>
-					<input class="form-control" required name="chargebackDate" type="text" class="form-control" datepicker-popup="MM/dd/yyyy" ng-model="data.chargebackDate" is-open="settings.openeda" ng-click="settings.openeda=true" isdate  ng-change="ds()">
+					<input class="form-control" required name="chargebackDate" type="text" class="form-control" datepicker-popup="MM/dd/yyyy" ng-model="data.chargebackDate" is-open="settings.openeda" ng-click="settings.openeda=true" isdate  ng-change="methods.ds()">
 				</div>
 			</div>
 		</div>
@@ -43,7 +43,7 @@
 			<div class="col-md-4">
 				<div class="form-group select">
 					<label>CC Type</label>
-					<select ng-disabled="data.portal_data.CcPrefix.length >= 4" class="form-control" ng-model="data.gateway_data.CcType" ng-options="ct for ct in settings.cctypes" ng-change="ds()"></select>
+					<select ng-disabled="data.portal_data.CcPrefix.length >= 4" class="form-control" ng-model="data.gateway_data.CcType" ng-options="ct for ct in settings.cctypes" ng-change="methods.ds()"></select>
 				</div>
 			</div>
 		</div>
@@ -51,19 +51,19 @@
 			<div class="col-md-4">
 				<div class="form-group" show-errors>
 					<label>CC Expires</label>
-					<input name="CcExpire" type="text" class="form-control" pop-show="{{errors.CcExpire}}" pop="{{errors.CcExpire}}" pop-placement="right" ng-model="data.gateway_data.CcExpire" placeholder="Format: MMYYYY" ng-change="ds()">
+					<input name="CcExpire" type="text" class="form-control" pop-show="{{errors.CcExpire}}" pop="{{errors.CcExpire}}" pop-placement="right" ng-model="data.gateway_data.CcExpire" placeholder="Format: MMYYYY" ng-change="methods.ds()">
 				</div>
 			</div>
 			<div class="col-md-4">
 				<div class="form-group" show-errors>
 					<label>AVS Status</label>
-					<input name="AvsStatus" type="text" class="form-control" pop-show="{{errors.AvsStatus}}" pop="{{errors.AvsStatus}}" pop-placement="right" ng-model="data.gateway_data.AvsStatus" placeholder="" ng-change="ds()">
+					<input name="AvsStatus" type="text" class="form-control" pop-show="{{errors.AvsStatus}}" pop="{{errors.AvsStatus}}" pop-placement="right" ng-model="data.gateway_data.AvsStatus" placeholder="" ng-change="methods.ds()">
 				</div>
 			</div>
 			<div class="col-md-4">
 				<div class="form-group" show-errors>
 					<label>CVV Status</label>
-					<input name="CvvStatus" type="text" class="form-control" pop-show="{{errors.CvvStatus}}" pop="{{errors.CvvStatus}}" pop-placement="right" ng-model="data.gateway_data.CvvStatus" placeholder="" ng-change="ds()">
+					<input name="CvvStatus" type="text" class="form-control" pop-show="{{errors.CvvStatus}}" pop="{{errors.CvvStatus}}" pop-placement="right" ng-model="data.gateway_data.CvvStatus" placeholder="" ng-change="methods.ds()">
 				</div>
 			</div>
 		</div>	
@@ -71,19 +71,19 @@
 			<div class="col-md-4">
 				<div class="form-group" show-errors>
 					<label>Transaction Date</label>
-					<input class="form-control" name="TransDate" type="text" class="form-control" datepicker-popup="MM/dd/yyyy" ng-model="data.gateway_data.TransDate" is-open="settings.openedb" ng-click="settings.openedb=true" isdate ng-change="ds()">
+					<input class="form-control" name="TransDate" type="text" class="form-control" datepicker-popup="MM/dd/yyyy" ng-model="data.gateway_data.TransDate" is-open="settings.openedb" ng-click="settings.openedb=true" isdate ng-change="methods.ds()">
 				</div>
 			</div>
 			<div class="col-md-4">
 				<div class="form-group" show-errors>
 					<label>Case Number</label>
-					<input name="CaseNumber" type="text" class="form-control" pop-show="{{errors.CaseNumber}}" pop="{{errors.CaseNumber}}" pop-placement="right" ng-model="data.portal_data.CaseNumber" placeholder="" ng-change="ds()">
+					<input name="CaseNumber" type="text" class="form-control" pop-show="{{errors.CaseNumber}}" pop="{{errors.CaseNumber}}" pop-placement="right" ng-model="data.portal_data.CaseNumber" placeholder="" ng-change="methods.ds()">
 				</div>
 			</div>
 			<div class="col-md-4">
 				<div class="form-group" show-errors>
 					<label>Reference Number</label>
-					<input name="RefNumber" type="text" class="form-control" pop-show="{{errors.RefNumber}}" pop="{{errors.RefNumber}}" pop-placement="right" ng-model="data.portal_data.RefNumber" placeholder="" ng-change="ds()">
+					<input name="RefNumber" type="text" class="form-control" pop-show="{{errors.RefNumber}}" pop="{{errors.RefNumber}}" pop-placement="right" ng-model="data.portal_data.RefNumber" placeholder="" ng-change="methods.ds()">
 				</div>
 			</div>
 		</div>
@@ -91,13 +91,13 @@
 			<div class="col-md-6">
 				<div class="form-group" show-errors>
 					<label>Reason Code</label>
-					<input name="ReasonCode" required type="text" class="form-control" pop-show="{{errors.ReasonCode}}" pop="{{errors.ReasonCode}}" pop-placement="right" ng-model="data.portal_data.ReasonCode" placeholder="" ng-change="ds()">
+					<input name="ReasonCode" required type="text" class="form-control" pop-show="{{errors.ReasonCode}}" pop="{{errors.ReasonCode}}" pop-placement="right" ng-model="data.portal_data.ReasonCode" placeholder="" ng-change="methods.ds()">
 				</div>
 			</div>
 			<div class="col-md-6">
 				<div class="form-group" show-errors>
 					<label>Reason Text</label>
-					<input name="ReasonText" required type="text" class="form-control" pop-show="{{errors.ReasonText}}" pop="{{errors.ReasonText}}" pop-placement="right" ng-model="data.portal_data.ReasonText" placeholder="" ng-change="ds()">
+					<input name="ReasonText" required type="text" class="form-control" pop-show="{{errors.ReasonText}}" pop="{{errors.ReasonText}}" pop-placement="right" ng-model="data.portal_data.ReasonText" placeholder="" ng-change="methods.ds()">
 				</div>
 			</div>
 		</div>
@@ -112,13 +112,13 @@
 		<div class="col-md-6">
 			<div class="form-group" show-errors>
 				<label>First Name</label>
-				<input name="FirstName" required type="text" class="form-control" pop-show="{{errors.FirstName}}" pop="{{errors.FirstName}}" pop-placement="right" ng-model="data.gateway_data.FirstName" placeholder="" ng-change="ds()">
+				<input name="FirstName" required type="text" class="form-control" pop-show="{{errors.FirstName}}" pop="{{errors.FirstName}}" pop-placement="right" ng-model="data.gateway_data.FirstName" placeholder="" ng-change="methods.ds()">
 			</div>
 		</div>
 		<div class="col-md-6">
 			<div class="form-group" show-errors>
 				<label>Last Name</label>
-				<input name="LastName" required type="text" class="form-control" pop-show="{{errors.LastName}}" pop="{{errors.LastName}}" pop-placement="right" ng-model="data.gateway_data.LastName" placeholder="" ng-change="ds()">
+				<input name="LastName" required type="text" class="form-control" pop-show="{{errors.LastName}}" pop="{{errors.LastName}}" pop-placement="right" ng-model="data.gateway_data.LastName" placeholder="" ng-change="methods.ds()">
 			</div>
 		</div>
 	</div>
@@ -126,13 +126,13 @@
 		<div class="col-md-6">
 			<div class="form-group" show-errors>
 				<label>Billing Address One</label>
-				<input name="BillingAddr1" type="text" class="form-control" pop-show="{{errors.BillingAddr1}}" pop="{{errors.BillingAddr1}}" pop-placement="right" ng-model="data.gateway_data.BillingAddr1" placeholder="" ng-change="ds()">
+				<input name="BillingAddr1" type="text" class="form-control" pop-show="{{errors.BillingAddr1}}" pop="{{errors.BillingAddr1}}" pop-placement="right" ng-model="data.gateway_data.BillingAddr1" placeholder="" ng-change="methods.ds()">
 			</div>
 		</div>
 		<div class="col-md-6">
 			<div class="form-group" show-errors>
 				<label>Billing Address Two</label>
-				<input name="BillingAddr2" type="text" class="form-control" pop-show="{{errors.BillingAddr2}}" pop="{{errors.BillingAddr2}}" pop-placement="right" ng-model="data.gateway_data.BillingAddr2" placeholder="" ng-change="ds()">
+				<input name="BillingAddr2" type="text" class="form-control" pop-show="{{errors.BillingAddr2}}" pop="{{errors.BillingAddr2}}" pop-placement="right" ng-model="data.gateway_data.BillingAddr2" placeholder="" ng-change="methods.ds()">
 			</div>
 		</div>
 	</div>
@@ -140,25 +140,25 @@
 		<div class="col-md-3">
 			<div class="form-group" show-errors>
 				<label>Billing City</label>
-				<input name="BillingCity" type="text" class="form-control" pop-show="{{errors.BillingCity}}" pop="{{errors.BillingCity}}" pop-placement="right" ng-model="data.gateway_data.BillingCity" placeholder="" ng-change="ds()">
+				<input name="BillingCity" type="text" class="form-control" pop-show="{{errors.BillingCity}}" pop="{{errors.BillingCity}}" pop-placement="right" ng-model="data.gateway_data.BillingCity" placeholder="" ng-change="methods.ds()">
 			</div>
 		</div>
 		<div class="col-md-3">
 			<div class="form-group" show-errors>
 				<label>Billing State</label>
-				<input name="BillingState" type="text" class="form-control" pop-show="{{errors.BillingState}}" pop="{{errors.BillingState}}" pop-placement="right" ng-model="data.gateway_data.BillingState" placeholder="" ng-change="ds()">
+				<input name="BillingState" type="text" class="form-control" pop-show="{{errors.BillingState}}" pop="{{errors.BillingState}}" pop-placement="right" ng-model="data.gateway_data.BillingState" placeholder="" ng-change="methods.ds()">
 			</div>
 		</div>
 		<div class="col-md-3">
 			<div class="form-group" show-errors>
 				<label>Billing Postal</label>
-				<input name="BillingPostal" type="text" class="form-control" pop-show="{{errors.BillingPostal}}" pop="{{errors.BillingPostal}}" pop-placement="right" ng-model="data.gateway_data.BillingPostal" placeholder="" ng-change="ds()">
+				<input name="BillingPostal" type="text" class="form-control" pop-show="{{errors.BillingPostal}}" pop="{{errors.BillingPostal}}" pop-placement="right" ng-model="data.gateway_data.BillingPostal" placeholder="" ng-change="methods.ds()">
 			</div>
 		</div>
 		<div class="col-md-3">
 			<div class="form-group" show-errors>
 				<label>Billing Country</label>
-				<input name="BillingCountry" type="text" class="form-control" pop-show="{{errors.BillingCountry}}" pop="{{errors.BillingCountry}}" pop-placement="right" ng-model="data.gateway_data.BillingCountry" placeholder="" ng-change="ds()">
+				<input name="BillingCountry" type="text" class="form-control" pop-show="{{errors.BillingCountry}}" pop="{{errors.BillingCountry}}" pop-placement="right" ng-model="data.gateway_data.BillingCountry" placeholder="" ng-change="methods.ds()">
 			</div>
 		</div>
 	</div>
@@ -166,25 +166,25 @@
 		<div class="col-md-3">	
 			<div class="form-group" show-errors>
 				<label>Middle Name</label>
-				<input name="MiddleName" type="text" class="form-control" pop-show="{{errors.MiddleName}}" pop="{{errors.MiddleName}}" pop-placement="right" ng-model="data.gateway_data.MiddleName" placeholder="" ng-change="ds()">
+				<input name="MiddleName" type="text" class="form-control" pop-show="{{errors.MiddleName}}" pop="{{errors.MiddleName}}" pop-placement="right" ng-model="data.gateway_data.MiddleName" placeholder="" ng-change="methods.ds()">
 			</div>
 		</div>
 		<div class="col-md-3">
 			<div class="form-group" show-errors>
 				<label>Phone</label>
-				<input name="Phone" type="text" class="form-control" pop-show="{{errors.Phone}}" pop="{{errors.Phone}}" pop-placement="right" ng-model="data.gateway_data.Phone" placeholder="" ng-change="ds()">
+				<input name="Phone" type="text" class="form-control" pop-show="{{errors.Phone}}" pop="{{errors.Phone}}" pop-placement="right" ng-model="data.gateway_data.Phone" placeholder="" ng-change="methods.ds()">
 			</div>
 		</div>
 		<div class="col-md-3">
 			<div class="form-group" show-errors>
 				<label>Email</label>
-				<input name="Email" type="text" class="form-control" pop-show="{{errors.Email}}" pop="{{errors.Email}}" pop-placement="right" ng-model="data.crm_data.Email" placeholder="" ng-change="ds()">
+				<input name="Email" type="text" class="form-control" pop-show="{{errors.Email}}" pop="{{errors.Email}}" pop-placement="right" ng-model="data.crm_data.Email" placeholder="" ng-change="methods.ds()">
 			</div>
 		</div>
 		<div class="col-md-3">
 			<div class="form-group" show-errors>
 				<label>IP Address</label>
-				<input name="IpAddress" type="text" class="form-control" pop-show="{{errors.IpAddress}}" pop="{{errors.IpAddress}}" pop-placement="right" ng-model="data.crm_data.IpAddress" placeholder="" ng-change="ds()">
+				<input name="IpAddress" type="text" class="form-control" pop-show="{{errors.IpAddress}}" pop="{{errors.IpAddress}}" pop-placement="right" ng-model="data.crm_data.IpAddress" placeholder="" ng-change="methods.ds()">
 			</div>
 		</div>
 	</div>
@@ -203,13 +203,13 @@
 		<div class="col-md-6">
 			<div class="form-group" show-errors>
 				<label>Transaction Id</label>
-				<input name="TransId" required type="text" class="form-control" pop-show="{{errors.TransId}}" pop="{{errors.TransId}}" pop-placement="right" ng-model="data.gateway_data.TransId" placeholder="" ng-change="ds()">
+				<input name="TransId" required type="text" class="form-control" pop-show="{{errors.TransId}}" pop="{{errors.TransId}}" pop-placement="right" ng-model="data.gateway_data.TransId" placeholder="" ng-change="methods.ds()">
 			</div>
 		</div>
 		<div class="col-md-6">
 			<div class="form-group" show-errors>
 				<label>Order Id</label>
-				<input name="OrderId" required type="text" class="form-control" pop-show="{{errors.OrderId}}" pop="{{errors.OrderId}}" pop-placement="right" ng-model="data.gateway_data.OrderId" placeholder="" ng-change="ds()">
+				<input name="OrderId" required type="text" class="form-control" pop-show="{{errors.OrderId}}" pop="{{errors.OrderId}}" pop-placement="right" ng-model="data.gateway_data.OrderId" placeholder="" ng-change="methods.ds()">
 			</div>
 		</div>
 	</div>
@@ -217,13 +217,13 @@
 		<div class="col-md-6">
 			<div class="form-group" show-errors>
 				<label>Transaction Type</label>
-				<input name="TransType" required type="text" class="form-control" pop-show="{{errors.TransType}}" pop="{{errors.TransType}}" pop-placement="right" ng-model="data.gateway_data.TransType" placeholder="" ng-change="ds()">
+				<input name="TransType" required type="text" class="form-control" pop-show="{{errors.TransType}}" pop="{{errors.TransType}}" pop-placement="right" ng-model="data.gateway_data.TransType" placeholder="" ng-change="methods.ds()">
 			</div>
 		</div>
 		<div class="col-md-6">
 			<div class="form-group" show-errors>
 				<label>Transaction Status</label>
-				<input name="TransStatus" required type="text" class="form-control" pop-show="{{errors.TransStatus}}" pop="{{errors.TransStatus}}" pop-placement="right" ng-model="data.gateway_data.TransStatus" placeholder="" ng-change="ds()">
+				<input name="TransStatus" required type="text" class="form-control" pop-show="{{errors.TransStatus}}" pop="{{errors.TransStatus}}" pop-placement="right" ng-model="data.gateway_data.TransStatus" placeholder="" ng-change="methods.ds()">
 			</div>
 		</div>
 	</div>
@@ -231,7 +231,7 @@
 		<div class="col-md-12">
 			<div class="form-group" show-errors>
 				<label>Product Name</label>
-				<input name="ProductName" type="text" class="form-control" pop-show="{{errors.ProductName}}" pop="{{errors.ProductName}}" pop-placement="right" ng-model="data.crm_data.ProductName" placeholder="" ng-change="ds()">
+				<input name="ProductName" type="text" class="form-control" pop-show="{{errors.ProductName}}" pop="{{errors.ProductName}}" pop-placement="right" ng-model="data.crm_data.ProductName" placeholder="" ng-change="methods.ds()">
 			</div>
 		</div>
 	</div>
@@ -240,14 +240,14 @@
 			<div class="form-group">
 				<label>Is Recurring</label>
 				<div class="form-control-static">
-					<input name="IsRecurring" type="checkbox" ng-model="data.crm_data.IsRecurring" ng-change="ds()">
+					<input name="IsRecurring" type="checkbox" ng-model="data.crm_data.IsRecurring" ng-change="methods.ds()">
 				</div>
 			</div>
 		</div>
 		<div class="col-md-6">
 			<div class="form-group" show-errors>
 				<label>RMA</label>
-				<input name="Rma" type="text" class="form-control" pop-show="{{errors.Rma}}" pop="{{errors.Rma}}" pop-placement="right" ng-model="data.crm_data.Rma" placeholder="" ng-change="ds()">
+				<input name="Rma" type="text" class="form-control" pop-show="{{errors.Rma}}" pop="{{errors.Rma}}" pop-placement="right" ng-model="data.crm_data.Rma" placeholder="" ng-change="methods.ds()">
 			</div>
 		</div>
 	</div>
@@ -255,13 +255,13 @@
 
 	<div style="margin-top: 100px;" ng-if="data.refunded" >
 		<div class="pull-right" style="width: auto;">
-			<a href="" ng-click="data.refunded = false;">Hide Refund</a>
+			<a href="" ng-click="data.refunded = false; methods.ds();">Hide Refund</a>
 		</div>
 		<h4 style="font-weight: bold;">Refund</h4>
 	</div>
 	<div style="margin-top: 100px; border: solid 1px #dedede; padding: 0px 0px 0px 10px;" ng-if="!data.refunded" >
 		<div class="pull-right" style="width: auto; padding: 9px 10px 0px 0px;">
-			<a href="" ng-click="data.refunded = true;">Include Refund</a>
+			<a href="" ng-click="data.refunded = true; methods.ds();">Include Refund</a>
 		</div>
 		<h4 style="font-weight: bold;">No Refund Issued</h4>
 	</div>
@@ -272,13 +272,13 @@
 		<div class="col-md-6">
 			<div class="form-group" show-errors>
 				<label>Refund Date</label>
-				<input class="form-control" name="RefundDateFull" type="text" class="form-control" datepicker-popup="MM/dd/yyyy" ng-model="data.crm_data.RefundDateFull" is-open="opened" ng-click="opened=true" isdate  ng-change="ds()">
+				<input class="form-control" name="RefundDateFull" type="text" class="form-control" datepicker-popup="MM/dd/yyyy" ng-model="data.crm_data.RefundDateFull" is-open="opened" ng-click="opened=true" isdate  ng-change="methods.ds()">
 			</div>
 		</div>
 		<div class="col-md-6">
 			<div class="form-group" show-errors>
 				<label>Refund Amount</label>
-				<input name="RefundAmount" type="number" class="form-control" pop-show="{{errors.RefundAmount}}" pop="{{errors.RefundAmount}}" pop-placement="right" ng-model="data.crm_data.RefundAmount" placeholder="" ng-change="ds()">
+				<input name="RefundAmount" type="number" class="form-control" pop-show="{{errors.RefundAmount}}" pop="{{errors.RefundAmount}}" pop-placement="right" ng-model="data.crm_data.RefundAmount" placeholder="" ng-change="methods.ds()">
 			</div>
 		</div>
 	</div>
@@ -286,80 +286,84 @@
 
 
 
-	<div style="margin-top: 100px;" ng-if="data.settings.shipped" >
+	<div style="margin-top: 100px;" ng-if="data.shipped" >
 		<div class="pull-right" style="width: auto;">
-			<a href="" ng-click="data.settings.shipped = false;">Hide Shipping</a>
+			<a href="" ng-click="data.shipped = false; methods.ds();">Hide Shipping</a>
 		</div>
 		<h4 style="font-weight: bold;">Shipping</h4>
 	</div>
-	<div style="margin-top: 100px; border: solid 1px #dedede; padding: 0px 0px 0px 10px;" ng-if="!data.settings.shipped" >
+	<div style="margin-top: 100px; border: solid 1px #dedede; padding: 0px 0px 0px 10px;" ng-if="!data.shipped" >
 		<div class="pull-right" style="width: auto; padding: 9px 10px 0px 0px;">
-			<a href="" ng-click="data.settings.shipped = true;">Include Shipping</a>
+			<a href="" ng-click="data.shipped = true; methods.ds();">Include Shipping</a>
 		</div>
 		<h4 style="font-weight: bold;">No Shipping</h4>
 	</div>
 	
 
-	<div style="font-size: 12px; color: #999; padding-bottom: 10px;" ng-if="data.settings.shipped">This information is typically found in your CRM or order information system.  You can use the transaction data to the right to look up the customer for this transaction. We will use the tracking number to gather the summary data from your shipping agent.</div>
+	<div style="font-size: 12px; color: #999; padding-bottom: 10px;" ng-if="data.shipped">This information is typically found in your CRM or order information system.  You can use the transaction data to the right to look up the customer for this transaction. We will use the tracking number to gather the summary data from your shipping agent.</div>
 
-	<div class="row bt" ng-if="data.settings.shipped">
+	<div ng-if="data.shipped" style="margin-bottom: 10px;">
+		[ <a ng-click="methods.copyBilling();">Copy Billing Address to Delivery Address</a> ]
+	</div>
+
+	<div class="row bt" ng-if="data.shipped">
 		<div class="col-md-6">
 			<div class="form-group" show-errors>
 				<label>Delivery Address One</label>
-				<input name="DeliveryAddr1" type="text" class="form-control" pop-show="{{errors.DeliveryAddr1}}" pop="{{errors.DeliveryAddr1}}" pop-placement="right" ng-model="data.crm_data.DeliveryAddr1" placeholder="" ng-change="ds()">
+				<input name="DeliveryAddr1" type="text" class="form-control" pop-show="{{errors.DeliveryAddr1}}" pop="{{errors.DeliveryAddr1}}" pop-placement="right" ng-model="data.crm_data.DeliveryAddr1" placeholder="" ng-change="methods.ds()">
 			</div>
 		</div>
 		<div class="col-md-6">
 			<div class="form-group" show-errors>
 				<label>Delivery Address Two</label>
-				<input name="DeliveryAddr2" type="text" class="form-control" pop-show="{{errors.DeliveryAddr2}}" pop="{{errors.DeliveryAddr2}}" pop-placement="right" ng-model="data.crm_data.DeliveryAddr2" placeholder="" ng-change="ds()">
+				<input name="DeliveryAddr2" type="text" class="form-control" pop-show="{{errors.DeliveryAddr2}}" pop="{{errors.DeliveryAddr2}}" pop-placement="right" ng-model="data.crm_data.DeliveryAddr2" placeholder="" ng-change="methods.ds()">
 			</div>
 		</div>
 	</div>
-	<div class="row" ng-if="data.settings.shipped">
+	<div class="row" ng-if="data.shipped">
 		<div class="col-md-3">
 			<div class="form-group" show-errors>
 				<label>Delivery City</label>
-				<input name="DeliveryCity" type="text" class="form-control" pop-show="{{errors.DeliveryCity}}" pop="{{errors.DeliveryCity}}" pop-placement="right" ng-model="data.crm_data.DeliveryCity" placeholder="" ng-change="ds()">
+				<input name="DeliveryCity" type="text" class="form-control" pop-show="{{errors.DeliveryCity}}" pop="{{errors.DeliveryCity}}" pop-placement="right" ng-model="data.crm_data.DeliveryCity" placeholder="" ng-change="methods.ds()">
 			</div>
 		</div>
 		<div class="col-md-3">
 			<div class="form-group" show-errors>
 				<label>Delivery State</label>
-				<input name="DeliveryState" type="text" class="form-control" pop-show="{{errors.DeliveryState}}" pop="{{errors.DeliveryState}}" pop-placement="right" ng-model="data.crm_data.DeliveryState" placeholder="" ng-change="ds()">
+				<input name="DeliveryState" type="text" class="form-control" pop-show="{{errors.DeliveryState}}" pop="{{errors.DeliveryState}}" pop-placement="right" ng-model="data.crm_data.DeliveryState" placeholder="" ng-change="methods.ds()">
 			</div>
 		</div>
 		<div class="col-md-3">
 			<div class="form-group" show-errors>
 				<label>Delivery Postal</label>
-				<input name="DeliveryPostal" type="text" class="form-control" pop-show="{{errors.DeliveryPostal}}" pop="{{errors.DeliveryPostal}}" pop-placement="right" ng-model="data.crm_data.DeliveryPostal" placeholder="" ng-change="ds()">
+				<input name="DeliveryPostal" type="text" class="form-control" pop-show="{{errors.DeliveryPostal}}" pop="{{errors.DeliveryPostal}}" pop-placement="right" ng-model="data.crm_data.DeliveryPostal" placeholder="" ng-change="methods.ds()">
 			</div>
 		</div>
 		<div class="col-md-3">
 			<div class="form-group" show-errors>
 				<label>Delivery Country</label>
-				<input name="DeliveryCountry" type="text" class="form-control" pop-show="{{errors.DeliveryCountry}}" pop="{{errors.DeliveryCountry}}" pop-placement="right" ng-model="data.crm_data.DeliveryCountry" placeholder="" ng-change="ds()">
+				<input name="DeliveryCountry" type="text" class="form-control" pop-show="{{errors.DeliveryCountry}}" pop="{{errors.DeliveryCountry}}" pop-placement="right" ng-model="data.crm_data.DeliveryCountry" placeholder="" ng-change="methods.ds()">
 			</div>
 		</div>
 	</div>
-	<div class="row" ng-if="data.settings.shipped">
+	<div class="row" ng-if="data.shipped">
 		<div class="col-md-3">
 			<div class="form-group select">
 				<label>Shipping Company</label>
-				<select class="form-control" ng-model="data.shipping_data.company" ng-options="s for s in settings.shipping_companies" ng-change="ds()"></select>
+				<select class="form-control" ng-model="data.shipping_data.company" ng-options="s for s in settings.shipping_companies" ng-change="methods.ds()"></select>
 			</div>
 		</div>
 		<div class="col-md-3">
 			<div class="form-group" show-errors>
 				<label>Shipping Date</label>
-				<input class="form-control" name="ShippingDate" type="text" datepicker-popup="MM/dd/yyyy" ng-model="data.shipping_data.ShippingDate" is-open="opened" ng-click="opened=true" isdate  ng-change="ds()">
+				<input class="form-control" name="ShippingDate" type="text" datepicker-popup="MM/dd/yyyy" ng-model="data.shipping_data.ShippingDate" is-open="opened" ng-click="opened=true" isdate  ng-change="methods.ds()">
 				
 			</div>
 		</div>
 		<div class="col-md-6">
 			<div class="form-group" show-errors>
 				<label>Tracking Number</label>
-				<input name="TrackingNum" type="text" class="form-control" pop-show="{{errors.TrackingNum}}" pop="{{errors.TrackingNum}}" pop-placement="right" ng-model="data.shipping_data.TrackingNum" placeholder="" ng-change="ds()">
+				<input name="TrackingNum" type="text" class="form-control" pop-show="{{errors.TrackingNum}}" pop="{{errors.TrackingNum}}" pop-placement="right" ng-model="data.shipping_data.TrackingNum" placeholder="" ng-change="methods.ds()">
 			</div>
 		</div>
 	</div>
@@ -400,7 +404,7 @@
 	<div class="row bt">
 		<div class="col-md-12">
 			<div class="form-group" show-errors>
-				<textarea class="form-control" style="padding-top: 20px;" name="additional_comments" type="text" class="form-control" ng-model="data.additional_comments" ng-change="ds()"S></textarea>
+				<textarea class="form-control" style="padding-top: 20px;" name="additional_comments" type="text" class="form-control" ng-model="data.additional_comments" ng-change="methods.ds()"S></textarea>
 			</div>
 		</div>
 	</div>
@@ -415,7 +419,7 @@
 
 				<div ng-show="uploaders.receipt.isHTML5">
 					<div nv-file-drop="" uploader="uploaders.receipt">
-						<div nv-file-over="" uploader="uploaders.receipt" over-class="ddhover" class="ddzone" ng-click="triggerUpload('#receiptFile')">
+						<div nv-file-over="" uploader="uploaders.receipt" over-class="ddhover" class="ddzone" ng-click="methods.triggerUpload('#receiptFile')">
 							Upload Receipt<br/>
 							<span class="glyphicon glyphicon-picture"></span>
 							<div class="subtext">(drag here or click to upload)</div>
@@ -430,7 +434,7 @@
 
 					<div ng-repeat="saved_item in data.attachments | filter: { type:'receipt' }">
 						<div class="img">
-							<div class="remove" ng-click="removeItem(saved_item)">
+							<div class="remove" ng-click="methods.removeItem(saved_item)">
 								<span class="glyphicon glyphicon-remove-circle"></span>
 							</div>
 							<img ng-if="!saved_item.processed" ng-src="{{saved_item.urls.orig}}">
@@ -460,7 +464,7 @@
 
 				<div ng-show="uploaders.add.isHTML5">
 					<div nv-file-drop="" uploader="uploaders.add">
-						<div nv-file-over="" uploader="uploaders.add" over-class="ddhover" class="ddzone" ng-click="triggerUpload('#addFile')">
+						<div nv-file-over="" uploader="uploaders.add" over-class="ddhover" class="ddzone" ng-click="methods.triggerUpload('#addFile')">
 							Upload Attachments<br/>
 							<span class="glyphicon glyphicon-picture"></span>
 							<div class="subtext">(drag here or click to upload)</div>
@@ -475,7 +479,7 @@
 
 					<div ng-repeat="saved_item in data.attachments | filter: { type:'additional' }">
 						<div class="img">
-							<div class="remove" ng-click="removeItem(saved_item)">
+							<div class="remove" ng-click="methods.removeItem(saved_item)">
 								<span class="glyphicon glyphicon-remove-circle"></span>
 							</div>
 							<img ng-if="!saved_item.processed" ng-src="{{saved_item.urls.orig}}">
@@ -513,7 +517,7 @@
 
 				<div ng-show="uploaders.terms.isHTML5">
 					<div nv-file-drop="" uploader="uploaders.terms">
-						<div nv-file-over="" uploader="uploaders.terms" over-class="ddhover" class="ddzone" ng-click="triggerUpload('#termsFile')">
+						<div nv-file-over="" uploader="uploaders.terms" over-class="ddhover" class="ddzone" ng-click="methods.triggerUpload('#termsFile')">
 							Upload Terms<br/>
 							<span class="glyphicon glyphicon-picture"></span>
 							<div class="subtext">(drag here or click to upload)</div>
@@ -528,7 +532,7 @@
 
 					<div ng-repeat="saved_item in data.attachments | filter: { type:'terms' }">
 						<div class="img">
-							<div class="remove" ng-click="removeItem(saved_item)">
+							<div class="remove" ng-click="methods.removeItem(saved_item)">
 								<span class="glyphicon glyphicon-remove-circle"></span>
 							</div>
 							<img ng-if="!saved_item.processed" ng-src="{{saved_item.urls.orig}}">
@@ -558,7 +562,7 @@
 
 				<div ng-show="uploaders.checkout.isHTML5">
 					<div nv-file-drop="" uploader="uploaders.checkout">
-						<div nv-file-over="" uploader="uploaders.checkout" over-class="ddhover" class="ddzone" ng-click="triggerUpload('#checkoutFile')">
+						<div nv-file-over="" uploader="uploaders.checkout" over-class="ddhover" class="ddzone" ng-click="methods.triggerUpload('#checkoutFile')">
 							Upload Checkout Screenshot<br/>
 							<span class="glyphicon glyphicon-picture"></span>
 							<div class="subtext">(drag here or click to upload)</div>
@@ -573,7 +577,7 @@
 
 					<div ng-repeat="saved_item in data.attachments | filter: { type:'checkout' }">
 						<div class="img">
-							<div class="remove" ng-click="removeItem(saved_item)">
+							<div class="remove" ng-click="methods.removeItem(saved_item)">
 								<span class="glyphicon glyphicon-remove-circle"></span>
 							</div>
 							<img ng-if="!saved_item.processed" ng-src="{{saved_item.urls.orig}}">
@@ -608,7 +612,7 @@
 
 				<div ng-show="uploaders.add.isHTML5">
 					<div nv-file-drop="" uploader="uploaders.add">
-						<div nv-file-over="" uploader="uploaders.add" over-class="ddhover" class="ddzone" ng-click="triggerUpload('#addFile')">
+						<div nv-file-over="" uploader="uploaders.add" over-class="ddhover" class="ddzone" ng-click="methods.triggerUpload('#addFile')">
 							Upload Attachments<br/>
 							<span class="glyphicon glyphicon-picture"></span>
 							<div class="subtext">(drag here or click to upload)</div>
@@ -623,7 +627,7 @@
 
 					<div ng-repeat="saved_item in data.attachments | filter: { type:'additional' }">
 						<div class="img">
-							<div class="remove" ng-click="removeItem(saved_item)">
+							<div class="remove" ng-click="methods.removeItem(saved_item)">
 								<span class="glyphicon glyphicon-remove-circle"></span>
 							</div>
 							<img ng-if="!saved_item.processed" ng-src="{{saved_item.urls.orig}}">

@@ -28,6 +28,23 @@
 				});
 		};
 
+		this.alogin = function(d) {
+			var self = this;
+			return $http
+				.post('/api/v1/admin/login', d)
+				.then(function (res) {
+					
+					self.setToken(res.data.authtoken);
+					self.markTime();
+					delete res.data.authtoken;	// don't have token in current user
+					
+					// manually set current user (vs additional ajax request)
+					self.setUser(res.data);
+
+					return res.data;
+				});
+		};
+
 		this.getCurrentUser = function(d) {
 			
 			if (!this.isAuthenticated()) {
