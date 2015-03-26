@@ -56,12 +56,12 @@ module.exports = function(app) {
 			this.vars.cb.save(this);
 
 		})
-		.seq(function(cb) {
+		.seq(function() {
 
 			// cache busting on static api end point
 			res.header('Content-Type', 'application/json');
 			res.header('Cache-Control', 'no-cache, private, no-store, must-revalidate, max-stale=0, post-check=0, pre-check=0');
-			return res.json(cb);
+			return res.json(this.vars.first);
 
 		})
 		.catch(next);

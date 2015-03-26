@@ -15,10 +15,10 @@
 			<div class="col-xs-4" ng-if="data.type" ui-sref-active="active" ui-sref=".data">
 				<span>2</span> Data
 			</div>
-			<div class="col-xs-4 disabled" ng-if="settings.disableReview">
+			<div class="col-xs-4 disabled" ng-if="disableReview">
 				<span>3</span> Review
 			</div>
-			<div class="col-xs-4" ng-if="!settings.disableReview" ui-sref-active="active" ui-sref=".review">
+			<div class="col-xs-4" ng-if="!disableReview" ui-sref-active="active" ui-sref=".review">
 				<span>3</span> Review
 			</div>
 		</div>
@@ -29,7 +29,7 @@
 	
 	<div class="col-md-4 col-md-push-8 form-sidebar">
 		
-		<div class="col-md-4 imported-col">
+		<div class="col-md-4 imported-col" ng-if="state.current.name != 'chargeback.confirmation'">
 			<div class="imported">
 				<div class="side-cbinfo-head">
 					<span ng-if="data.manual">SUMMARY</span>
@@ -103,11 +103,23 @@
 				</div>
 			</div>
 
-			<div class="form-group btns" style="text-align: center; margin-top: 40px;" ng-if="settings.state.current.name == 'chargeback.review'">
+			<div class="form-group btns" style="text-align: center; margin-top: 40px;" ng-if="state.current.name == 'chargeback.review'">
 				<button type="button" class="btn btn-success" ng-if="data.status == 'In-Progress'" style="margin-right: 20px;" ng-click="submit('Are you sure you want to submit this chargeback dispute?', 'Yes, submit it!', 'No, keep working.')" class="btn btn-danger">Submit Chargeback Dispute</button>
 				<button type="button" ng-if="data.status == 'Won' || data.status == 'Lost' || data.status == 'Sent'" ng-click="download('/images/example.0511cc.pdf')" class="btn btn-info">Download Chargeback PDF</button>
 
 			</div>
+		</div>
+
+		<div class="side-cbinfo" ng-if="state.current.name == 'chargeback.confirmation'">
+			<div class="side-main-head">KEEP IN MIND</div>
+			<div>
+				<ul>
+					<li>Processors may ask for additional information.</li>
+					<li>It usually takes about one week for processors to respond.</li>
+					<li>Not all processors will notify chargeback.com, so check with your processor directly in about one week.</li>
+				</ul>
+			</div>
+			
 		</div>
 
 	</div>
