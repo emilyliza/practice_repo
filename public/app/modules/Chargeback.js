@@ -297,7 +297,7 @@
 			$scope.data.crm_data.DeliveryPostal = $scope.data.gateway_data.BillingPostal;
 			$scope.data.crm_data.DeliveryCountry = $scope.data.gateway_data.BillingCountry;
 			save();
-		}
+		};
 
 		
 

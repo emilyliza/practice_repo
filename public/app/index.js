@@ -62,6 +62,13 @@
 			$scope.$state = $state;	// for navigation active to work
 			$scope.isCollapsed = true;
 
+			function closeModals() {
+				if ($scope.warning) {
+					$scope.warning.close();
+					$scope.warning = null;
+				}
+			}
+			
 			if (UserService.isAuthenticated()) {
 				var user = UserService.getCurrentUser();
 				// immediate auth error
@@ -73,12 +80,7 @@
 				Idle.watch();
 			}
 
-			function closeModals() {
-				if ($scope.warning) {
-					$scope.warning.close();
-					$scope.warning = null;
-				}
-			};
+			
 
 			$scope.$on('IdleStart', function() {
 				closeModals();

@@ -51,6 +51,22 @@
 			<div class="row">
 				<div class="col-md-12">
 					<div class="form-group" show-errors>
+						<label>Response Email</label>
+						<input name="response_email" type="email" class="form-control" pop-show="{{errors.response_email}}" pop="{{errors.response_email}}" pop-placement="right" ng-model="currentUser.response_email" pop-append-to-body>
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-md-12">
+					<div class="form-group" show-errors>
+						<label>Response Fax</label>
+						<input name="response_fax" type="text" class="form-control" pop-show="{{errors.response_fax}}" pop="{{errors.response_fax}}" pop-placement="right" ng-model="currentUser.response_fax" pop-append-to-body>
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-md-12">
+					<div class="form-group" show-errors>
 						<label>Password</label>
 						<input type="password" name="pass" class="form-control" pop-show="{{errors.password}}" pop="{{errors.password}}" placeholder="Only enter to change." pop-placement="right" ng-model="currentUser.password" />
 					</div>
