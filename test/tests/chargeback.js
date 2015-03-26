@@ -1,4 +1,5 @@
-var _ = require('underscore'),
+var _ = require('highland'),
+	lodash = require('lodash'),
 	assert = require("assert"),
 	should = require('should');
 
@@ -34,7 +35,7 @@ module.exports = function(app) {
 		var db_cb;
 		describe('Create chargeback and test data manipulation', function(){
 			it('should return object with _id', function(done){
-				var c = _.clone(config.get('chargebacks'))[0];
+				var c = lodash.clone(config.get('chargebacks'))[0];
 				var cb = new Chargeback();
 				cb.set('crm_data', c.crm_data);
 				cb.set('portal_data', c.portal_data);
@@ -129,11 +130,17 @@ module.exports = function(app) {
 
 		describe('Search chargebacks with logged in user.', function(){
 			it('should return arary with length=1', function(done){
-				Chargeback.search({
+				var q = Chargeback.search({
 					user: login,
 					query: {}
-				}, function(err,data) {
-					if (err) { throw err; }
+				});
+
+				_( Chargeback.find()
+					.and(q)
+					.lean()
+					.stream() )
+				.stopOnError(function(err) { throw err; })
+				.toArray(function(data) {
 					data.should.be.instanceof(Array).and.have.lengthOf(1);
 					done();
 				});
@@ -144,16 +151,23 @@ module.exports = function(app) {
 		// stub user._id to make sure chargebacks aren't returned anonymously
 		describe('Search chargebacks with non-user.', function(){
 			it('should return empty array', function(done){
-				Chargeback.search({
+				var q = Chargeback.search({
 					user: {
 						'_id': "54ef98adf1a824ed278b6b3c"
 					},
 					query: {}
-				}, function(err,data) {
-					if (err) { throw err; }
+				});
+
+				_( Chargeback.find()
+					.and(q)
+					.lean()
+					.stream() )
+				.stopOnError(function(err) { throw err; })
+				.toArray(function(data) {
 					data.should.be.instanceof(Array).and.have.lengthOf(0);
 					done();
 				});
+
 			});
 		});
 
@@ -244,43 +258,64 @@ module.exports = function(app) {
 				});
 			});
 			it('should return array with length=2', function(done){
-				Chargeback.search({
+				var q = Chargeback.search({
 					user: login,
 					query: {}
-				}, function(err,data) {
-					if (err) { throw err; }
+				});
+
+				_( Chargeback.find()
+					.and(q)
+					.lean()
+					.stream() )
+				.stopOnError(function(err) { throw err; })
+				.toArray(function(data) {
 					data.should.be.instanceof(Array).and.have.lengthOf(2);
 					done();
 				});
+
 			});
 			it('new user should return array with length=1', function(done){
-				_.each(users, function(u) {
+				lodash.each(users, function(u) {
 					if (u._id + '' != login._id + '') {
 						other = u._id;
 					}
 				});
-				Chargeback.search({
+				var q = Chargeback.search({
 					'user': {
 						'_id': other
 					},
 					query: {}
-				}, function(err,data) {
-					if (err) { throw err; }
+				});
+
+				_( Chargeback.find()
+					.and(q)
+					.lean()
+					.stream() )
+				.stopOnError(function(err) { throw err; })
+				.toArray(function(data) {
 					data.should.be.instanceof(Array).and.have.lengthOf(1);
 					done();
 				});
+
 			});
 			it('chargeback query with user param should return array with length=1', function(done){
-				Chargeback.search({
+				var q = Chargeback.search({
 					user: login,
 					query: {
 						user: other
 					}
-				}, function(err,data) {
-					if (err) { throw err; }
+				});
+
+				_( Chargeback.find()
+					.and(q)
+					.lean()
+					.stream() )
+				.stopOnError(function(err) { throw err; })
+				.toArray(function(data) {
 					data.should.be.instanceof(Array).and.have.lengthOf(2);
 					done();
 				});
+
 			});
 		});
 
