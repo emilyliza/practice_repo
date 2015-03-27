@@ -38,7 +38,6 @@
     "newrelic": "1.15.1",
     "thumbd": "justingshreve/thumbd.git",
     "aws-sdk": "2.1.20",
-    "connect-domain": "0.5.0",
     "lodash": "3.5.0",
     "highland": "2.4.0",
     "airbrake": "0.3.8"

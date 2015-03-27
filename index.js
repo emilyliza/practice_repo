@@ -7,7 +7,6 @@ var fs = require('fs'),
 	logger = require('morgan'),
     bodyParser = require('body-parser'),
 	methodOverride = require('method-override'),
-	connectDomain = require('connect-domain'),
 	app = module.exports = express();
 
 if (!process.env.NODE_ENV) {
@@ -26,7 +25,6 @@ app.set('views', __dirname + '/views/');
 app.set('db', require('mongoose'));
 app.use(airbrake.expressHandler());
 
-app.use(connectDomain());
 
 var favicon = require('serve-favicon');
 app.use(favicon(path.join(__dirname,'public','images','chargeback-shield.png')));
@@ -136,12 +134,14 @@ var myStream = {
 app.use(logger('combined', {stream: myStream}))
 
 
-// connect-domain error handler
-app.use(function(err, req, res, next) {
-	log.error(err.message);
-	res.end(err.message); // this catches the error!!
+process.on('uncaughtException', function(err) {
+	log.err(err.stack);
+	if (process.env.NODE_ENV === 'development' || process.env.NODE_ENV === 'local') {
+		process.exit(1);
+	} else {
+		
+	}
 });
-
 
 
 // Defaults to first environment configuration listed
