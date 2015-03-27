@@ -14,6 +14,9 @@ if (!process.env.NODE_ENV) {
 	require('dotenv').load();
 }
 
+var airbrake = require('airbrake').createClient(process.env.AIRBRAKE);
+airbrake.handleExceptions();
+
 
 // Config
 //app.engine('.ejs', require('ejs').__express);
@@ -21,6 +24,7 @@ if (!process.env.NODE_ENV) {
 app.set('root_dir', __dirname);
 app.set('views', __dirname + '/views/');
 app.set('db', require('mongoose'));
+app.use(airbrake.expressHandler());
 
 app.use(connectDomain());
 
