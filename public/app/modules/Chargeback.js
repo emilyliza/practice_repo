@@ -318,6 +318,9 @@
 
 
 		$scope.methods.copyBilling = function() {
+			if (!$scope.data.crm_data) {
+				$scope.data.crm_data = {};
+			}
 			$scope.data.crm_data.DeliveryAddr1 = $scope.data.gateway_data.BillingAddr1;
 			$scope.data.crm_data.DeliveryAddr2 = $scope.data.gateway_data.BillingAddr2;
 			$scope.data.crm_data.DeliveryCity = $scope.data.gateway_data.BillingCity;
