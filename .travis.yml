@@ -30,4 +30,4 @@ deploy:
   application: chargeback-cart
   deployment_group: cart-ec2-servers
   on:
-    repo: justingshreve/chargeback
+    branch: dev
