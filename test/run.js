@@ -1,15 +1,8 @@
-var _ = require('underscore'),
-	fs = require('fs'),
-	configFile = __dirname + "/config.json",
-	config = require('nconf').env().argv().file({file: configFile});
+var config = require('nconf').env().argv().file({file: __dirname + "/config.json" });
 
-var envconfig = fs.readFileSync(__dirname + '/../.env-test', 'utf8')
-_.each(envconfig.split('\n'), function(d) {
-	if (d) {
-		var kv = d.split('=');
-		process.env[kv[0]] = kv[1];
-	}
-});
+if (!process.env.NODE_ENV) {
+	require('dotenv').load({path: __dirname + '/../.env-test'});
+}
 
 var app = require("../index");
 app.set('config', config);
