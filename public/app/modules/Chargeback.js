@@ -160,6 +160,34 @@
 			}
 		};
 
+
+		$scope.methods.wonlost = function(wonlost, msg, confirmbtn, cancelbtn) {
+			var modalInstance = $modal.open({
+				templateUrl: '/app/templates/confirm-modal.html',
+				controller: 'ModalInstanceCtrl',
+				size: "md",
+				resolve: {
+					data: function () {
+						return {
+							'msg': msg,
+							'confirm': confirmbtn,
+							'cancel': cancelbtn
+						};
+					}
+				}
+			});
+			modalInstance.result.then(function (confirm) {
+				if (confirm) {
+					if (wonlost) {
+						$scope.data.status = "Won";
+					} else {
+						$scope.data.status = "Lost";
+					}
+					save();
+				}
+			});
+		};	
+
 		var save = function(halt_save_on_error) {
 			$scope.$broadcast('show-errors-check-validity');
 			if ($scope.cbForm.$valid) {
@@ -176,7 +204,7 @@
 			ChargebackService.save($scope.data).then(function (res) {
 				$scope.data = res.data;
 				$scope.methods.checkForErrors($scope.data);
-				$scope.methods.addUploaders();
+				addUploaders();
 			}, function (res) {
 				$scope.errors = UtilService.formatErrors(res.data);
 			});
