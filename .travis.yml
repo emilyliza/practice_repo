@@ -1,6 +1,6 @@
 language: node_js
 node_js:
-- '0.10.33'
+- 0.10.33
 services:
 - mongodb
 before_install: npm install -g grunt-cli
@@ -21,13 +21,11 @@ env:
   - secure: kvvLABsWT4BaTPbqvzj09L3nyeli+98dJp3woKP/SSnvtVxm45CDci7Uut4u0Nh1j/4THu9oeEsTOG3IPJp2W6RYNd0ZUzDhlJGtfD2forjyPx4D1OMGHj6UAeGYqM6Cm9ZcrbzrWqewYu0jvk4AN7K0Dd5azjSnc6tuTP7RcUk=
 deploy:
   provider: codedeploy
-  access_key_id: AKIAIV2GJMSH3WICWGWA
-  secret_access_key:
-    secure: Fq2mv7v7CNg9uzmHlxQZsK6UbdapfHaL76Tq015Cbh2+2XZsYlGI1sgew0oHyOYpeBNJWRIa/25fO0zDq8O8b9z5dGPy2/n3PkYOCwFUdCAF30zqHS79tTzhWG7ysHrk7hOglcviuZnA5fEMvSsGbyPScihEyb0ZpX1M20hJkP8=
-  bucket: ''
-  key: ''
-  bundle_type: ''
+  access_key_id: AKIAICDNB622PMVW3G4A
   application: chargeback-cart
   deployment_group: cart-ec2-servers
+  revision_type: github
   on:
     branch: dev
+  secret_access_key:
+    secure: EyAIPwcyJOm/BFQjvE1u2VfbIaMlLYHOrZ7I9naYKMDPVBLozSOKnWcv5mxqpDBEXg6M31B9ZNnKs1iA8XqufxCF5TYvkqvjKK8LbIGNvYkhomeIolN3ypRaqGUOaD0nmPjMFsdtPGryBsNrOonYsY5xUlfnl7FRI6YsxvZVDyw=
