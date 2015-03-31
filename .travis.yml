@@ -25,6 +25,7 @@ deploy:
   application: cart
   deployment_group: devs
   revision_type: github
+  codedeployRegion: us-west-2
   on:
     branch: dev
   secret_access_key:
