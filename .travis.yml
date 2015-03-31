@@ -22,8 +22,8 @@ env:
 deploy:
   provider: codedeploy
   access_key_id: AKIAICDNB622PMVW3G4A
-  application: chargeback-cart
-  deployment_group: cart-ec2-servers
+  application: cart
+  deployment_group: devs
   revision_type: github
   on:
     branch: dev
