@@ -24,7 +24,8 @@ deploy:
   access_key_id: AKIAICDNB622PMVW3G4A
   application: cart
   deployment_group: devs
-  revision_type: github
+  bucket: "chargeback-builds"
+  key: cart.zip
   region: us-west-2
   skip_cleanup: true
   on:
