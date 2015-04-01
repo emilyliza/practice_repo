@@ -8,9 +8,9 @@ hooks:
   ApplicationStop:
     - location: /var/www/cart/node_modules/forever/bin/forever stop 0
       runas: justin
-  AfterInstall:
     - location: /bin/rm -r /var/www/cart/node_modules
       runas: root
+  AfterInstall:
     - location: /usr/local/bin/npm --prefix /var/www/cart install    
       runas: justin
   ApplicationStart:
