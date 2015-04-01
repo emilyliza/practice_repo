@@ -7,10 +7,12 @@ files:
 hooks:
   ApplicationStop:
     - location: /var/www/cart/node_modules/forever/bin/forever stop 0
-      runas: ec2-user
+      runas: justin
   AfterInstall:
-    - location: /usr/local/bin/npm install    
-      runas: ec2-user
+    - location: /bin/rm -r /var/www/cart/node_modules
+      runas: root
+    - location: /usr/local/bin/npm --prefix /var/www/cart install    
+      runas: justin
   ApplicationStart:
     - location: /var/www/cart/node_modules/forever/bin/forever server.js
-      runas: ec2-user
+      runas: justin
