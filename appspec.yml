@@ -4,24 +4,11 @@ os: linux
 files:
   - source: /
     destination: /var/www/cart
-permissions:
-  - object: /var/www/cart
-    pattern: "**"
-    owner: justin
-    mode: 644
 hooks:
   ApplicationStop:
     - location: /var/www/cart/node_modules/forever/bin/forever stop 0
-      runas: justin
     - location: rm -r /var/www/cart/node_modules
-      runas: justin
   AfterInstall:
-    - location: mkdir /var/www/cart/node_modules
-      runas: root
-    - location: chown justin /var/www/cart/node_modules
-      runas: root
     - location: /usr/local/bin/npm --prefix /var/www/cart install    
-      runas: justin
   ApplicationStart:
     - location: /var/www/cart/node_modules/forever/bin/forever server.js
-      runas: justin
