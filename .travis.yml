@@ -26,6 +26,7 @@ deploy:
   deployment_group: devs
   revision_type: github
   region: us-west-2
+  skip_cleanup: true
   on:
     branch: dev
   secret_access_key:
