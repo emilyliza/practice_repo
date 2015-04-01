@@ -13,12 +13,12 @@ hooks:
   ApplicationStop:
     - location: /var/www/cart/node_modules/forever/bin/forever stop 0
       runas: justin
-    - location: /bin/rm -r /var/www/cart/node_modules
+    - location: rm -r /var/www/cart/node_modules
       runas: justin
   AfterInstall:
-    - location: /bin/mkdir /var/www/cart/node_modules
+    - location: mkdir /var/www/cart/node_modules
       runas: root
-    - location: /bin/chown justin /var/www/cart/node_modules
+    - location: chown justin /var/www/cart/node_modules
       runas: root
     - location: /usr/local/bin/npm --prefix /var/www/cart install    
       runas: justin
