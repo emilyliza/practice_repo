@@ -16,6 +16,10 @@ hooks:
     - location: /bin/rm -r /var/www/cart/node_modules
       runas: justin
   AfterInstall:
+    - location: /bin/mkdir /var/www/cart/node_modules
+      runas: root
+    - location: /bin/chown justin /var/www/cart/node_modules
+      runas: root
     - location: /usr/local/bin/npm --prefix /var/www/cart install    
       runas: justin
   ApplicationStart:
