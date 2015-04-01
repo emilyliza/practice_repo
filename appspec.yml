@@ -6,9 +6,9 @@ files:
     destination: /var/www/cart
 hooks:
   ApplicationStop:
-    - location: /var/www/cart/node_modules/forever/bin/forever stop 0
-    - location: rm -r /var/www/cart/node_modules
+    - location: "/var/www/cart/node_modules/forever/bin/forever stop 0"
+    - location: "rm -r /var/www/cart/node_modules"
   AfterInstall:
-    - location: /usr/local/bin/npm --prefix /var/www/cart install    
+    - location: "/usr/local/bin/npm --prefix /var/www/cart install"
   ApplicationStart:
-    - location: /var/www/cart/node_modules/forever/bin/forever server.js
+    - location: "/var/www/cart/node_modules/forever/bin/forever server.js"
