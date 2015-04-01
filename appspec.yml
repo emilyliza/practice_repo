@@ -8,6 +8,7 @@ permissions:
   - object: /var/www/cart
     pattern: "**"
     owner: justin
+    mode: 644
 hooks:
   ApplicationStop:
     - location: /var/www/cart/node_modules/forever/bin/forever stop 0
