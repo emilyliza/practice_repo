@@ -2,6 +2,9 @@
 
 DIRECTORY=/var/www/cart/node_modules
 
+echo 'Removing node_modules directory'
+rm -r $DIRECTORY
+
 echo 'running mkdir'
 mkdir $DIRECTORY
 

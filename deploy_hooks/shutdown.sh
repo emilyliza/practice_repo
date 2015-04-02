@@ -10,7 +10,4 @@ if [ -d "$DIRECTORY" ]; then
 		cd /var/www/cart && node_modules/forever/bin/forever stopall
 	fi
 
-	echo 'Removing node_modules directory: rm -r /var/www/cart/node_modules'
-	rm -r /var/www/cart/node_modules
-
 fi
