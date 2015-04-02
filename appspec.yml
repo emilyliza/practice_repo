@@ -7,10 +7,16 @@ files:
 permissions:
   - object: /var/www/cart
     pattern: "**"
+    owner: justin
 hooks:
   ApplicationStop:
     - location: deploy_hooks/shutdown.sh
+      runas: root
   AfterInstall:
+    - location: deploy_hooks/createNodeModules.sh
+      runas: root
     - location: deploy_hooks/npmInstall.sh
+      runas: justin
   ApplicationStart:
     - location: deploy_hooks/start.sh
+      runas: root
