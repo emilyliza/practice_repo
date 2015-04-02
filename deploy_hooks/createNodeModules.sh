@@ -7,3 +7,6 @@ mkdir $DIRECTORY
 
 echo "chowning to justin"
 chown justin $DIRECTORY
+
+echo "" > /var/www/npm_install.txt
+chown justin /var/www/npm_install.txt
