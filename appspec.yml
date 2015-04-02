@@ -7,14 +7,10 @@ files:
 permissions:
   - object: /var/www/cart
     pattern: "**"
-    owner: root
 hooks:
   ApplicationStop:
     - location: deploy_hooks/shutdown.sh
-      runas: root
   AfterInstall:
     - location: deploy_hooks/npmInstall.sh
-      runas: root
   ApplicationStart:
     - location: deploy_hooks/start.sh
-      runas: root
