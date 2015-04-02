@@ -11,3 +11,5 @@ if [ -d "$DIRECTORY" ]; then
 	fi
 
 fi
+
+exit 0;
