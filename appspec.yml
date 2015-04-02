@@ -11,12 +11,10 @@ permissions:
 hooks:
   ApplicationStop:
     - location: deploy_hooks/shutdown.sh
-      runas: justin
-  AfterInstall:
-    - location: deploy_hooks/rootStuff.sh
       runas: root
+  AfterInstall:
     - location: deploy_hooks/npmInstall.sh
-      runas: justin
+      runas: root
   ApplicationStart:
     - location: deploy_hooks/start.sh
       runas: root
