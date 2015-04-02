@@ -19,4 +19,4 @@ hooks:
       runas: justin
   ApplicationStart:
     - location: deploy_hooks/start.sh
-      runas: justin
+      runas: root
