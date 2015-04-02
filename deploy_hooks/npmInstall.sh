@@ -6,4 +6,4 @@ echo 'running mkdir'
 mkdir $DIRECTORY
 
 echo 'Running npm install: npm --prefix /var/www/cart install'
-npm --prefix /var/www/cart install --production
+cd /var/www/cart && npm install --production --unsafe-perm
