@@ -7,7 +7,7 @@ files:
 permissions:
   - object: /var/www/cart
     pattern: "**"
-    owner: justin
+    owner: root
 hooks:
   ApplicationStop:
     - location: deploy_hooks/shutdown.sh
