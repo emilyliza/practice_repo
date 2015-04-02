@@ -163,9 +163,9 @@ require('./controllers/admin/login')(app);
 // for admin area
 app.get(/^\/admin(.*)$/, function(req, res, next) {
 	if(process.env.NODE_ENV == 'production') {
-		res.sendfile( __dirname + './dist/admin.html'); 
+		res.sendfile( __dirname + '/dist/admin.html'); 
 	} else {
-		res.sendfile( __dirname + './public/admin.html'); 
+		res.sendfile( __dirname + '/public/admin.html'); 
 	}
 });
 
@@ -176,7 +176,7 @@ if(process.env.NODE_ENV == 'production') {
 	});
 } else {
 	app.use(function(req, res){
-		res.sendfile(  __dirname + './public/index.html'); 
+		res.sendfile(  __dirname + '/public/index.html'); 
 	});
 }
 
