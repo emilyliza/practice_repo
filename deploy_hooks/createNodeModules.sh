@@ -10,3 +10,6 @@ chown justin $DIRECTORY
 
 echo "" > /var/www/npm_install.txt
 chown justin /var/www/npm_install.txt
+
+echo "" > /var/www/node.log
+chown justin /var/www/node.log

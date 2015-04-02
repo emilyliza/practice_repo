@@ -54,72 +54,32 @@ app.use(device.capture());
 app.use(methodOverride());
 
 if(process.env.NODE_ENV == 'production') {
-	app.use('/', express.static('./dist', { maxAge: 10 }));
+	app.use('/', express.static(  __dirname + '/dist', { maxAge: 10 }));
 } else {
-	app.use('/', express.static('./public', { maxAge: 10 }));
+	app.use('/', express.static(  __dirname + '/public', { maxAge: 10 }));
 }
 
 
-var le_log = false;
-if (process.env.NODE_ENV == "production" && process.env.LOGENTRIES) {
-	var logentries = require('le_node');
-	le_log = logentries.logger({
-		token: process.env.LOGENTRIES
-	});
-}
-
-processLog = function(m) {
-	if (_.isObject(m)) {
-		// need to clone so object info is not overwritten!
-		le_log.info(_.clone(m));
-	} else if (!m.match(/info wait for message on/)) {
-		le_log.info(m);
-	}
-}
 
 
 var	log = {
 	log: function(m) {
-		if (le_log) {
-			 return processLog(m);
-		} else {
-			return console.dir(m, { colors: true, depth: null });
-		}
+		return console.dir(m, { colors: true, depth: null });
 	},
 	info: function(m) {
-		if (le_log) {
-			 return processLog(m);
-		} else {
-			return console.dir(m, { colors: true, depth: null });
-		}
+		return console.dir(m, { colors: true, depth: null });
 	},
 	debug: function(m) {
-		if (le_log) {
-			 return processLog(m);
-		} else {
-			return console.dir(m, { colors: true, depth: null });
-		}
+		return console.dir(m, { colors: true, depth: null });
 	},
 	notice: function(m) {
-		if (le_log) {
-			 return processLog(m);
-		} else {
-			return console.dir(m, { colors: true, depth: null });
-		}
+		return console.dir(m, { colors: true, depth: null });
 	},
 	warning: function(m) {
-		if (le_log) {
-			 return processLog(m);
-		} else {
-			return console.dir(m, { colors: true, depth: null });
-		}
+		return console.dir(m, { colors: true, depth: null });
 	},
 	err: function(m) {
-		if (le_log) {
-			 return processLog(m);
-		} else {
-			return console.dir(m, { colors: true, depth: null });
-		}
+		return console.dir(m, { colors: true, depth: null });
 	}
 };
 
@@ -203,20 +163,20 @@ require('./controllers/admin/login')(app);
 // for admin area
 app.get(/^\/admin(.*)$/, function(req, res, next) {
 	if(process.env.NODE_ENV == 'production') {
-		res.sendfile('./dist/admin.html'); 
+		res.sendfile( __dirname + './dist/admin.html'); 
 	} else {
-		res.sendfile('./public/admin.html'); 
+		res.sendfile( __dirname + './public/admin.html'); 
 	}
 });
 
 
 if(process.env.NODE_ENV == 'production') {
 	app.use(function(req, res){
-		res.sendfile('./dist/index.html'); 
+		res.sendfile( __dirname + '/dist/index.html'); 
 	});
 } else {
 	app.use(function(req, res){
-		res.sendfile('./public/index.html'); 
+		res.sendfile(  __dirname + './public/index.html'); 
 	});
 }
 
