@@ -8,6 +8,7 @@ if [ -d "$DIRECTORY" ]; then
 	then
 		echo 'Stopping forever: /var/www/cart/node_modules/forever/bin/forever stop 0'
 		cd /var/www/cart && node_modules/forever/bin/forever stopall
+		kill $(ps aux | grep 'thumbd')
 	fi
 
 fi
