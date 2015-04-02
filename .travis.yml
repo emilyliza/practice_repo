@@ -27,4 +27,5 @@ deploy:
   bucket: "chargeback-builds"
   skip_cleanup: true
   region: us-west-2
-  local_dir: dist
+  on:
+    branch: dev
