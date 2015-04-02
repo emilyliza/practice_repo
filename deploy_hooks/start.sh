@@ -1,4 +1,5 @@
 #!/bin/bash
 
-cd /var/www/cart && node_modules/forever/bin/forever start -o /var/www/node.log server.js;
+n 0.12.2
+cd /var/www/cart && node_modules/forever/bin/forever start -l /var/www/forever.log -o /var/www/out.log -e /var/www/err.log server.js;
 exit 0;

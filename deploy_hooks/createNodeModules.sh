@@ -17,8 +17,14 @@ chown justin /var/www/cart/dist
 echo "" > /var/www/npm_install.txt
 chown justin /var/www/npm_install.txt
 
-echo "" > /var/www/node.log
-chown justin /var/www/node.log
+echo "" > /var/www/out.log
+chown justin /var/www/out.log
+
+echo "" > /var/www/forever.log
+chown justin /var/www/forever.log
+
+echo "" > /var/www/err.log
+chown justin /var/www/err.log
 
 echo "" > /var/www/cart/newrelic_agent.log
 chown justin /var/www/cart/newrelic_agent.log
