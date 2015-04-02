@@ -1,6 +1,3 @@
 #!/bin/bash
 
-echo 'Starting forever: /var/www/cart/node_modules/forever/bin/forever /var/www/cart/server.js'
-env $(cat /etc/environment) /var/www/cart/node_modules/forever/bin/forever /var/www/cart/server.js -o /var/www/node.log;
-
-exit 0;
+cd /var/www/cart && node_modules/forever/bin/forever server.js -o /var/www/node.log;
