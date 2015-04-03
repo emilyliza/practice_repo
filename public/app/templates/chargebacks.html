@@ -34,11 +34,11 @@
 	</div>
 
 	<div class="row" ng-repeat="cb in cbs.data">
-		<div class="col-sm-2" ui-sref="chargeback.card({ _id: cb._id })">{{cb.chargebackDate | date:'MM/dd/yyyy'}}</div>
-		<div class="col-sm-2" ui-sref="chargeback.card({ _id: cb._id })">{{cb.portal_data.ChargebackAmt | currency}}</div>
-		<div class="col-sm-3" ui-sref="chargeback.card({ _id: cb._id })">{{cb.gateway_data.FirstName}} {{cb.gateway_data.LastName}}&nbsp;</div>
-		<div class="col-sm-2" ui-sref="chargeback.card({ _id: cb._id })">{{cb.portal_data.CaseNumber}}</div>
-		<div class="col-sm-3 status-colors" ui-sref="chargeback.card({ _id: cb._id })">
+		<div class="col-sm-2" ng-click="goTo(cb)">{{cb.chargebackDate | date:'MM/dd/yyyy'}}</div>
+		<div class="col-sm-2" ng-click="goTo(cb)">{{cb.portal_data.ChargebackAmt | currency}}</div>
+		<div class="col-sm-3" ng-click="goTo(cb)">{{cb.gateway_data.FirstName}} {{cb.gateway_data.LastName}}&nbsp;</div>
+		<div class="col-sm-2" ng-click="goTo(cb)">{{cb.portal_data.CaseNumber}}</div>
+		<div class="col-sm-3 status-colors" ng-click="goTo(cb)">
 			<span ng-if="cb.status == 'New'" class="{{cb.status}}"><b>New</b>: Work Chargeback</span>
 			<span ng-if="cb.status != 'New'" class="{{cb.status}}">
 				{{cb.status}} &nbsp;
