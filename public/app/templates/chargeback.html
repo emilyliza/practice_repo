@@ -101,6 +101,15 @@
 					<div class="col-xs-4" style="text-align: right;">Reason:</div>
 					<div class="col-xs-8">{{data.portal_data.ReasonText}}</div>
 				</div>
+
+				<div class="row" ng-if="data.send_to.email">
+					<div class="col-xs-4" style="text-align: right;">Email To:</div>
+					<div class="col-xs-8">{{data.send_to.email}}</div>
+				</div>
+				<div class="row" ng-if="data.send_to.fax">
+					<div class="col-xs-4" style="text-align: right;">Fax To:</div>
+					<div class="col-xs-8">{{data.send_to.fax}}</div>
+				</div>
 			</div>
 
 			<div class="form-group btns" style="text-align: center; margin-top: 40px;" ng-if="settings.state.current.name == 'chargeback.review'">

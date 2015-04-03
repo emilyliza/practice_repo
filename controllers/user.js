@@ -97,7 +97,7 @@ module.exports = function(app) {
 		req.assert('email', 'Please enter your email.').notEmpty();
 		req.assert('username', 'Please enter your username.').notEmpty();
 		req.assert('name', 'Please enter your name.').notEmpty();
-		req.assert('response_email', 'Please enter a valid email.').optional().isEmail();
+		req.assert('send_to.email', 'Please enter a valid email.').optional().isEmail();
 		
 		
 		var errors = req.validationErrors();
@@ -110,8 +110,8 @@ module.exports = function(app) {
 		req.sanitize(req.body.password).trim();
 		req.sanitize(req.body.email).trim();
 		req.sanitize(req.body.name).trim();
-		req.sanitize(req.body.response_fax).trim();
-		req.sanitize(req.body.response_email).trim();
+		req.sanitize(req.body.send_to.email).trim();
+		req.sanitize(req.body.send_to.fax).trim();
 
 		$()
 		.seq(function() {
@@ -121,8 +121,8 @@ module.exports = function(app) {
 			user.set('username', req.body.username);
 			user.set('email', req.body.email);
 			user.set('name', req.body.name);
-			user.set('response_email', req.body.response_email);
-			user.set('response_fax', req.body.response_fax);
+			user.set('send_to.email', req.body.send_to.email);
+			user.set('send_to.fax', req.body.send_to.fax);
 			if (req.body.password) {
 				user.set('password', req.body.password);
 			}

@@ -22,6 +22,8 @@
 			<p>You can find this information in your merchant service providers online portal.</p>
 
 			<div style="margin-top: 20px;">You'll be able to enter additional chargeback information in the subsequent screens.</div>
+
+			<div style="margin-top: 20px;">The response email and/or fax let us know where to send the chargeback dispute. The values are prepoulated with values set in your account.</div>
 		</div>
 		<div class="col-sm-8 col-sm-pull-4">
 
@@ -78,6 +80,20 @@
 						<div class="form-group" show-errors>
 							<label>Reason Text</label>
 							<input name="ReasonText" required type="text" class="form-control" pop-show="{{errors.ReasonText}}" pop="{{errors.ReasonText}}" pop-placement="right" ng-model="data.portal_data.ReasonText" placeholder="">
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-md-6">
+						<div class="form-group" show-errors>
+							<label>Response Email</label>
+							<input name="send_to_email" type="email" class="form-control" pop-show="{{errors.send_to_email}}" pop="{{errors.send_to_email}}" pop-placement="right" ng-model="data.send_to.email" pop-append-to-body>
+						</div>
+					</div>
+					<div class="col-md-6">
+						<div class="form-group" show-errors>
+							<label>Response Fax</label>
+							<input name="send_to_fax" type="text" class="form-control" pop-show="{{errors.send_to_fax}}" pop="{{errors.send_to_fax}}" pop-placement="right" ng-model="data.send_to.fax" pop-append-to-body>
 						</div>
 					</div>
 				</div>

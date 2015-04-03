@@ -373,6 +373,7 @@
 		};
 
 		this.getDefaults = function() {
+			var user = UserService.getCurrentUser();
 			return {
 				user_entered: true,
 				status: 'New',
@@ -380,6 +381,10 @@
 				gateway_data: {
 					TransType: "Card Settle",
 					TransStatus: "Complete"
+				},
+				send_to: {
+					email: (user.send_to.email || undefined),
+					fax: (user.send_to.fax || undefined)
 				}
 			};
 		};
