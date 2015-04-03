@@ -6,7 +6,7 @@
   "author": "Justin Shreve",
   "repository": {
     "type": "git",
-    "url": "https://justinshreve@bitbucket.org/chargebackcomdev/merchantportal.git"
+    "url": "https://github.com/Chargeback/chargeback"
   },
   "main": "index.js",
   "engines": {
