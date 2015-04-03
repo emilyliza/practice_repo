@@ -6,11 +6,11 @@
   "author": "Justin Shreve",
   "repository": {
     "type": "git",
-    "url": "https://justinshreve@bitbucket.org/chargebackcomdev/merchantportal.git"
+    "url": "https://github.com/Chargeback/chargeback"
   },
   "main": "index.js",
   "engines": {
-    "node": "0.10.33",
+    "node": "0.12.2",
     "npm": "2.6.1"
   },
   "dependencies": {
@@ -28,19 +28,19 @@
     "method-override": "2.0.2",
     "morgan": "1.5.1",
     "moment": "2.8.3",
-    "jsonwebtoken": "1.1.2",
+    "jsonwebtoken": "4.2.2",
     "express-csv": "0.6.0",
     "ejs": "0.8.5",
     "postmark": "0.2.6",
     "bcrypt": "0.8.1",
-    "le_node": "0.2.1",
     "chrono-node": "1.0.2",
     "newrelic": "1.15.1",
     "thumbd": "justingshreve/thumbd.git",
     "aws-sdk": "2.1.20",
     "lodash": "3.5.0",
     "highland": "2.4.0",
-    "airbrake": "0.3.8"
+    "airbrake": "0.3.8",
+    "forever": "0.14.1"
   },
   "devDependencies": {
     "protractor": "^1.1.1",

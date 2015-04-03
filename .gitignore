@@ -5,9 +5,7 @@ npm-debug.log
 .tmp/
 mongo/
 bower_components
-dist/images
-dist/fonts
-dist/assets
+dist/*
 aws.json
 dump/
 tim/

@@ -1,4 +1,12 @@
 
+<div class="row" style="margin-bottom: 30px; background-color: #efefef; border-radius: 5px;" ng-if="data.status == 'Sent'">
+	<div class="col-sm-12" style="padding: 24px; text-align: center;">
+		<a class="btn btn-success pull-left" ng-click="methods.wonlost(true, 'Are you sure you want to mark this chargeback as won?', 'Yes, we won!', 'No, cancel.')">Won</a> <a class="btn btn-danger pull-right" ng-click="methods.wonlost(false, 'Are you sure you want to mark this chargeback as lost?', 'Yes, we lost!', 'No, cancel.')">Lost</a>
+		<span style="font-size: 18px;">Report Status</span>
+	</div>
+</div>
+
+
 <div class="review-block first-block">
 	<h4>Chargeback</h4>
 	<div class="row">
@@ -19,6 +27,7 @@
 		</div>
 	</div>
 </div>
+
 
 <div class="review-block">
 	<h4>Customer</h4>
