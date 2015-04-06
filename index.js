@@ -16,6 +16,23 @@ if (!process.env.NODE_ENV) {
 var airbrake = require('airbrake').createClient(process.env.AIRBRAKE);
 airbrake.handleExceptions();
 
+// hide from error tracking
+airbrake.on('vars', function(type, vars) {
+	if (type === 'cgi-data') {
+  		delete vars.TOKEN_SECRET;
+		delete vars.MONGO_URI;
+		delete vars.MONGO_URI_2
+		delete vars.NEWRELIC;
+		delete vars.AWS_KEY;
+		delete vars.AWS_SECRET;
+		delete vars.AWS_ACCESS_KEY_ID;
+		delete vars.AWS_SECRET_ACCESS_KEY;
+		delete vars.POSTMARK_API_KEY;
+		delete vars.CODEDEPLOY;
+		delete vars.CODEDEPLOY_SECRET;
+  	}
+});
+
 
 // Config
 //app.engine('.ejs', require('ejs').__express);

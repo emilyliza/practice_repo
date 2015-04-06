@@ -96,6 +96,7 @@
 		};
 		$scope.settings.state = $state;
 		$scope.settings.disableReview = true;
+		if (!$scope.data.attachments) { $scope.data.attachments = []; }
 
 		$scope.methods.setCard = function(c) {
 			$scope.data.type = c;
@@ -284,7 +285,7 @@
 			});
 			$scope.uploaders['receipt'].setUploads($scope.data.attachments);
 			$scope.uploaders['receipt'].onCompleteAll = function() {
-				$scope.ds();
+				$scope.methods.ds();
 			};
 
 			$scope.uploaders['add'] = new FileUploader({
@@ -293,7 +294,7 @@
 			});
 			$scope.uploaders['add'].setUploads($scope.data.attachments);
 			$scope.uploaders['add'].onCompleteAll = function() {
-				$scope.ds();
+				$scope.methods.ds();
 			};
 			
 			$scope.uploaders['terms'] = new FileUploader({
@@ -302,7 +303,7 @@
 			});
 			$scope.uploaders['terms'].setUploads($scope.data.attachments);
 			$scope.uploaders['terms'].onCompleteAll = function() {
-				$scope.ds();
+				$scope.methods.ds();
 			};
 
 			$scope.uploaders['checkout'] = new FileUploader({
@@ -311,7 +312,7 @@
 			});
 			$scope.uploaders['checkout'].setUploads($scope.data.attachments);
 			$scope.uploaders['checkout'].onCompleteAll = function() {
-				$scope.ds();
+				$scope.methods.ds();
 			};
 		};
 		addUploaders();
@@ -372,6 +373,7 @@
 		};
 
 		this.getDefaults = function() {
+			var user = UserService.getCurrentUser();
 			return {
 				user_entered: true,
 				status: 'New',
@@ -379,6 +381,10 @@
 				gateway_data: {
 					TransType: "Card Settle",
 					TransStatus: "Complete"
+				},
+				send_to: {
+					email: (user.send_to.email || undefined),
+					fax: (user.send_to.fax || undefined)
 				}
 			};
 		};

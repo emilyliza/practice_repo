@@ -90,7 +90,11 @@ module.exports = function(app) {
 		},
 		'attachments': [ Upload.schema ],
 		'deleted_attachments': [ Upload.schema ],
-		'additional_comments': String
+		'additional_comments': String,
+		'send_to': {
+			'email': String,
+			'fax': String
+		}
 	}, { autoIndex: false, strict: true })
 	
 	.plugin(UserMicro, { path: 'user', objectid: ObjectId })

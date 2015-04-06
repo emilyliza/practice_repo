@@ -264,6 +264,13 @@ module.exports = function(app) {
 			if (!chargeback.gateway_data.TransStatus) {
 				chargeback.gateway_data.TransStatus = "Complete";
 			}
+
+			if (cb.send_to && cb.send_to.email) {
+				chargeback.set('send_to.email', cb.send_to.email);
+			}
+			if (cb.send_to && cb.send_to.fax) {
+				chargeback.set('send_to.fax', cb.send_to.fax);
+			}
 			
 			if (cc) {
 				chargeback.user = User.toMicro( this.vars.users[ cb.portal_data.MidNumber ] );
@@ -347,6 +354,13 @@ module.exports = function(app) {
 			}
 			if (!chargeback.gateway_data.TransStatus) {
 				chargeback.gateway_data.TransStatus = "Complete";
+			}
+
+			if (cb.send_to && cb.send_to.email) {
+				chargeback.set('send_to.email', cb.send_to.email);
+			}
+			if (cb.send_to && cb.send_to.fax) {
+				chargeback.set('send_to.fax', cb.send_to.fax);
 			}
 			
 			if (user.parent) {

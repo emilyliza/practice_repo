@@ -116,10 +116,11 @@ module.exports = function(app) {
 		})
 
 		.seq(function() {
-			
+				
 			var out = {
-				'total': this.vars.totals[0]
+				'total': (this.vars.totals[0] || { 'sum': 0, 'count': 0 })
 			};
+			
 			_.each(this.vars.amount, function(item) {
 				out[item._id.status] = {
 					count: item.count,

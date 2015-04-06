@@ -64,7 +64,16 @@
 			}
 			$scope.load_end = true;
 		});
-		
+
+		$scope.goTo = function(d) {
+			if (d.status == "In-Progress") {
+				$state.go('chargeback.data', { '_id': d._id });
+			} else if (_.indexOf(["Sent","Won","Lost"], d.status ) != -1) {
+				$state.go('chargeback.review', { '_id': d._id });
+			} else {
+				$state.go('chargeback.card', { '_id': d._id });
+			}
+		};
 
 		$scope.download = function() {
 			var url = $scope.cbs.nextPage(true);

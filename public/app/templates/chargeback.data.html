@@ -373,23 +373,24 @@
 
 	<div style="display: none;">
 		<h4 style="margin-top: 100px; font-weight: bold;">Card Holder Correspondence</h4>
-
 		<div class="row bt">
 			<div class="col-md-6">
 				<div class="form-group">
-					<label>Available</label>
+					<label>Card Holder Letter</label>
 					<div class="form-control-static">
-						<toggle-switch ng-model="data.chc" on-label="Yes" off-label="No"></toggle-switch>
+						<img src="/images/chc.jpg" style="max-width: 100%;" />
 					</div>
 				</div>
 			</div>
 			<div class="col-md-6">
 				<div class="form-group">
-					<label>Uploaded Correspondence</label>
-					<div class="form-control-static">
-						<span class="btn btn-link" ng-if="data.chc" ng-click="download('/images/ChargebackRequest.fdad00.pdf')">Chargeback Request</span>
-						<span ng-if="!data.chc">Not Available</span>
-					</div>
+					<label>Describe Issues</label>
+					<textarea class="form-control" name="chc_issues" type="text" class="form-control" ng-model="data.chc_issues"></textarea>
+				</div>
+
+				<div class="form-group" style="border-top: solid 1px #dedede;">
+					<label>Response to Issues</label>
+					<textarea class="form-control" name="chc_response" type="text" class="form-control" ng-model="data.chc_response"></textarea>
 				</div>
 			</div>
 		</div>
@@ -404,7 +405,7 @@
 	<div class="row bt">
 		<div class="col-md-12">
 			<div class="form-group" show-errors>
-				<textarea class="form-control" style="padding-top: 20px;" name="additional_comments" type="text" class="form-control" ng-model="data.additional_comments" ng-change="methods.ds()"S></textarea>
+				<textarea class="form-control" style="padding-top: 20px;" name="additional_comments" type="text" class="form-control" ng-model="data.additional_comments" ng-change="methods.ds()"></textarea>
 			</div>
 		</div>
 	</div>
