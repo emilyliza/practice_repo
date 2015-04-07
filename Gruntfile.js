@@ -188,8 +188,8 @@ module.exports = function(grunt) {
 				src: ['dist/assets/*.js'],
 				overwrite: true,
 				replacements: [{
-					from: /src=\/images/g,
-					to: "src=<%= aws.cloudfront %>/images"
+					from: /\/images\//g,
+					to: "<%= aws.cloudfront %>/images/"
 				}]
 			},
 			bower: {
