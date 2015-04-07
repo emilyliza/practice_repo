@@ -28,8 +28,6 @@ deploy:
     skip_cleanup: true
     region: us-west-2
     local_dir: dist
-    on:
-      branch: dev
   - provider: codedeploy
     access_key_id: AKIAIXCNXSVBHMLAAXHQ
     secret_access_key:
