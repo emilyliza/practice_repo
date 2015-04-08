@@ -10,7 +10,7 @@ env:
   global:
   - NODE_ENV: test
   - PORT: 5000
-  - SSL: false
+  - SSL: off
   - TOKEN_SECRET: naingaiLieSah5o
   - MONGO_URI: mongodb://localhost:27017/chargeback-test
   - BUCKET: chargebackcom
