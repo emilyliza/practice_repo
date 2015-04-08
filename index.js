@@ -34,24 +34,24 @@ airbrake.on('vars', function(type, vars) {
 });
 
 
-// Enable reverse proxy support in Express. This causes the
-// the "X-Forwarded-Proto" header field to be trusted so its
-// value can be used to determine the protocol. See 
-// http://expressjs.com/api#app-settings for more details.
-app.enable('trust proxy');
+// // Enable reverse proxy support in Express. This causes the
+// // the "X-Forwarded-Proto" header field to be trusted so its
+// // value can be used to determine the protocol. See 
+// // http://expressjs.com/api#app-settings for more details.
+// app.enable('trust proxy');
 
-// Add a handler to inspect the req.secure flag (see 
-// http://expressjs.com/api#req.secure). This allows us 
-// to know whether the request was via http or https.
-app.use (function (req, res, next) {
-	if (req.secure || process.env.SSL == "off") {
-		// request was via https, so do no special handling
-		next();
-	} else {
-		// request was via http, so redirect to https
-		res.redirect('https://cart.chargeback.com' + req.url);
-	}
-});
+// // Add a handler to inspect the req.secure flag (see 
+// // http://expressjs.com/api#req.secure). This allows us 
+// // to know whether the request was via http or https.
+// app.use (function (req, res, next) {
+// 	if (req.secure || process.env.SSL == "off") {
+// 		// request was via https, so do no special handling
+// 		next();
+// 	} else {
+// 		// request was via http, so redirect to https
+// 		res.redirect('https://cart.chargeback.com' + req.url);
+// 	}
+// });
 
 
 // Config
