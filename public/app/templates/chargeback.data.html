@@ -238,9 +238,10 @@
 	<div class="row">
 		<div class="col-md-6">
 			<div class="form-group">
-				<label>Is Recurring</label>
+				<label>Is this a recurring transaction?</label>
 				<div class="form-control-static">
-					<input name="IsRecurring" type="checkbox" ng-model="data.crm_data.IsRecurring" ng-change="methods.ds()">
+					<input name="IsRecurring" type="checkbox" ng-model="data.crm_data.IsRecurring" ng-change="methods.ds()"> 
+					<span style="font-size: 12px;">If the product purchased is on a subscription plan</span>
 				</div>
 			</div>
 		</div>
