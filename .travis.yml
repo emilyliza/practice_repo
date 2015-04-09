@@ -16,6 +16,7 @@ env:
   - BUCKET: chargebackcom
   - AWS_REGION: us-west-2
   - CDN: https://dksl2s5vm2cnl.cloudfront.net
+  - POSTMARK_API_KEY: POSTMARK_API_TEST
   - AIRBRAKE: 69f846e293e956cde008c4f917218468
   - secure: M3YSEJnWYdYGYDtCmv/y4rf7urHViaYBikGZsPiSAPDnq3nFEx5OY6J2PzDOoN2111b/VxS6Ec1ZmOULTkZ0OQsXt6XwWn+YKQsxj8nlLkrpoxpfRSX8fSBX/lvdInVQiRr0OtS3vbG4BkwTzFtu9y075G5fK4BDj1hAKgh4IqU=
   - secure: kvvLABsWT4BaTPbqvzj09L3nyeli+98dJp3woKP/SSnvtVxm45CDci7Uut4u0Nh1j/4THu9oeEsTOG3IPJp2W6RYNd0ZUzDhlJGtfD2forjyPx4D1OMGHj6UAeGYqM6Cm9ZcrbzrWqewYu0jvk4AN7K0Dd5azjSnc6tuTP7RcUk=
