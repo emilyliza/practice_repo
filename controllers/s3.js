@@ -1,8 +1,6 @@
 module.exports = function(app) {
 
-	var _ = require('underscore'),
-		$ = require('seq'),
-		mongoose = require('mongoose'),
+	var mongoose = require('mongoose'),
 		path = require('path'),
 		moment = require('moment'),
 		mw = require('./middleware'),
@@ -45,17 +43,14 @@ module.exports = function(app) {
 			c_ext = ".jpg";
 		}
 
-		$()
-		.seq(function() {
-			// Save to tracker so we know what to delete, or basically
-			// lost file harvesting.
-			var n = new S3Tracker({
-				'_id': id,
-				'extension': extension
-			});
-			n.save(this);
-		})
-		.seq(function() {
+		
+		// Save to tracker so we know what to delete, or basically
+		// lost file harvesting.
+		var n = new S3Tracker({
+			'_id': id,
+			'extension': extension
+		});
+		n.save(function(err,data) {
 			
 			return res.json({
 				'path': 'https://' + process.env.BUCKET + '.s3.amazonaws.com/',
@@ -78,8 +73,7 @@ module.exports = function(app) {
 				}
 			});
 
-		})
-		.catch(next);
+		});
 
 	});
 
