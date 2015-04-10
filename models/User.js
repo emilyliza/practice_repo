@@ -2,9 +2,7 @@ module.exports = function(app) {
 	const MODEL = 'User';
 	if (app.Models.isLoaded(MODEL)) { return app.Models.get(MODEL); }
 
-	var fs = require('fs'),
-		_ = require('underscore'),
-		$ = require('seq'),
+	var lodash = require('lodash'),
 		moment = require('moment'),
 		Util = require('../lib/Util'),
 		log = app.get('log'),
@@ -83,17 +81,10 @@ module.exports = function(app) {
 				'active': user.active
 			};
 
-		$()
-		.par(function() {
-			Chargeback.update(
-				{'user._id': user._id},
-				{ '$set': { 'user': user_obj }}, options, this);
-		})
-		.seq(function() { 
-			next();
-		})
-		.catch(next);
-
+		Chargeback.update( {'user._id': user._id}, { '$set': { 'user': user_obj } }, options, function(err,data) {
+			next(err,data);
+		});
+	
 	};
 
 
