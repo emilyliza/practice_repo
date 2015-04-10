@@ -374,6 +374,7 @@
 
 		this.getDefaults = function() {
 			var user = UserService.getCurrentUser();
+			if (!user.send_to) { user.send_to = {}; }
 			return {
 				user_entered: true,
 				status: 'New',
