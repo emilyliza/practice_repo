@@ -32,7 +32,17 @@ deploy:
     region: us-west-2
     local_dir: dist
     on:
-      all_branches: true
+      branch: master
+  - provider: s3
+    access_key_id: AKIAIXCNXSVBHMLAAXHQ
+    secret_access_key:
+      secure: JiEZAy0Y2ZXLXBcOHhs4MyWcGNhgkY+p5wkmjJ8I0ieRcE85DNSyvqtozpz805fj/Oxeva9+KApc08+iqd99rqVS6Sfb1ILN8LmXFAHNOl+OFYxDV4Y24r8ltNcaX9W3buvVkzYFdWgUqpFnbsBae4A3zzSA0mWLI4gtH6ujwQc=
+    bucket: "chargeback-builds-dev"
+    skip_cleanup: true
+    region: us-west-2
+    local_dir: dist
+    on:
+      branch: dev
   - provider: codedeploy
     access_key_id: AKIAIXCNXSVBHMLAAXHQ
     secret_access_key:

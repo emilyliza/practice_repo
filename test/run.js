@@ -33,6 +33,7 @@ describe('Initializing Tests',function(){
 		require('./tests/chargeback')(app);
 		require('./tests/reports')(app);
 		require('./tests/cardTypes')(app);
+		require('./tests/s3')(app);
 	});
 	after(function (done) {
 		app.settings.db.connection.close();
