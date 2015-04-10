@@ -1,13 +1,8 @@
 /**
  * Shared Route Middleware
  */
-
 var middleware = module.exports = {},
-	$ = require('seq'),
-	_ = require('underscore'),
-	moment = require('moment'),
 	jwt = require('jsonwebtoken');
-
 
 middleware.auth = function() {
 	return function(req, res, next) {
@@ -40,16 +35,13 @@ middleware.auth = function() {
 			}
 		}
 
-		
 		jwt.verify(token, process.env.TOKEN_SECRET, function(err, decoded) {
 			if (err) {
 				console.log('jwt.verify error!!!');
 				console.log(err);
 				return res.send(401);
 			}
-
 			req.user = decoded;
-
 			return next();
 		});
 		
