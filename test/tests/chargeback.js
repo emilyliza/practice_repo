@@ -250,10 +250,10 @@ module.exports = function(app) {
 						done();
 					});
 			});
-			it('total users should be 3', function(done){
+			it('total users should be 4', function(done){
 				User.count(function(err,c) {
 					if (err) { throw err; }
-					c.should.equal(3);
+					c.should.equal(4);
 					done();
 				});
 			});

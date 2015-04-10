@@ -1,7 +1,7 @@
 module.exports = function(app) {
 
-	var _ = require('underscore'),
-		$ = require('seq'),
+	var _ = require('highland'),
+		lodash = require('lodash'),
 		mailer = require(app.settings.root_dir + '/lib/mailer')(app),
 		User = app.Models.get('User'),
 		log = app.get('log');
@@ -19,50 +19,42 @@ module.exports = function(app) {
 		// clean data.
 		req.sanitize(req.body.email).trim();
 		
-		$()
-		.seq(function() {
-			var email = new RegExp('^' + req.body.email + '$', 'i');
-			User.findOne({'email': email}, this);
+		var email = new RegExp('^' + req.body.email + '$', 'i');
+		
+		_( User.findOne()
+			.where('email', email)
+			.stream() )
+		.stopOnError(next)
+		.otherwise(function() {
+			return res.json(400, errors );
 		})
-		.seq(function(existing) {
-
-			if (!existing) { return res.json(404, [{"email": "No user was found with that email address."}]); }
-			existing.set('timestamps.forgotSent', new Date());
-			existing.save(this);
-
+		.map(function(dd) {
+			dd.set('timestamps.forgotSent', new Date());
+			return dd;
 		})
-		.seq(function(existing) {
-
-			// sending user._id is not safe in itself, but we're also restricting based on
-			// forgotSent datetime, so this is minor security hole.
-			var top = this,
-				encoded_id = new Buffer(existing._id+'++'+req.body.email).toString('base64'),
-				link = "http://" + req.headers.host + "/reset/" + encoded_id;
-
-			mailer.create({
-				'to': req.body.email,
+		.flatMap(Util.saveStream)	// save
+		.map(function(d) {
+			// convert stream to email data. 
+			var encoded_id = new Buffer(d._id+'++'+d.email).toString('base64'),
+			link = "http://" + req.headers.host + "/reset/" + encoded_id;
+			return {
+				'to': d.email,
 				'from': process.env.MAIL_FROM_EMAIL,
 				'fromname': process.env.MAIL_FROM_NAME,
 				'view': 'forgot',
 				'data': {
-					'user': existing, 
+					'user': d, 
 					'link': link
 				},
 				'subject': "Reset Your Password",
-				'category': "forgot_password_email"
-			}, function(err, email) {
-				if (err) { return top(err); }
-				mailer.send(email, process.env.POSTMARK_API_KEY, function(err,status) {
-					if (err) { return top(err); }
-					top();	
-				});
-			});
-
+				'category': "forgot_password_email",
+				'key': process.env.POSTMARK_API_KEY
+			};
 		})
-		.seq(function() {
-			return res.json({'success': true});
-		})
-		.catch(next);
+		.flatMap(mailer.create)	// creates payload
+		.flatMap(mailer.send)	// sends payload
+		.map( JSON.stringify )
+		.pipe(res);
 
 	});
 
