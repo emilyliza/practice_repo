@@ -239,7 +239,7 @@
 				}
 				i++;
 			});
-			$scope.ds();
+			$scope.methods.ds();
 		};
 
 		$scope.methods.submit = function(msg, confirmbtn, cancelbtn) {
