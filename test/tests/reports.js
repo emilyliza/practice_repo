@@ -1,4 +1,4 @@
-var _ = require('underscore'),
+var lodash = require('lodash'),
 	assert = require("assert"),
 	should = require('should'),
 	moment = require('moment');
@@ -74,7 +74,7 @@ module.exports = function(app) {
 						if (e) { console.log(e); done(e); }
 						users = res.body;
 						users.should.be.instanceof(Array).and.have.lengthOf(2);
-						_.each(users, function(u) {
+						lodash.each(users, function(u) {
 							if (u._id + '' != login._id + '') {
 								other = u._id;
 							}

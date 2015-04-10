@@ -4,11 +4,10 @@ module.exports = function(app) {
 	if (app.Models.isLoaded(MODEL)) { return app.Models.get(MODEL); }
 
 	var db = app.settings.db,
-		$ = require('seq'),
 		Util = require('../lib/Util'),
 		Schema = db.Schema,
 		ObjectId = Schema.ObjectId,
-		_ = require('underscore'),
+		lodash = require('lodash'),
 		log = app.get('log'),
 		moment = require('moment'),
 		chrono = require('chrono-node'),
@@ -113,7 +112,6 @@ module.exports = function(app) {
 			}
 		}
 		next();
-
 	})
 
 	.pre('save', function(next) {
@@ -146,30 +144,30 @@ module.exports = function(app) {
 	.pre('save', function(next) {
 
 		// date conversions
-		if (this.chargebackDate && !_.isDate(this.chargebackDate)) {
+		if (this.chargebackDate && !lodash.isDate(this.chargebackDate)) {
 			this.chargebackDate = chrono.parseDate(this.chargebackDate);
 		}
 		if (this.gateway_data) {
-			if (this.gateway_data.TransDate && !_.isDate(this.gateway_data.TransDate)) {
+			if (this.gateway_data.TransDate && !lodash.isDate(this.gateway_data.TransDate)) {
 				this.gateway_data.TransDate = chrono.parseDate(this.gateway_data.TransDate);
 			}
 		}
 		if (this.crm_data) {
-			if (this.crm_data.OrderDate && !_.isDate(this.crm_data.OrderDate)) {
+			if (this.crm_data.OrderDate && !lodash.isDate(this.crm_data.OrderDate)) {
 				this.crm_data.OrderDate = chrono.parseDate(this.crm_data.OrderDate);
 			}
-			if (this.crm_data.CancelDateSystem && !_.isDate(this.crm_data.CancelDateSystem)) {
+			if (this.crm_data.CancelDateSystem && !lodash.isDate(this.crm_data.CancelDateSystem)) {
 				this.crm_data.CancelDateSystem = chrono.parseDate(this.crm_data.CancelDateSystem);
 			}
-			if (this.crm_data.RefundDateFull && !_.isDate(this.crm_data.RefundDateFull)) {
+			if (this.crm_data.RefundDateFull && !lodash.isDate(this.crm_data.RefundDateFull)) {
 				this.crm_data.RefundDateFull = chrono.parseDate(this.crm_data.RefundDateFull);
 			}
-			if (this.crm_data.RefundDatePartial && !_.isDate(this.crm_data.RefundDatePartial)) {
+			if (this.crm_data.RefundDatePartial && !lodash.isDate(this.crm_data.RefundDatePartial)) {
 				this.crm_data.RefundDatePartial = chrono.parseDate(this.crm_data.RefundDatePartial);
 			}
 		}
 		if (this.shipping_data) {
-			if (this.shipping_data.ShippingDate && !_.isDate(this.shipping_data.ShippingDate)) {
+			if (this.shipping_data.ShippingDate && !lodash.isDate(this.shipping_data.ShippingDate)) {
 				this.shipping_data.ShippingDate = chrono.parseDate(this.shipping_data.ShippingDate);
 			}
 		}
@@ -220,10 +218,10 @@ module.exports = function(app) {
 
 	
 	Chargeback.clearNulls = function(d, key) {
-		_.each(d[key], function(v,k) {
-			if (_.isString(v)) {
+		lodash.each(d[key], function(v,k) {
+			if (lodash.isString(v)) {
 				v = v.trim();
-				if (!v || _.isNull(v) || v == "NULL" || v == "null" || v == "Null") {
+				if (!v || lodash.isNull(v) || v == "NULL" || v == "null" || v == "Null") {
 					delete d[key][k];
 				}
 			}
