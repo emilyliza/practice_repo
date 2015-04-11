@@ -111,24 +111,26 @@ module.exports = function(app) {
 	
 	app.get('/api/v1/refresh',  mw.auth(), function(req, res, next) {
 
-		$()
-		.seq("user", function() {
-			User.findById(req.user._id, this);
+		res.header('Content-Type', 'application/json');
+		
+		_(User
+			.findOne()
+			.where('_id', req.user._id)
+			.stream()
+		)
+		.stopOnError(next)
+		.otherwise(function() {
+			log.log('user not found.');
+			return res.json(404, { '_id': "User does not exist."} );
 		})
-		.seq(function() {
-			
-			if (!this.vars.user) {
-				log.log('user not found.');
-				errors['username'] = "User does not exist.";
-				return res.json(404, errors);
-			}
+		.map(function(d) {
 
 			// We are sending the profile inside the token
 			var obj = {
-				"_id": this.vars.user._id,
-				"name": this.vars.user.name,
-				"username": this.vars.user.username,
-				"email": this.vars.user.email
+				"_id": d._id,
+				"name": d.name,
+				"username": d.username,
+				"email": d.email
 			};
 
 			// store admin flag in session token
@@ -141,14 +143,12 @@ module.exports = function(app) {
 			// logged in.
 			var token = jwt.sign(obj, process.env.TOKEN_SECRET, { expiresInMinutes: 20 });
 
-			this.vars.user.set('authtoken', token, { strict: false });
-			
-			return res.json({
+			return {
 				authtoken: token
-			});
-		
+			};
 		})
-		.catch(next);
+		.map( JSON.stringify )
+		.pipe(res);
 
 	});
 
