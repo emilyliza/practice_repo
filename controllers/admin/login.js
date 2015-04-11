@@ -1,7 +1,7 @@
 module.exports = function(app) {
 
-	var _ = require('underscore'),
-		$ = require('seq'),
+	var _ = require('highland'),
+		lodash = require('lodash'),
 		Util = require('../../lib/Util'),
 		jwt = require('jsonwebtoken'),
 		mongoose = require('mongoose'),
@@ -38,38 +38,30 @@ module.exports = function(app) {
 		req.sanitize(req.body.username).trim();
 		
 
-		$()
-		.seq("user", function() {
-			var query_reg = new RegExp('^' + req.body.username + '$', 'i'),
-				q = User.findOne();
-			q.where('username', query_reg);
-			q.exec(this);
+		var reg = new RegExp('^' + req.body.username + '$', 'i'),
+			query = { 'username': reg };
+
+		_(User.findOne(query).lean().stream())
+		.stopOnError(next)
+		.otherwise(function() {
+			log.log('user not found.');
+			errors['username'] = "User does not exist.";
+			return res.json(400, errors );
 		})
-		.seq(function() {
-			
-			if (!this.vars.user) {
-				log.log('user not found.');
-				errors['username'] = "User does not exist.";
-				return res.json(404, errors);
-			}
-
-			// We are sending the profile inside the token
-			var obj = {
-				"_id": this.vars.user._id,
-				"name": this.vars.user.name,
-				"username": this.vars.user.username,
-				"email": this.vars.user.email,
-				"admin": true
-			};
-
-			var token = jwt.sign(obj, process.env.TOKEN_SECRET, { expiresInMinutes: 60 });
-
-			this.vars.user.set('authtoken', token, { strict: false });
-			
-			return res.json( _.omit(this.vars.user.toJSON(), ['password', 'admin', 'timestamps', 'meta', 'active', '__v']) );
-		
+		.map(function(d) {
+			// create token
+			var token = jwt.sign({
+					"_id": d._id,
+					"name": d.name,
+					"username": d.username,
+					"email": d.email,
+					"admin": true
+			}, process.env.TOKEN_SECRET, { expiresInMinutes: 60 });
+			d.set('authtoken', token, { strict: false });
+			return lodash.omit(d.toJSON(), ['password', 'admin', 'timestamps', 'meta', 'active', '__v']);
 		})
-		.catch(next);
+		.map( JSON.stringify )
+		.pipe(res);
 
 	});
 
