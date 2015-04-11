@@ -28,6 +28,7 @@ describe('Initializing Tests',function(){
 	});
 	describe('Starting Tests',function(){
 		require('./tests/clear')(app);
+		require('./tests/login')(app);
 		require('./tests/user')(app);
 		require('./tests/forgot')(app);
 		require('./tests/chargeback')(app);

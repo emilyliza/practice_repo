@@ -104,23 +104,6 @@ module.exports = function(app) {
 		});
 
 
-		describe('POST /api/v1/login invalid', function(){
-			it('should return 401', function(done){
-				var user = lodash.clone(config.get('users')[1]);
-				user.password = "wrong";
-				request
-					.post('/api/v1/login')
-					.send(user)
-					.set('Content-Type', 'application/json')
-					.set('Accept', 'application/json')
-					.expect(401)
-					.end(function(e, res) {  
-						if (e) { console.log(e); done(e); }
-						done();
-					});
-			});
-		});
-
 		var login = false;
 		describe('POST /api/v1/login valid', function(){
 			it('should return 200', function(done){

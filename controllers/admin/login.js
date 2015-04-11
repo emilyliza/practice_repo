@@ -14,11 +14,12 @@ module.exports = function(app) {
 	// login
 	app.post('/api/v1/admin/login',  mw.auth(), function(req, res, next) {
 
-		console.log(req.user);
 		if (!req.user || !req.user.admin) {
 			return res.json(401, { 'noauth': 'No admin.'} );	
 		}
 
+		res.header('Content-Type', 'application/json');
+		
 		// Validate user input
 		req.assert('username', 'Please enter username.').notEmpty();
 		
@@ -41,7 +42,7 @@ module.exports = function(app) {
 		var reg = new RegExp('^' + req.body.username + '$', 'i'),
 			query = { 'username': reg };
 
-		_(User.findOne(query).lean().stream())
+		_(User.findOne(query).stream())
 		.stopOnError(next)
 		.otherwise(function() {
 			log.log('user not found.');

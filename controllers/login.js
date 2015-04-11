@@ -112,7 +112,7 @@ module.exports = function(app) {
 	app.get('/api/v1/refresh',  mw.auth(), function(req, res, next) {
 
 		res.header('Content-Type', 'application/json');
-		
+
 		_(User
 			.findOne()
 			.where('_id', req.user._id)
@@ -144,7 +144,7 @@ module.exports = function(app) {
 			var token = jwt.sign(obj, process.env.TOKEN_SECRET, { expiresInMinutes: 20 });
 
 			return {
-				authtoken: token
+				'authtoken': token
 			};
 		})
 		.map( JSON.stringify )
