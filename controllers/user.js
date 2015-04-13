@@ -1,8 +1,8 @@
 module.exports = function(app) {
 
-	var _ = require('underscore'),
+	var _ = require('highland'),
+		lodash = require('lodash'),
 		mw = require('./middleware'),
-		$ = require('seq'),
 		Util = require('../lib/Util'),
 		log = app.get('log'),
 		User = app.Models.get('User');
@@ -10,29 +10,64 @@ module.exports = function(app) {
 
 	app.get('/api/v1/users', mw.auth(), function(req, res, next) {
 
-		$()
-		.seq(function() {
-			User.search(req, this);
-		})
-		.seq(function(users) {	
-			return res.json(users);
-		})
-		.catch(next);
-	
+		res.header('Content-Type', 'application/json');
+		var query = {};
+		
+		if (req.query.query) {
+			var pattern = new RegExp('.*'+req.query.query+'.*', 'i');
+			query = {
+				'$and': [{
+					'$or': [
+						{ 'name': pattern },
+						{ 'username': pattern },
+						{ 'email': pattern }
+					]
+				},{
+					'$or': [
+						{ '_id': req.user._id },
+						{ 'parent._id': req.user._id }
+					]
+				}]
+			};
+		} else {
+			query = {
+				'$or': [
+					{ '_id': req.user._id },
+					{ 'parent._id': req.user._id }
+				]
+			};
+		}
+
+		_(User.find(query)
+			.skip( (req.query.page ? ((+req.query.page - 1) * req.query.limit) : 0) )
+			.limit( req.query.limit || 50 )
+			.sort( req.query.sort || 'name' )
+			.lean().stream({ transform: JSON.stringify }))
+			.stopOnError(next)
+			.toArray(function(data) {
+				res.header('Content-Type', 'application/json');
+				res.send(data);
+			});
+
 	});
 
+	
 	app.get('/api/v1/user', mw.auth(), function(req, res, next) {
 
-		$()
-		.seq(function() {
-			User.findById(req.user._id, this);
-		})
-		.seq(function(user) {
-			return res.json( _.omit(user.toJSON(), ['password', 'admin', 'timestamps', 'meta', 'active', '__v']) );
-		})
-		.catch(next);
+		res.header('Content-Type', 'application/json');
+		_(
+			User.findById(req.user._id)
+				.select('-password -admin -timestamps -meta - active')
+				.lean()
+				.stream({ transform: JSON.stringify })
+			)
+			.stopOnError(next)
+			.pipe(res);
 	
 	});
+
+
+
 
 
 	app.post('/api/v1/user', function(req, res, next) {
@@ -53,12 +88,17 @@ module.exports = function(app) {
 		req.sanitize(req.body.email).trim();
 		req.sanitize(req.body.name).trim();
 
-		$()
-		.seq(function() {
-			User.findOne({'username': req.body.username}, this);
-		})
-		.seq(function(user) {
-			if (user) { return res.json(400, { 'username': 'already exists' }); }
+
+		User.findOne()
+		.where('username', req.body.username)
+		.exec(function(err,data) {
+			
+			if (err) { return next(err); }
+			
+			if (data) {
+				log.log(req.body.username + ' already exists.');
+				return res.json(400, {'username': "Username already exists."});
+			}
 
 			var user = new User({
 				'name': req.body.name,
@@ -76,15 +116,20 @@ module.exports = function(app) {
 			user.timestamps.firstLogin = new Date();
 			user.meta.lastIp = meta.ip;
 			user.meta.useragent = meta.useragent;
-
-			user.save(this);
-		})
-		.seq(function(user) {
-			return res.json( _.omit( user.toJSON(), ['password', 'admin', 'timestamps', 'meta', 'active', '__v']) );
-		})
-		.catch(next);
+			
+			user.save(function(err,d) {
+				if (err) { return next(err); }
+				return res.json( lodash.omit(d.toJSON(), ['password', 'admin', 'timestamps', 'meta', 'active', '__v']) );
+			});
+			
+		});
 
 	});
+
+
+
+
+
 
 	app.put('/api/v1/user', mw.auth(), function(req, res, next) {
 		put(req, res, next);
@@ -117,11 +162,16 @@ module.exports = function(app) {
 			req.sanitize(req.body.send_to.fax).trim();
 		}
 
-		$()
-		.seq(function() {
-			User.findById(req.user._id, this);
+		
+		res.header('Content-Type', 'application/json');
+		_( User.findById(req.user._id)
+			.stream() )
+		.stopOnError(next)
+		.otherwise(function() {
+			log.log('cannot find user.');
+			return res.json(404);
 		})
-		.seq(function(user) {
+		.map(function( user ) {
 			user.set('username', req.body.username);
 			user.set('email', req.body.email);
 			user.set('name', req.body.name);
@@ -130,12 +180,14 @@ module.exports = function(app) {
 			if (req.body.password) {
 				user.set('password', req.body.password);
 			}
-			user.save(this);
+			return user;
 		})
-		.seq(function(user) {
-			return res.json( _.omit(user.toJSON(), ['password', 'admin', 'timestamps', 'meta', 'active', '__v']) );
+		.flatMap(Util.saveStream)
+		.map(function(d) {
+			return lodash.omit(d.toJSON(), ['password', 'admin', 'timestamps', 'meta', 'active', '__v']);
 		})
-		.catch(next);
+		.map( JSON.stringify )
+		.pipe(res);
 
 	};
 
