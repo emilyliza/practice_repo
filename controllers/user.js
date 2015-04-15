@@ -42,12 +42,14 @@ module.exports = function(app) {
 			.skip( (req.query.page ? ((+req.query.page - 1) * req.query.limit) : 0) )
 			.limit( req.query.limit || 50 )
 			.sort( req.query.sort || 'name' )
-			.lean().stream({ transform: JSON.stringify }))
-			.stopOnError(next)
-			.toArray(function(data) {
-				res.header('Content-Type', 'application/json');
-				res.send(data);
-			});
+			.lean()
+			.stream()
+		)
+		.stopOnError(next)
+		.toArray(function(data) {
+			res.header('Content-Type', 'application/json');
+			res.send(data);
+		});
 
 	});
 

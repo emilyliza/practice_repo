@@ -46,7 +46,9 @@ module.exports = function(app) {
 					}}
 				];
 			
-			log.log(agg);
+			if (process.env.NODE_ENV == "development") {
+				log.log(agg);
+			}
 			Chargeback.aggregate(agg, this);
 
 		})
@@ -66,7 +68,9 @@ module.exports = function(app) {
 				}}
 			];
 			
-			log.log(agg);
+			if (process.env.NODE_ENV == "development") {
+				log.log(agg);
+			}
 			Chargeback.aggregate(agg, this);
 
 		})
@@ -90,7 +94,9 @@ module.exports = function(app) {
 				{ $limit: 10 }
 			];
 			
-			log.log(agg);
+			if (process.env.NODE_ENV == "development") {
+				log.log(agg);
+			}
 			Chargeback.aggregate(agg, this);
 
 		})
@@ -110,7 +116,9 @@ module.exports = function(app) {
 				}}
 			];
 
-			log.log(search);
+			if (process.env.NODE_ENV == "development") {
+				log.log(search);
+			}
 			Chargeback.aggregate(search, this);
 
 		})

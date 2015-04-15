@@ -100,7 +100,6 @@ module.exports = function(app) {
 	.plugin(UserMicro, { path: 'parent', objectid: ObjectId })
 
 	.pre('save', function(next) {
-		console.log('saving')
 		// get Card type
 		if (!this.gateway_data || !this.gateway_data.CcType || this.isModified('portal_data.CcPrefix') || this.isModified('portal_data.CcSuffix')) {
 			if (this.portal_data.CardNumber) {
@@ -333,8 +332,10 @@ module.exports = function(app) {
 			query.push({'status': params.status });
 		}	
 
-		log.log('Chargeback Query...');
-		log.log(query);
+		if (process.env.NODE_ENV == "development") {
+			log.log('Chargeback Query...');
+			log.log(query);
+		}
 
 		return query;
 

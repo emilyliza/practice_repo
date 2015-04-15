@@ -93,9 +93,11 @@ module.exports = function(app) {
 		query.where('_id').equals(child);
 		query.where('parent._id').equals(parent);
 
-		log.log('Child Query...');
-		log.log(query._conditions);
-		log.log(query.options);
+		if (process.env.NODE_ENV == "development") {
+			log.log('Child Query...');
+			log.log(query._conditions);
+			log.log(query.options);
+		}
 
 		query.exec(next);
 	};
