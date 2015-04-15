@@ -11,6 +11,12 @@
 			"username": "username2",
 			"password": "hotdog2",
 			"email": "justin@junder2.com"
+		},
+		{
+			"name": "CompanyName3",
+			"username": "username3",
+			"password": "hotdog3",
+			"email": "justin@junder3.com"
 		}
 	],
 	"chargebacks": [

@@ -55,13 +55,17 @@ module.exports = function(app) {
 				return res.json(400, 'Unauthorized');
 			}
 
-			log.log('history query');
-			log.log(search);
+			if (process.env.NODE_ENV == "development") {
+				log.log('history query');
+				log.log(search);
+			}
 			Chargeback.aggregate(search, this);
 		})
 		.seq(function(data) {
 
-			log.log(data);
+			if (process.env.NODE_ENV == "development") {
+				log.log(data);
+			}
 
 			var out = [];
 			_.each(data, function(row) {
@@ -109,7 +113,9 @@ module.exports = function(app) {
 			}}
 		];
 
-		log.log(search);
+		if (process.env.NODE_ENV == "development") {
+			log.log(search);
+		}
 		
 		$()
 		.seq(function() {
@@ -131,7 +137,9 @@ module.exports = function(app) {
 		})
 		.seq(function(data) {
 			
-			log.log(data);
+			if (process.env.NODE_ENV == "development") {
+				log.log(data);
+			}
 			
 			var result1 = [],
 				result2 = [];
@@ -189,7 +197,9 @@ module.exports = function(app) {
 			}}
 		];
 
-		log.log(search);
+		if (process.env.NODE_ENV == "development") {
+			log.log(search);
+		}
 		
 		$()
 		.seq(function() {
@@ -211,7 +221,9 @@ module.exports = function(app) {
 		})
 		.seq(function(data) {
 			
-			log.log(data);
+			if (process.env.NODE_ENV == "development") {
+				log.log(data);
+			}
 			
 			var result1 = [],
 				result2 = [];
@@ -274,7 +286,9 @@ module.exports = function(app) {
 			}}
 		];
 
-		log.log(search);
+		if (process.env.NODE_ENV == "development") {
+			log.log(search);
+		}
 
 		$()
 		.seq(function() {
@@ -343,7 +357,9 @@ module.exports = function(app) {
 				}}
 			];
 
-		log.log(search);
+		if (process.env.NODE_ENV == "development") {
+			log.log(search);
+		}
 
 		$()
 		.seq(function() {
@@ -411,7 +427,9 @@ module.exports = function(app) {
 				}}
 			];
 
-		log.log(search);
+		if (process.env.NODE_ENV == "development") {
+			log.log(search);
+		}
 
 		$()
 		.seq(function() {
@@ -477,7 +495,9 @@ module.exports = function(app) {
 				}}
 			];
 
-		log.log(search);
+		if (process.env.NODE_ENV == "development") {
+			log.log(search);
+		}
 
 		$()
 		.seq(function() {

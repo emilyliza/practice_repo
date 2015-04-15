@@ -1,4 +1,4 @@
-var _ = require('underscore'),
+var lodash = require('lodash'),
 	assert = require("assert"),
 	should = require('should');
 	
@@ -52,7 +52,7 @@ module.exports = function(app) {
 				var user = config.get('users')[0];
 				request
 					.post('/api/v1/user')
-					.send(_.omit(user, 'username'))
+					.send(lodash.omit(user, 'username'))
 					.set('Content-Type', 'application/json')
 					.set('Accept', 'application/json')
 					.expect(400)
@@ -104,23 +104,6 @@ module.exports = function(app) {
 		});
 
 
-		describe('POST /api/v1/login invalid', function(){
-			it('should return 401', function(done){
-				var user = _.clone(config.get('users')[1]);
-				user.password = "wrong";
-				request
-					.post('/api/v1/login')
-					.send(user)
-					.set('Content-Type', 'application/json')
-					.set('Accept', 'application/json')
-					.expect(401)
-					.end(function(e, res) {  
-						if (e) { console.log(e); done(e); }
-						done();
-					});
-			});
-		});
-
 		var login = false;
 		describe('POST /api/v1/login valid', function(){
 			it('should return 200', function(done){
@@ -149,7 +132,7 @@ module.exports = function(app) {
 
 		describe('PUT /api/v1/user with new user', function(){
 			it('should return 200', function(done){
-				var user = _.clone(config.get('users')[1]);
+				var user = lodash.clone(config.get('users')[1]);
 				user.name = "new name";
 				request
 					.put('/api/v1/user/' + new_user._id)

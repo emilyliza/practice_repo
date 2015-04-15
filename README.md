@@ -15,7 +15,9 @@ You need git to clone the chargeback repository. You can get git from
 [http://git-scm.com/](http://git-scm.com/).
 
 We also use a number of node.js tools to initialize and test chargeback. You must have node.js and
-its package manager (npm) installed.  You can get them from [http://nodejs.org/](http://nodejs.org/).
+its package manager (npm) installed.  You can get them from [http://nodejs.org/](http://nodejs.org/). 
+We're currently using version 0.12.2. It is nice to use [https://github.com/tj/n](https://github.com/tj/n)
+to manage nodejs versions.
 
 ### Clone chargeback
 
@@ -54,6 +56,45 @@ it easier to serve the files by a webserver.*
 *Note: if you make any changes to bower.json (add client side lib) or package.json (add npm) you'll need to run "npm install" again. npm install is not autorun due to performance issues and speed of restarting all the time.*
 
 
+### Install configs
+
+The application needs two config files or ENVs set to work. When running locally you can 
+just put these in .env in the document root. When running in production, these should be set
+in the environement. Here are the values that need proper config values:
+
+PORT=
+NODE_ENV=development
+SSL=off
+TOKEN_SECRET=
+MONGO_URI=mongodb://localhost:27017/chargeback
+NEWRELIC=
+AIRBRAKE=
+AWS_KEY=
+AWS_SECRET=
+BUCKET=chargebackcom
+AWS_REGION=us-west-2
+S3_ACL=public-read
+S3_STORAGE_CLASS=STANDARD
+SQS_QUEUE=
+SQS_QUEUE_DOCGEN=
+CALLBACK_HOST=http://localhost:5000
+CDN=
+AWS_ACCESS_KEY_ID=$AWS_KEY
+AWS_SECRET_ACCESS_KEY=$AWS_SECRET
+POSTMARK_API_KEY=
+MAIL_FROM_NAME=Chargeback
+MAIL_FROM_EMAIL=pull.user@chargeback.com
+CODEDEPLOY=
+CODEDEPLOY_SECRET=
+
+To run tests locally, we'll also need .env-test installed with a copy of the values above. However,
+use a test db when running tests at the tests clear out the entire contents to run tests from scratch.
+DOT NOT TEST ON ANY REAL DATA!!!! You can copy the above and simply change the MONGO_URI!
+
+MONGO_URI=mongodb://localhost:27017/chargeback-TEST
+
+
+
 ### Run the Application
 
 We have preconfigured the project with a simple development web server.  The simplest way to start
@@ -73,7 +114,8 @@ Now browse to the app at `http://localhost:5000/`.
 ## Directory Layout
 
 ```
-.env-local              --> ENV variables, including AWS credentials for builds (should not be in repo!!!)
+.env                    --> ENV variables, including AWS credentials for builds (should not be in repo!!!)
+.env-test               --> ENV variables for testing (should not be in repo!!!)
 public/                 --> all of the source files for the client side application
   app/                  --> custom chargeback angular code
     modules/            --> Angular JS modules per view
@@ -101,6 +143,10 @@ test/                   --> mocha server side unit tests, the main dir contains 
   tests/                --> individual unit tests 
 index.js                --> the main application file
 server.js               --> the server launch file (separated out from index for testing purposes)
+appspec.yml             --> config for deploying the application in AWS's CodeDeploy
+deploy_hooks/           --> scripts called from within appspec.yml for starting and stopping server during CodeDeploy
+.travis.yml             --> file that provides travis with proper testing and deployment instructions
+newrelic.js             --> new relic config info, newrelic is only run in production
 ```
 
 
@@ -125,6 +171,8 @@ unit tests is to use the supplied npm script:
 npm test
 ```
 
+@TODO: unit tests are fully functioning and working well. I have not spent much time on karam tests!
+
 This script will start the Karma test runner to execute the unit tests. Moreover, Karma will sit and
 watch the source and test files for changes and then re-run the tests whenever any of them change.
 This is the recommended strategy; if your unit tests are being run every time you save a file then
@@ -140,6 +188,8 @@ npm run test-single-run
 
 ### End to end testing
 
+@TODO: unit tests are fully functioning and working well. I have not spent much time on end-to-end
+
 The app comes with end-to-end tests, again written in [Jasmine][jasmine]. These tests
 are run with the [Protractor][protractor] End-to-End test runner.  It uses native events and has
 special features for Angular applications.
@@ -150,10 +200,6 @@ special features for Angular applications.
 Protractor simulates interaction with our web app and verifies that the application responds
 correctly. Therefore, our web server needs to be serving up the application, so that Protractor
 can interact with it.
-
-```
-npm start
-```
 
 In addition, since Protractor is built upon WebDriver we need to install this.  The 
 project comes with a predefined script to do this:
@@ -176,25 +222,58 @@ development server.
 
 ## Logging
 
-### Request logs and info 
+Logs on production machines can be found in this dir: /var/www/
+There are logs for forever (process manager), regular node, and errors.
 
-In development logs are sent to stdout/console. In production, logs are sent to stdout/console, but also
-to logentries.com if process.env.LOGENTRIES is set. This enables 3rd party log searching and works better
-with AWS OpsWorks, since the server process is started by a root Chef script root and gaining access to
-stdout is not possible.
+
 
 ### Bugs and errors
 
-TODO: bugsnag
+Errors are being sent to Airbrake.io here: [https://cartdev.airbrake.io](https://cartdev.airbrake.io). This
+services is okay, not sure it is worth keeping, but can be used to detect some important errors.
+
+Username: justin@infoshreve.com, Password: achaiV0ien6iech
+
+Free account only allows one user.
 
 
 ### Server information
 
-TODO: new relic
+Servers can be monitored in a variety of ways:
+
+1. AWS OpsWorks - shows status of various machines (dev and production), as well as mongo servers.
+You can spin up new instances here and scale things within OpsWorks. 
+
+2. MMS - is the mongo monitoring and configuration tool. [https://mms.mongodb.com/host/list/54bd6bd6e4b047dcccb3e48d](https://mms.mongodb.com/host/list/54bd6bd6e4b047dcccb3e48d). This is where mongo should be scaled. This service is on free tier as well.
+
+3. NewRelic - [https://rpm.newrelic.com/accounts/889104/applications/4976726](https://rpm.newrelic.com/accounts/889104/applications/4976726) shows requests, timing, traffic, responses, and much much more. We're on free tier right now. There are ping alerts set up to monitor the app here too.
+
+4. GA - CART is being fully tracked inside the main Chargeback GA account.
+
+
 
 
 
 ## Production Build Process
+
+The build process is taken care of by [https://magnum.travis-ci.com/Chargeback/cart](Travis). When you push a
+commit to github, Travis will automatically build the app and run unit tests (eventually end-to-end tests too).
+This will happen on ANY branch you push. If you push to the "dev" branch, then travis will build, test, and deploy
+to the dev servers set up in AWS's CodeDeploy. If you push to the "master" branch, then travis will build, test, and deploy
+to the production servers set up in AWS's CodeDeploy.
+
+SUGGESTED WORK FLOW:
+It is recommended to follow the github pull-request flow. When working on a feature do it in a branch, like
+"jgs-user-refactor". When you're done, run npm test locally, see if it passed unit test. Then push the branch
+to github, which will trigger the travis build and tests. If they pass, create a "pull-request" inside github
+on that branch ("dev" <- "jgs-user-refactor") and have someone do quick code review. If the code review is good,
+auto merge the pull-request, which will in turn run another set of unit tests (sort of redundant, but good to
+test after a merge) and actually deploy the changes to the dev servers. When deploying to production, create a
+large pull-request from "dev" to "master". Review it and when you merge, the system will automatically deploy to
+all production machines, since you've in essence just pushed to the master branch.
+
+
+You can also run the build process manually for debugging purposes...
 
 The build process requires Grunt `~0.4.1` which is installed via npm install (no need to install separately).
 
@@ -230,15 +309,4 @@ grunt build --target=(index|admin) // defaults to index if --target it not provi
 ```
 
 or run with --verbose for more information. Then check ./dist for the results. You can run the following to boot up the nodejs app using the production files for testing. Production mode basically uses ./dist directory versus ./public directory as the root web folder.
-
-*NOTE: AWS credentials need to be in both .env-local and aws.json. .env-local will use them on the server (getting s3 key for uploading) and aws.json will be used in the grunt build process.*
-
-
-```
-npm start
-```
-OR for production mode, set up env and start...
-```
-env $(cat .env) node server.js
-```
 

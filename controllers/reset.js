@@ -1,7 +1,6 @@
 module.exports = function(app) {
 
-	var _ = require('underscore'),
-		$ = require('seq'),
+	var _ = require('highland'),
 		jwt = require('jsonwebtoken'),
 		log = app.get('log'),
 		User = app.Models.get('User');
@@ -29,31 +28,45 @@ module.exports = function(app) {
 			return res.json(200, {"code": tryagain});
 		}
 		
-		$()
-		.seq(function() {
-			User.findById(user_id, this);
-		})
-		.seq(function(user) {
-			var now = new Date();
+		function check(user) {
+			return _(function (push, next) {
+				var pass = true,
+					now = new Date();
+				if (!user.timestamps.forgotSent) {
+					// passing "code" triggers error handling.
+					pass = false;
+				} else if (now.getTime() - user.timestamps.forgotSent.getTime() > 3600000) {
+					pass = false;
+				}
+				push(null, pass);
+				push(null, _.nil);
+			});
+		}
 
-			if (!user) {
-				return res.json(400, {"error": "no user found."});
-			} else if (!user.timestamps.forgotSent) {
-				// passing "code" triggers error handling.
-				return res.json(400, {"error": 'Forgot link expired.'});
-			} else if (now.getTime() - user.timestamps.forgotSent.getTime() > 3600000) {
-				// passing "code" triggers error handling.
-				return res.json(400, {"error": 'Forgot link expired.'});
-			} else {
-				
-				var token = jwt.sign({ "_id": user._id }, process.env.TOKEN_SECRET, { expiresInMinutes: 15 });
-				return res.json(200, {
-					'reset_token': token
-				});
-
-			}
+		_(
+			User
+			.findById(user_id)
+			.lean()
+			.stream()
+		)
+		.stopOnError(next)
+		.otherwise(function() {
+			log.log('cannot find user.');
+			return res.json(404);
 		})
-		.catch(next);
+		.flatFilter(check)
+		.otherwise(function() {
+			return res.json(400, {"error": 'Forgot link expired.'});
+		})
+		.map(function(d) {
+
+			var token = jwt.sign({ "_id": d._id }, process.env.TOKEN_SECRET, { expiresInMinutes: 15 });
+			return {
+				'reset_token': token
+			};
+		})
+		.map( JSON.stringify )
+		.pipe(res);
 
 	});
 
@@ -76,24 +89,27 @@ module.exports = function(app) {
 				return res.send(401);
 			}
 
-			$()
-			.seq('user', function() {
-				User.findOne({'_id': decoded._id}, this);
+			_(
+				User
+				.findById(decoded._id)
+				.stream()
+			)
+			.stopOnError(next)
+			.otherwise(function() {
+				log.log('cannot find user.');
+				return res.json(404);
 			})
-			.seq(function() {
-
-				if (!this.vars.user) { return res.json(404, [{ "password1": "No user was found."}]); }
-
-				this.vars.user.set('password', password1);
-				this.vars.user.set('timestamps.forgotSent', undefined);
-				this.vars.user.save(this);
+			.map(function(d) {
+				d.set('password', password1);
+				d.set('timestamps.forgotSent', undefined);
+				return d;
 			})
-			.seq(function(saved_user) {
-
-				return res.json({ "success": true });
-			
+			.flatMap(Util.saveStream)
+			.map(function(d) {
+				return { 'success': true };
 			})
-			.catch(next);
+			.map( JSON.stringify )
+			.pipe(res);
 
 			
 		});

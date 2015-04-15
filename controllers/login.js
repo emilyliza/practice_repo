@@ -1,7 +1,7 @@
 module.exports = function(app) {
 
-	var _ = require('underscore'),
-		$ = require('seq'),
+	var _ = require('highland'),
+		lodash = require('lodash'),
 		Util = require('../lib/Util'),
 		jwt = require('jsonwebtoken'),
 		mongoose = require('mongoose'),
@@ -42,58 +42,56 @@ module.exports = function(app) {
 				useragent: Util.getClientUseragent(req)
 			};
 
+		var reg = new RegExp('^' + req.body.username + '$', 'i');
 
-		$()
-		.seq("user", function() {
-			var query_reg = new RegExp('^' + req.body.username + '$', 'i'),
-				q = User.findOne();
-			q.where('active', true);
-			q.where('username', query_reg);
-			if (req.body.admin) {
-				q.where('admin', true);
-			}
-			q.exec(this);
+		function check(v) {
+			return _(function (push, next) {
+				push(null, Util.compare_password(req.body.password, v.password));
+				push(null, _.nil);
+			});
+		}
+
+		res.header('Content-Type', 'application/json');
+
+		_(User
+			.findOne()
+			.where('username', reg)
+			.where('active', true)
+			.where('password').exists(true)
+			.where('password').ne("")
+			.stream()
+		)
+		.stopOnError(next)
+		.otherwise(function() {
+			log.log('user not found.');
+			return res.json(401, { 'username': "User does not exist."} );
 		})
-		.seq(function() {
+		.flatFilter(check)
+		.otherwise(function() {
+			log.log('invalid password');
+			return res.json(401, {'password': "Invalid password"});
+		})
+		.map(function(d) {
 			
-			if (!this.vars.user) {
-				log.log('user not found.');
-				errors['username'] = "User does not exist.";
-				return res.json(404, errors);
-			}
-
-			if (!this.vars.user.password) {
-				log.log('no password.');
-				errors['username'] = "No password set for this user. Access denied.";
-				return res.json(400, errors);
-			}
-
-			if (!Util.compare_password(req.body.password, this.vars.user.password)) { 
-				log.log('invalid password');
-				errors['password'] = "Invalid password";
-				return res.json(401, errors);
-			}
-
 			// any data updates here.
-			this.vars.user.timestamps.lastLogin = new Date();
-			this.vars.user.meta.lastIp = meta.ip;
-			this.vars.user.meta.useragent = meta.useragent;
+			d.timestamps.lastLogin = new Date();
+			d.meta.lastIp = meta.ip;
+			d.meta.useragent = meta.useragent;
 
-			if (!this.vars.user.timestamps && !this.vars.user.timestampsfirstLogin) {
-				this.vars.user.timestamps.firstLogin = new Date();
+			if (!d.timestamps && !d.timestampsfirstLogin) {
+				d.timestamps.firstLogin = new Date();
 			}
-
-			this.vars.user.save(this);
-
+			return d;
 		})
-		.seq(function() {
+		.flatMap(Util.saveStream)
+		.map(function(d) {
 
 			// We are sending the profile inside the token
 			var obj = {
-				"_id": this.vars.user._id,
-				"name": this.vars.user.name,
-				"username": this.vars.user.username,
-				"email": this.vars.user.email
+				"_id": d._id,
+				"name": d.name,
+				"username": d.username,
+				"email": d.email
 			};
 
 			// store admin flag in session token
@@ -102,41 +100,37 @@ module.exports = function(app) {
 			}
 			
 			var token = jwt.sign(obj, process.env.TOKEN_SECRET, { expiresInMinutes: 20 });
-
-			var query_end = new Date().getTime();
-			log.log("Login Time: " + (query_end - query_start) + "ms");
-
-			this.vars.user.set('authtoken', token, { strict: false });
-			
-			return res.json( _.omit(this.vars.user.toJSON(), ['password', 'admin', 'timestamps', 'meta', 'active', '__v']) );
-			
-
+			d.set('authtoken', token, { strict: false });
+			return lodash.omit(d.toJSON(), ['password', 'admin', 'timestamps', 'meta', 'active', '__v']);
 		})
-		.catch(next);
+		.map( JSON.stringify )
+		.pipe(res);
 
 	});
 
 	
 	app.get('/api/v1/refresh',  mw.auth(), function(req, res, next) {
 
-		$()
-		.seq("user", function() {
-			User.findById(req.user._id, this);
+		res.header('Content-Type', 'application/json');
+
+		_(User
+			.findOne()
+			.where('_id', req.user._id)
+			.stream()
+		)
+		.stopOnError(next)
+		.otherwise(function() {
+			log.log('user not found.');
+			return res.json(404, { '_id': "User does not exist."} );
 		})
-		.seq(function() {
-			
-			if (!this.vars.user) {
-				log.log('user not found.');
-				errors['username'] = "User does not exist.";
-				return res.json(404, errors);
-			}
+		.map(function(d) {
 
 			// We are sending the profile inside the token
 			var obj = {
-				"_id": this.vars.user._id,
-				"name": this.vars.user.name,
-				"username": this.vars.user.username,
-				"email": this.vars.user.email
+				"_id": d._id,
+				"name": d.name,
+				"username": d.username,
+				"email": d.email
 			};
 
 			// store admin flag in session token
@@ -149,14 +143,12 @@ module.exports = function(app) {
 			// logged in.
 			var token = jwt.sign(obj, process.env.TOKEN_SECRET, { expiresInMinutes: 20 });
 
-			this.vars.user.set('authtoken', token, { strict: false });
-			
-			return res.json({
-				authtoken: token
-			});
-		
+			return {
+				'authtoken': token
+			};
 		})
-		.catch(next);
+		.map( JSON.stringify )
+		.pipe(res);
 
 	});
 
