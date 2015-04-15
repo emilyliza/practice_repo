@@ -93,51 +93,13 @@ module.exports = function(app) {
 		query.where('_id').equals(child);
 		query.where('parent._id').equals(parent);
 
-		log.log('Child Query...');
-		log.log(query._conditions);
-		log.log(query.options);
+		if (process.env.NODE_ENV == "development") {
+			log.log('Child Query...');
+			log.log(query._conditions);
+			log.log(query.options);
+		}
 
 		query.exec(next);
-	};
-
-	User.search = function(params, next) {
-
-		var query = User.find();
-
-		if (params.query.query) {
-			var pattern = new RegExp('.*'+params.query.query+'.*', 'i');
-			query.or([
-				{ 'name': pattern },
-				{ 'username': pattern },
-				{ 'email': pattern }
-			]);
-		}
-
-		query.or([
-			{ '_id': params.user._id },
-			{ 'parent._id': params.user._id }
-		]);
-		
-		query.skip( (params.page ? ((+params.page - 1) * params.limit) : 0) );
-		query.limit((params.limit ? params.limit : 50));
-
-		if (params.sort) {
-			query.sort( params.sort );
-		} else {
-			query.sort( 'name' );
-		}
-
-		log.log('User Query...');
-		log.log(query._conditions);
-		log.log(query.options);
-
-		var np = false;
-		query.select('-password');
-		query.exec(function(err, data) {
-			if (err) { return next(err); }
-			next(null, data);
-		});
-
 	};
 
 	return User;

@@ -151,7 +151,6 @@ module.exports = function(app) {
 					});
 			});
 			it('should have object with data', function(done) {
-				console.log(data)
 				data.byVolume.should.be.an.instanceOf(Object).and.have.property('data');
 				data.byVolume.data[0].should.be.an.instanceOf(Object).and.have.property('sum', 8.98);
 				done();
