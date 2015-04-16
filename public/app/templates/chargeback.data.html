@@ -88,13 +88,19 @@
 			</div>
 		</div>
 		<div class="row">
-			<div class="col-md-6">
+			<div class="col-md-2">
+				<div class="form-group" show-errors>
+					<label>Currency</label>
+					<input name="Currency" type="text" class="form-control" pop-show="{{errors.Currency}}" pop="{{errors.Currency}}" pop-placement="right" ng-model="data.gateway_data.Currency" placeholder="" ng-change="methods.ds()">
+				</div>
+			</div>
+			<div class="col-md-2">
 				<div class="form-group" show-errors>
 					<label>Reason Code</label>
 					<input name="ReasonCode" required type="text" class="form-control" pop-show="{{errors.ReasonCode}}" pop="{{errors.ReasonCode}}" pop-placement="right" ng-model="data.portal_data.ReasonCode" placeholder="" ng-change="methods.ds()">
 				</div>
 			</div>
-			<div class="col-md-6">
+			<div class="col-md-8">
 				<div class="form-group" show-errors>
 					<label>Reason Text</label>
 					<input name="ReasonText" required type="text" class="form-control" pop-show="{{errors.ReasonText}}" pop="{{errors.ReasonText}}" pop-placement="right" ng-model="data.portal_data.ReasonText" placeholder="" ng-change="methods.ds()">
