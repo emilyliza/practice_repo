@@ -33,19 +33,19 @@
 					<div class="col-md-4">
 						<div class="form-group" show-errors>
 							<label>Case Number</label>
-							<input name="CaseNumber" type="text" class="form-control" pop-show="{{errors.CaseNumber}}" pop="{{errors.CaseNumber}}" pop-placement="right" ng-model="data.portal_data.CaseNumber" placeholder="" ng-change="methods.ds()">
+							<input name="CaseNumber" type="text" class="form-control" pop-show="{{errors.CaseNumber}}" pop="{{errors.CaseNumber}}" pop-placement="right" ng-model="data.portal_data.CaseNumber" placeholder="">
 						</div>
 					</div>
 					<div class="col-md-4">
 						<div class="form-group" show-errors>
 							<label>Reference Number</label>
-							<input name="RefNumber" type="text" class="form-control" pop-show="{{errors.RefNumber}}" pop="{{errors.RefNumber}}" pop-placement="right" ng-model="data.portal_data.RefNumber" placeholder="" ng-change="methods.ds()">
+							<input name="RefNumber" type="text" class="form-control" pop-show="{{errors.RefNumber}}" pop="{{errors.RefNumber}}" pop-placement="right" ng-model="data.portal_data.RefNumber" placeholder="">
 						</div>
 					</div>
 					<div class="col-md-4 ">
 						<div class="form-group select">
 							<label>Type</label>
-							<select required class="form-control" ng-model="data.internal_type" ng-options="s for s in settings.internal_types" ng-change="methods.ds()" pop-show="{{errors.internal_number}}" pop="{{errors.internal_number}}" pop-placement="top"></select>
+							<select required class="form-control" ng-model="data.internal_type" ng-options="s for s in settings.internal_types" pop-show="{{errors.internal_number}}" pop="{{errors.internal_number}}" pop-placement="top"></select>
 						</div>
 					</div>
 				</div>
