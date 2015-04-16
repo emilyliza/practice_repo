@@ -71,7 +71,7 @@
 			<div class="col-md-4">
 				<div class="form-group" show-errors>
 					<label>Transaction Date</label>
-					<input class="form-control" name="TransDate" type="text" class="form-control" datepicker-popup="MM/dd/yyyy" ng-model="data.gateway_data.TransDate" is-open="opened" ng-click="opened=true" isdate ng-change="methods.ds()">
+					<input class="form-control" required name="TransDate" type="text" class="form-control" datepicker-popup="MM/dd/yyyy" ng-model="data.gateway_data.TransDate" is-open="opened" ng-click="opened=true" isdate ng-change="methods.ds()">
 				</div>
 			</div>
 			<div class="col-md-4">
@@ -244,18 +244,35 @@
 	<div class="row">
 		<div class="col-md-6">
 			<div class="form-group" show-errors>
-				<label>Cancel Date</label>
-				<input name="CancelDateSystem" type="text" class="form-control" pop-show="{{errors.CancelDateSystem}}" pop="{{errors.CancelDateSystem}}" pop-placement="right" ng-model="data.crm_data.CancelDateSystem" placeholder="" ng-change="methods.ds()" datepicker-popup="MM/dd/yyyy" is-open="opened" ng-click="opened=true" isdate>
+				<label>RMA</label>
+				<input name="Rma" type="text" class="form-control" pop-show="{{errors.Rma}}" pop="{{errors.Rma}}" pop-placement="right" ng-model="data.crm_data.Rma" placeholder="" ng-change="methods.ds()">
 			</div>
 		</div>
 		<div class="col-md-6">
 			<div class="form-group" show-errors>
 				<label>Order Amount</label>
-				<input name="TransAmt" required type="text" class="form-control" pop-show="{{errors.TransAmt}}" pop="{{errors.TransAmt}}" pop-placement="right" ng-model="data.crm_data.TransAmt" placeholder="" ng-change="methods.ds()">
+				<input name="TransAmt" required type="text" class="form-control" pop-show="{{errors.TransAmt}}" pop="{{errors.TransAmt}}" pop-placement="right" ng-model="data.gateway_data.TransAmt" placeholder="" ng-change="methods.ds()">
 			</div>
 		</div>
 	</div>
-	<div class="row">
+	
+
+	<div style="margin-top: 100px;" ng-if="data.recurring" >
+		<div class="pull-right" style="width: auto;">
+			<a href="" ng-click="data.recurring = false; data.crm_data.IsRecurring = false; methods.ds();">Disable Recurring Purchase</a>
+		</div>
+		<h4 style="font-weight: bold;">Recurring</h4>
+	</div>
+	<div style="margin-top: 100px; border: solid 1px #dedede; padding: 0px 0px 0px 10px;" ng-if="!data.recurring" >
+		<div class="pull-right" style="width: auto; padding: 9px 10px 0px 0px;">
+			<a href="" ng-click="data.recurring = true; data.crm_data.IsRecurring = true; methods.ds();">Enable recurring subscription plan purchase</a>
+		</div>
+		<h4 style="font-weight: bold;">Not Recurring</h4>
+	</div>
+
+	<div style="font-size: 12px; color: #999; padding-bottom: 10px;" ng-if="data.recurring">Enable this section if the product purchased is on a subscription plan. Please indicate the cancel date if the subscription was canceled.</div>
+
+	<div class="row bt" ng-if="data.recurring">
 		<div class="col-md-6">
 			<div class="form-group">
 				<label>Is this a recurring transaction?</label>
@@ -267,11 +284,12 @@
 		</div>
 		<div class="col-md-6">
 			<div class="form-group" show-errors>
-				<label>RMA</label>
-				<input name="Rma" type="text" class="form-control" pop-show="{{errors.Rma}}" pop="{{errors.Rma}}" pop-placement="right" ng-model="data.crm_data.Rma" placeholder="" ng-change="methods.ds()">
+				<label>Cancel Date</label>
+				<input name="CancelDateSystem" type="text" class="form-control" pop-show="{{errors.CancelDateSystem}}" pop="{{errors.CancelDateSystem}}" pop-placement="right" ng-model="data.crm_data.CancelDateSystem" placeholder="" ng-change="methods.ds()" datepicker-popup="MM/dd/yyyy" is-open="opened" ng-click="opened=true" isdate>
 			</div>
-		</div>
+		</div>	
 	</div>
+
 	
 
 	<div style="margin-top: 100px;" ng-if="data.refunded" >
