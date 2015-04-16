@@ -99,7 +99,7 @@
 				<div class="col-sm-6">Order Id: {{data.gateway_data.OrderId}}</div>
 			</div>
 			<div class="row" ng-if="data.crm_data.IsRecurring || data.crm_data.IsFraud">
-				<div class="col-sm-6">Is Recurring: {{data.crm_data.IsRecurring}}</div>
+				<div class="col-sm-6">Order Date: {{data.crm_data.OrderDate | date:'MMM dd, yyyy'}}</div>
 				<div class="col-sm-6">Is Fraud: {{data.crm_data.IsFraud}}</div>
 			</div>
 			<div class="row" ng-if="data.crm_data.ProductCrmName || data.crm_data.ProductName">
@@ -114,10 +114,27 @@
 				<div class="col-sm-6">RMA: {{data.crm_data.Rma}}</div>
 				<div class="col-sm-6">Currency: {{data.gateway_data.Currency}}</div>
 			</div>
-		</div>
-					
+			<div class="row" ng-if="data.gateway_data.TransAmout">
+				<div class="col-sm-6">Order Amount: {{data.gateway_data.TransAmt}}</div>
+				<div class="col-sm-6"></div>
+			</div>
+		</div>			
 	</div>
 </div>
+
+<div class="review-block" ng-if="data.recurring">
+	<h4>Recurring</h4>
+	<div class="row">
+		<div class="col-sm-2"><span class="glyphicon glyphicon-refresh"></span></div>
+		<div class="col-sm-10">
+			<div class="row">
+				<div class="col-sm-6">Is Recurring: {{data.crm_data.IsRecurring}}</div>
+				<div class="col-sm-6">Cancel Date: {{data.crm_data.CancelDateSystem | date:'MMM dd, yyyy'}}</div>
+			</div>
+		</div>
+	</div>
+</div>
+
 
 <div class="review-block" ng-if="data.refunded">
 	<h4>Refund</h4>
@@ -133,7 +150,7 @@
 </div>
 
 
-<div class="review-block" ng-if="data.settings.shipped">
+<div class="review-block" ng-if="data.shipped">
 	<h4>Shipping</h4>
 	<div class="row">
 		<div class="col-sm-2"><span class="glyphicon glyphicon-send"></span></div>
@@ -141,7 +158,7 @@
 			<div class="row">
 				<div class="col-sm-6">
 					{{data.crm_data.DeliveryAddr1}}<span ng-if="data.crm_data.DeliveryAddr2">, {{data.crm_data.DeliveryAddr2}}</span><br/>
-					{{data.crm_data.DeliveryCity}}, {{data.crm_data.DeliveryState}} {{data.crm_data.DeliveryPostal}}<br/>
+					{{data.crm_data.DeliveryCity}}<span ng-if="data.crm_data.DeliveryState || data.crm_data.DeliveryPostal">, {{data.crm_data.DeliveryState}} {{data.crm_data.DeliveryPostal}}</span><br/>
 					{{data.crm_data.DeliveryCountry}}
 				</div>
 				<div class="col-sm-6">
@@ -150,6 +167,9 @@
 					</div>
 					<div>Tracking: {{data.shipping_data.TrackingNum}}</div>	
 				</div>	
+			</div>
+			<div class="row" ng-if="data.shipping_data.TrackingSum">
+				<div class="col-sm-12">{{data.shipping_data.TrackingSum}}</div>
 			</div>
 		</div>
 	</div>

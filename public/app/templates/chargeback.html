@@ -72,7 +72,7 @@
 
 				<div class="row" ng-if="data.portal_data.MidNumber">
 					<div class="col-xs-4" style="text-align: right;">Amount:</div>
-					<div class="col-xs-8">{{data.portal_data.ChargebackAmt | currency}}</div>
+					<div class="col-xs-8">{{data.portal_data.ChargebackAmt | currency}} {{data.gateway_data.Currency}}</div>
 				</div>
 
 				<div class="row" ng-if="data.portal_data.CcPrefix || data.portal_data.CcSuffix">

@@ -56,10 +56,11 @@ module.exports = function(app) {
 			'CvvStatus'        : String,
 			'OrderId'          : String,
 			'TransHistory'     : String,
+			'TransAmt'		   : Number,
 			'TransId'          : String,
 			'TransStatus'      : String,
 			'TransType'        : String,
-			'TransDate'        : Date,
+			'TransDate'        : Date
 		},
 		'crm_data' : {
 			'OrderDate'          : Date,
