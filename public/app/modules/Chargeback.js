@@ -199,6 +199,7 @@
 
 		var save = function(halt_save_on_error) {
 			$scope.$broadcast('show-errors-check-validity');
+			if (!$scope.cbForm) { return; }
 			if ($scope.cbForm.$valid) {
 				$scope.settings.disableReview = false;
 			} else {
