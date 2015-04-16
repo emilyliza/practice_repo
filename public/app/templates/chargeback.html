@@ -37,7 +37,7 @@
 					
 				</div>
 				
-				<div class="side-cbinfo-desc">Data received regarding this chargeback case. Use this information to locate any missing data.</div>
+				<div class="side-cbinfo-desc">Data received regarding this <b>{{data.internal_type}}</b> case. Use this information to locate any missing data.</div>
 
 				<div class="row">
 					<div class="col-xs-4" style="text-align: right;">Status:</div>
@@ -67,7 +67,7 @@
 
 				<div class="row" ng-if="data.gateway_data.FullName">
 					<div class="col-xs-4" style="text-align: right;">Customer:</div>
-					<div class="col-xs-8">{{data.gateway_data.FullName}}</div>
+					<div class="col-xs-8">{{data.gateway_data.FullName || ""}}</div>
 				</div>
 
 				<div class="row" ng-if="data.portal_data.MidNumber">

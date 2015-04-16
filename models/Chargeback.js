@@ -21,6 +21,7 @@ module.exports = function(app) {
 		"updatedOn": { "type": Date },
 		"chargebackDate": { "type": Date },
 		"type": { "type": String },		// an enum of cp or cnp
+		"internal_type": { "type": String, "default": "Chargeback" },	// Retrieval-Request, Chargeback, Pre-Arbitration
 		"manual": { "type": Boolean, 'default': false },
 		"refunded": { "type": Boolean },
 		"shipped": { "type": Boolean },
@@ -196,7 +197,7 @@ module.exports = function(app) {
 				this.gateway_data.FirstName = name_chunks[0];
 				this.gateway_data.LastName = name_chunks[name_chunks.length - 1];
 			}
-		} else {
+		} else if (this.isModified('gateway_data.FirstName') || this.isModified('gateway_data.LastName')) {
 			this.gateway_data.FullName = this.gateway_data.FirstName + ' ' + this.gateway_data.LastName;
 		}
 		next();

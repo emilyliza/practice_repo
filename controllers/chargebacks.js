@@ -307,6 +307,7 @@ module.exports = function(app) {
 		req.assert('portal_data.CcSuffix', 'A valid credit card suffix is required.').len(4,4).isNumeric();
 		req.assert('portal_data.ReasonCode', 'A reason code is required.').isAlphanumeric();
 		req.assert('portal_data.ReasonText', 'Some reason text is required.').notEmpty();
+		req.assert('internal_type', 'Must specify a type.').notEmpty();
 		req.assert('chargebackDate', 'A valid chargeback date is required.').isDate();
 
 		var errors = req.validationErrors();
@@ -348,6 +349,7 @@ module.exports = function(app) {
 			chargeback.gateway_data = cb.gateway_data;
 			chargeback.status = "New";
 			chargeback.manual = true;
+			chargeback.internal_type = cb.internal_type;
 
 			if (!chargeback.gateway_data.TransType) {
 				chargeback.gateway_data.TransType = "Card Settle";
