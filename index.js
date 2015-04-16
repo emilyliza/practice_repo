@@ -90,7 +90,7 @@ app.use(expressValidator({
 app.use(device.capture());
 app.use(methodOverride());
 
-if(process.env.NODE_ENV == 'production') {
+if(process.env.NODE_ENV == 'production' || process.env.NODE_ENV == "staging") {
 	app.use('/', express.static(  __dirname + '/dist', { maxAge: 10 }));
 } else {
 	app.use('/', express.static(  __dirname + '/public', { maxAge: 10 }));
@@ -150,6 +150,8 @@ if (process.env.NODE_ENV == "local") {
 	log.info('======= Local Environment =======');
 } else if (process.env.NODE_ENV == "production") {
 	log.info('======= Production Environment =======');
+} else if (process.env.NODE_ENV == "staging") {
+	log.info('======= Staging Environment =======');
 }
 
 log.info('Node Version: ' + process.version);
@@ -199,7 +201,7 @@ require('./controllers/admin/login')(app);
 
 // for admin area
 app.get(/^\/admin(.*)$/, function(req, res, next) {
-	if(process.env.NODE_ENV == 'production') {
+	if(process.env.NODE_ENV == 'production' || process.env.NODE_ENV == 'staging') {
 		res.sendfile( __dirname + '/dist/admin.html'); 
 	} else {
 		res.sendfile( __dirname + '/public/admin.html'); 
@@ -207,7 +209,7 @@ app.get(/^\/admin(.*)$/, function(req, res, next) {
 });
 
 
-if(process.env.NODE_ENV == 'production') {
+if(process.env.NODE_ENV == 'production' || process.env.NODE_ENV == 'staging') {
 	app.use(function(req, res){
 		res.sendfile( __dirname + '/dist/index.html'); 
 	});

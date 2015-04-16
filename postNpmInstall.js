@@ -2,7 +2,7 @@
 var env = process.env.NODE_ENV,
 	exec = require('child_process').exec;
 
-if (env !== 'production') {
+if (env !== 'production' && env != "staging") {
     
     exec('bower install', function(err, stdout, stderr) {
 		console.log(stdout);
