@@ -21,6 +21,7 @@ module.exports = function(app) {
 		"updatedOn": { "type": Date },
 		"chargebackDate": { "type": Date },
 		"type": { "type": String },		// an enum of cp or cnp
+		"internal_type": { "type": String, "default": "Chargeback" },	// Retrieval-Request, Chargeback, Pre-Arbitration
 		"manual": { "type": Boolean, 'default': false },
 		"refunded": { "type": Boolean },
 		"shipped": { "type": Boolean },

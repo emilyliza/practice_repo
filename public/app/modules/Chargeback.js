@@ -111,6 +111,9 @@
 		if ($scope.data.gateway_data && !$scope.data.gateway_data.TransDate) {
 			$scope.data.gateway_data.TransDate = "";
 		}
+		if (!$scope.data.internal_type) {
+			$scope.data.internal_type = "Retrieval-Request";
+		}
 
 		$scope.settings.shipping_companies = ["USPS", "Fedex", "UPS", "DHL"];
 		$scope.settings.cctypes = [
@@ -126,6 +129,11 @@
 			"UNIONPAY",
 			"DINERS",
 			"JCB"
+		];
+		$scope.settings.internal_types = [
+			"Retrieval-Request",
+			"Chargeback",
+			"Pre-Arbitration"
 		];
 
 		$scope.$watch("data", function(newValue, oldValue){
