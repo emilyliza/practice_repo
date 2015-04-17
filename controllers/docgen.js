@@ -17,7 +17,7 @@ module.exports = function(app) {
 
 		res.header('Content-Type', 'application/json');
 
-		_( Chargeback.findById( req.body._id )
+		_( Chargeback.findById( req.params._id )
 			.stream() )
 		.stopOnError(next)
 		.otherwise(function() {
