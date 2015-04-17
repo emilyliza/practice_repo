@@ -303,6 +303,7 @@ module.exports = function(app) {
 
 		req.assert('portal_data.MidNumber', 'A mid number is required.').isAlphanumeric();
 		req.assert('portal_data.ChargebackAmt', 'An amount is required.').isFloat();
+		req.assert('gateway_data.TransAmt', 'Must be an amount.').optional().isFloat();
 		req.assert('portal_data.CcPrefix', 'A valid credit card prefix is required.').len(1,6).isNumeric();
 		req.assert('portal_data.CcSuffix', 'A valid credit card suffix is required.').len(4,4).isNumeric();
 		req.assert('portal_data.ReasonCode', 'A reason code is required.').isAlphanumeric();
@@ -410,6 +411,7 @@ module.exports = function(app) {
 
 		req.assert('portal_data.MidNumber', 'A mid number is required.').isAlphanumeric();
 		req.assert('portal_data.ChargebackAmt', 'An amount is required.').isFloat();
+		req.assert('gateway_data.TransAmt', 'Must be an amount.').optional().isFloat();
 		req.assert('portal_data.CcPrefix', 'A valid credit card prefix is required.').len(1,6).isNumeric();
 		req.assert('portal_data.CcSuffix', 'A valid credit card suffix is required.').len(4,4).isNumeric();
 		req.assert('portal_data.ReasonCode', 'A reason code is required.').isAlphanumeric();
