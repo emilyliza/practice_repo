@@ -1,20 +1,24 @@
 
-<div class="row" style="margin-bottom: 30px; background-color: #efefef; border-radius: 5px;" ng-if="data.status == 'Sent'">
-	<div class="col-sm-12" style="padding: 24px; text-align: center;">
-		<a class="btn btn-success pull-left" ng-click="methods.wonlost(true, 'Are you sure you want to mark this chargeback as won?', 'Yes, we won!', 'No, cancel.')">Won</a> <a class="btn btn-danger pull-right" ng-click="methods.wonlost(false, 'Are you sure you want to mark this chargeback as lost?', 'Yes, we lost!', 'No, cancel.')">Lost</a>
-		<span style="font-size: 18px;">Report Status</span>
+<div ng-if="data.status == 'New' || data.status == 'In-Progress'">
+
+	<div class="row" style="margin-bottom: 30px; background-color: #efefef; border-radius: 5px;" ng-if="data.status == 'Sent'">
+		<div class="col-sm-12" style="padding: 24px; text-align: center;">
+			<a class="btn btn-success pull-left" ng-click="methods.wonlost(true, 'Are you sure you want to mark this chargeback as won?', 'Yes, we won!', 'No, cancel.')">Won</a> <a class="btn btn-danger pull-right" ng-click="methods.wonlost(false, 'Are you sure you want to mark this chargeback as lost?', 'Yes, we lost!', 'No, cancel.')">Lost</a>
+			<span style="font-size: 18px;">Report Status</span>
+		</div>
 	</div>
-</div>
 
 
-<div class="alert alert-warning" style="margin-bottom: 30px;" ng-show="data.type == 'cnp' && (!data.gateway_data.AvsStatus || !data.gateway_data.CvvStatus || (data.shipped && (!data.shipping_data.TrackingNum || !data.shipping_data.TrackingSum )))">
-	<strong>WARNING!</strong> 
-	Your odds of success are very low when you do not include the following:<br/>
-		<div style="margin-left: 90px; font-weight: bold;" ng-if="!data.gateway_data.AvsStatus">&bullet; AVS code</div>
-		<div style="margin-left: 90px; font-weight: bold;" ng-if="!data.gateway_data.CvvStatus">&bullet; CVV code</div>
-		<div style="margin-left: 90px; font-weight: bold;" ng-if="!data.shipping_data.TrackingNum">&bullet; Shipping Tracking Number</div>
-		<div style="margin-left: 90px; font-weight: bold;" ng-if="!data.shipping_data.TrackingSum">&bullet; Shipping Tracking Summary</div>
-	<a ui-sref="chargeback.data">&lt; Go back and fix</a> 
+	<div class="alert alert-warning" style="margin-bottom: 30px;" ng-show="data.type == 'cnp' && (!data.gateway_data.AvsStatus || !data.gateway_data.CvvStatus || (data.shipped && (!data.shipping_data.TrackingNum || !data.shipping_data.TrackingSum )))">
+		<strong>WARNING!</strong> 
+		Your odds of success are very low when you do not include the following:<br/>
+			<div style="margin-left: 90px; font-weight: bold;" ng-if="!data.gateway_data.AvsStatus">&bullet; AVS code</div>
+			<div style="margin-left: 90px; font-weight: bold;" ng-if="!data.gateway_data.CvvStatus">&bullet; CVV code</div>
+			<div style="margin-left: 90px; font-weight: bold;" ng-if="!data.shipping_data.TrackingNum">&bullet; Shipping Tracking Number</div>
+			<div style="margin-left: 90px; font-weight: bold;" ng-if="!data.shipping_data.TrackingSum">&bullet; Shipping Tracking Summary</div>
+		<a ui-sref="chargeback.data">&lt; Go back and fix</a> 
+	</div>
+
 </div>
 
 
