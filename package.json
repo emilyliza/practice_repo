@@ -28,7 +28,7 @@
     "method-override": "2.0.2",
     "morgan": "1.5.1",
     "moment": "2.8.3",
-    "jsonwebtoken": "4.2.2",
+    "jsonwebtoken": "5.0.0",
     "express-csv": "0.6.0",
     "ejs": "0.8.5",
     "postmark": "1.0.0",
