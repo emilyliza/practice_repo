@@ -249,6 +249,7 @@
 				i++;
 			});
 			$scope.methods.ds();
+			$scope.methods.checkForReceipt();
 		};
 
 		$scope.methods.submit = function(msg, confirmbtn, cancelbtn) {
@@ -295,6 +296,7 @@
 			$scope.uploaders['receipt'].setUploads($scope.data.attachments);
 			$scope.uploaders['receipt'].onCompleteAll = function() {
 				$scope.methods.ds();
+				$scope.methods.checkForReceipt();
 			};
 
 			$scope.uploaders['add'] = new FileUploader({
@@ -325,6 +327,17 @@
 			};
 		};
 		addUploaders();
+
+		$scope.settings.has_receipt = false;
+		$scope.methods.checkForReceipt = function() {
+			$scope.settings.has_receipt = false;
+			_.each($scope.data.attachments, function(a) {
+				if (a.type == "receipt") {
+					$scope.settings.has_receipt = true;
+				}
+			});
+		};
+		$scope.methods.checkForReceipt();
 
 
 		$scope.methods.copyBilling = function() {
