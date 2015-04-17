@@ -322,6 +322,23 @@ module.exports = function(app) {
 		if (!req.body.gateway_data.CcType && !Util.detectCardType( req.body.portal_data.CcPrefix + "11010101" + req.body.portal_data.CcSuffix )) {
 			return res.json(400, { 'CcPrefix': 'Invalid credit card prefix.' });	
 		}
+
+		if (req.body.gateway_data && req.body.gateway_data.AvsStatus) {
+			req.body.gateway_data.AvsStatus = req.body.gateway_data.AvsStatus.toUpperCase();
+			// codes from http://www.emsecommerce.net/avs_cvv2_response_codes.htm
+			if (!lodash.includes(['X', 'Y', 'A', 'W', 'Z', 'N', 'U', 'R', 'E', 'S', 'D', 'M', 'B', 'P', 'C', 'I', 'G'], req.body.gateway_data.AvsStatus )) {
+				return res.json(400, { 'AvsStatus': 'Invalid AVS code.' });	
+			}
+		}
+
+		if (req.body.gateway_data && req.body.gateway_data.CvvStatus) {
+			req.body.gateway_data.CvvStatus = req.body.gateway_data.CvvStatus.toUpperCase();
+			// codes from http://www.emsecommerce.net/avs_cvv2_response_codes.htm
+			if (!lodash.includes(['M', 'N', 'P', 'S', 'U'], req.body.gateway_data.CvvStatus )) {
+				return res.json(400, { 'CvvStatus': 'Invalid CVV code.' });	
+			}
+		}
+
 		
 		$()
 		.seq(function() {
@@ -406,6 +423,22 @@ module.exports = function(app) {
 
 		if ((!req.body.portal_data.CcPrefix || req.body.portal_data.CcPrefix.length < 4) && !req.body.gateway_data.CcType) {
 			return res.json(400, { 'CcPrefix': 'Enter 4 digits or select a credit card type.' });	
+		}
+
+		if (req.body.gateway_data && req.body.gateway_data.AvsStatus) {
+			req.body.gateway_data.AvsStatus = req.body.gateway_data.AvsStatus.toUpperCase();
+			// codes from http://www.emsecommerce.net/avs_cvv2_response_codes.htm
+			if (!lodash.includes(['X', 'Y', 'A', 'W', 'Z', 'N', 'U', 'R', 'E', 'S', 'D', 'M', 'B', 'P', 'C', 'I', 'G'], req.body.gateway_data.AvsStatus )) {
+				return res.json(400, { 'AvsStatus': 'Invalid AVS code.' });	
+			}
+		}
+
+		if (req.body.gateway_data && req.body.gateway_data.CvvStatus) {
+			req.body.gateway_data.CvvStatus = req.body.gateway_data.CvvStatus.toUpperCase();
+			// codes from http://www.emsecommerce.net/avs_cvv2_response_codes.htm
+			if (!lodash.includes(['M', 'N', 'P', 'S', 'U'], req.body.gateway_data.CvvStatus )) {
+				return res.json(400, { 'CvvStatus': 'Invalid CVV code. M, N, P, S, or U' });	
+			}
 		}
 
 
