@@ -114,8 +114,8 @@
 
 			<div class="form-group btns" style="text-align: center; margin-top: 40px;" ng-if="settings.state.current.name == 'chargeback.review'">
 				<button type="button" class="btn btn-success" ng-if="data.status == 'In-Progress'" style="margin-right: 20px;" ng-click="methods.submit('Are you sure you want to submit this chargeback dispute?', 'Yes, submit it!', 'No, keep working.')" class="btn btn-danger">Submit Chargeback Dispute</button>
-				<button type="button" ng-if="data.status == 'Won' || data.status == 'Lost' || data.status == 'Sent'" ng-click="methods.download('/images/example.0511cc.pdf')" class="btn btn-info">Download Chargeback PDF</button>
-
+				<button type="button" ng-if="data.docgen" ng-click="methods.download('{{data.docgen}}')" class="btn btn-info">Download Chargeback PDF</button>
+				<button type="button" ng-if="(data.status == 'Won' || data.status == 'Lost' || data.status == 'Sent') && !data.docgen" class="btn btn-default">PDF Document is Processing</button>
 			</div>
 		</div>
 
