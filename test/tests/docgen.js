@@ -15,10 +15,11 @@ module.exports = function(app) {
 		var cbs = [];
 		
 		
-		describe('Search chargebacks where docgen_complete=false', function(){
+		describe('Search chargebacks where docgen does not exist', function(){
 			it('should return arary since false is default', function(done){
 				_( Chargeback.find()
-					.where('docgen_complete', false)
+					.where('docgen')
+					.exists(false)
 					.lean()
 					.stream() )
 				.stopOnError(function(err) { throw err; })
@@ -48,8 +49,8 @@ module.exports = function(app) {
 				completed.should.have.property('_id');
 				done();
 			});
-			it('should have docgen_complete=true', function(done){
-				completed.should.have.property('docgen_complete', true);
+			it('should have docgen url', function(done){
+				completed.should.have.property('docgen').startWith(process.env.DOCGEN);
 				done();
 			});
 		});

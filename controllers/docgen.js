@@ -25,7 +25,7 @@ module.exports = function(app) {
 			return res.json(400, { '_id': 'Chargeback does not exist.' } );
 		})
 		.map(function(cb) {
-			cb.docgen_complete = true;
+			cb.docgen = process.env.DOCGEN + cb._id + ".pdf";
 			return cb;
 		})
 		.flatMap(Util.saveStream)

@@ -86,6 +86,7 @@ MAIL_FROM_NAME=Chargeback
 MAIL_FROM_EMAIL=pull.user@chargeback.com
 CODEDEPLOY=
 CODEDEPLOY_SECRET=
+DOCGEN=https://s3-us-west-2.amazonaws.com/cart-pdfs/
 
 To run tests locally, we'll also need .env-test installed with a copy of the values above. However,
 use a test db when running tests at the tests clear out the entire contents to run tests from scratch.
