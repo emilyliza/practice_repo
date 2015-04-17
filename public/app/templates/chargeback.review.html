@@ -7,6 +7,24 @@
 </div>
 
 
+<div class="alert alert-warning" style="margin-bottom: 30px;" ng-show="data.type == 'cnp' && (!data.gateway_data.AvsStatus || !data.gateway_data.CvvStatus || (data.shipped && (!data.shipping_data.TrackingNum || !data.shipping_data.TrackingSum )))">
+	<strong>WARNING!</strong> 
+	Your odds of success are very low when you do not include the following:<br/>
+		<div style="margin-left: 90px; font-weight: bold;" ng-if="!data.gateway_data.AvsStatus">&bullet; AVS code</div>
+		<div style="margin-left: 90px; font-weight: bold;" ng-if="!data.gateway_data.CvvStatus">&bullet; CVV code</div>
+		<div style="margin-left: 90px; font-weight: bold;" ng-if="!data.shipping_data.TrackingNum">&bullet; Shipping Tracking Number</div>
+		<div style="margin-left: 90px; font-weight: bold;" ng-if="!data.shipping_data.TrackingSum">&bullet; Shipping Tracking Summary</div>
+	<a ui-sref="chargeback.data">&lt; Go back and fix</a> 
+</div>
+
+
+<div class="alert alert-warning alert-dismissable" style="margin-bottom: 30px;" ng-show="data.type == 'cp' && !settings.has_receipt">
+	<strong>WARNING!</strong> You have entered a card present transaction and have not uploaded a sales receipt. Your odds of success are very low without uploading a sales receipt.<br/>
+	<a ui-sref="chargeback.data">&lt; Go back and fix</a> 
+</div>
+
+
+
 <div class="review-block first-block">
 	<h4>Chargeback</h4>
 	<div class="row">
