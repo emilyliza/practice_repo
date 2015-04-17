@@ -193,6 +193,7 @@ require('./controllers/forgot')(app);
 require('./controllers/processed')(app);
 require('./controllers/submitchargeback')(app);
 require('./controllers/cctype')(app);
+require('./controllers/docgen')(app);
 
 // Admin endpoints
 require('./controllers/admin/users')(app);

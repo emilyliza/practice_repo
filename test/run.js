@@ -35,6 +35,7 @@ describe('Initializing Tests',function(){
 		require('./tests/reports')(app);
 		require('./tests/cardTypes')(app);
 		require('./tests/s3')(app);
+		require('./tests/docgen')(app);
 	});
 	after(function (done) {
 		app.settings.db.connection.close();

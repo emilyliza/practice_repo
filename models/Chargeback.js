@@ -22,6 +22,7 @@ module.exports = function(app) {
 		"chargebackDate": { "type": Date },
 		"type": { "type": String },		// an enum of cp or cnp
 		"internal_type": { "type": String, "default": "Chargeback" },	// Retrieval-Request, Chargeback, Pre-Arbitration
+		"docgen": { "type": String },			// had doc-gen been completed and url of PDF
 		"manual": { "type": Boolean, 'default': false },
 		"refunded": { "type": Boolean },
 		"shipped": { "type": Boolean },
