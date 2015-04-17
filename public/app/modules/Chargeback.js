@@ -230,8 +230,12 @@
 
 		
 		
-		$scope.methods.download = function(file) {
-			window.open( "http://dksl2s5vm2cnl.cloudfront.net" + file, "_blank");
+		$scope.methods.download = function() {
+			if ($scope.data.docgen) {
+				window.open( $scope.data.docgen, "_blank");
+			} else {
+				alert('Docgen URL does not exist.');
+			}
 		};
 		
 
