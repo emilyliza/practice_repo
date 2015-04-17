@@ -1,13 +1,12 @@
 
-<div ng-if="data.status == 'New' || data.status == 'In-Progress'">
-
-	<div class="row" style="margin-bottom: 30px; background-color: #efefef; border-radius: 5px;" ng-if="data.status == 'Sent'">
-		<div class="col-sm-12" style="padding: 24px; text-align: center;">
-			<a class="btn btn-success pull-left" ng-click="methods.wonlost(true, 'Are you sure you want to mark this chargeback as won?', 'Yes, we won!', 'No, cancel.')">Won</a> <a class="btn btn-danger pull-right" ng-click="methods.wonlost(false, 'Are you sure you want to mark this chargeback as lost?', 'Yes, we lost!', 'No, cancel.')">Lost</a>
-			<span style="font-size: 18px;">Report Status</span>
-		</div>
+<div class="row" style="margin-bottom: 30px; background-color: #efefef; border-radius: 5px;" ng-if="data.status == 'Sent'">
+	<div class="col-sm-12" style="padding: 24px; text-align: center;">
+		<a class="btn btn-success pull-left" ng-click="methods.wonlost(true, 'Are you sure you want to mark this chargeback as won?', 'Yes, we won!', 'No, cancel.')">Won</a> <a class="btn btn-danger pull-right" ng-click="methods.wonlost(false, 'Are you sure you want to mark this chargeback as lost?', 'Yes, we lost!', 'No, cancel.')">Lost</a>
+		<span style="font-size: 18px;">Report Status</span>
 	</div>
+</div>
 
+<div ng-if="data.status == 'New' || data.status == 'In-Progress'">
 
 	<div class="alert alert-warning" style="margin-bottom: 30px;" ng-show="data.type == 'cnp' && (!data.gateway_data.AvsStatus || !data.gateway_data.CvvStatus || (data.shipped && (!data.shipping_data.TrackingNum || !data.shipping_data.TrackingSum )))">
 		<strong>WARNING!</strong> 
@@ -19,13 +18,13 @@
 		<a ui-sref="chargeback.data">&lt; Go back and fix</a> 
 	</div>
 
+	<div class="alert alert-warning alert-dismissable" style="margin-bottom: 30px;" ng-show="data.type == 'cp' && !settings.has_receipt">
+		<strong>WARNING!</strong> You have entered a card present transaction and have not uploaded a sales receipt. Your odds of success are very low without uploading a sales receipt.<br/>
+		<a ui-sref="chargeback.data">&lt; Go back and fix</a> 
+	</div>
+
 </div>
 
-
-<div class="alert alert-warning alert-dismissable" style="margin-bottom: 30px;" ng-show="data.type == 'cp' && !settings.has_receipt">
-	<strong>WARNING!</strong> You have entered a card present transaction and have not uploaded a sales receipt. Your odds of success are very low without uploading a sales receipt.<br/>
-	<a ui-sref="chargeback.data">&lt; Go back and fix</a> 
-</div>
 
 
 
