@@ -39,7 +39,7 @@ module.exports = function(app) {
 					'MessageBody': JSON.stringify(cb)
 				};
 				sqs.sendMessage(msg_body, function(err,data) {
-					push(err, data);
+					push(err, cb);
 					push(null, _.nil);
 				});
 			});
