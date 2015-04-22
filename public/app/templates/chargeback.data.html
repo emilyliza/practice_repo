@@ -261,6 +261,22 @@
 			</div>
 		</div>
 	</div>
+	<div class="row">
+		<div class="col-md-6">
+			<div class="form-group" show-errors>
+				<label>Authorization Code</label>
+				<input name="AuthCode" type="text" class="form-control" pop-show="{{errors.AuthCode}}" pop="{{errors.AuthCode}}" pop-placement="right" ng-model="data.gateway_data.AuthCode" placeholder="" ng-change="methods.ds()">
+			</div>
+		</div>
+		<div class="col-md-6">
+			<div class="form-group" show-errors>
+				<label></label>
+				<div class="form-control-static" style="background-color: #efefef;"></div>
+				
+			</div>
+		</div>
+	</div>
+
 	
 
 	<div style="margin-top: 100px;" ng-if="data.recurring" >
