@@ -232,7 +232,13 @@
 		
 		$scope.methods.download = function() {
 			if ($scope.data.docgen) {
-				window.open( $scope.data.docgen, "_blank");
+				ChargebackService.getLink( $scope.data._id ).then(function(res) {
+					if (res.data.url) {
+						window.open( res.data.url, "_blank");		
+					} else {
+						console.log('Bug in getLink()');
+					}
+				});
 			} else {
 				alert('Docgen URL does not exist.');
 			}
@@ -384,6 +390,10 @@
 
 		this.getCardType = function(card) {
 			return $http.get('/api/v1/cctype/' + card);
+		};
+
+		this.getLink = function(_id) {
+			return $http.get('/api/v1/s3-link/' + _id);
 		};
 
 		this.save = function(data) {
