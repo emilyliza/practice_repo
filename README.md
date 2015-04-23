@@ -235,7 +235,7 @@ There are logs for forever (process manager), regular node, and errors.
 Errors are being sent to Airbrake.io here: [https://cartdev.airbrake.io](https://cartdev.airbrake.io). This
 services is okay, not sure it is worth keeping, but can be used to detect some important errors.
 
-Username: justin@infoshreve.com, Password: achaiV0ien6iech
+Username: chargeback@infoshreve.com, Password: achaiV0ien6iech
 
 Free account only allows one user.
 
