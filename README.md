@@ -43,6 +43,14 @@ We have preconfigured `npm` to automatically run `bower` so we can simply do:
 npm install
 ```
 
+If you get an error like "/bin/sh: 1: bower: not found", then run:
+
+```
+npm install -g bower
+```
+
+to install the bower package.
+
 Behind the scenes this will also call `bower install`.  You should find that you have two new
 folders in your project.
 
