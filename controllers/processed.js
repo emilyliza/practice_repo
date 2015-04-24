@@ -1,7 +1,7 @@
 module.exports = function(app) {
 
-	var _ = require('underscore'),
-		$ = require('seq'),
+	var _ = require('highland'),
+		lodash = require('lodash'),
 		Chargeback = app.Models.get('Chargeback'),
 		Upload = app.Models.get('Upload'),
 		log = app.get('log');
@@ -11,18 +11,29 @@ module.exports = function(app) {
 
 		log.log(req.body);
 		
-		$()
-		.seq(function() {
-			Chargeback.findById(req.params._id, this);
+		// wrap aws into streamable function
+		function process(data) {
+			return _(function (push, next) {
+				Upload.setProcessed(data, req.body.prefix, function(err,d) {
+					push(err, {'success': true});
+					push(null, _.nil);
+				});
+			});
+		}
+
+
+		_(
+			Chargeback
+			.findById(req.params._id)
+			.stream()
+		)
+		.stopOnError(next)
+		.otherwise(function() {
+			return res.send(404);
 		})
-		.seq(function(data) {
-			Upload.setProcessed(data, req.body.prefix, this);
-		})
-		.seq(function() {
-			log.log('Processed Photos!');
-			return res.json({'success': true});
-		})
-		.catch(next);
+		.flatMap(process)
+		.map( JSON.stringify )
+		.pipe(res);
 
 	});
 
