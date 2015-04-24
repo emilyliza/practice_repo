@@ -1,7 +1,7 @@
 module.exports = function(app) {
 
-	var _ = require('underscore'),
-		$ = require('seq'),
+	var _ = require('highland'),
+		lodash = require('lodash'),
 		mw = require('./middleware'),
 		moment = require('moment'),
 		Util = require('../lib/Util'),
@@ -29,46 +29,53 @@ module.exports = function(app) {
 
 		var sqs = new AWS.SQS();
 
-		$()
-		.seq('cb', function() {
-			Chargeback.findById( req.body._id , this);	
-		})
-		.seq(function() {
-			
-			if (!this.vars.cb) {
-				log.log('Chargeback does not exist.');
-				return res.json(400, { '_id': 'Chargeback does not exist.' } );
-			}
-
-			var msg_body = {
-				'QueueUrl': "https://sqs." + process.env.AWS_REGION + ".amazonaws.com/" + process.env.SQS_QUEUE_DOCGEN,
-				'DelaySeconds': 0,	// AWS SQS delay
-				'MessageBody': JSON.stringify(this.vars.cb)
-			};
-
-			sqs.sendMessage(msg_body, this);
 		
+		// wrap aws into streamable function
+		function send(cb) {
+			return _(function (push, next) {
+				var msg_body = {
+					'QueueUrl': "https://sqs." + process.env.AWS_REGION + ".amazonaws.com/" + process.env.SQS_QUEUE_DOCGEN,
+					'DelaySeconds': 0,	// AWS SQS delay
+					'MessageBody': JSON.stringify(cb)
+				};
+				sqs.sendMessage(msg_body, function(err,data) {
+					push(err, cb);
+					push(null, _.nil);
+				});
+			});
+		}
+
+
+		res.header('Content-Type', 'application/json');
+
+		_( Chargeback.findById( req.body._id )
+			.stream() )
+		.stopOnError(next)
+		.otherwise(function() {
+			log.log('Chargeback does not exist.');
+			return res.json(400, { '_id': 'Chargeback does not exist.' } );
 		})
-		.seq(function() {
-
-			// update status
-			this.vars.cb.status = 'Sent';
-			this.vars.cb.save(this);
-
+		.map(function(cb) {
+			// add callback so docgen can notify when doc is ready.
+			var url = "http://localhost:5000/api/v1/docgen/" + cb._id;
+			if (process.env.NODE_ENV == "staging") {
+				url = "http://cartdev.chargeback.com/api/v1/docgen/" + cb._id;
+			} else if (process.env.NODE_ENV == "production") {
+				url = "http://cart.chargeback.com/api/v1/docgen/" + cb._id;
+			}
+			cb.set('callback', url, { 'strict': false })
+			return cb;
 		})
-		.seq(function(cb) {
-
-			// cache busting on static api end point
-			res.header('Content-Type', 'application/json');
-			res.header('Cache-Control', 'no-cache, private, no-store, must-revalidate, max-stale=0, post-check=0, pre-check=0');
-			return res.json(cb);
-
+		.flatMap(send)
+		.map(function(cb) {
+			cb.status = 'Sent';
+			return cb;
 		})
-		.catch(next);
+		.flatMap(Util.saveStream)
+		.map( JSON.stringify )
+		.pipe(res);
+
 
 	});
-
-	
-
 
 };

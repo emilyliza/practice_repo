@@ -111,6 +111,9 @@
 		if ($scope.data.gateway_data && !$scope.data.gateway_data.TransDate) {
 			$scope.data.gateway_data.TransDate = "";
 		}
+		if (!$scope.data.internal_type) {
+			$scope.data.internal_type = "Retrieval-Request";
+		}
 
 		$scope.settings.shipping_companies = ["USPS", "Fedex", "UPS", "DHL"];
 		$scope.settings.cctypes = [
@@ -126,6 +129,11 @@
 			"UNIONPAY",
 			"DINERS",
 			"JCB"
+		];
+		$scope.settings.internal_types = [
+			"Retrieval-Request",
+			"Chargeback",
+			"Pre-Arbitration"
 		];
 
 		$scope.$watch("data", function(newValue, oldValue){
@@ -191,6 +199,7 @@
 
 		var save = function(halt_save_on_error) {
 			$scope.$broadcast('show-errors-check-validity');
+			if (!$scope.cbForm) { return; }
 			if ($scope.cbForm.$valid) {
 				$scope.settings.disableReview = false;
 			} else {
@@ -221,8 +230,18 @@
 
 		
 		
-		$scope.methods.download = function(file) {
-			window.open( "http://dksl2s5vm2cnl.cloudfront.net" + file, "_blank");
+		$scope.methods.download = function() {
+			if ($scope.data.docgen) {
+				ChargebackService.getLink( $scope.data._id ).then(function(res) {
+					if (res.data.url) {
+						window.open( res.data.url, "_blank");		
+					} else {
+						console.log('Bug in getLink()');
+					}
+				});
+			} else {
+				alert('Docgen URL does not exist.');
+			}
 		};
 		
 
@@ -240,6 +259,7 @@
 				i++;
 			});
 			$scope.methods.ds();
+			$scope.methods.checkForReceipt();
 		};
 
 		$scope.methods.submit = function(msg, confirmbtn, cancelbtn) {
@@ -286,6 +306,7 @@
 			$scope.uploaders['receipt'].setUploads($scope.data.attachments);
 			$scope.uploaders['receipt'].onCompleteAll = function() {
 				$scope.methods.ds();
+				$scope.methods.checkForReceipt();
 			};
 
 			$scope.uploaders['add'] = new FileUploader({
@@ -316,6 +337,17 @@
 			};
 		};
 		addUploaders();
+
+		$scope.settings.has_receipt = false;
+		$scope.methods.checkForReceipt = function() {
+			$scope.settings.has_receipt = false;
+			_.each($scope.data.attachments, function(a) {
+				if (a.type == "receipt") {
+					$scope.settings.has_receipt = true;
+				}
+			});
+		};
+		$scope.methods.checkForReceipt();
 
 
 		$scope.methods.copyBilling = function() {
@@ -358,6 +390,10 @@
 
 		this.getCardType = function(card) {
 			return $http.get('/api/v1/cctype/' + card);
+		};
+
+		this.getLink = function(_id) {
+			return $http.get('/api/v1/s3-link/' + _id);
 		};
 
 		this.save = function(data) {

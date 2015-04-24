@@ -6,6 +6,7 @@ module.exports = function(app) {
 		mw = require('./middleware'),
 		log = app.get('log'),
 		crypto = require( "crypto" ),
+		AWS = require('aws-sdk'),
 		S3Tracker = app.Models.get('S3Tracker');
 
 	/*
@@ -73,6 +74,20 @@ module.exports = function(app) {
 				}
 			});
 
+		});
+
+	});
+
+
+	app.get('/api/v1/s3-link/:_id?', mw.auth(), function(req, res, next) {
+
+		AWS.config.update({ region: 'us-west-2' });
+
+		var s3 = new AWS.S3(),
+			params = { Bucket: "cart-pdfs", Key: req.params._id + ".pdf" };
+		
+		s3.getSignedUrl('getObject', params, function (err, url) {
+			res.json({'url': url});
 		});
 
 	});

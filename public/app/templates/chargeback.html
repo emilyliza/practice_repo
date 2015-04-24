@@ -37,7 +37,7 @@
 					
 				</div>
 				
-				<div class="side-cbinfo-desc">Data received regarding this chargeback case. Use this information to locate any missing data.</div>
+				<div class="side-cbinfo-desc">Data received regarding this <b>{{data.internal_type}}</b> case. Use this information to locate any missing data.</div>
 
 				<div class="row">
 					<div class="col-xs-4" style="text-align: right;">Status:</div>
@@ -67,12 +67,12 @@
 
 				<div class="row" ng-if="data.gateway_data.FullName">
 					<div class="col-xs-4" style="text-align: right;">Customer:</div>
-					<div class="col-xs-8">{{data.gateway_data.FullName}}</div>
+					<div class="col-xs-8">{{data.gateway_data.FullName || ""}}</div>
 				</div>
 
 				<div class="row" ng-if="data.portal_data.MidNumber">
 					<div class="col-xs-4" style="text-align: right;">Amount:</div>
-					<div class="col-xs-8">{{data.portal_data.ChargebackAmt | currency}}</div>
+					<div class="col-xs-8">{{data.portal_data.ChargebackAmt | currency}} {{data.gateway_data.Currency}}</div>
 				</div>
 
 				<div class="row" ng-if="data.portal_data.CcPrefix || data.portal_data.CcSuffix">
@@ -114,8 +114,8 @@
 
 			<div class="form-group btns" style="text-align: center; margin-top: 40px;" ng-if="settings.state.current.name == 'chargeback.review'">
 				<button type="button" class="btn btn-success" ng-if="data.status == 'In-Progress'" style="margin-right: 20px;" ng-click="methods.submit('Are you sure you want to submit this chargeback dispute?', 'Yes, submit it!', 'No, keep working.')" class="btn btn-danger">Submit Chargeback Dispute</button>
-				<button type="button" ng-if="data.status == 'Won' || data.status == 'Lost' || data.status == 'Sent'" ng-click="methods.download('/images/example.0511cc.pdf')" class="btn btn-info">Download Chargeback PDF</button>
-
+				<button type="button" ng-if="data.docgen" ng-click="methods.download()" class="btn btn-info">Download Chargeback PDF</button>
+				<button type="button" ng-if="(data.status == 'Won' || data.status == 'Lost' || data.status == 'Sent') && !data.docgen" class="btn btn-default">PDF Document is Processing</button>
 			</div>
 		</div>
 

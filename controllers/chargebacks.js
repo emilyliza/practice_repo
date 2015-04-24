@@ -303,10 +303,12 @@ module.exports = function(app) {
 
 		req.assert('portal_data.MidNumber', 'A mid number is required.').isAlphanumeric();
 		req.assert('portal_data.ChargebackAmt', 'An amount is required.').isFloat();
+		req.assert('gateway_data.TransAmt', 'Must be an amount.').optional().isFloat();
 		req.assert('portal_data.CcPrefix', 'A valid credit card prefix is required.').len(1,6).isNumeric();
 		req.assert('portal_data.CcSuffix', 'A valid credit card suffix is required.').len(4,4).isNumeric();
 		req.assert('portal_data.ReasonCode', 'A reason code is required.').isAlphanumeric();
 		req.assert('portal_data.ReasonText', 'Some reason text is required.').notEmpty();
+		req.assert('internal_type', 'Must specify a type.').notEmpty();
 		req.assert('chargebackDate', 'A valid chargeback date is required.').isDate();
 
 		var errors = req.validationErrors();
@@ -321,6 +323,23 @@ module.exports = function(app) {
 		if (!req.body.gateway_data.CcType && !Util.detectCardType( req.body.portal_data.CcPrefix + "11010101" + req.body.portal_data.CcSuffix )) {
 			return res.json(400, { 'CcPrefix': 'Invalid credit card prefix.' });	
 		}
+
+		if (req.body.gateway_data && req.body.gateway_data.AvsStatus) {
+			req.body.gateway_data.AvsStatus = req.body.gateway_data.AvsStatus.toUpperCase();
+			// codes from http://www.emsecommerce.net/avs_cvv2_response_codes.htm
+			if (!lodash.includes(['X', 'Y', 'A', 'W', 'Z', 'N', 'U', 'R', 'E', 'S', 'D', 'M', 'B', 'P', 'C', 'I', 'G'], req.body.gateway_data.AvsStatus )) {
+				return res.json(400, { 'AvsStatus': 'Invalid AVS code.' });	
+			}
+		}
+
+		if (req.body.gateway_data && req.body.gateway_data.CvvStatus) {
+			req.body.gateway_data.CvvStatus = req.body.gateway_data.CvvStatus.toUpperCase();
+			// codes from http://www.emsecommerce.net/avs_cvv2_response_codes.htm
+			if (!lodash.includes(['M', 'N', 'P', 'S', 'U'], req.body.gateway_data.CvvStatus )) {
+				return res.json(400, { 'CvvStatus': 'Invalid CVV code.' });	
+			}
+		}
+
 		
 		$()
 		.seq(function() {
@@ -348,6 +367,7 @@ module.exports = function(app) {
 			chargeback.gateway_data = cb.gateway_data;
 			chargeback.status = "New";
 			chargeback.manual = true;
+			chargeback.internal_type = cb.internal_type;
 
 			if (!chargeback.gateway_data.TransType) {
 				chargeback.gateway_data.TransType = "Card Settle";
@@ -391,6 +411,7 @@ module.exports = function(app) {
 
 		req.assert('portal_data.MidNumber', 'A mid number is required.').isAlphanumeric();
 		req.assert('portal_data.ChargebackAmt', 'An amount is required.').isFloat();
+		req.assert('gateway_data.TransAmt', 'Must be an amount.').optional().isFloat();
 		req.assert('portal_data.CcPrefix', 'A valid credit card prefix is required.').len(1,6).isNumeric();
 		req.assert('portal_data.CcSuffix', 'A valid credit card suffix is required.').len(4,4).isNumeric();
 		req.assert('portal_data.ReasonCode', 'A reason code is required.').isAlphanumeric();
@@ -404,6 +425,22 @@ module.exports = function(app) {
 
 		if ((!req.body.portal_data.CcPrefix || req.body.portal_data.CcPrefix.length < 4) && !req.body.gateway_data.CcType) {
 			return res.json(400, { 'CcPrefix': 'Enter 4 digits or select a credit card type.' });	
+		}
+
+		if (req.body.gateway_data && req.body.gateway_data.AvsStatus) {
+			req.body.gateway_data.AvsStatus = req.body.gateway_data.AvsStatus.toUpperCase();
+			// codes from http://www.emsecommerce.net/avs_cvv2_response_codes.htm
+			if (!lodash.includes(['X', 'Y', 'A', 'W', 'Z', 'N', 'U', 'R', 'E', 'S', 'D', 'M', 'B', 'P', 'C', 'I', 'G'], req.body.gateway_data.AvsStatus )) {
+				return res.json(400, { 'AvsStatus': 'Invalid AVS code.' });	
+			}
+		}
+
+		if (req.body.gateway_data && req.body.gateway_data.CvvStatus) {
+			req.body.gateway_data.CvvStatus = req.body.gateway_data.CvvStatus.toUpperCase();
+			// codes from http://www.emsecommerce.net/avs_cvv2_response_codes.htm
+			if (!lodash.includes(['M', 'N', 'P', 'S', 'U'], req.body.gateway_data.CvvStatus )) {
+				return res.json(400, { 'CvvStatus': 'Invalid CVV code. M, N, P, S, or U' });	
+			}
 		}
 
 
