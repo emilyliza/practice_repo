@@ -418,30 +418,30 @@ module.exports = function(app) {
 		req.assert('chargebackDate', 'A valid chargeback date is required.').isDate();
 
 
-		// Additional required fields. (TJ)
-		req.assert('portal_data.ReasonCode', 'A reason code is required.').isAlphanumeric();
-		req.assert('gateway_data.TransDate', 'A valid transaction  date is required.').isDate();
-		req.assert('gateway_data.Currency', 'A currency type is required.').isAlphanumeric();
-		req.assert('gateway_data.FirstName', 'A first name for the customer is required.').isAlphanumeric();
-		req.assert('gateway_data.LastName', 'A last name for the customer is required.').isAlphanumeric();
-		req.assert('gateway_data.TransAmt', 'An order amount is required.').notEmpty();
-		req.assert('gateway_data.BillingAddr1', 'You must provide a billing address.').notEmpty();
-		req.assert('gateway_data.BillingCity', 'You must provide a billing city.').notEmpty();
-		req.assert('gateway_data.BillingPostal', 'You must provide a billing postal code.').notEmpty();
-		req.assert('gateway_data.BillingCountry', 'You must provide a billing country.').notEmpty();
-		req.assert('gateway_data.TransId', 'A transaction id is required.').notEmpty();
-		req.assert('gateway_data.OrderId', 'An order id is required.').notEmpty();
-		req.assert('gateway_data.AuthCode', 'An uathorization code is required.').notEmpty();
-		//if(req.body.crm_data.CancelDateSystem != undefined && !req.body.crm_data.CancelDateSystem.isEmpty()) {
-		//	req.assert('crm_data.CancelDateSystem', 'Invalid Date.').isDate();
-		//}
-		req.assert('crm_data.RefundAmount', 'Invalid refund amount.').isFloat();
-		req.assert('crm_data.RefundDateFull', 'Invalid Date.').isDate();
-
-		req.assert('crm_data.DeliveryAddr1', 'You must provide a delivery address.').notEmpty();
-		req.assert('crm_data.DeliveryCity', 'You must provide a delivery city.').notEmpty();
-		req.assert('crm_data.DeliveryPostal', 'You must provide a delivery postal code.').notEmpty();
-		req.assert('crm_data.DeliveryCountry', 'You must provide a delivery country.').notEmpty();
+		//// Additional required fields. (TJ)
+		//req.assert('portal_data.ReasonCode', 'A reason code is required.').isAlphanumeric();
+		//req.assert('gateway_data.TransDate', 'A valid transaction  date is required.').isDate();
+		//req.assert('gateway_data.Currency', 'A currency type is required.').isAlphanumeric();
+		//req.assert('gateway_data.FirstName', 'A first name for the customer is required.').isAlphanumeric();
+		//req.assert('gateway_data.LastName', 'A last name for the customer is required.').isAlphanumeric();
+		//req.assert('gateway_data.TransAmt', 'An order amount is required.').notEmpty();
+		//req.assert('gateway_data.BillingAddr1', 'You must provide a billing address.').notEmpty();
+		//req.assert('gateway_data.BillingCity', 'You must provide a billing city.').notEmpty();
+		//req.assert('gateway_data.BillingPostal', 'You must provide a billing postal code.').notEmpty();
+		//req.assert('gateway_data.BillingCountry', 'You must provide a billing country.').notEmpty();
+		//req.assert('gateway_data.TransId', 'A transaction id is required.').notEmpty();
+		//req.assert('gateway_data.OrderId', 'An order id is required.').notEmpty();
+		//req.assert('gateway_data.AuthCode', 'An athorization code is required.').notEmpty();
+		////if(req.body.crm_data.CancelDateSystem != undefined && !req.body.crm_data.CancelDateSystem.isEmpty()) {
+		////	req.assert('crm_data.CancelDateSystem', 'Invalid Date.').isDate();
+		////}
+		//req.assert('crm_data.RefundAmount', 'Invalid refund amount.').isFloat();
+		//req.assert('crm_data.RefundDateFull', 'Invalid Date.').isDate();
+        //
+		//req.assert('crm_data.DeliveryAddr1', 'You must provide a delivery address.').notEmpty();
+		//req.assert('crm_data.DeliveryCity', 'You must provide a delivery city.').notEmpty();
+		//req.assert('crm_data.DeliveryPostal', 'You must provide a delivery postal code.').notEmpty();
+		//req.assert('crm_data.DeliveryCountry', 'You must provide a delivery country.').notEmpty();
 
 
 
