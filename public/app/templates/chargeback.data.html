@@ -58,7 +58,7 @@
 				<div class="form-group" show-errors>
 					<label>CC Expires</label>
 					<input name="CcExpire" required=""  type="text" class="form-control" pop-show="{{errors.CcExpire}}" pop="{{errors.CcExpire}}" pop-placement="right"
-						   ng-model="data.gateway_data.CcExpire" placeholder="Format: MM/YYYY" ng-change="methods.ds()">
+						   ng-model="data.gateway_data.CcExpire" placeholder="Format: MM/YYYY" ng-change="methods.ds()" ng-pattern="/^[0-9][1-9]\/[2][0][1-9][0-9]/">
 				</div>
 			</div>
 			<div  class="col-md-4">
