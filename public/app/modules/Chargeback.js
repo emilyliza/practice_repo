@@ -122,13 +122,13 @@
 			"MASTERCARD",
 			"AMEX",
 			"DISCOVER",
-			"ELECTRON",
-			"MAESTRO",
-			"DANKORT",
-			"INTERPAYMENT",
-			"UNIONPAY",
-			"DINERS",
-			"JCB"
+			//"ELECTRON",
+			//"MAESTRO",
+			//"DANKORT",
+			//"INTERPAYMENT",
+			//"UNIONPAY",
+			//"DINERS",
+			//"JCB"
 		];
 		$scope.settings.internal_types = [
 			"Retrieval-Request",
