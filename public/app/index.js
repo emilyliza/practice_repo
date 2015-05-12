@@ -49,7 +49,7 @@
 	.filter('ccexpires', function() {
 		return function (t) {
 			if (t) {
-				return t.substr(0,1) + "/" + t.substr(1,2);
+				return t.substr(0,3) + t.substr(-2);
 			}
 			return;
 		};
