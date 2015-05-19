@@ -77,10 +77,10 @@
 	.controller('MyCtrl', ['$scope', '$filter',
 		function($scope, $filter){
 			$scope.$watch('data.gateway_data.Currency', function(val){
-				$scope.data.gateway_data.Currency = $filter('uppercase')(val)
+				$scope.data.gateway_data.Currency = $filter('uppercase')(val);
 			});
 			$scope.$watch('data.gateway_data.BillingCountry', function(val){
-				$scope.data.gateway_data.BillingCountry = $filter('uppercase')(val)
+				$scope.data.gateway_data.BillingCountry = $filter('uppercase')(val);
 			});
 		}])
 	.controller('ChargebackController',
