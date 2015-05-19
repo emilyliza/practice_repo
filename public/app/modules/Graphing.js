@@ -272,7 +272,6 @@
 						if (!ref) { ref = 'null'; }
 
 						element.color = GRAPHING_COLORS[ ref ];
-						console.log(ref + ": " + element.color)
 						return (element.value > 0);
 					}
 					filteredPieData = pieData.filter(filterData);
@@ -311,9 +310,7 @@
 						paths.enter().append("svg:path")
 							.attr("stroke", "white")
 							.attr("stroke-width", 0.5)
-							.attr("fill", function(d, i) {
-								return d.color;
-							})
+							.attr("fill", function(d, i) {return d.color;})
 							.transition()
 							.duration(tweenDuration)
 							.attrTween("d", pieTween);
