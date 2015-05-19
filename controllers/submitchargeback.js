@@ -56,14 +56,19 @@ module.exports = function(app) {
 			return res.json(400, { '_id': 'Chargeback does not exist.' } );
 		})
 		.map(function(cb) {
-			// add callback so docgen can notify when doc is ready.
+			// add callback so docgen can notify when doc is ready or if it errored.
+			// Start with local as default
 			var url = "http://localhost:5000/api/v1/docgen/" + cb._id;
+			var	errUrl =  "http://localhost:5000/api/v1/docgenerr/" + cb._id;
 			if (process.env.NODE_ENV == "staging") {
 				url = "http://cartdev.chargeback.com/api/v1/docgen/" + cb._id;
+				errUrl = "http://cartdev.chargeback.com/api/v1/docgenerr/" + cb._id;
 			} else if (process.env.NODE_ENV == "production") {
 				url = "http://cart.chargeback.com/api/v1/docgen/" + cb._id;
+				errUrl = "http://cart.chargeback.com/api/v1/docgenerr/" + cb._id;
 			}
 			cb.set('callback', url, { 'strict': false })
+			cb.set('errcallback', errUrl, { 'strict': false });
 			return cb;
 		})
 		.flatMap(send)

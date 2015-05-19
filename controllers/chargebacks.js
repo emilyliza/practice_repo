@@ -327,7 +327,7 @@ module.exports = function(app) {
 		if (req.body.gateway_data && req.body.gateway_data.AvsStatus) {
 			req.body.gateway_data.AvsStatus = req.body.gateway_data.AvsStatus.toUpperCase();
 			// codes from http://www.emsecommerce.net/avs_cvv2_response_codes.htm
-			if (!lodash.includes(['X', 'Y', 'A', 'W', 'Z', 'N', 'U', 'R', 'E', 'S', 'D', 'M', 'B', 'P', 'C', 'I', 'G'], req.body.gateway_data.AvsStatus )) {
+			if (!lodash.includes(['X', 'Y', 'A', 'W', 'Z', 'N', 'U', 'R', 'E', 'S', 'D', 'M', 'B', 'P', 'C', 'I', 'G', 'NA'], req.body.gateway_data.AvsStatus )) {
 				return res.json(400, { 'AvsStatus': 'Invalid AVS code.' });	
 			}
 		}
@@ -368,6 +368,7 @@ module.exports = function(app) {
 			chargeback.status = "New";
 			chargeback.manual = true;
 			chargeback.internal_type = cb.internal_type;
+			chargeback.chargebackDate = new Date(cb.chargebackDate)
 
 			if (!chargeback.gateway_data.TransType) {
 				chargeback.gateway_data.TransType = "Card Settle";
@@ -457,7 +458,7 @@ module.exports = function(app) {
 		if (req.body.gateway_data && req.body.gateway_data.AvsStatus) {
 			req.body.gateway_data.AvsStatus = req.body.gateway_data.AvsStatus.toUpperCase();
 			// codes from http://www.emsecommerce.net/avs_cvv2_response_codes.htm
-			if (!lodash.includes(['X', 'Y', 'A', 'W', 'Z', 'N', 'U', 'R', 'E', 'S', 'D', 'M', 'B', 'P', 'C', 'I', 'G'], req.body.gateway_data.AvsStatus )) {
+			if (!lodash.includes(['X', 'Y', 'A', 'W', 'Z', 'N', 'U', 'R', 'E', 'S', 'D', 'M', 'B', 'P', 'C', 'I', 'G', 'NA'], req.body.gateway_data.AvsStatus )) {
 				return res.json(400, { 'AvsStatus': 'Invalid AVS code.' });	
 			}
 		}

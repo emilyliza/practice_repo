@@ -56,24 +56,47 @@
 		<div class="row">
 			<div class="col-md-4">
 				<div class="form-group" show-errors>
-					<label>CC Expires</label>
+					<label >CC Expires</label>
 					<input name="CcExpire" required=""  type="text" class="form-control" pop-show="{{errors.CcExpire}}" pop="{{errors.CcExpire}}" pop-placement="right"
-						   ng-model="data.gateway_data.CcExpire" placeholder="Format: MM/YYYY" ng-change="methods.ds()" ng-pattern="/^[0-1][0-9]\/[2][0][1-9][0-9]/">
+						   ng-model="data.gateway_data.CcExpire" placeholder="Format: MM/YYYY" ng-change="methods.ds()" ng-pattern="/^[0-1][0-9]\/[2][0][1-9][0-9]$|^NA$/i">
 				</div>
 			</div>
 			<div  class="col-md-4">
-				<div ng-if="data.type == 'cnp'" class="form-group" show-errors>
+				<div ng-if="data.type == 'cnp'"
+					 class="form-group"
+					 show-errors
+					 data-tooltip-html-unsafe="<b>Address Verification Service (AVS) Response Code Definitions</b><br>X: Match, Street address and 9-digit ZIP code both match<br><br>Y: Match, Street address and 5-digit ZIP code both match<br><br>A: Partial Match, Street address matches, but both 5-digit and 9-digit ZIP Code do not match<br><br>W: Partial Match, Street address does not match, but 9-digit ZIP code matches<br><br>Z: Partial Match, Street address does not match, but 5-digit ZIP code matches<br><br>N: No Match, Street address, 5-digit ZIP code, and 9-digit ZIP code all do not match<br><br>U: System Unavailable,<br>    Address information unavailable. Returned if non-US.<br>    AVS is not available or if the AVS in a U.S. bank is not functioning properly.<br><br>R: System Unavailable, Retry - Issuer's System Unavailable or Timed Out.<br><br>E: Invalid, AVS data is invalid<br><br>S: Not Supported, U.S. issuing bank does not support AVS<br><br><b>International AVS Response Code Definitions</b><br>D: Match, Street Address and Postal Code match for International Transaction<br><br>M: Match, Street Address and Postal Code match for International Transaction<br><br>B: Partial, Match Street Address Match for International Transaction. Postal Code not verified due to incompatible formats<br><br>P: Partial, Match Postal Codes match for International Transaction but street address not verified due to incompatible formats<br><br>C: No Match, Street Address and Postal Code not verified for International Transaction due to incompatible formats<br><br>I: No Match, Address Information not verified by International issuer<br><br>G: Not Supported, Non-US. Issuer does not participate<br><br>"
+					 tooltip-placement="right"
+					 tooltip-append-to-body="true"
+						>
 					<label>AVS Status</label>
-					<input name="AvsStatus" type="text" class="form-control" pop-show="{{errors.AvsStatus}}" pop="{{errors.AvsStatus}}" pop-placement="right"
-						   ng-model="data.gateway_data.AvsStatus" placeholder="" ng-change="methods.ds()">
+					<input name="AvsStatus"
+
+						type="text"
+						class="form-control"
+						pop-show="{{errors.AvsStatus}}"
+						pop="{{errors.AvsStatus}}"
+						pop-placement="right"
+						ng-model="data.gateway_data.AvsStatus"
+						placeholder=""
+						ng-change="methods.ds()">
 				</div>
 				<div ng-if="data.type == 'cp'" class="form-control-static" style="background-color: #efefef;"></div>
 			</div>
 			<div class="col-md-4">
-				<div ng-if="data.type == 'cnp'" class="form-group" show-errors>
+				<div ng-if="data.type == 'cnp'" class="form-group" show-errors
+					 data-tooltip-html-unsafe="<b>Card Verification Value (CVV2) Response Codes</b><br>M: CVV2 Match<br><br>N: CVV2 No Match<br><br>P: Not Processed<br><br>S: Issuer indicates that CVV2 data should be present on the card, but the merchant has indicated data is not present on the card<br><br>U: Issuer has not certified for CVV2 or Issuer has not provided Visa with the CVV2 encryption keys<br><br>Empty: Transaction failed because wrong CVV2 number was entered or no CVV2 number was entered"
+					 tooltip-placement="left"
+					 tooltip-append-to-body="true" >
 					<label>CVV Status</label>
-					<input name="CvvStatus" type="text" class="form-control" pop-show="{{errors.CvvStatus}}" pop="{{errors.CvvStatus}}" pop-placement="right"
-						   ng-model="data.gateway_data.CvvStatus" placeholder="" ng-change="methods.ds()">
+					<input name="CvvStatus"
+						   type="text"
+						   class="form-control"
+						   pop-show="{{errors.CvvStatus}}"
+						   pop="{{errors.CvvStatus}}"
+						   pop-placement="right"
+						   ng-model="data.gateway_data.CvvStatus"
+						   placeholder="" ng-change="methods.ds()">
 				</div>
 				<div ng-if="data.type == 'cp'" class="form-control-static" style="background-color: #efefef;"></div>
 			</div>
@@ -102,8 +125,8 @@
 			</div>
 		</div>
 		<div class="row">
-			<div class="col-md-2">
-				<div class="form-group" show-errors>
+			<div class="col-md-2" ng-controller="UpperCtrl">
+				<div class="form-group" show-errors >
 					<label>Currency</label>
 					<input name="Currency"
 						   required=""
@@ -121,7 +144,7 @@
 				<div class="form-group" show-errors>
 					<label>Reason Code</label>
 					<input name="ReasonCode" required type="text" class="form-control" pop-show="{{errors.ReasonCode}}" pop="{{errors.ReasonCode}}" pop-placement="right"
-						   ng-model="data.portal_data.ReasonCode" placeholder="" ng-change="methods.ds()">
+						   ng-model="data.portal_data.ReasonCode" placeholder="Enter NA if not available" ng-change="methods.ds()">
 				</div>
 			</div>
 			<div class="col-md-8">
@@ -193,10 +216,14 @@
 					   ng-model="data.gateway_data.BillingPostal" placeholder="" ng-change="methods.ds()">
 			</div>
 		</div>
-		<div class="col-md-3">
+		<div class="col-md-3" >
 			<div class="form-group" show-errors>
 				<label>Billing Country</label>
-				<input name="BillingCountry" type="text" class="form-control" pop-show="{{errors.BillingCountry}}" pop="{{errors.BillingCountry}}" pop-placement="right"
+				<input name="BillingCountry"
+					   type="text"
+					   class="form-control"
+					   pop-show="{{errors.BillingCountry}}"
+					   pop="{{errors.BillingCountry}}" pop-placement="right"
 					   ng-model="data.gateway_data.BillingCountry" placeholder="" ng-change="methods.ds()">
 			</div>
 		</div>
@@ -339,6 +366,23 @@
 			</div>
 			<div class="col-md-6">
 				<div class="form-group" show-errors>
+					<label>Authorization Code</label>
+					<input name="AuthCode" required type="text" class="form-control" pop-show="{{errors.AuthCode}}" pop="{{errors.AuthCode}}" pop-placement="right"
+						   ng-model="data.gateway_data.AuthCode" placeholder="" ng-change="methods.ds()">
+				</div>
+			</div>
+
+		</div>
+		<div class="row">
+			<div class="col-md-6">
+				<div class="form-group" show-errors>
+					<label>Transaction Amount</label>
+					<input name="TransAmt" required type="text" class="form-control" pop-show="{{errors.TransAmt}}" pop="{{errors.TransAmt}}" pop-placement="right"
+						   ng-model="data.gateway_data.TransAmt" placeholder="" ng-change="methods.ds()">
+				</div>
+			</div>
+			<div class="col-md-6">
+				<div class="form-group" show-errors>
 					<label>Product Name</label>
 					<input name="ProductName" type="text" class="form-control" pop-show="{{errors.ProductName}}" pop="{{errors.ProductName}}" pop-placement="right"
 						   ng-model="data.crm_data.ProductName" placeholder="" ng-change="methods.ds()">
@@ -355,9 +399,9 @@
 			</div>
 			<div class="col-md-6">
 				<div class="form-group" show-errors>
-					<label>Authorization Code</label>
-					<input name="AuthCode" required type="text" class="form-control" pop-show="{{errors.AuthCode}}" pop="{{errors.AuthCode}}" pop-placement="right"
-						   ng-model="data.gateway_data.AuthCode" placeholder="" ng-change="methods.ds()">
+					<label></label>
+					<div class="form-control-static" style="background-color: #efefef;"></div>
+
 				</div>
 			</div>
 		</div>
@@ -378,23 +422,59 @@
 
 	<div style="font-size: 12px; color: #999; padding-bottom: 10px;" ng-if="data.recurring">Enable this section if the product purchased is on a subscription plan. Please indicate the cancel date if the subscription was canceled.</div>
 
-	<div class="row bt" ng-if="data.recurring">
-		<div class="col-md-6">
-			<div class="form-group">
-				<label>Is this a recurring transaction?</label>
-				<div class="form-control-static">
-					<input name="IsRecurring" type="checkbox" ng-model="data.crm_data.IsRecurring" ng-change="methods.ds()"> 
-					<span style="font-size: 12px;">The product purchased is on a subscription plan</span>
+	<div class="bt" ng-if="data.recurring">
+		<div class="row">
+			<div class="col-md-6">
+				<div class="form-group">
+					<label>Is this a recurring transaction?</label>
+					<div class="form-control-static">
+						<input name="IsRecurring" type="checkbox" ng-model="data.crm_data.IsRecurring" ng-change="methods.ds()">
+						<span style="font-size: 12px;">The product purchased is on a subscription plan</span>
+					</div>
+				</div>
+			</div>
+			<div class="col-md-6">
+				<div class="form-group" show-errors>
+					<label>Cancel Date</label>
+					<input name="CancelDateSystem" type="text" class="form-control" pop-show="{{errors.CancelDateSystem}}" pop="{{errors.CancelDateSystem}}" pop-placement="right"
+						   ng-model="data.crm_data.CancelDateSystem" placeholder="" ng-change="methods.ds()" datepicker-popup="MM/dd/yyyy" is-open="opened" ng-click="opened=true" isdate>
 				</div>
 			</div>
 		</div>
-		<div class="col-md-6">
-			<div class="form-group" show-errors>
-				<label>Cancel Date</label>
-				<input name="CancelDateSystem" type="text" class="form-control" pop-show="{{errors.CancelDateSystem}}" pop="{{errors.CancelDateSystem}}" pop-placement="right"
-					   ng-model="data.crm_data.CancelDateSystem" placeholder="" ng-change="methods.ds()" datepicker-popup="MM/dd/yyyy" is-open="opened" ng-click="opened=true" isdate>
+		<div class="row">
+			<div class="col-md-6">
+				<div class="form-group" show-errors>
+					<label>Originating Transaction ID</label>
+					<input name="OriginatingTransId"
+						   type="text"
+						   data-tooltip-html-unsafe="The transaction id for the transaction that started the recurring transactions. (i.e. Introductory Offer)"
+						   tooltip-placement="top"
+
+						   class="form-control"
+						   pop-show="" pop=""
+						   pop-placement="right"
+						   ng-model="data.gateway_data.Originating.TransId"
+						   placeholder=""
+						   ng-change="methods.ds()" >
+				</div>
 			</div>
-		</div>	
+			<div class="col-md-6">
+				<div class="form-group" show-errors>
+					<label>Originating Transaction CVV</label>
+					<input name="OriginatingTransCVV"
+						   type="text"
+						   data-tooltip-html-unsafe="The CVV for the transaction that started the recurring transactions. (i.e. Introductory Offer)"
+						   tooltip-placement="top"
+						   class="form-control"
+						   pop-show=""
+						   pop=""
+						   pop-placement="right"
+						   ng-model="data.gateway_data.Originating.CvvStatus"
+						   placeholder=""
+						   ng-change="methods.ds()" >
+				</div>
+			</div>
+		</div>
 	</div>
 
 	
