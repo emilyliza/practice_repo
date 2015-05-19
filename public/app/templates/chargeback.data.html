@@ -1,12 +1,4 @@
-<style>
-	/* Specify styling for tooltip contents */
-	.tooltip .tooltip-inner {
-		text-align: left;
-	}
-	.tooltip-inner {
-		max-width: 600px;
-	}
-</style>
+
 <div class="jgs-form">
 
 
@@ -70,12 +62,16 @@
 				</div>
 			</div>
 			<div  class="col-md-4">
-				<div ng-if="data.type == 'cnp'" class="form-group" show-errors>
+				<div ng-if="data.type == 'cnp'"
+					 class="form-group"
+					 show-errors
+					 data-tooltip-html-unsafe="<b>Address Verification Service (AVS) Response Code Definitions</b><br>X: Match, Street address and 9-digit ZIP code both match<br><br>Y: Match, Street address and 5-digit ZIP code both match<br><br>A: Partial Match, Street address matches, but both 5-digit and 9-digit ZIP Code do not match<br><br>W: Partial Match, Street address does not match, but 9-digit ZIP code matches<br><br>Z: Partial Match, Street address does not match, but 5-digit ZIP code matches<br><br>N: No Match, Street address, 5-digit ZIP code, and 9-digit ZIP code all do not match<br><br>U: System Unavailable,<br>    Address information unavailable. Returned if non-US.<br>    AVS is not available or if the AVS in a U.S. bank is not functioning properly.<br><br>R: System Unavailable, Retry - Issuer's System Unavailable or Timed Out.<br><br>E: Invalid, AVS data is invalid<br><br>S: Not Supported, U.S. issuing bank does not support AVS<br><br><b>International AVS Response Code Definitions</b><br>D: Match, Street Address and Postal Code match for International Transaction<br><br>M: Match, Street Address and Postal Code match for International Transaction<br><br>B: Partial, Match Street Address Match for International Transaction. Postal Code not verified due to incompatible formats<br><br>P: Partial, Match Postal Codes match for International Transaction but street address not verified due to incompatible formats<br><br>C: No Match, Street Address and Postal Code not verified for International Transaction due to incompatible formats<br><br>I: No Match, Address Information not verified by International issuer<br><br>G: Not Supported, Non-US. Issuer does not participate<br><br>"
+					 tooltip-placement="right"
+					 tooltip-append-to-body="true"
+						>
 					<label>AVS Status</label>
 					<input name="AvsStatus"
-						data-tooltip-html-unsafe="<b>Address Verification Service (AVS) Response Code Definitions</b><br>X: Match, Street address and 9-digit ZIP code both match<br><br>Y: Match, Street address and 5-digit ZIP code both match<br><br>A: Partial Match, Street address matches, but both 5-digit and 9-digit ZIP Code do not match<br><br>W: Partial Match, Street address does not match, but 9-digit ZIP code matches<br><br>Z: Partial Match, Street address does not match, but 5-digit ZIP code matches<br><br>N: No Match, Street address, 5-digit ZIP code, and 9-digit ZIP code all do not match<br><br>U: System Unavailable,<br>    Address information unavailable. Returned if non-US.<br>    AVS is not available or if the AVS in a U.S. bank is not functioning properly.<br><br>R: System Unavailable, Retry - Issuer's System Unavailable or Timed Out.<br><br>E: Invalid, AVS data is invalid<br><br>S: Not Supported, U.S. issuing bank does not support AVS<br><br><b>International AVS Response Code Definitions</b><br>D: Match, Street Address and Postal Code match for International Transaction<br><br>M: Match, Street Address and Postal Code match for International Transaction<br><br>B: Partial, Match Street Address Match for International Transaction. Postal Code not verified due to incompatible formats<br><br>P: Partial, Match Postal Codes match for International Transaction but street address not verified due to incompatible formats<br><br>C: No Match, Street Address and Postal Code not verified for International Transaction due to incompatible formats<br><br>I: No Match, Address Information not verified by International issuer<br><br>G: Not Supported, Non-US. Issuer does not participate<br><br>"
-						tooltip-placement="right"
-						tooltip-append-to-body="true"
+
 						type="text"
 						class="form-control"
 						pop-show="{{errors.AvsStatus}}"
@@ -88,12 +84,12 @@
 				<div ng-if="data.type == 'cp'" class="form-control-static" style="background-color: #efefef;"></div>
 			</div>
 			<div class="col-md-4">
-				<div ng-if="data.type == 'cnp'" class="form-group" show-errors>
+				<div ng-if="data.type == 'cnp'" class="form-group" show-errors
+					 data-tooltip-html-unsafe="<b>Card Verification Value (CVV2) Response Codes</b><br>M: CVV2 Match<br><br>N: CVV2 No Match<br><br>P: Not Processed<br><br>S: Issuer indicates that CVV2 data should be present on the card, but the merchant has indicated data is not present on the card<br><br>U: Issuer has not certified for CVV2 or Issuer has not provided Visa with the CVV2 encryption keys<br><br>Empty: Transaction failed because wrong CVV2 number was entered or no CVV2 number was entered"
+					 tooltip-placement="left"
+					 tooltip-append-to-body="true" >
 					<label>CVV Status</label>
 					<input name="CvvStatus"
-						   data-tooltip-html-unsafe="<b>Card Verification Value (CVV2) Response Codes</b><br>M: CVV2 Match<br><br>N: CVV2 No Match<br><br>P: Not Processed<br><br>S: Issuer indicates that CVV2 data should be present on the card, but the merchant has indicated data is not present on the card<br><br>U: Issuer has not certified for CVV2 or Issuer has not provided Visa with the CVV2 encryption keys<br><br>Empty: Transaction failed because wrong CVV2 number was entered or no CVV2 number was entered"
-						   tooltip-placement="left"
-						   tooltip-append-to-body="true"
 						   type="text"
 						   class="form-control"
 						   pop-show="{{errors.CvvStatus}}"
@@ -129,7 +125,7 @@
 			</div>
 		</div>
 		<div class="row">
-			<div class="col-md-2" ng-controller="MyCtrl">
+			<div class="col-md-2" ng-controller="UpperCtrl">
 				<div class="form-group" show-errors >
 					<label>Currency</label>
 					<input name="Currency"

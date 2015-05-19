@@ -74,7 +74,7 @@
 		});
 		
 	}])
-	.controller('MyCtrl', ['$scope', '$filter',
+	.controller('UpperCtrl', ['$scope', '$filter',
 		function($scope, $filter){
 			$scope.$watch('data.gateway_data.Currency', function(val){
 				$scope.data.gateway_data.Currency = $filter('uppercase')(val);
