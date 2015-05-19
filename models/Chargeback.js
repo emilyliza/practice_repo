@@ -17,6 +17,7 @@ module.exports = function(app) {
 	
 	var ChargebackSchema = new Schema({
 		"status": { "type": String, "required": true, "index": true },	// New, In-Progress, Sent, Won, Lost
+		"errInfo": {"type": String },
 		'createdOn': { 'type': Date, 'required': true, 'default': new Date()},
 		"updatedOn": { "type": Date },
 		"chargebackDate": { "type": Date },
@@ -62,7 +63,12 @@ module.exports = function(app) {
 			'TransId'          : String,
 			'TransStatus'      : String,
 			'TransType'        : String,
-			'TransDate'        : Date
+			'TransDate'        : Date,
+			'Originating'  : {
+				'TransId'   : String,
+				'CvvStatus' : String,
+				'TransAmt'  : Number
+			}
 		},
 		'crm_data' : {
 			'OrderDate'          : Date,

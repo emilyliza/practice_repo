@@ -66,7 +66,7 @@
 		});
 
 		$scope.goTo = function(d) {
-			if (d.status == "In-Progress") {
+			if (d.status == "In-Progress" || d.status == "Errored") {
 				$state.go('chargeback.data', { '_id': d._id });
 			} else if (_.indexOf(["Sent","Won","Lost"], d.status ) != -1) {
 				$state.go('chargeback.review', { '_id': d._id });

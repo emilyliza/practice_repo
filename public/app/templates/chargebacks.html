@@ -41,11 +41,14 @@
 		<div class="col-sm-3 status-colors" ng-click="goTo(cb)">
 			<span ng-if="cb.status == 'New'" class="{{cb.status}}"><b>New</b>: Work Chargeback</span>
 			<span ng-if="cb.status != 'New'" class="{{cb.status}}">
-				{{cb.status}} &nbsp;
+				<span ng-if="cb.status == 'Errored'" class="text-danger">{{cb.status}} &nbsp;</span>
+				<span ng-if="cb.status != 'Errored'" >{{cb.status}} &nbsp;</span>
 				<span ng-if="cb.status == 'Sent'" class="glyphicon glyphicon-send"></span>
 				<span ng-if="cb.status == 'In-Progress'" class="glyphicon glyphicon-circle-arrow-right"></span>
 				<span ng-if="cb.status == 'Won'" class="glyphicon glyphicon-thumbs-up"></span>
 				<span ng-if="cb.status == 'Lost'" class="glyphicon glyphicon-thumbs-down"></span>
+				<span ng-if="cb.status == 'Errored'" class="glyphicon glyphicon-exclamation-sign text-danger"></span>
+
 			</span>
 		</div>
 
