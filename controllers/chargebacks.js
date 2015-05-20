@@ -327,7 +327,7 @@ module.exports = function(app) {
 		if (req.body.gateway_data && req.body.gateway_data.AvsStatus) {
 			req.body.gateway_data.AvsStatus = req.body.gateway_data.AvsStatus.toUpperCase();
 			// codes from http://www.emsecommerce.net/avs_cvv2_response_codes.htm
-			if (!lodash.includes(['X', 'Y', 'A', 'W', 'Z', 'N', 'U', 'R', 'E', 'S', 'D', 'M', 'B', 'P', 'C', 'I', 'G'], req.body.gateway_data.AvsStatus )) {
+			if (!lodash.includes(['X', 'Y', 'A', 'W', 'Z', 'N', 'U', 'R', 'E', 'S', 'D', 'M', 'B', 'P', 'C', 'I', 'G', 'NA'], req.body.gateway_data.AvsStatus )) {
 				return res.json(400, { 'AvsStatus': 'Invalid AVS code.' });	
 			}
 		}
@@ -368,6 +368,7 @@ module.exports = function(app) {
 			chargeback.status = "New";
 			chargeback.manual = true;
 			chargeback.internal_type = cb.internal_type;
+			chargeback.chargebackDate = new Date(cb.chargebackDate)
 
 			if (!chargeback.gateway_data.TransType) {
 				chargeback.gateway_data.TransType = "Card Settle";
@@ -414,9 +415,36 @@ module.exports = function(app) {
 		req.assert('gateway_data.TransAmt', 'Must be an amount.').optional().isFloat();
 		req.assert('portal_data.CcPrefix', 'A valid credit card prefix is required.').len(1,6).isNumeric();
 		req.assert('portal_data.CcSuffix', 'A valid credit card suffix is required.').len(4,4).isNumeric();
-		req.assert('portal_data.ReasonCode', 'A reason code is required.').isAlphanumeric();
 		req.assert('portal_data.ReasonText', 'Some reason text is required.').notEmpty();
 		req.assert('chargebackDate', 'A valid chargeback date is required.').isDate();
+
+
+		//// Additional required fields. (TJ)
+		//req.assert('portal_data.ReasonCode', 'A reason code is required.').isAlphanumeric();
+		//req.assert('gateway_data.TransDate', 'A valid transaction  date is required.').isDate();
+		//req.assert('gateway_data.Currency', 'A currency type is required.').isAlphanumeric();
+		//req.assert('gateway_data.FirstName', 'A first name for the customer is required.').isAlphanumeric();
+		//req.assert('gateway_data.LastName', 'A last name for the customer is required.').isAlphanumeric();
+		//req.assert('gateway_data.TransAmt', 'An order amount is required.').notEmpty();
+		//req.assert('gateway_data.BillingAddr1', 'You must provide a billing address.').notEmpty();
+		//req.assert('gateway_data.BillingCity', 'You must provide a billing city.').notEmpty();
+		//req.assert('gateway_data.BillingPostal', 'You must provide a billing postal code.').notEmpty();
+		//req.assert('gateway_data.BillingCountry', 'You must provide a billing country.').notEmpty();
+		//req.assert('gateway_data.TransId', 'A transaction id is required.').notEmpty();
+		//req.assert('gateway_data.OrderId', 'An order id is required.').notEmpty();
+		//req.assert('gateway_data.AuthCode', 'An athorization code is required.').notEmpty();
+		////if(req.body.crm_data.CancelDateSystem != undefined && !req.body.crm_data.CancelDateSystem.isEmpty()) {
+		////	req.assert('crm_data.CancelDateSystem', 'Invalid Date.').isDate();
+		////}
+		//req.assert('crm_data.RefundAmount', 'Invalid refund amount.').isFloat();
+		//req.assert('crm_data.RefundDateFull', 'Invalid Date.').isDate();
+        //
+		//req.assert('crm_data.DeliveryAddr1', 'You must provide a delivery address.').notEmpty();
+		//req.assert('crm_data.DeliveryCity', 'You must provide a delivery city.').notEmpty();
+		//req.assert('crm_data.DeliveryPostal', 'You must provide a delivery postal code.').notEmpty();
+		//req.assert('crm_data.DeliveryCountry', 'You must provide a delivery country.').notEmpty();
+
+
 
 		var errors = req.validationErrors();
 		if (errors) {
@@ -430,7 +458,7 @@ module.exports = function(app) {
 		if (req.body.gateway_data && req.body.gateway_data.AvsStatus) {
 			req.body.gateway_data.AvsStatus = req.body.gateway_data.AvsStatus.toUpperCase();
 			// codes from http://www.emsecommerce.net/avs_cvv2_response_codes.htm
-			if (!lodash.includes(['X', 'Y', 'A', 'W', 'Z', 'N', 'U', 'R', 'E', 'S', 'D', 'M', 'B', 'P', 'C', 'I', 'G'], req.body.gateway_data.AvsStatus )) {
+			if (!lodash.includes(['X', 'Y', 'A', 'W', 'Z', 'N', 'U', 'R', 'E', 'S', 'D', 'M', 'B', 'P', 'C', 'I', 'G', 'NA'], req.body.gateway_data.AvsStatus )) {
 				return res.json(400, { 'AvsStatus': 'Invalid AVS code.' });	
 			}
 		}

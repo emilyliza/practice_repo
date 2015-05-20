@@ -74,8 +74,16 @@
 		});
 		
 	}])
-
-	.controller('ChargebackController', 
+	.controller('UpperCtrl', ['$scope', '$filter',
+		function($scope, $filter){
+			$scope.$watch('data.gateway_data.Currency', function(val){
+				$scope.data.gateway_data.Currency = $filter('uppercase')(val);
+			});
+			$scope.$watch('data.gateway_data.BillingCountry', function(val){
+				$scope.data.gateway_data.BillingCountry = $filter('uppercase')(val);
+			});
+		}])
+	.controller('ChargebackController',
 			['$scope', '$rootScope', 'ChargebackService', 'FileUploader', '$timeout', 'res', '$state', '$modal', 'UtilService',
 			function ($scope, $rootScope, ChargebackService, FileUploader, $timeout, res, $state, $modal, UtilService) {
 		
@@ -112,7 +120,7 @@
 			$scope.data.gateway_data.TransDate = "";
 		}
 		if (!$scope.data.internal_type) {
-			$scope.data.internal_type = "Retrieval-Request";
+			$scope.data.internal_type = "Chargeback";
 		}
 
 		$scope.settings.shipping_companies = ["USPS", "Fedex", "UPS", "DHL"];
@@ -122,13 +130,13 @@
 			"MASTERCARD",
 			"AMEX",
 			"DISCOVER",
-			"ELECTRON",
-			"MAESTRO",
-			"DANKORT",
-			"INTERPAYMENT",
-			"UNIONPAY",
-			"DINERS",
-			"JCB"
+			//"ELECTRON",
+			//"MAESTRO",
+			//"DANKORT",
+			//"INTERPAYMENT",
+			//"UNIONPAY",
+			//"DINERS",
+			//"JCB"
 		];
 		$scope.settings.internal_types = [
 			"Retrieval-Request",
@@ -427,8 +435,5 @@
 		};
 
 	}]);
-
-
-	
 
 })();

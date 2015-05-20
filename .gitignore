@@ -11,3 +11,5 @@ dump/
 tim/
 certs/*
 newrelic_agent.log
+.idea
+

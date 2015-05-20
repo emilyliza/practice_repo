@@ -3,13 +3,16 @@
 	angular.module('graphing', ['reporting'])
 
 	 .constant('GRAPHING_COLORS', {
-	 	"In Progress": "#A7DBD8",
-	 	"Responded": "#6CBAA5",
-	 	"New": "#F38630",
+	 	"In-Progress": "#E0E4CC",
+		"Won": "#F38630",
+	 	"Lost": "#EF1054",
+	 	"Sent": "#0d94c1",
 	 	"AMEX": "#6CBAA5",
 	 	"MASTERCARD": "#F38630",
 	 	"VISA": "#0d94c1",
-	 	"DISCOVER": "#E0E4CC"
+	 	"DISCOVER": "#E0E4CC",
+		"UNIONPAY": "#EF1054",
+		"DINERS": "#409352"
 	})
 	
 	.directive('percentage', 
@@ -307,7 +310,7 @@
 						paths.enter().append("svg:path")
 							.attr("stroke", "white")
 							.attr("stroke-width", 0.5)
-							.attr("fill", function(d, i) { return d.color; })
+							.attr("fill", function(d, i) {return d.color;})
 							.transition()
 							.duration(tweenDuration)
 							.attrTween("d", pieTween);
