@@ -460,10 +460,10 @@
 			</div>
 			<div class="col-md-6">
 				<div class="form-group" show-errors>
-					<label>Originating Transaction CVV</label>
+					<label>Originating Transaction CVV Status</label>
 					<input name="OriginatingTransCVV"
 						   type="text"
-						   data-tooltip-html-unsafe="The CVV for the transaction that started the recurring transactions. (i.e. Introductory Offer)"
+						   data-tooltip-html-unsafe="The CVV status for the transaction that started the recurring transactions. (i.e. Introductory Offer)"
 						   tooltip-placement="top"
 						   class="form-control"
 						   pop-show=""
@@ -657,7 +657,11 @@
 			</div>
 		</div>
 	</div>
-
+	<style >
+		.subtext {
+			line-height: 20px;
+		}
+	</style>
 
 
 	<div ng-if="data.type == 'cp'">
@@ -671,7 +675,8 @@
 						<div nv-file-over="" uploader="uploaders.receipt" over-class="ddhover" class="ddzone" ng-click="methods.triggerUpload('#receiptFile')">
 							Upload Receipt<br/>
 							<span class="glyphicon glyphicon-picture"></span>
-							<div class="subtext">(drag here or click to upload)</div>
+							<div class="subtext">(drag here or click to upload)<br>
+							Note: Never upload full credit card numbers!</div>
 						</div>
 					</div>
 				</div>
@@ -716,7 +721,7 @@
 						<div nv-file-over="" uploader="uploaders.add" over-class="ddhover" class="ddzone" ng-click="methods.triggerUpload('#addFile')">
 							Upload Attachments<br/>
 							<span class="glyphicon glyphicon-picture"></span>
-							<div class="subtext">(drag here or click to upload)</div>
+							<div class="subtext">(drag here or click to upload)<br>Note: Never upload full credit card numbers!</div>
 						</div>
 					</div>
 				</div>
@@ -769,7 +774,7 @@
 						<div nv-file-over="" uploader="uploaders.terms" over-class="ddhover" class="ddzone" ng-click="methods.triggerUpload('#termsFile')">
 							Upload Terms<br/>
 							<span class="glyphicon glyphicon-picture"></span>
-							<div class="subtext">(drag here or click to upload)</div>
+							<div class="subtext">(drag here or click to upload)<br>Note: Never upload full credit card numbers!</div>
 						</div>
 					</div>
 				</div>
@@ -814,7 +819,7 @@
 						<div nv-file-over="" uploader="uploaders.checkout" over-class="ddhover" class="ddzone" ng-click="methods.triggerUpload('#checkoutFile')">
 							Upload Checkout Screenshot<br/>
 							<span class="glyphicon glyphicon-picture"></span>
-							<div class="subtext">(drag here or click to upload)</div>
+							<div class="subtext">(drag here or click to upload)<br>Note: Never upload full credit card numbers!</div>
 						</div>
 					</div>
 				</div>
@@ -864,7 +869,7 @@
 						<div nv-file-over="" uploader="uploaders.add" over-class="ddhover" class="ddzone" ng-click="methods.triggerUpload('#addFile')">
 							Upload Attachments<br/>
 							<span class="glyphicon glyphicon-picture"></span>
-							<div class="subtext">(drag here or click to upload)</div>
+							<div class="subtext">(drag here or click to upload)<br>Note: Never upload full credit card numbers!</div>
 						</div>
 					</div>
 				</div>
