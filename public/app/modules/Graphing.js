@@ -140,8 +140,13 @@
 				var filteredPieData = [];
 
 				//D3 helper function to populate pie slice parameters from array data
-				var donut = d3.layout.pie().value(function(d){
+				var volumeDonut = d3.layout.pie().value(function(d){
 					return d.sum;
+				});
+
+				//D3 helper function to populate pie slice parameters from array data
+				var countDonut = d3.layout.pie().value(function(d){
+					return d.count;
 				});
 
 				
@@ -241,7 +246,11 @@
 				ctrl.update = function(res) {
 
 					oldPieData = filteredPieData;
-					pieData = donut(res.data);
+					if (res.data_type == "number") {
+						pieData = countDonut(res.data);
+					} else {
+						pieData = volumeDonut(res.data);
+					}
 
 					var sum = 0,
 						pcount = 0;
