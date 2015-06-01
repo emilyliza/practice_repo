@@ -20,10 +20,7 @@
 					self.setToken(res.data.authtoken);
 					self.markTime();
 					delete res.data.authtoken;	// don't have token in current user
-					if(res.data.parent === undefined) {
-						res.data.parent = {name:''};
-					}
-
+					
 					// manually set current user (vs additional ajax request)
 					self.setUser(res.data);
 
