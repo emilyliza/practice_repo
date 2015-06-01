@@ -92,40 +92,63 @@ module.exports = function(app) {
 
 
 		User.findOne()
-		.where('username', req.body.username)
-		.exec(function(err,data) {
-			
+		.where('name', req.body.parentName)
+		.exec(function(err, data){
+			var parent;
+
 			if (err) { return next(err); }
-			
-			if (data) {
-				log.log(req.body.username + ' already exists.');
-				return res.json(400, {'username': "Username already exists."});
+			if(data) {
+				parent = {
+					_id:data._id,
+					username: data.username,
+					name: data.name,
+					email:data.email,
+					active: data.active
+				}
+			} else if( req.body.parentName != '') {
+				// A bad parent name was sent
+				log.log(req.body.parentName + " doesn't exists.");
+				return res.json(400, {'parentName': "Parent company doesn't exist."});
+
 			}
+			User.findOne()
+			.where('username', req.body.username)
+			.exec(function(err,data) {
 
-			var user = new User({
-				'name': req.body.name,
-				'username': req.body.username,
-				'email': req.body.email,
-				'password': req.body.password
-			});
-			
-			var meta = {
-				ip: Util.getClientAddress(req),
-				useragent: Util.getClientUseragent(req)
-			};
-
-			user.timestamps.createdOn = new Date();
-			user.timestamps.firstLogin = new Date();
-			user.meta.lastIp = meta.ip;
-			user.meta.useragent = meta.useragent;
-			
-			user.save(function(err,d) {
 				if (err) { return next(err); }
-				return res.json( lodash.omit(d.toJSON(), ['password', 'admin', 'timestamps', 'meta', 'active', '__v']) );
-			});
-			
-		});
 
+				if (data) {
+					log.log(req.body.username + ' already exists.');
+					return res.json(400, {'username': "Username already exists."});
+				}
+				// Now we need to get the id for the
+				var user = new User({
+					'name': req.body.name,
+					'username': req.body.username,
+					'email': req.body.email,
+					'password': req.body.password
+				});
+				if( parent != undefined) {
+					user.parent = parent;
+				}
+
+				var meta = {
+					ip: Util.getClientAddress(req),
+					useragent: Util.getClientUseragent(req)
+				};
+
+				user.timestamps.createdOn = new Date();
+				user.timestamps.firstLogin = new Date();
+				user.meta.lastIp = meta.ip;
+				user.meta.useragent = meta.useragent;
+
+				user.save(function(err,d) {
+					if (err) { return next(err); }
+					return res.json( lodash.omit(d.toJSON(), ['password', 'admin', 'timestamps', 'meta', 'active', '__v']) );
+				});
+
+			});
+		});
 	});
 
 
