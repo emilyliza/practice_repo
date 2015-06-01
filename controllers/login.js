@@ -24,7 +24,7 @@ module.exports = function(app) {
 			return res.json(401, errors );
 		}
 
-		errors = {};
+		var errors = {};
 		if (!process.env.TOKEN_SECRET) {
 			log.log('NO ENV TOKEN_SECRET!!');
 			errors['username'] = "No token.";
