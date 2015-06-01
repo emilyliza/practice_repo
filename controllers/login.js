@@ -64,12 +64,12 @@ module.exports = function(app) {
 		.stopOnError(next)
 		.otherwise(function() {
 			log.log('user not found.');
-			return res.json(401, { 'username': "User does not exist."} );
+			return res.json(401, { 'username': "Incorrect username and/or password."} );
 		})
 		.flatFilter(check)
 		.otherwise(function() {
 			log.log('invalid password');
-			return res.json(401, {'password': "Invalid password"});
+			return res.json(401, {'username': "Incorrect username and/or password."});
 		})
 		.map(function(d) {
 			
