@@ -31,13 +31,13 @@
 		$scope.$state = $state;	// for navigation active to work
 		var parentInfo =  decodeURIComponent(window.location.search).slice(1).split('=');
 		var createAcctHeader = 'Create Account';
-		var parentName = ''
-		if(parentInfo[0]== 'parent' && parentInfo[1] != '') {
+		var parentName = '';
+		if(parentInfo[0]== 'parent' && parentInfo[1] !== '') {
 			createAcctHeader = "Create Sub Account for: ";
 			parentName = parentInfo[1];
 		}
 		$scope.createAcctHeader = createAcctHeader;
-		$scope.parentName = parentName != undefined ? parentName : '';
+		$scope.parentName = parentName !== undefined ? parentName : '';
 		
 		// watch for changes to clear out errors
 		$scope.$watch("currentUser", function(newValue, oldValue){
@@ -107,7 +107,7 @@
 		};
 
 		acctService.create = function(data) {
-			console.log(window.location.search)
+			console.log(window.location.search);
 			var retHttp =  $http
 			.post('/api/v1/user', data)
 			.then(function (res) {

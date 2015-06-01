@@ -91,13 +91,16 @@ module.exports = function(app) {
 		req.sanitize(req.body.name).trim();
 
 
+		// Look for the record for the parent name, may be '' so will return a null record.
 		User.findOne()
 		.where('name', req.body.parentName)
 		.exec(function(err, data){
 			var parent;
-
+			// If errored call next
 			if (err) { return next(err); }
+			// Did a record come back?
 			if(data) {
+				// Now build the parent object.
 				parent = {
 					_id:data._id,
 					username: data.username,
@@ -105,33 +108,35 @@ module.exports = function(app) {
 					email:data.email,
 					active: data.active
 				}
-			} else if( req.body.parentName != '') {
+			} else if( req.body.parentName !== '') {
 				// A bad parent name was sent
 				log.log(req.body.parentName + " doesn't exists.");
 				return res.json(400, {'parentName': "Parent company doesn't exist."});
 
 			}
+			// Now look for a record with the user name.
 			User.findOne()
 			.where('username', req.body.username)
 			.exec(function(err,data) {
-
+				// if error call next
 				if (err) { return next(err); }
-
+				// If data not null, the user already exists.
 				if (data) {
 					log.log(req.body.username + ' already exists.');
 					return res.json(400, {'username': "Username already exists."});
 				}
-				// Now we need to get the id for the
+				// Now setup a new user.
 				var user = new User({
 					'name': req.body.name,
 					'username': req.body.username,
 					'email': req.body.email,
 					'password': req.body.password
 				});
-				if( parent != undefined) {
+				// Attach the parent if exists.
+				if( parent !== undefined) {
 					user.parent = parent;
 				}
-
+				// attach the meta data.
 				var meta = {
 					ip: Util.getClientAddress(req),
 					useragent: Util.getClientUseragent(req)
