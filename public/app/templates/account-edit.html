@@ -3,6 +3,7 @@
 <div class="row search" style="margin-bottom: 20px;">
 	<div class="col-md-12">
 		<h2 style="margin-top: 0px;">My Account</h2>
+		<h4 ng-if="currentUser.parent.name !=''">Sub account for {{ currentUser.parent.name }}</h4>
 	</div>
 </div>
 

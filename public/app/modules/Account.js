@@ -28,7 +28,16 @@
 		
 		$scope.user = {};
 		$scope.errors = {};
-		$scope.$state = $state;	// for navigation active to work		
+		$scope.$state = $state;	// for navigation active to work
+		var parentInfo =  decodeURIComponent(window.location.search).slice(1).split('=');
+		var createAcctHeader = 'Create Account';
+		var parentName = '';
+		if(parentInfo[0]== 'parent' && parentInfo[1] !== '') {
+			createAcctHeader = "Create Sub Account for: ";
+			parentName = parentInfo[1];
+		}
+		$scope.createAcctHeader = createAcctHeader;
+		$scope.parentName = parentName !== undefined ? parentName : '';
 		
 		// watch for changes to clear out errors
 		$scope.$watch("currentUser", function(newValue, oldValue){
@@ -56,7 +65,9 @@
 		$scope.create = function(data) {
 			$scope.$broadcast('show-errors-check-validity');
 			if ($scope.registerForm.$valid) {
-				
+
+				// Add the parent name to the data
+				data.parentName = $scope.parentName;
 				AccountService.create(data).then(function (user) {
 					
 					var payload = {
@@ -96,11 +107,14 @@
 		};
 
 		acctService.create = function(data) {
-			return $http
+			console.log(window.location.search);
+			var retHttp =  $http
 			.post('/api/v1/user', data)
 			.then(function (res) {
 				return res.data;
 			});
+
+			return retHttp;
 		};
 
 		return acctService;
