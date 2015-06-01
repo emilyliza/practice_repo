@@ -10,7 +10,8 @@
 			"name": "CompanyName2",
 			"username": "username2",
 			"password": "hotdog2",
-			"email": "justin@junder2.com"
+			"email": "justin@junder2.com",
+		  	"parentName" : ""
 		},
 		{
 			"name": "CompanyName3",
