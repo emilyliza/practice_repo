@@ -3,6 +3,7 @@
 <div class="row search" style="margin-bottom: 20px;">
 	<div class="col-md-12">
 		<h2 style="margin-top: 0px;">My Account</h2>
+		<h4 ng-if="currentUser.parent.name !=''">Sub account for {{ currentUser.parent.name }}</h4>
 	</div>
 </div>
 
@@ -45,6 +46,14 @@
 					<div class="form-group" show-errors>
 						<label>Email</label>
 						<input name="email" type="email" required class="form-control" pop-show="{{errors.email}}" pop="{{errors.email}}" pop-placement="right" ng-model="currentUser.email" pop-append-to-body>
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-md-12">
+					<div class="form-group" show-errors>
+						<label>Response Email</label>
+						<input name="send_to_email" type="email" class="form-control" pop-show="{{errors.send_to_email}}" pop="{{errors.send_to_email}}" pop-placement="right" ng-model="currentUser.send_to.email" pop-append-to-body>
 					</div>
 				</div>
 			</div>

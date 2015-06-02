@@ -29,6 +29,13 @@ module.exports = function(app) {
 			'firstLogin': { type: Date },
 			'forgotSent': { type: Date }
 		},
+		'parent':{
+			'_id':      { type: ObjectId },
+			'email':    { type: String },
+			'username': { type: String },
+			'name':     { type: String },
+			'active':   { type: Boolean }
+		},
 		'meta': {
 			'useragent': {type: String},
 			'lastIp': {type: String},
