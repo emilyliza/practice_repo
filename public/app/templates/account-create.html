@@ -1,8 +1,9 @@
 
 <div class="row search" style="margin-bottom: 20px;">
-	<div class="col-md-12">
-		<h2 style="margin-top: 0px;">Create Account</h2>
+	<div class="col-md-8">
+		<h2 name='parentName' style="margin-top: 0px;" pop-show="{{errors.parentName}}" pop="{{errors.parentName}}" pop-placement="top" >{{ createAcctHeader }}{{ parentName }}</h2>
 	</div>
+	<div class="col-md-4"></div>
 </div>
 
 <div class="row">
@@ -16,7 +17,6 @@
 				role="form" 
 				class="jgs-form" 
 				ng-submit="create(user)" novalidate >
-		
 			<div class="row">
 				<div class="col-md-6">
 					<div class="form-group" show-errors>
