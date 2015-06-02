@@ -91,41 +91,69 @@ module.exports = function(app) {
 		req.sanitize(req.body.name).trim();
 
 
+		// Look for the record for the parent name, may be '' so will return a null record.
 		User.findOne()
-		.where('username', req.body.username)
-		.exec(function(err,data) {
-			
+		.where('name', req.body.parentName)
+		.exec(function(err, data){
+			var parent;
+			// If errored call next
 			if (err) { return next(err); }
-			
-			if (data) {
-				log.log(req.body.username + ' already exists.');
-				return res.json(400, {'username': "Username already exists."});
+			// Did a record come back?
+			if(data) {
+				// Now build the parent object.
+				parent = {
+					_id:data._id,
+					username: data.username,
+					name: data.name,
+					email:data.email,
+					active: data.active
+				}
+			} else if( req.body.parentName !== '') {
+				// A bad parent name was sent
+				log.log(req.body.parentName + " doesn't exists.");
+				return res.json(400, {'parentName': "Parent company doesn't exist."});
+
 			}
-
-			var user = new User({
-				'name': req.body.name,
-				'username': req.body.username,
-				'email': req.body.email,
-				'password': req.body.password
-			});
-			
-			var meta = {
-				ip: Util.getClientAddress(req),
-				useragent: Util.getClientUseragent(req)
-			};
-
-			user.timestamps.createdOn = new Date();
-			user.timestamps.firstLogin = new Date();
-			user.meta.lastIp = meta.ip;
-			user.meta.useragent = meta.useragent;
-			
-			user.save(function(err,d) {
+			// Now look for a record with the user name.
+			User.findOne()
+			.where('username', req.body.username)
+			.exec(function(err,data) {
+				// if error call next
 				if (err) { return next(err); }
-				return res.json( lodash.omit(d.toJSON(), ['password', 'admin', 'timestamps', 'meta', 'active', '__v']) );
-			});
-			
-		});
+				// If data not null, the user already exists.
+				if (data) {
+					log.log(req.body.username + ' already exists.');
+					return res.json(400, {'username': "Username already exists."});
+				}
+				// Now setup a new user.
+				var user = new User({
+					'name': req.body.name,
+					'username': req.body.username,
+					'email': req.body.email,
+					'password': req.body.password
+				});
+				// Attach the parent if exists.
+				if( parent !== undefined) {
+					user.parent = parent;
+				}
+				// attach the meta data.
+				var meta = {
+					ip: Util.getClientAddress(req),
+					useragent: Util.getClientUseragent(req)
+				};
 
+				user.timestamps.createdOn = new Date();
+				user.timestamps.firstLogin = new Date();
+				user.meta.lastIp = meta.ip;
+				user.meta.useragent = meta.useragent;
+
+				user.save(function(err,d) {
+					if (err) { return next(err); }
+					return res.json( lodash.omit(d.toJSON(), ['password', 'admin', 'timestamps', 'meta', 'active', '__v']) );
+				});
+
+			});
+		});
 	});
 
 
