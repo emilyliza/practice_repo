@@ -24,10 +24,6 @@ module.exports = function(app) {
 		_( User.findOne()
 			.where('email', email)
 			.stream() )
-		.stopOnError(next)
-		.otherwise(function() {
-			return res.json(400, errors );
-		})
 		.map(function(dd) {
 			dd.set('timestamps.forgotSent', new Date());
 			return dd;
