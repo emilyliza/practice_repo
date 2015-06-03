@@ -77,11 +77,10 @@
 						</div>
 					</div>
 					<div class="col-md-4">
-						<!--<div class="form-group" show-errors tooltip="This is the last 4 to 6 digits of your customers credit card number."> -->
 						<div class="form-group" show-errors
 							 data-tooltip-html-unsafe="This is the last 4 to 6 digits of your customers credit card number.<br> NOTE:<br>Never include the full credit card number!">
 							<label>CC Suffix</label>
-							<input name="CcSuffix" ng-minlength="4" ng-maxlength="4" required type="text" class="form-control" pop-show="{{errors.CcSuffix}}" pop="{{errors.CcSuffix}}" pop-placement="right" ng-model="data.portal_data.CcSuffix" placeholder="" ng-blur="methods.getCardType()">
+							<input name="CcSuffix" ng-minlength="4" ng-maxlength="6" required type="text" class="form-control" pop-show="{{errors.CcSuffix}}" pop="{{errors.CcSuffix}}" pop-placement="right" ng-model="data.portal_data.CcSuffix" placeholder="" ng-blur="methods.getCardType()">
 						</div>
 					</div>
 					<div class="col-md-4">
