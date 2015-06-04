@@ -36,7 +36,7 @@
 		var parentId = ''
 		if(parentInfo[0]== 'parent' && parentInfo[1] !== '') {
 			createAcctHeader = "Create Sub Account for: ";
-			var sInfo = AccountUtils.getParentInfo(parentInfo[1])
+			var sInfo = AccountUtils.getParentInfo(parentInfo[1]);
 			var parent_ll = sInfo.split("-");
 			parentName = parent_ll[1];
 			parentId = parent_ll[0];
@@ -145,7 +145,7 @@
 
 			// We now need to add padding to string. = signs are not allowed in values
 			// The last charcter is the number of padding chars
-			var paddingdata = "========"	// Max of 8
+			var paddingdata = "========";	// Max of 8
 			var paddingcount = parseInt(base32EncodedString.slice(-1));	// Get the last char and convert to int
 			base32EncodedString = base32EncodedString.slice(0,-1); // remove the count character
 			base32EncodedString += paddingdata.slice(0,paddingcount);
