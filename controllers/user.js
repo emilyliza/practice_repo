@@ -93,7 +93,7 @@ module.exports = function(app) {
 
 		// Look for the record for the parent name, may be '' so will return a null record.
 		User.findOne()
-		.where('name', req.body.parentName)
+		.where('license', req.body.parentId)
 		.exec(function(err, data){
 			var parent;
 			// If errored call next
