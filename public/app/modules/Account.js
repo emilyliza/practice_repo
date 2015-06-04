@@ -33,7 +33,7 @@
 		var parentInfo =  decodeURIComponent(window.location.search).slice(1).split('=');
 		var createAcctHeader = 'Create Account';
 		var parentName = '';
-		var parentId = ''
+		var parentId = '';
 		if(parentInfo[0]== 'parent' && parentInfo[1] !== '') {
 			createAcctHeader = "Create Sub Account for: ";
 			var sInfo = AccountUtils.getParentInfo(parentInfo[1]);
