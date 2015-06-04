@@ -32,14 +32,14 @@ module.exports = function(app) {
 			});
 		});
 
-		describe('POST /api/v1/fogot with invalid email', function(){
-			it('should return 400', function(done){
+		describe('POST /api/v1/forgot with invalid email', function(){
+			it('should return 200', function(done){
 				request
 					.post('/api/v1/forgot')
 					.send({ 'email': 'thewrongemail@wrong.com' })
 					.set('Content-Type', 'application/json')
 					.set('Accept', 'application/json')
-					.expect(400)
+					.expect(200)
 					.end(function(err, res) {  
 						if (err) { throw err; }
 						done();
@@ -47,7 +47,7 @@ module.exports = function(app) {
 			});
 		});
 
-		describe('POST /api/v1/fogot with valid email', function(){
+		describe('POST /api/v1/forgot with valid email', function(){
 			it('should return 200', function(done){
 				request
 					.post('/api/v1/forgot')
