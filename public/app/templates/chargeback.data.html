@@ -48,8 +48,12 @@
 			<div class="col-md-4">
 				<div class="form-group select">
 					<label>CC Type</label>
-					<select ng-disabled="data.portal_data.CcPrefix.length >= 4" class="form-control"
-							ng-model="data.gateway_data.CcType" ng-options="ct for ct in settings.cctypes" ng-change="methods.ds()"></select>
+					<select xng-disabled="data.portal_data.CcPrefix.length >= 4"
+							ng-disabled="true"
+							class="form-control"
+							ng-model="data.gateway_data.CcType"
+							ng-options="ct for ct in settings.cctypes"
+							ng-change="methods.ds()"></select>
 				</div>
 			</div>
 		</div>
@@ -57,8 +61,22 @@
 			<div class="col-md-4">
 				<div class="form-group" show-errors>
 					<label >CC Expires</label>
-					<input name="CcExpire" required=""  type="text" class="form-control" pop-show="{{errors.CcExpire}}" pop="{{errors.CcExpire}}" pop-placement="right"
-						   ng-model="data.gateway_data.CcExpire" placeholder="Format: MM/YYYY" ng-change="methods.ds()" ng-pattern="/^[0-1][0-9]\/[2][0][1-9][0-9]$|^NA$/i">
+					<input name="CcExpire"
+						  required=""
+						  type="text"
+						  class="form-control"
+						  pop-show="{{errors.CcExpire}}"
+						  pop="{{errors.CcExpire}}"
+						  pop-placement="right"
+						  ng-model="data.gateway_data.CcExpire"
+						  placeholder="Format: MM/YYYY or NA"
+						  ng-change="methods.ds()"
+						  ng-pattern="/^[0-1][0-9]\/[2][0][1-9][0-9]$|^NA$/i"
+					      data-tooltip-html-unsafe="If you don't have the expiration date,<br>Please enter NA."
+						  tooltip-placement="right"
+						  tooltip-append-to-body="true"
+						  >
+
 				</div>
 			</div>
 			<div  class="col-md-4">
@@ -105,8 +123,18 @@
 			<div class="col-md-4">
 				<div class="form-group" show-errors>
 					<label>Transaction Date</label>
-					<input name="TransDate" required class="form-control" pop-show="{{errors.TransDate}}" pop="{{errors.TransDate}}" pop-placement="right" type="text" class="form-control"
-						   ng-model="data.gateway_data.TransDate" is-open="opened" ng-click="opened=true" isdate ng-change="methods.ds()" datepicker-popup="MM/dd/yyyy">
+					<input name="TransDate"
+						   required class="form-control"
+						   pop-show="{{errors.TransDate}}"
+						   pop="{{errors.TransDate}}"
+						   pop-placement="right"
+						   type="text" class="form-control"
+						   ng-model="data.gateway_data.TransDate"
+						   is-open="opened"
+						   ng-click="opened=true"
+						   isdate ng-change="methods.ds()"
+						   datepicker-popup="MM/dd/yyyy"
+							placeholder="MM/DD/YYYY">
 				</div>
 			</div>
 			<div class="col-md-4">
@@ -253,7 +281,8 @@
 			<div class="form-group" show-errors>
 				<label>IP Address</label>
 				<input name="IpAddress" required type="text" class="form-control" pop-show="{{errors.IpAddress}}" pop="{{errors.IpAddress}}" pop-placement="right"
-					   ng-model="data.crm_data.IpAddress" placeholder="" ng-change="methods.ds()">
+					   ng-model="data.crm_data.IpAddress" placeholder="" ng-change="methods.ds()"
+						ng-pattern="/^(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/">
 			</div>
 		</div>
 	</div>
