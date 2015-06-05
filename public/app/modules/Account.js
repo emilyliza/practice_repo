@@ -35,18 +35,25 @@
 		var createAcctHeader = 'Create Account';
 		var parentName = '';
 		var parentId = '';
+		var parentInfoErr = false;
 
 		if(parentInfo[0]== 'parent' && parentInfo[1] !== '') {
 			createAcctHeader = "Create Sub Account for: ";
-			var sInfo = AccountUtils.getParentInfo(parentInfo[1]);
-			var parent_ll = sInfo.split("-");
-			parentName = parent_ll[1];
-			parentId = parent_ll[0];
+			try {
+				var sInfo = AccountUtils.getParentInfo(parentInfo[1]);
+				var parent_ll = sInfo.split("-");
+				parentName = parent_ll[1];
+				parentId = parent_ll[0];
+			} catch( err ) {
+				console.log(err);
+				parentInfoErr = true;
+			}
 
 		}
 		$scope.createAcctHeader = createAcctHeader;
 		$scope.parentName = parentName;
 		$scope.parentId = parentId; // This is really the license key for the parent account.
+		$scope.parentInfoErr = parentInfoErr;
 
 		// watch for changes to clear out errors
 		$scope.$watch("currentUser", function(newValue, oldValue){
@@ -141,10 +148,6 @@
 				throw "base32EncodedString cannot be null or undefined";
 			}
 
-			if (base32EncodedString.length * 5 % 8 !== 0) {
-				throw "base32EncodedString is not of the proper length. Please verify padding.";
-			}
-
 			// We now need to add padding to string. = signs are not allowed in values
 			// The last charcter is the number of padding chars
 			var paddingData = "========";	// Max of 8
@@ -153,14 +156,13 @@
 			base32EncodedString += paddingData.slice(0,paddingSize);
 
 			base32EncodedString = base32EncodedString.toLowerCase();
-			//var alphabet = "abcdefghijklmnopqrstuvwxyz234567";
-			//var returnArray = new Array(base32EncodedString.length * 5 / 8);
 
-			//var currentByte = 0;
-			//var bitsRemaining = 8;
-			//var mask = 0;
-			//var arrayIndex = 0;
+			if (base32EncodedString.length * 5 % 8 !== 0) {
+				throw "base32EncodedString is not of the proper length. Please verify padding.";
+			}
 
+
+			// Set up data object. (This is a result of refactoring to reduce Cyclomatic Complexity)
 			var data = {};
 			data.alphabet = "abcdefghijklmnopqrstuvwxyz234567";
 			data.returnArray = new Array(base32EncodedString.length * 5 / 8);
@@ -236,9 +238,10 @@
 					//}
 					processBits(data, currentIndexValue);
 				}
+				return count;
 			};
 			for (var count = 0; count < base32EncodedString.length; count++) {
-				processByte(base32EncodedString, count, data);
+				count = processByte(base32EncodedString, count, data);
 			}
 
 			return new Uint8Array(data.returnArray);
