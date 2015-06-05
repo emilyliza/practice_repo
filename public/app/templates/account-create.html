@@ -1,12 +1,21 @@
+err={{ parentInfoErr }}
+<div class="row search" style="margin-bottom: 20px;" ng-if="parentInfoErr == true">
+	<div class="col-md-8">
+		<h2 name='parentErr' style="margin-top: 0px;" pop-show="{{errors.parentName}}" pop="{{errors.parentName}}" pop-placement="top" >An error has occured with creating a sub account.</h2>
+		<h2 name='parentErr' style="margin-top: 0px;" pop-show="{{errors.parentName}}" pop="{{errors.parentName}}" pop-placement="top" >The url is invalid.</h2>
+		<h2 name='parentErr2' style="margin-top: 0px;" pop-show="{{errors.parentName}}" pop="{{errors.parentName}}" pop-placement="top" >Please contact the provider of the url.</h2>
+	</div>
+	<div class="col-md-4"></div>
+</div>
 
-<div class="row search" style="margin-bottom: 20px;">
+<div class="row search" style="margin-bottom: 20px;" ng-if="parentInfoErr == false">
 	<div class="col-md-8">
 		<h2 name='parentName' style="margin-top: 0px;" pop-show="{{errors.parentName}}" pop="{{errors.parentName}}" pop-placement="top" >{{ createAcctHeader }}{{ parentName }}</h2>
 	</div>
 	<div class="col-md-4"></div>
 </div>
 
-<div class="row">
+<div class="row" ng-if="parentInfoErr == false">
 	
 	<div class="col-sm-4 col-sm-push-8 form-sidebar">
 
@@ -16,7 +25,7 @@
 		<form name="registerForm" 
 				role="form" 
 				class="jgs-form" 
-				ng-submit="create(user)" novalidate >
+				ng-submit="create(user)" novalidate>
 			<div class="row">
 				<div class="col-md-6">
 					<div class="form-group" show-errors>
