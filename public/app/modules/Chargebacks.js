@@ -176,7 +176,7 @@
     		//url += '&start=' + this.start + "&end=" + this.end;
     		url += '&query=' + this.query;
     		
-    		// additional params such as start, end, cctype, merchanct, etc
+    		// additional params such as start, end, cctype, merchant, etc
     		if ($state.params) {
     			_.each(_.keys($state.params), function(k) {
     				if ($state.params[k]) {
