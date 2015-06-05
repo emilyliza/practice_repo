@@ -45,7 +45,6 @@
 				parentName = parent_ll[1];
 				parentId = parent_ll[0];
 			} catch( err ) {
-				console.log(err);
 				parentInfoErr = true;
 			}
 
