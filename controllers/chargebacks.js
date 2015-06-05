@@ -120,11 +120,12 @@ module.exports = function(app) {
 			});
 		
 		} else {
-
+			var limit = req.query.limit ? +req.query.limit : 30;
+			var page = req.query.page ? +req.query.page - 1 : 0;
 			_( Chargeback.find()
 				.and(query)
-				.skip( (req.query.page ? ((+req.query.page - 1) * req.query.limit) : 0) )
-				.limit((req.query.limit ? req.query.limit : 30))
+				.skip( page * limit)
+				.limit(limit)
 				.sort('-chargebackDate')
 				.lean()
 				.stream() )

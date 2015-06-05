@@ -174,7 +174,7 @@
     		
     		var url = '/api/v1/chargebacks?page=' + this.page;
     		//url += '&start=' + this.start + "&end=" + this.end;
-    		url += '&query=' + this.query;
+    		url += '&limit=30&query=' + this.query;
     		
     		// additional params such as start, end, cctype, merchant, etc
     		if ($state.params) {
