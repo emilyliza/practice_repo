@@ -1,7 +1,8 @@
 (function() {
 
 	angular.module('account', ['ui.router', 'user'])
-	
+
+
 	.config(['$stateProvider', '$urlRouterProvider', function( $stateProvider, $urlRouterProvider ) {
 		
 		$stateProvider.state('account', {
@@ -34,6 +35,7 @@
 		var createAcctHeader = 'Create Account';
 		var parentName = '';
 		var parentId = '';
+
 		if(parentInfo[0]== 'parent' && parentInfo[1] !== '') {
 			createAcctHeader = "Create Sub Account for: ";
 			var sInfo = AccountUtils.getParentInfo(parentInfo[1]);
@@ -45,7 +47,7 @@
 		$scope.createAcctHeader = createAcctHeader;
 		$scope.parentName = parentName;
 		$scope.parentId = parentId; // This is really the license key for the parent account.
-		
+
 		// watch for changes to clear out errors
 		$scope.$watch("currentUser", function(newValue, oldValue){
 			$scope.errors = null;
@@ -53,12 +55,12 @@
 			var popups = document.querySelectorAll('.popover');
 			_.each(popups, function(p) { p.remove(); });
 		},true);
-		
+
 		var _this = this;
 		$scope.save = function(data) {
 			$scope.$broadcast('show-errors-check-validity');
 			if ($scope.acctForm.$valid) {
-				
+
 				$scope.accountService = AccountService.save(data).then(function (user) {
 					UserService.setUser(user);
 					$scope.saved = true;
@@ -145,45 +147,74 @@
 
 			// We now need to add padding to string. = signs are not allowed in values
 			// The last charcter is the number of padding chars
-			var paddingdata = "========";	// Max of 8
-			var paddingcount = parseInt(base32EncodedString.slice(-1));	// Get the last char and convert to int
+			var paddingData = "========";	// Max of 8
+			var paddingSize = parseInt(base32EncodedString.slice(-1));	// Get the last char and convert to int
 			base32EncodedString = base32EncodedString.slice(0,-1); // remove the count character
-			base32EncodedString += paddingdata.slice(0,paddingcount);
+			base32EncodedString += paddingData.slice(0,paddingSize);
 
 			base32EncodedString = base32EncodedString.toLowerCase();
-			var alphabet = "abcdefghijklmnopqrstuvwxyz234567";
-			var returnArray = new Array(base32EncodedString.length * 5 / 8);
+			//var alphabet = "abcdefghijklmnopqrstuvwxyz234567";
+			//var returnArray = new Array(base32EncodedString.length * 5 / 8);
 
-			var currentByte = 0;
-			var bitsRemaining = 8;
-			var mask = 0;
-			var arrayIndex = 0;
+			//var currentByte = 0;
+			//var bitsRemaining = 8;
+			//var mask = 0;
+			//var arrayIndex = 0;
 
-			for (var count = 0; count < base32EncodedString.length; count++) {
-				var currentIndexValue = alphabet.indexOf(base32EncodedString[count]);
+			var data = {};
+			data.alphabet = "abcdefghijklmnopqrstuvwxyz234567";
+			data.returnArray = new Array(base32EncodedString.length * 5 / 8);
+
+			data.currentByte = 0;
+			data.bitsRemaining = 8;
+			data.mask = 0;
+			data.arrayIndex = 0;
+
+
+			var calcPadding = function(count) {
+				var paddingCount = 0;
+				for (count = count; count < base32EncodedString.length; count++) {
+					if ("=" !== base32EncodedString[count]) {
+						throw "Invalid '=' in encoded string";
+					} else {
+						paddingCount++;
+					}
+				}
+				return { count: count, paddingCount : paddingCount};
+			};
+			var processBits = function(data, currentIndexValue) {
+				if (data.bitsRemaining > 5) {
+					data.mask = currentIndexValue << (data.bitsRemaining - 5);
+					data.currentByte = data.currentByte | data.mask;
+					data.bitsRemaining -= 5;
+				} else {
+					data.mask = currentIndexValue >> (5 - data.bitsRemaining);
+					data.currentByte = data.currentByte | data.mask;
+					data.returnArray[data.arrayIndex++] = data.currentByte;
+					data.currentByte = currentIndexValue << (3 + data.bitsRemaining);
+					data.bitsRemaining += 3;
+				}
+
+			};
+			var processByte = function(base32EncodedString, count, data) {
+				var currentIndexValue = data.alphabet.indexOf(base32EncodedString[count]);
 				if (-1 === currentIndexValue) {
 					if ("=" === base32EncodedString[count]) {
-						var paddingCount = 0;
-						for (count = count; count < base32EncodedString.length; count++) {
-							if ("=" !== base32EncodedString[count]) {
-								throw "Invalid '=' in encoded string";
-							} else {
-								paddingCount++;
-							}
-						}
+						calcRes = calcPadding(count);
+						count = calcRes.count;
 
-						switch (paddingCount) {
+						switch (calcRes.paddingCount) {
 							case 6:
-								returnArray = returnArray.slice(0, returnArray.length - 4);
+								data.returnArray = data.returnArray.slice(0, data.returnArray.length - 4);
 								break;
 							case 4:
-								returnArray = returnArray.slice(0, returnArray.length - 3);
+								data.returnArray = data.returnArray.slice(0, data.returnArray.length - 3);
 								break;
 							case 3:
-								returnArray = returnArray.slice(0, returnArray.length - 2);
+								data.returnArray = data.returnArray.slice(0, data.returnArray.length - 2);
 								break;
 							case 1:
-								returnArray = returnArray.slice(0, returnArray.length - 1);
+								data.returnArray = data.returnArray.slice(0, data.returnArray.length - 1);
 								break;
 							default:
 								throw "Incorrect padding";
@@ -192,21 +223,25 @@
 						throw "base32EncodedString contains invalid characters or invalid padding.";
 					}
 				} else {
-					if (bitsRemaining > 5) {
-						mask = currentIndexValue << (bitsRemaining - 5);
-						currentByte = currentByte | mask;
-						bitsRemaining -= 5;
-					} else {
-						mask = currentIndexValue >> (5 - bitsRemaining);
-						currentByte = currentByte | mask;
-						returnArray[arrayIndex++] = currentByte;
-						currentByte = currentIndexValue << (3 + bitsRemaining);
-						bitsRemaining += 3;
-					}
+					//if (data.bitsRemaining > 5) {
+					//	data.mask = currentIndexValue << (data.bitsRemaining - 5);
+					//	data.currentByte = data.currentByte | data.mask;
+					//	data.bitsRemaining -= 5;
+					//} else {
+					//	data.mask = currentIndexValue >> (5 - data.bitsRemaining);
+					//	data.currentByte = data.currentByte | data.mask;
+					//	data.returnArray[data.arrayIndex++] = data.currentByte;
+					//	data.currentByte = currentIndexValue << (3 + data.bitsRemaining);
+					//	data.bitsRemaining += 3;
+					//}
+					processBits(data, currentIndexValue);
 				}
+			};
+			for (var count = 0; count < base32EncodedString.length; count++) {
+				processByte(base32EncodedString, count, data);
 			}
 
-			return new Uint8Array(returnArray);
+			return new Uint8Array(data.returnArray);
 		};
 
 		acctUtils.getParentInfo = function(sInfo) {
