@@ -43,19 +43,7 @@
 				<div class="col-md-12">
 					<div class="form-group" show-errors>
 						<label>Password</label>
-						<input type="password"
-							   name="pass"
-							   required
-							   class="form-control"
-							   pop-show="{{errors.password}}"
-							   pop="{{errors.password}}"
-							   pop-placement="right"
-							   ng-model="user.password" ng-pattern="/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/"
-							   data-tooltip-html-unsafe="Your password must contain 7 characters<br>with a combination of letters and numbers"
-							   tooltip-placement="right"
-							   tooltip-append-to-body="true"
-
-								/>
+						<input type="password" name="pass" required class="form-control" pop-show="{{errors.password}}" pop="{{errors.password}}" pop-placement="right" ng-model="user.password" />
 					</div>
 				</div>
 			</div>
