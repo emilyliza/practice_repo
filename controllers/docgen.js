@@ -7,7 +7,7 @@ module.exports = function(app) {
 		mw = require('./middleware'),
 		log = app.get('log');
 		
-	
+	// Alert CART that the docgen was successful.
 	app.get('/api/v1/docgen/:_id?', function(req, res, next) {
 
 		req.assert('_id', 'An _id for a chargebacks is required.').notEmpty();
