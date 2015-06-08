@@ -65,9 +65,9 @@
 			$scope.$state = $state;	// for navigation active to work
 			$scope.isCollapsed = true;
 			$scope.settings = {};
-			$scope.settings.logo = "/images/"+ logoname + ".png";
-			$scope.settings.whitelabelcss = "/css/" + logoname + ".css";
-
+			//$scope.settings.logo = "/images/"+ logoname + ".png";
+			//$scope.settings.whitelabelcss = "/css/" + logoname + ".css";
+			$scope.settings.logo = "/images/logo.png";
 
 			function closeModals() {
 				if ($scope.warning) {
