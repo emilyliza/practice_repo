@@ -15,7 +15,7 @@
 	<div class="col-md-4"></div>
 </div>
 
-<div class="row" ng-if="parentInfoErr == false">
+<div class="row" >
 	
 	<div class="col-sm-4 col-sm-push-8 form-sidebar">
 
@@ -26,53 +26,54 @@
 				role="form" 
 				class="jgs-form" 
 				ng-submit="create(user)" novalidate>
+		<div ng-if="parentInfoErr == false">
 			<div class="row">
-				<div class="col-md-6">
-					<div class="form-group" show-errors>
-						<label>Company</label>
-						<input name="name" type="text" required class="form-control" pop-show="{{errors.name}}" pop="{{errors.name}}" pop-placement="right" ng-model="user.name">
+					<div class="col-md-6">
+						<div class="form-group" show-errors>
+							<label>Company</label>
+							<input name="name" type="text" required class="form-control" pop-show="{{errors.name}}" pop="{{errors.name}}" pop-placement="right" ng-model="user.name">
+						</div>
+					</div>
+					<div class="col-md-6">
+						<div class="form-group" show-errors>
+							<label>Username</label>
+							<input name="username" type="text" required class="form-control" pop-show="{{errors.username}}" pop="{{errors.username}}" pop-placement="right" ng-model="user.username">
+						</div>
 					</div>
 				</div>
-				<div class="col-md-6">
-					<div class="form-group" show-errors>
-						<label>Username</label>
-						<input name="username" type="text" required class="form-control" pop-show="{{errors.username}}" pop="{{errors.username}}" pop-placement="right" ng-model="user.username">
+				<div class="row">
+					<div class="col-md-12">
+						<div class="form-group" show-errors>
+							<label>Email</label>
+							<input name="email" type="email" required class="form-control" pop-show="{{errors.email}}" pop="{{errors.email}}" pop-placement="right" ng-model="user.email">
+						</div>
 					</div>
 				</div>
-			</div>
-			<div class="row">
-				<div class="col-md-12">
-					<div class="form-group" show-errors>
-						<label>Email</label>
-						<input name="email" type="email" required class="form-control" pop-show="{{errors.email}}" pop="{{errors.email}}" pop-placement="right" ng-model="user.email">
-					</div>
-				</div>
-			</div>
-			<div class="row">
-				<div class="col-md-12">
-					<div class="form-group" show-errors>
-						<label>Password</label>
-						<input type="password"
-							   name="pass"
-							   required
-							   class="form-control"
-							   pop-show="{{errors.password}}"
-							   pop="{{errors.password}}"
-							   pop-placement="right"
-							   ng-model="user.password" ng-pattern="/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/"
-							   data-tooltip-html-unsafe="Your password must contain 7 characters<br>with a combination of letters and numbers"
-							   tooltip-placement="right"
-							   tooltip-append-to-body="true"
+				<div class="row">
+					<div class="col-md-12">
+						<div class="form-group" show-errors>
+							<label>Password</label>
+							<input type="password"
+								   name="pass"
+								   required
+								   class="form-control"
+								   pop-show="{{errors.password}}"
+								   pop="{{errors.password}}"
+								   pop-placement="right"
+								   ng-model="user.password" ng-pattern="/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/"
+								   data-tooltip-html-unsafe="Your password must contain 7 characters<br>with a combination of letters and numbers"
+								   tooltip-placement="right"
+								   tooltip-append-to-body="true"
 
-								/>
+									/>
+						</div>
 					</div>
 				</div>
-			</div>
 
-			<div class="form-group btns">
-				<button type="submit" class="btn btn-success pull-right">Create Account</button>
+				<div class="form-group btns">
+					<button type="submit" class="btn btn-success pull-right">Create Account</button>
+				</div>
 			</div>
-		
 		</form>
 	</div>
 
