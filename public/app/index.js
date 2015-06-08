@@ -59,10 +59,15 @@
 		['$scope', '$rootScope', '$state', 'AUTH_EVENTS', 'UserService', 'Idle', '$modal',
 		function ($scope, $rootScope, $state, AUTH_EVENTS, UserService, Idle, $modal) {
 			
+			var logoname = window.location.hostname.split(".").join("_");
+			logoname = logoname != "localhost" ? logoname : "cart_chargeback_com";
+
 			$scope.$state = $state;	// for navigation active to work
 			$scope.isCollapsed = true;
 			$scope.settings = {};
-			$scope.settings.logo = "/images/logo.png";
+			$scope.settings.logo = "/images/"+ logoname + ".png";
+			$scope.settings.whitelabelcss = "/css/" + logoname + ".css";
+
 
 			function closeModals() {
 				if ($scope.warning) {
