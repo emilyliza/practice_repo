@@ -46,8 +46,8 @@
 							{{data.status}} &nbsp;
 							<span ng-if="data.status == 'Sent'" class="glyphicon glyphicon-send"></span>
 							<span ng-if="data.status == 'In-Progress'" class="glyphicon glyphicon-circle-arrow-right"></span>
-							<span ng-if="data.status == 'Won'" class="glyphicon glyphicon-thumbs-up"></span>
-							<span ng-if="data.status == 'Lost'" class="glyphicon glyphicon-thumbs-down"></span>
+							<span ng-if="data.status == 'Won'" class="glyphicon glyphicon-thumbs-up"></span> <a ng-if="data.status == 'Won'" ng-click="methods.undowonlost()"><span class="glyphicon glyphicon-remove-circle"></span></a>
+							<span ng-if="data.status == 'Lost'" class="glyphicon glyphicon-thumbs-down"></span> <a ng-if="data.status == 'Lost'" ng-click="methods.undowonlost()"><span class="glyphicon glyphicon-remove-circle"></span></a>
 						</span>
 					</div>
 				</div>
