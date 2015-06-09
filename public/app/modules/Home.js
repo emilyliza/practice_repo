@@ -12,9 +12,13 @@
 
 	}])
 
-	.controller('HomeController', function() {
+	.controller('HomeController', ['$scope', function($scope) {
+		var name = window.location.hostname.split(".").join("_");
+		if(name == "localhost") {
+			name = "cart_chargeback_com";
+		}
+		$scope.jumbotron = "'/app/templates/" + name + ".html'";
 		
-		
-	});
+	}]);
 
 })();
