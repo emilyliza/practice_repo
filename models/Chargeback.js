@@ -28,6 +28,7 @@ module.exports = function(app) {
 		"refunded": { "type": Boolean },
 		"shipped": { "type": Boolean },
 		"recurring": { "type": Boolean },
+		"visible": {"type": Boolean, 'default': true },
 		'portal_data' : {
 			'Portal'           : String,	// prob don't need this field, now taken care of by parent/child users
 			'CaseNumber'       : String,

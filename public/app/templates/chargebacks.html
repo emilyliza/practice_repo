@@ -26,19 +26,22 @@
 
 <div class="animated-grid chargebacks" infinite-scroll="cbs.nextPage(q)" infinite-scroll-disabled="cbs.busy">
 	<div class="row head">
+		<div class="col-sm-1">Remove</div>
 		<div class="col-sm-2">Date</div>
 		<div class="col-sm-2">Amount</div>
-		<div class="col-sm-3">Customer</div>
+		<div class="col-sm-2">Customer</div>
 		<div class="col-sm-2">Case Number</div>
 		<div class="col-sm-3">Status</div>
 	</div>
 
 	<div class="row" ng-repeat="cb in cbs.data">
-		<div class="col-sm-2" ng-click="goTo(cb)">{{cb.chargebackDate | date:'MM/dd/yyyy'}}</div>
-		<div class="col-sm-2" ng-click="goTo(cb)">{{cb.portal_data.ChargebackAmt | currency}}</div>
-		<div class="col-sm-3" ng-click="goTo(cb)">{{cb.gateway_data.FirstName}} {{cb.gateway_data.LastName}}&nbsp;</div>
-		<div class="col-sm-2" ng-click="goTo(cb)">{{cb.portal_data.CaseNumber}}</div>
-		<div class="col-sm-3 status-colors" ng-click="goTo(cb)">
+		<div ng-show="(cb.visible == null || cb.visible) && cb.status != 'Sent' && cb.status != 'Won' && cb.status != 'Lost' && cb.status != 'Errored'" class="col-sm-1" ng-click="methods.hideChargeback()"><span class="glyphicon glyphicon-remove-circle"></span></div>
+		<div ng-hide="(cb.visible == null || cb.visible) && cb.status != 'Sent' && cb.status != 'Won' && cb.status != 'Lost' && cb.status != 'Errored'" class="col-sm-1" ng-click="goTo(cb)"></div>
+		<div ng-if="cb.visible == null || cb.visible" class="col-sm-2" ng-click="goTo(cb)">{{cb.chargebackDate | date:'MM/dd/yyyy'}}</div>
+		<div ng-if="cb.visible == null || cb.visible" class="col-sm-2" ng-click="goTo(cb)">{{cb.portal_data.ChargebackAmt | currency}}</div>
+		<div ng-if="cb.visible == null || cb.visible" class="col-sm-2" ng-click="goTo(cb)">{{cb.gateway_data.FirstName}} {{cb.gateway_data.LastName}}&nbsp;</div>
+		<div ng-if="cb.visible == null || cb.visible" class="col-sm-2" ng-click="goTo(cb)">{{cb.portal_data.CaseNumber}}</div>
+		<div ng-if="cb.visible == null || cb.visible" class="col-sm-3 status-colors" ng-click="goTo(cb)">
 			<span ng-if="cb.status == 'New'" class="{{cb.status}}"><b>New</b>: Work Chargeback</span>
 			<span ng-if="cb.status != 'New'" class="{{cb.status}}">
 				<span ng-if="cb.status == 'Errored'" class="text-danger">{{cb.status}} &nbsp;</span>
