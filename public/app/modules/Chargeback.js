@@ -203,7 +203,12 @@
 					save();
 				}
 			});
-		};	
+		};
+
+		$scope.methods.undowonlost = function() {
+			$scope.data.status = "Sent";
+			save();
+		};
 
 		var save = function(halt_save_on_error) {
 			$scope.$broadcast('show-errors-check-validity');
