@@ -3,7 +3,8 @@
 	angular.module('graphing', ['reporting'])
 
 	 .constant('GRAPHING_COLORS', {
-	 	"In-Progress": "#E0E4CC",
+		"New": "#123ABC",
+		"In-Progress": "#E0E4CC",
 		"Won": "#F38630",
 	 	"Lost": "#EF1054",
 	 	"Sent": "#0d94c1",

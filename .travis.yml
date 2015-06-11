@@ -64,3 +64,5 @@ deploy:
     deployment_group: production
     on:
       branch: master
+notifications:
+  slack: chargebackcom:tiSayoOUkZlXRnrlk3d9pwvR
