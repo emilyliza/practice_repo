@@ -63,6 +63,11 @@
 	
 		<a href="/chargeback" class="btn btn-lg btn-info" style="margin-bottom: 30px; width: 100%;">Add New Chargeback</a>
 
+		<div class="dateRange">
+			<a href="#" datepicker-popup="MM/dd/yyyy" ng-model="date.start.val" is-open="date.start.opened" ng-click="date.start.opened=true" isdate >{{date.start.val | date:'MMM dd, yyyy'}}</a> thru
+			<a href="#" datepicker-popup="MM/dd/yyyy" ng-model="date.end.val" is-open="date.end.opened" ng-click="date.end.opened=true" isdate >{{date.end.val | date:'MMM dd, yyyy'}}</a>
+		</div>
+
 		<div class="dash-stat">
 			<div class="stat-head">Win Rate</div>
 			<div class="percentage" ng-if="dbs.data_dashboard.hwl" percentage control="winloss"></div>
