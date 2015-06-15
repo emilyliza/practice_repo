@@ -24,7 +24,37 @@
 				
 			}
 		});
-		
+
+
+		$scope.date = {
+			start: {
+				val: moment().utc().subtract(1, 'month').format(),
+				opened: false
+			},
+			end: {
+				val: moment().utc().format(),
+				opened: false
+			}
+		};
+		DashboardService.prototype.setDates($scope.date);
+
+
+		$scope.$watch("date.start.val", function(newValue, oldValue){
+			//@TODO: alert location for history option, like chargeback list
+			if (newValue == oldValue) { return; }
+			DashboardService.prototype.setDates($scope.date);
+			if ($scope.last) {
+				$scope[$scope.last]();
+			}
+		});
+		$scope.$watch("date.end.val", function(newValue, oldValue){
+			//@TODO: alert location for history option, like chargeback list
+			if (newValue == oldValue) { return; }
+			DashboardService.prototype.setDates($scope.date);
+			if ($scope.last) {
+				$scope[$scope.last]();
+			}
+		});
 		// $timeout(function() {
 		// 	$scope.winloss.update({
 		// 		"label": '',
