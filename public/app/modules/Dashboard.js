@@ -41,11 +41,18 @@
 
 
 	.factory('DashboardService', ['$http', '$timeout', function ($http, $timeout) {
-			
+
+
 		var DashboardService = function() {
 			this.data_chargebacks = [];
 			this.data_dashboard = [];
 			this.loaded_chargebacks = false;
+		};
+
+		var start, end;
+		DashboardService.prototype.setDates = function(d){
+			start = moment(d.start.val).valueOf();
+			end = moment(d.end.val).valueOf();
 		};
 
 		DashboardService.prototype.loadChargebacks = function() {
@@ -58,17 +65,31 @@
 		};
 		DashboardService.prototype.loadDashboard = function() {
 			var _this = this;
-			return $http.get('/api/v1/dashboard')
-			.then(function (res) {
-				
-				res.data.hwl = true;
-				if (_.isNaN(res.data.winloss.won / res.data.winloss.count)) {
-					res.data.hwl = false;
-				}
-				
-				_this.data_dashboard = res.data;
-				return res.data;
-			});
+			if (start !== undefined && end !== undefined) {
+				return $http.get('/api/v1/dashboard?start=' + start + '?end=' + end)
+					.then(function (res) {
+
+						res.data.hwl = true;
+						if (_.isNaN(res.data.winloss.won / res.data.winloss.count)) {
+							res.data.hwl = false;
+						}
+
+						_this.data_dashboard = res.data;
+						return res.data;
+					});
+			} else {
+				return $http.get('/api/v1/dashboard')
+					.then(function (res) {
+
+						res.data.hwl = true;
+						if (_.isNaN(res.data.winloss.won / res.data.winloss.count)) {
+							res.data.hwl = false;
+						}
+
+						_this.data_dashboard = res.data;
+						return res.data;
+					});
+			}
 		};
 
 		return DashboardService;
