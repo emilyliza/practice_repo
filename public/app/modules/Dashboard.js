@@ -16,14 +16,6 @@
 	.controller('DashboardController', [ '$scope', 'DashboardService', '$timeout', function($scope, DashboardService, $timeout) {
 		$scope.dbs = new DashboardService();
 		$scope.winloss = {};
-		$scope.dbs.loadDashboard().then(function(data) {
-			if (data.hwl) {
-				$timeout(function() {
-					$scope.winloss.update(data.winloss);		
-				},150);
-				
-			}
-		});
 
 
 		$scope.date = {
@@ -38,11 +30,28 @@
 		};
 		DashboardService.prototype.setDates($scope.date);
 
+		$scope.dbs.loadDashboard().then(function(data) {
+			if (data.hwl) {
+				$timeout(function() {
+					$scope.winloss.update(data.winloss);
+				},150);
+
+			}
+		});
+
 
 		$scope.$watch("date.start.val", function(newValue, oldValue){
 			//@TODO: alert location for history option, like chargeback list
 			if (newValue == oldValue) { return; }
 			DashboardService.prototype.setDates($scope.date);
+			$scope.dbs.loadDashboard().then(function(data) {
+				if (data.hwl) {
+					$timeout(function() {
+						$scope.winloss.update(data.winloss);
+					},150);
+
+				}
+			});
 			if ($scope.last) {
 				$scope[$scope.last]();
 			}
@@ -51,6 +60,14 @@
 			//@TODO: alert location for history option, like chargeback list
 			if (newValue == oldValue) { return; }
 			DashboardService.prototype.setDates($scope.date);
+			$scope.dbs.loadDashboard().then(function(data) {
+				if (data.hwl) {
+					$timeout(function() {
+						$scope.winloss.update(data.winloss);
+					},150);
+
+				}
+			});
 			if ($scope.last) {
 				$scope[$scope.last]();
 			}
@@ -96,7 +113,7 @@
 		DashboardService.prototype.loadDashboard = function() {
 			var _this = this;
 			if (start !== undefined && end !== undefined) {
-				return $http.get('/api/v1/dashboard?start=' + start + '?end=' + end)
+				return $http.get('/api/v1/dashboard?start=' + start + '&end=' + end)
 					.then(function (res) {
 
 						res.data.hwl = true;
