@@ -2,6 +2,10 @@
 	<div class="pull-right merchantSelect">
     	<input ng-model="selectedMerchant" typeahead="merchant as merchant.name for merchant in merchants | filter:$viewValue" class="form-control" placeholder="Filter By Merchant" ng-click="showList()" typeahead-on-select='setMerchant($item, $model, $label)' />
     </div>
+	<div class="pull-right dateRange" style="margin-right: 10px">
+		<a href="#" datepicker-popup="MM/dd/yyyy" ng-model="date.start.val" is-open="date.start.opened" ng-click="date.start.opened=true" isdate >{{date.start.val | date:'MMM dd, yyyy'}}</a> thru
+		<a href="#" datepicker-popup="MM/dd/yyyy" ng-model="date.end.val" is-open="date.end.opened" ng-click="date.end.opened=true" isdate >{{date.end.val | date:'MMM dd, yyyy'}}</a>
+	</div>
     <h3 style="margin-top: 10px;">Chargeback Reporting</h3>
 </div>
 
@@ -76,11 +80,9 @@
 				<div class="dash-stat">
 					<div class="stat-head">Total Amount</div>
 					<div class="stat">{{data.total.sum | currency:"$":0}}</div>
-				</div
+				</div>
 			</div>
 		</div>		
-
-
 	</div>
 </div>
 

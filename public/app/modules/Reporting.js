@@ -339,7 +339,7 @@
 
 		reportingService.getDashboard = function() {
 			return $http
-			.get('/api/v1/dashboard?user=' + reportingService.getMerchant() )
+			.get('/api/v1/dashboard?user=' + reportingService.getMerchant() + "&start=" + start + "&end=" + end)
 			.then(function (res) {
 				res.data.hwl = true;
 				if (_.isNaN(res.data.winloss.won / res.data.winloss.count)) {
