@@ -16,8 +16,6 @@
 	.controller('DashboardController', [ '$scope', 'DashboardService', '$timeout', function($scope, DashboardService, $timeout) {
 		$scope.dbs = new DashboardService();
 		$scope.winloss = {};
-
-
 		$scope.date = {
 			start: {
 				val: moment().utc().subtract(1, 'month').format(),
@@ -28,7 +26,7 @@
 				opened: false
 			}
 		};
-		DashboardService.prototype.setDates($scope.date);
+		$scope.dbs.setDates($scope.date);
 
 		$scope.dbs.loadDashboard().then(function(data) {
 			if (data.hwl) {
@@ -39,11 +37,10 @@
 			}
 		});
 
-
 		$scope.$watch("date.start.val", function(newValue, oldValue){
 			//@TODO: alert location for history option, like chargeback list
 			if (newValue == oldValue) { return; }
-			DashboardService.prototype.setDates($scope.date);
+			$scope.dbs.setDates($scope.date);
 			$scope.dbs.loadDashboard().then(function(data) {
 				if (data.hwl) {
 					$timeout(function() {
@@ -59,7 +56,7 @@
 		$scope.$watch("date.end.val", function(newValue, oldValue){
 			//@TODO: alert location for history option, like chargeback list
 			if (newValue == oldValue) { return; }
-			DashboardService.prototype.setDates($scope.date);
+			$scope.dbs.setDates($scope.date);
 			$scope.dbs.loadDashboard().then(function(data) {
 				if (data.hwl) {
 					$timeout(function() {
@@ -72,23 +69,10 @@
 				$scope[$scope.last]();
 			}
 		});
-		// $timeout(function() {
-		// 	$scope.winloss.update({
-		// 		"label": '',
-		// 		"data_type": 'number',
-		// 		"filtertype": '',
-		// 		"data": [
-		// 			{ name: 'Won', val: 90 },
-		// 			{ name: 'Lost', val: 10 },
-		// 		]
-		// 	});
-		// },500);
-
 	}])
 
 
 	.factory('DashboardService', ['$http', '$timeout', function ($http, $timeout) {
-
 
 		var DashboardService = function() {
 			this.data_chargebacks = [];
@@ -110,6 +94,7 @@
 				_this.loaded_chargebacks = true;
 			});
 		};
+
 		DashboardService.prototype.loadDashboard = function() {
 			var _this = this;
 			if (start !== undefined && end !== undefined) {
@@ -142,7 +127,4 @@
 		return DashboardService;
 
 	}]);
-
-
-
 })();
