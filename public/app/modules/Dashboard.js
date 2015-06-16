@@ -16,36 +16,74 @@
 	.controller('DashboardController', [ '$scope', 'DashboardService', '$timeout', function($scope, DashboardService, $timeout) {
 		$scope.dbs = new DashboardService();
 		$scope.winloss = {};
+		$scope.date = {
+			start: {
+				val: moment().utc().subtract(1, 'month').format(),
+				opened: false
+			},
+			end: {
+				val: moment().utc().format(),
+				opened: false
+			}
+		};
+		$scope.dbs.setDates($scope.date);
+
 		$scope.dbs.loadDashboard().then(function(data) {
 			if (data.hwl) {
 				$timeout(function() {
-					$scope.winloss.update(data.winloss);		
+					$scope.winloss.update(data.winloss);
 				},150);
-				
+
 			}
 		});
-		
-		// $timeout(function() {
-		// 	$scope.winloss.update({
-		// 		"label": '',
-		// 		"data_type": 'number',
-		// 		"filtertype": '',
-		// 		"data": [
-		// 			{ name: 'Won', val: 90 },
-		// 			{ name: 'Lost', val: 10 },
-		// 		]
-		// 	});
-		// },500);
 
+		$scope.$watch("date.start.val", function(newValue, oldValue){
+			//@TODO: alert location for history option, like chargeback list
+			if (newValue == oldValue) { return; }
+			$scope.dbs.setDates($scope.date);
+			$scope.dbs.loadDashboard().then(function(data) {
+				if (data.hwl) {
+					$timeout(function() {
+						$scope.winloss.update(data.winloss);
+					},150);
+
+				}
+			});
+			if ($scope.last) {
+				$scope[$scope.last]();
+			}
+		});
+		$scope.$watch("date.end.val", function(newValue, oldValue){
+			//@TODO: alert location for history option, like chargeback list
+			if (newValue == oldValue) { return; }
+			$scope.dbs.setDates($scope.date);
+			$scope.dbs.loadDashboard().then(function(data) {
+				if (data.hwl) {
+					$timeout(function() {
+						$scope.winloss.update(data.winloss);
+					},150);
+
+				}
+			});
+			if ($scope.last) {
+				$scope[$scope.last]();
+			}
+		});
 	}])
 
 
 	.factory('DashboardService', ['$http', '$timeout', function ($http, $timeout) {
-			
+
 		var DashboardService = function() {
 			this.data_chargebacks = [];
 			this.data_dashboard = [];
 			this.loaded_chargebacks = false;
+		};
+
+		var start, end;
+		DashboardService.prototype.setDates = function(d){
+			start = moment(d.start.val).valueOf();
+			end = moment(d.end.val).valueOf();
 		};
 
 		DashboardService.prototype.loadChargebacks = function() {
@@ -56,25 +94,37 @@
 				_this.loaded_chargebacks = true;
 			});
 		};
+
 		DashboardService.prototype.loadDashboard = function() {
 			var _this = this;
-			return $http.get('/api/v1/dashboard')
-			.then(function (res) {
-				
-				res.data.hwl = true;
-				if (_.isNaN(res.data.winloss.won / res.data.winloss.count)) {
-					res.data.hwl = false;
-				}
-				
-				_this.data_dashboard = res.data;
-				return res.data;
-			});
+			if (start !== undefined && end !== undefined) {
+				return $http.get('/api/v1/dashboard?start=' + start + '&end=' + end)
+					.then(function (res) {
+
+						res.data.hwl = true;
+						if (_.isNaN(res.data.winloss.won / res.data.winloss.count)) {
+							res.data.hwl = false;
+						}
+
+						_this.data_dashboard = res.data;
+						return res.data;
+					});
+			} else {
+				return $http.get('/api/v1/dashboard')
+					.then(function (res) {
+
+						res.data.hwl = true;
+						if (_.isNaN(res.data.winloss.won / res.data.winloss.count)) {
+							res.data.hwl = false;
+						}
+
+						_this.data_dashboard = res.data;
+						return res.data;
+					});
+			}
 		};
 
 		return DashboardService;
 
 	}]);
-
-
-
 })();
