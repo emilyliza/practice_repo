@@ -13,7 +13,8 @@
 	
 	}])
 
-	.controller('ChargebacksController', ['$scope', '$timeout', 'ChargebacksService', 'UserService', '$state', '$location', function($scope, $timeout, ChargebacksService, UserService, $state, $location) {
+	.controller('ChargebacksController', ['$scope', '$timeout', 'ChargebacksService', 'UserService', '$state', '$location', '$modal', '$http',
+			function($scope, $timeout, ChargebacksService, UserService, $state, $location, $modal, $http) {
 		
 		var s = moment().utc().subtract(6, 'month').format(),
 			e = moment().utc().format();
@@ -24,6 +25,8 @@
 		if ($state.params.end) {
 			e = moment( parseInt($state.params.end) ).utc().format();
 		}
+
+		$scope.methods = {};
 
 		$scope.date = {
 			start: {
@@ -45,8 +48,32 @@
 				$scope.filters += key + "=" + $state.params[key];
 			}
 		});
-		
-		
+
+		$scope.methods.hideChargeback = function(cb, msg, confirmbtn, cancelbtn){
+			var modalInstance = $modal.open({
+				templateUrl: '/app/templates/confirm-modal.html',
+				controller: 'ModalInstanceCtrl',
+				size: "md",
+				resolve: {
+					data: function () {
+						return {
+							'msg': msg,
+							'confirm': confirmbtn,
+							'cancel': cancelbtn
+						};
+					}
+				}
+			});
+			modalInstance.result.then(function (confirm) {
+				if (confirm) {
+					$http.get('/api/v1/Chargeback/' + cb._id)
+						.then(function(res){
+							res.data.visible = false;
+							$http.put('/api/v1/Chargeback/' + res.data._id, res.data)
+						});
+				}
+			});
+		}
 
 		$scope.cbs = new ChargebacksService();	
 		

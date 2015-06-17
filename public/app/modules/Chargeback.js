@@ -210,30 +210,6 @@
 			save();
 		};
 
-
-		$scope.methods.hideChargeback = function(){
-			var modalInstance = $modal.open({
-				templateUrl: '/app/templates/confirm-modal.html',
-				controller: 'ModalInstanceCtrl',
-				size: "md",
-				resolve: {
-					data: function () {
-						return {
-							'msg': msg,
-							'confirm': confirmbtn,
-							'cancel': cancelbtn
-						};
-					}
-				}
-			});
-			modalInstance.result.then(function (confirm) {
-				if (confirm) {
-					$scope.data.visible = False;
-					save();
-				}
-			});
-		}
-
 		var save = function(halt_save_on_error) {
 			$scope.$broadcast('show-errors-check-validity');
 			if (!$scope.cbForm) { return; }
