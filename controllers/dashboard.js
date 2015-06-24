@@ -136,6 +136,13 @@ module.exports = function(app) {
 				};
 			});
 
+			out['Complete'] = {
+				count: 0,
+				sum: 0
+			};
+			out.Complete.count = out.Won.count + out.Lost.count;
+			out.Complete.sum = out.Won.sum + out.Lost.sum;
+
 			var top_merchants = [];
 			_.each(this.vars.top_merchants, function(item) {
 				top_merchants.push( { mid: item._id.mid, amt: item.sum } );
