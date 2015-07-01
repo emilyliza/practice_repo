@@ -12,7 +12,10 @@
 						<span class="glyphicon glyphicon-inbox"></span>
 						<a href="chargebacks?status=New">New</a>
 					</div>
-					<div class="col-xs-4">{{dbs.data_dashboard.New.count | number}}</div>
+					<div class="col-xs-4">
+						{{dbs.data_dashboard.New.count | number}}
+						<span ng-if="!dbs.data_dashboard.New">0</span>
+					</div>
 				</div>
 				<div class="row">
 					<div class="col-xs-7 col-xs-offset-1">
@@ -20,7 +23,7 @@
 						<a href="chargebacks?status=In-Progress">In-Progress</a>
 					</div>
 					<div class="col-xs-4">
-						{{dbs.data_dashboard['In Progress'].count | number}}
+						{{dbs.data_dashboard['In-Progress'].count | number}}
 						<span ng-if="!dbs.data_dashboard['In-Progress']">0</span>
 					</div>
 				</div>
@@ -62,6 +65,11 @@
 	<div class="col-sm-4">
 	
 		<a href="/chargeback" class="btn btn-lg btn-info" style="margin-bottom: 30px; width: 100%;">Add New Chargeback</a>
+
+		<div class="dateRange" ng-if="date.start && date.end">
+			<a href="#" datepicker-popup="MM/dd/yyyy" ng-model="date.start.val" is-open="date.start.opened" ng-click="date.start.opened=true" isdate >{{date.start.val | date:'MMM dd, yyyy'}}</a> thru
+			<a href="#" datepicker-popup="MM/dd/yyyy" ng-model="date.end.val" is-open="date.end.opened" ng-click="date.end.opened=true" isdate >{{date.end.val | date:'MMM dd, yyyy'}}</a>
+		</div>
 
 		<div class="dash-stat">
 			<div class="stat-head">Win Rate</div>

@@ -16,8 +16,8 @@ module.exports = function(app) {
 		var params = req.query;
 			
 		// // need to set these, there is no input for history, setMatch requires.
-		req.query.start = moment().utc().subtract(1, 'year').valueOf();
-		req.query.end = moment().utc().add(2, 'days').valueOf();
+		//req.query.start = moment().utc().subtract(1, 'year').valueOf();
+		//req.query.end = moment().utc().add(2, 'days').valueOf();
 		
 		var search = [{
 				'$match': Chargeback.setMatch(req)

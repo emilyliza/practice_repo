@@ -32,9 +32,18 @@
 		var parentInfo =  decodeURIComponent(window.location.search).slice(1).split('=');
 		var createAcctHeader = 'Create Account';
 		var parentName = '';
+		var parentId = '';
+		var parentInfoErr = false;
 		if(parentInfo[0]== 'parent' && parentInfo[1] !== '') {
 			createAcctHeader = "Create Sub Account for: ";
-			parentName = parentInfo[1];
+			try {
+				var sInfo = AccountUtils.getParentInfo(parentInfo[1]);
+				var parent_ll = sInfo.split("-");
+				parentName = parent_ll[1];
+				parentId = parent_ll[0];
+			} catch( err ) {
+				parentInfoErr = true;
+			}
 		}
 		$scope.createAcctHeader = createAcctHeader;
 		$scope.parentName = parentName !== undefined ? parentName : '';
