@@ -140,8 +140,17 @@ module.exports = function(app) {
 				count: 0,
 				sum: 0
 			};
-			out.Complete.count = out.Won.count + out.Lost.count;
-			out.Complete.sum = out.Won.sum + out.Lost.sum;
+
+			if (out.Won && out.Lost){
+				out.Complete.count = out.Won.count + out.Lost.count;
+				out.Complete.sum = out.Won.sum + out.Lost.sum;
+			} else if (out.Won) {
+				out.Complete.count = out.Won.count;
+				out.Complete.sum = out.Won.sum;
+			} else if (out.Lost) {
+				out.Complete.count = out.Lost.count;
+				out.Complete.sum = out.Lost.sum;
+			}
 
 			var top_merchants = [];
 			_.each(this.vars.top_merchants, function(item) {
