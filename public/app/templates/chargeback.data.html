@@ -25,8 +25,17 @@
 			<div class="col-md-4">
 				<div class="form-group" show-errors>
 					<label>Chargeback Date</label>
-					<input class="form-control" required name="chargebackDate" type="text" class="form-control" datepicker-popup="MM/dd/yyyy"
-						   ng-model="data.chargebackDate" is-open="settings.openeda" ng-click="settings.openeda=true" isdate  ng-change="methods.ds()">
+					<input class="form-control"
+						   required
+						   name="chargebackDate"
+						   type="text"
+						   class="form-control"
+						   datepicker-popup="MM/dd/yyyy"
+						   ng-model="data.chargebackDate"
+						   is-open="settings.chargeBackDateOpened"
+						   ng-click="settings.chargeBackDateOpened=true"
+						   isdate
+						   ng-change="methods.ds()">
 				</div>
 			</div>
 		</div>
@@ -130,8 +139,8 @@
 						   pop-placement="right"
 						   type="text" class="form-control"
 						   ng-model="data.gateway_data.TransDate"
-						   is-open="opened"
-						   ng-click="opened=true"
+						   is-open="settings.transDateOpened"
+						   ng-click="settings.transDateOpened=true"
 						   isdate ng-change="methods.ds()"
 						   datepicker-popup="MM/dd/yyyy"
 							placeholder="MM/DD/YYYY">
@@ -336,9 +345,18 @@
 			<div class="col-md-6">
 				<div class="form-group" show-errors>
 					<label>Order Date</label>
-					<input name="OrderDate" required type="text" class="form-control" pop-show="{{errors.OrderDate}}" pop="{{errors.OrderDate}}" pop-placement="right"
-						   ng-model="data.crm_data.OrderDate" placeholder="MM/DD/YYYY" ng-change="methods.ds()" datepicker-popup="MM/dd/yyyy" is-open="opened"
-						   ng-click="opened=true" isdate>
+					<input name="OrderDate"
+						   required type="text"
+						   class="form-control"
+						   pop-show="{{errors.OrderDate}}"
+						   pop="{{errors.OrderDate}}"
+						   pop-placement="right"
+						   ng-model="data.crm_data.OrderDate"
+						   placeholder="MM/DD/YYYY"
+						   ng-change="methods.ds()"
+						   datepicker-popup="MM/dd/yyyy"
+						   is-open="settings.orderDateOpened"
+						   ng-click="settings.orderDateOpened=true" isdate>
 				</div>
 			</div>
 			<div class="col-md-6">
@@ -465,8 +483,18 @@
 			<div class="col-md-6">
 				<div class="form-group" show-errors>
 					<label>Cancel Date</label>
-					<input name="CancelDateSystem" type="text" class="form-control" pop-show="{{errors.CancelDateSystem}}" pop="{{errors.CancelDateSystem}}" pop-placement="right"
-						   ng-model="data.crm_data.CancelDateSystem" placeholder="" ng-change="methods.ds()" datepicker-popup="MM/dd/yyyy" is-open="opened" ng-click="opened=true" isdate>
+					<input name="CancelDateSystem"
+						   type="text"
+						   class="form-control"
+						   pop-show="{{errors.CancelDateSystem}}"
+						   pop="{{errors.CancelDateSystem}}"
+						   pop-placement="right"
+						   ng-model="data.crm_data.CancelDateSystem"
+						   placeholder=""
+						   ng-change="methods.ds()"
+						   datepicker-popup="MM/dd/yyyy"
+						   is-open="settings.canceledDateOpened"
+						   ng-click="settings.canceledDateOpened=true" isdate>
 				</div>
 			</div>
 		</div>
@@ -504,6 +532,81 @@
 				</div>
 			</div>
 		</div>
+		<div class="row">
+			<div class="col-md-6">
+				<div class="form-group" show-errors>
+					<label>Transaction Date</label>
+					<input name="OriginatingTransDate"
+						   type="text"
+						   data-tooltip-html-unsafe="Click for calendar."
+						   tooltip-placement="top"
+						   class="form-control"
+						   pop-show=""
+						   pop=""
+						   pop-placement="right"
+						   ng-model="data.gateway_data.Originating.TransDate"
+						   placeholder="mm/dd/yyy"
+						   ng-change="methods.ds()"
+						   datepicker-popup="MM/dd/yyyy"
+						   is-open="setting.transDateOrigOpened"
+						   ng-click="setting.transDateOrigOpened=true"
+						   isdate>
+
+				</div>
+			</div>
+			<div class="col-md-6">
+				<div class="form-group" show-errors>
+					<label>Transaction Amount</label>
+					<input name="OriginatingTransAmount"
+						   type="text"
+						   data-tooltip-html-unsafe="The amount of the originating transaction."
+						   tooltip-placement="top"
+						   class="form-control"
+						   pop-show=""
+						   pop=""
+						   pop-placement="right"
+						   ng-model="data.gateway_data.Originating.TransAmt"
+						   placeholder=""
+						   ng-change="methods.ds()" >
+
+				</div>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-md-6">
+				<div class="form-group" show-errors>
+					<label>Authorization Code</label>
+					<input name="OriginatingAuthCode"
+						   type="text"
+						   data-tooltip-html-unsafe="The authorization code of the originating transaction."
+						   tooltip-placement="top"
+						   class="form-control"
+						   pop-show=""
+						   pop=""
+						   pop-placement="right"
+						   ng-model="data.gateway_data.Originating.AuthCode"
+						   placeholder=""
+						   ng-change="methods.ds()" >
+				</div>
+			</div>
+			<div class="col-md-6">
+				<div class="form-group" show-errors>
+					<label>Order ID</label>
+					<input name="OriginatingOrderId"
+						   type="text"
+						   data-tooltip-html-unsafe="The order id originating transaction."
+						   tooltip-placement="top"
+						   class="form-control"
+						   pop-show=""
+						   pop=""
+						   pop-placement="right"
+						   ng-model="data.gateway_data.Originating.OrderId"
+						   placeholder=""
+						   ng-change="methods.ds()" >
+				</div>
+			</div>
+		</div>
+
 	</div>
 
 	
