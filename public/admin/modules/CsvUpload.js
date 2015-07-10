@@ -6,21 +6,19 @@
  */
 function buildDataList(map, k, value, b) {
 	var key = map[k] || k,
-		second = false;
-	if(key.charAt(0) != '#') {
-		if (key.match(/\./)) {
-			var parts = key.split(".");		// only handles one level of nested json!
-			key = parts[0];
-			second = parts[1];
+	second = false;
+	if (key.match(/\./)) {
+		var parts = key.split(".");		// only handles one level of nested json!
+		key = parts[0];
+		second = parts[1];
+	}
+	if (second) {
+		if (!b[key]) {
+			b[key] = {};
 		}
-		if (second) {
-			if (!b[key]) {
-				b[key] = {};
-			}
-			b[key][second] = value;
-		} else {
-			b[key] = value;
-		}
+		b[key][second] = value;
+	} else {
+		b[key] = value;
 	}
 }
 
@@ -172,7 +170,9 @@ function buildDataList(map, k, value, b) {
 		service.map = function(existing, map) {
 			var b = {};
 			_.each(existing, function(value, k) {
-				buildDataList(map, k, value, b);
+				if(k.charAt(0) != '#') {
+					buildDataList(map, k, value, b);
+				}
 			});
 			return b;
 		};
