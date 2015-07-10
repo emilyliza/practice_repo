@@ -31,6 +31,9 @@
 			"merchant",
 			"chargebackDate",
 			"type",
+			"fullName",
+			"cardSwipe",
+			"sendTo",
 			'portal_data.CardNumber',	// not stored, but used to determine prefix, suffix and type
 			'portal_data.CaseNumber',
 			'portal_data.RefNumber',
@@ -42,7 +45,6 @@
 			'portal_data.ReasonText',
 			'gateway_data.AuthCode',
 			'gateway_data.AvsStatus',
-			'gateway_data.FullName',
 			'gateway_data.FirstName',
 			'gateway_data.MiddleName',
 			'gateway_data.LastName',
@@ -114,14 +116,21 @@
 				$scope.json = JSON.parse(newValue);
 				if ($scope.json.length) {
 					_.each($scope.json[0], function(value, key) {
-						var regex = new RegExp(key + '$', "i");
-						_.each($scope.cbFields, function(test) {
-							if (test.match(regex)) {
-								$scope.map[key] = test;
-								$scope.blowItUp();
-							}
-						});
-						$scope.fields.push( { 'field': key, 'example': value });
+						key = key.trim();
+						if( key.charAt(0) != '#') {
+							var regex = new RegExp('^' + key + '$', "i");
+							_.each($scope.cbFields, function (test) {
+								var test_ll = test.split(".");
+								// Move element 0 to element 1 if length is 1 else move element 1 to preserve it.
+								test_ll[1] = test_ll.length == 1 ? test_ll[0] : test_ll[1];
+								if (test_ll[1].match(regex)) {
+									//							if (test_ll[1] == key) {
+									$scope.map[key] = test;
+									$scope.blowItUp();
+								}
+							});
+							$scope.fields.push({'field': key, 'example': value});
+						}
 					});
 					processed = true;
 				}
@@ -141,18 +150,20 @@
 			_.each(existing, function(value, k) {
 				var key = map[k] || k,
 					second = false;
-				if (key.match(/\./)) {
-					var parts = key.split(".");		// only handles one level of nested json!
-					key = parts[0];
-					second = parts[1];
-				}
-				if (second) {
-					if (!b[key]) {
-						b[key] = {};
+				if(key.charAt(0) != '#') {
+					if (key.match(/\./)) {
+						var parts = key.split(".");		// only handles one level of nested json!
+						key = parts[0];
+						second = parts[1];
 					}
-					b[key][second] = value;	
-				} else {
-					b[key] = value;
+					if (second) {
+						if (!b[key]) {
+							b[key] = {};
+						}
+						b[key][second] = value;
+					} else {
+						b[key] = value;
+					}
 				}
 			});
 			return b;
@@ -174,7 +185,7 @@
 
 		service.getUsers = function(q) {
 			return $http
-				.get('/api/v1/admin/users?query=' + q)
+				.get('/api/v2/admin/users?query=' + q)
 				.then(function(response){
 					return response.data;
 				});

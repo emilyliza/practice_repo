@@ -1,6 +1,7 @@
 module.exports = function(app) {
 
 	var _ = require('highland'),
+		mongoose = require('mongoose'),
 		lodash = require('lodash'),
 		$ = require('seq'),
 		mw = require('./middleware'),
@@ -175,7 +176,7 @@ module.exports = function(app) {
 			return res.json(401, { 'chargebacks': 'an array of chargebacks is required.'});
 		}
 
-		var cc = true;
+		var cc = false;
 		if (req.body.createChildren) {
 			cc = req.body.createChildren;
 		}
@@ -190,10 +191,13 @@ module.exports = function(app) {
 		})
 		.par('users', function() {
 			var top = this;
-			User.find({ 'parent._id': req.body.user._id }, function(err, data) {
+				var id = new mongoose.Types.ObjectId(req.body.user._id);
+
+			User.find({ 'parent._id': id }, function(err, data) {
 				if (err) { return top(err); }
 				var keyed_users = {};
-				_.each(data, function(d) {
+				//_.each(data, function(d, a) {
+				lodash.each(data, function(d) {
 					keyed_users[ d.username ] = d;
 				});	
 				top(null, keyed_users);
@@ -258,6 +262,33 @@ module.exports = function(app) {
 			chargeback.shipping_data = cb.shipping_data;
 			chargeback.gateway_data = cb.gateway_data;
 			chargeback.status = "New";
+			chargeback.chargebackDate = cb.chargebackDate;
+			chargeback.type = cb.cardSwipe;
+
+			if(cb.hasOwnProperty("fullName")) {
+				chargeback.gateway_data.FullName = cb.fullName;
+				var name_ll = cb.fullName.split(" ");
+				if(name_ll.length > 2) {
+					// May have middle name
+					chargeback.gateway_data.FirstName = name_ll[0]
+					chargeback.gateway_data.MiddleName = name_ll[1]
+					chargeback.gateway_data.LastName = name_ll[name_ll.len -1]
+				} else {
+					chargeback.gateway_data.FirstName = name_ll[0]
+					chargeback.gateway_data.LastName = name_ll[1]
+				}
+
+			}
+			if(cb.hasOwnProperty("sendTo")) {
+				var sendTo_ll = cb.sendTo.split(":")
+				//if( sendTo_ll[0] == "email") {
+				//	chargeback.send_to.email = sendTo_ll[1]
+				//} else if(sendTo_ll[0] == "fax") {
+				//	chargeback.send_to.fax = sendTo_ll[1]
+				//}
+				chargeback.send_to[sendTo_ll[0]] = sendTo_ll[1]
+
+			}
 			
 			if (!chargeback.gateway_data.TransType) {
 				chargeback.gateway_data.TransType = "Card Settle";
