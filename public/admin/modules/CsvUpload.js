@@ -139,33 +139,12 @@
 
 		
 	}])
-
-
 	.factory('CsvService', ['$http', '$timeout', function ($http, $timeout) {
 			
 		var service = {};
 
 		service.map = function(existing, map) {
-			var b = {};
-			_.each(existing, function(value, k) {
-				var key = map[k] || k,
-					second = false;
-				if(key.charAt(0) != '#') {
-					if (key.match(/\./)) {
-						var parts = key.split(".");		// only handles one level of nested json!
-						key = parts[0];
-						second = parts[1];
-					}
-					if (second) {
-						if (!b[key]) {
-							b[key] = {};
-						}
-						b[key][second] = value;
-					} else {
-						b[key] = value;
-					}
-				}
-			});
+			var b = buildDataList(existing, map);
 			return b;
 		};
 		service.mapAll = function(data, map) {
@@ -198,3 +177,32 @@
 
 
 })();
+/*********
+ * Convert the dot notated items into a Javascript Object.
+ * @param existing
+ * @param map
+ * @returns {{}}
+ */
+function buildDataList(existing, map) {
+	var b = {};
+	_.each(existing, function(value, k) {
+		var key = map[k] || k,
+			second = false;
+		if(key.charAt(0) != '#') {
+			if (key.match(/\./)) {
+				var parts = key.split(".");		// only handles one level of nested json!
+				key = parts[0];
+				second = parts[1];
+			}
+			if (second) {
+				if (!b[key]) {
+					b[key] = {};
+				}
+				b[key][second] = value;
+			} else {
+				b[key] = value;
+			}
+		}
+	});
+	return b;
+}
