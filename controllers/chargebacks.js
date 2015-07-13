@@ -251,6 +251,17 @@ module.exports = function(app) {
 				cb.portal_data.Portal = this.vars.parent.name;
 			}
 
+			// Is CardNumber specified?
+			if(cb.hasOwnProperty('CardNumber')) {
+				// get the prefix and suffix.
+				var regx = new RegExp("x",'g');
+				var ccnum = cb.CardNumber.toLowerCase().replace(regx, "*");
+				var ccPrefix = ccnum.slice(0,4);
+				var ccSuffix = ccnum.slice(-4);
+				cb.portal_data.CcPrefix = ccPrefix;
+				cb.portal_data.CcSuffix = ccSuffix;
+			}
+
 			Chargeback.clearNulls(cb, 'crm_data');
 			Chargeback.clearNulls(cb, 'gateway_data');
 			Chargeback.clearNulls(cb, 'shipping_data');
@@ -261,10 +272,14 @@ module.exports = function(app) {
 			chargeback.portal_data = cb.portal_data;
 			chargeback.shipping_data = cb.shipping_data;
 			chargeback.gateway_data = cb.gateway_data;
-			chargeback.status = "New";
-			chargeback.chargebackDate = cb.chargebackDate;
-			chargeback.type = cb.cardSwipe;
 
+			chargeback.chargebackDate = cb.chargebackDate;
+			if(cb.hasOwnProperty("cardSwipe")) {
+				chargeback.type = cb.cardSwipe;
+				chargeback.status = "In-Progress";
+			} else {
+				chargeback.status = "New";
+			}
 			if(cb.hasOwnProperty("fullName")) {
 				chargeback.gateway_data.FullName = cb.fullName;
 				var name_ll = cb.fullName.split(" ");
