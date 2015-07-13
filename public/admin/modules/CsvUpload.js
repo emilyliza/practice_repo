@@ -58,7 +58,7 @@ function buildDataList(map, k, value, b) {
 			"fullName",
 			"cardSwipe",
 			"sendTo",
-			'portal_data.CardNumber',	// not stored, but used to determine prefix, suffix and type
+			'CardNumber',	// not stored, but used to determine prefix, suffix and type
 			'portal_data.CaseNumber',
 			'portal_data.RefNumber',
 			'portal_data.CcPrefix',
