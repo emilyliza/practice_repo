@@ -285,23 +285,23 @@ module.exports = function(app) {
 				var name_ll = cb.fullName.split(" ");
 				if(name_ll.length > 2) {
 					// May have middle name
-					chargeback.gateway_data.FirstName = name_ll[0]
-					chargeback.gateway_data.MiddleName = name_ll[1]
-					chargeback.gateway_data.LastName = name_ll[name_ll.len -1]
+					chargeback.gateway_data.FirstName = name_ll[0];
+					chargeback.gateway_data.MiddleName = name_ll[1];
+					chargeback.gateway_data.LastName = name_ll[name_ll.len -1];
 				} else {
-					chargeback.gateway_data.FirstName = name_ll[0]
-					chargeback.gateway_data.LastName = name_ll[1]
+					chargeback.gateway_data.FirstName = name_ll[0];
+					chargeback.gateway_data.LastName = name_ll[1];
 				}
 
 			}
 			if(cb.hasOwnProperty("sendTo")) {
-				var sendTo_ll = cb.sendTo.split(":")
+				var sendTo_ll = cb.sendTo.split(":");
 				//if( sendTo_ll[0] == "email") {
 				//	chargeback.send_to.email = sendTo_ll[1]
 				//} else if(sendTo_ll[0] == "fax") {
 				//	chargeback.send_to.fax = sendTo_ll[1]
 				//}
-				chargeback.send_to[sendTo_ll[0]] = sendTo_ll[1]
+				chargeback.send_to[sendTo_ll[0]] = sendTo_ll[1];
 
 			}
 			
@@ -415,7 +415,7 @@ module.exports = function(app) {
 			chargeback.status = "New";
 			chargeback.manual = true;
 			chargeback.internal_type = cb.internal_type;
-			chargeback.chargebackDate = new Date(cb.chargebackDate)
+			chargeback.chargebackDate = new Date(cb.chargebackDate);
 
 			if (!chargeback.gateway_data.TransType) {
 				chargeback.gateway_data.TransType = "Card Settle";
