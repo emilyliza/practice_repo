@@ -68,7 +68,10 @@ module.exports = function(app) {
 			'Originating'  : {
 				'TransId'   : String,
 				'CvvStatus' : String,
-				'TransAmt'  : Number
+				'TransAmt'  : Number,
+				'AuthCode'  : String,
+				'TransDate' : Date,
+				'OrderId'   : String
 			}
 		},
 		'crm_data' : {

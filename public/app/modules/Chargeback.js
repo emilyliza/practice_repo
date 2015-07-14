@@ -99,8 +99,12 @@
 		
 		$scope.methods = {};
 		$scope.settings = {
-			openeda: false,
-			openedb: false
+			chargeBackDateOpened: false,
+			transDateOpened: false,
+			transDateOrigOpened: false,
+			canceledDateOpened: false,
+			orderDateOpened: false
+
 		};
 		$scope.settings.state = $state;
 		$scope.settings.disableReview = true;
