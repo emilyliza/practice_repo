@@ -193,7 +193,27 @@
 			</div>
 		</div>
 	</div>
-	
+
+	<h4 style="margin-top: 40px; font-weight: bold;">Response Information</h4>
+
+	<div style="font-size: 12px; color: #999; padding-bottom: 10px;">Your bank will usually provide a fax number to send the response to. The values are prepoulated with values set in <a href="/account">your account</a>.</div>
+
+	<div class="row bt">
+		<div class="col-md-6">
+			<div class="form-group" show-errors>
+				<label>Response Fax</label>
+				<input name="send_to_fax"
+					   type="text" class="form-control"
+					   pop-show="{{errors.send_to_fax}}"
+					   pop="{{errors.send_to_fax}}"
+					   pop-placement="right"
+					   ng-model="data.send_to.fax"
+					   pop-append-to-body
+					   ng-change="methods.ds()" >
+			</div>
+		</div>
+	</div>
+
 
 	<h4 style="font-weight: bold;">Customer</h4>
 
