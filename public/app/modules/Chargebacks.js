@@ -1,20 +1,20 @@
 (function() {
 
 	angular.module('chargebacks', ['ui.router', 'ngAnimate', 'infinite-scroll', 'user'])
-	
+
 	.config(['$stateProvider', function( $stateProvider ) {
-		
+
 		$stateProvider.state('chargebacks', {
 			url: '/chargebacks?status&start&end&cctype&mid&merchant',
 			templateUrl: '/app/templates/chargebacks.html',
 			requiresAuth: true,
 			controller: 'ChargebacksController'
 		});
-	
+
 	}])
 
 	.controller('ChargebacksController', ['$scope', '$timeout', 'ChargebacksService', 'UserService', '$state', '$location', function($scope, $timeout, ChargebacksService, UserService, $state, $location) {
-		
+
 		var s = moment().utc().subtract(6, 'month').format(),
 			e = moment().utc().format();
 
@@ -36,7 +36,7 @@
 			}
 		};
 
-		
+
 
 		$scope.filters = "";
 		_.forOwn($state.params, function(num,key) {
@@ -45,11 +45,20 @@
 				$scope.filters += key + "=" + $state.params[key];
 			}
 		});
-		
-		
 
-		$scope.cbs = new ChargebacksService();	
-		
+		$scope.n_pdfs_tobe_downloaded = 0;
+        $scope.pdf_checkbox  = function(cb) {
+            if(cb.checked) {
+                $scope.n_pdfs_tobe_downloaded += 1;
+            } else {
+                if($scope.n_pdfs_tobe_downloaded > 0) {
+                    $scope.n_pdfs_tobe_downloaded -= 1;
+                }
+            }
+        };
+
+		$scope.cbs = new ChargebacksService();
+
 		$scope.load_start = false;
 		$scope.load_end = false;
 		$scope.$watch("date.start.val", function(newValue, oldValue){
@@ -90,7 +99,7 @@
 	}])
 
 	.factory('ChargebacksService', ['$http', '$timeout', '$state', '$window', function ($http, $timeout, $state, $window) {
-		
+
 		var ChargebacksService = function() {
 			this.data = [];
 			this.busy = false;
@@ -113,7 +122,7 @@
 			this.last_page = false;
 			return;
 		};
-		
+
 
 		ChargebacksService.prototype.clearAndRun = function(q) {
 			// reset
@@ -125,11 +134,11 @@
 			this.nextPage();
 			return;
 		};
-		
+
 
 		ChargebacksService.prototype.search = function(query) {
 			var _this = this;
-			
+
 			query = query.trim();
 
 			// min query length is 2 chars
@@ -171,11 +180,11 @@
     			this.data = [];
     			this.lastQuery = this.query;
     		}
-    		
+
     		var url = '/api/v1/chargebacks?page=' + this.page;
     		//url += '&start=' + this.start + "&end=" + this.end;
     		url += '&limit=30&query=' + this.query;
-    		
+
     		// additional params such as start, end, cctype, merchant, etc
     		if ($state.params) {
     			_.each(_.keys($state.params), function(k) {
@@ -189,7 +198,7 @@
     			_this.busy = false;
     			return url + '&export=csv&cbkey=' + $window.sessionStorage.token;
     		}
-    		
+
     		if (this.page == this.last_page) {
     			this.busy = false;
     			return;
@@ -205,7 +214,7 @@
 			.success(function (rows) {
 				_this.loaded = true;
 				var new_data = rows;
-				
+
 				_.each(new_data, function(d) {
 					_this.data.push(d);
 				});
@@ -214,7 +223,7 @@
 				if (rows.length == 30) {
 					_this.page++;
 				}
-				
+
 				$timeout(function() {
 					_this.busy = false;
 				},50);

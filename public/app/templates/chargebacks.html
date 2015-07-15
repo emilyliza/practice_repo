@@ -3,7 +3,7 @@
 	<div class="col-md-3">
 		<h2>Chargebacks</h2>
 	</div>
-	
+
 	<div class="col-md-4 dateRange" style="text-align: center; margin-top: 20px;">
 		<a href="#" datepicker-popup="MM/dd/yyyy" ng-model="date.start.val" is-open="date.start.opened" ng-click="date.start.opened=true" isdate >{{date.start.val | date:'MM/dd/yyyy'}}</a> thru
 		<a href="#" datepicker-popup="MM/dd/yyyy" ng-model="date.end.val" is-open="date.end.opened" ng-click="date.end.opened=true" isdate >{{date.end.val | date:'MM/dd/yyyy'}}</a>
@@ -28,17 +28,24 @@
 	<div class="row head">
 		<div class="col-sm-2">Date</div>
 		<div class="col-sm-2">Amount</div>
-		<div class="col-sm-3">Customer</div>
+		<div class="col-sm-2">Customer</div>
 		<div class="col-sm-2">Case Number</div>
-		<div class="col-sm-3">Status</div>
+		<div class="col-sm-2">Status</div>
+
+		<!-- Download Link -->
+		<div class="col-sm-2">
+			<span ng-if="n_pdfs_tobe_downloaded > 0"><a href="">Download PDFs</a></span>
+			<span ng-if="0 == n_pdfs_tobe_downloaded">Download PDFs</span>
+		</div>
+
 	</div>
 
 	<div class="row" ng-repeat="cb in cbs.data">
 		<div class="col-sm-2" ng-click="goTo(cb)">{{cb.chargebackDate | date:'MM/dd/yyyy'}}</div>
 		<div class="col-sm-2" ng-click="goTo(cb)">{{cb.portal_data.ChargebackAmt | currency}}</div>
-		<div class="col-sm-3" ng-click="goTo(cb)">{{cb.gateway_data.FirstName}} {{cb.gateway_data.LastName}}&nbsp;</div>
+		<div class="col-sm-2" ng-click="goTo(cb)">{{cb.gateway_data.FirstName}} {{cb.gateway_data.LastName}}&nbsp;</div>
 		<div class="col-sm-2" ng-click="goTo(cb)">{{cb.portal_data.CaseNumber}}</div>
-		<div class="col-sm-3 status-colors" ng-click="goTo(cb)">
+		<div class="col-sm-2 status-colors" ng-click="goTo(cb)">
 			<span ng-if="cb.status == 'New'" class="{{cb.status}}"><b>New</b>: Work Chargeback</span>
 			<span ng-if="cb.status != 'New'" class="{{cb.status}}">
 				<span ng-if="cb.status == 'Errored'" class="text-danger">{{cb.status}} &nbsp;</span>
@@ -52,12 +59,17 @@
 			</span>
 		</div>
 
+		<!-- Download checkbox -->
+		<div class="col-sm-2">
+			<input type="checkbox" ng-model="cb.checked" ng-click="pdf_checkbox(cb)">
+		</div>
+
 	</div>
-	
+
 	<div class="row" ng-if="cbs.loaded && cbs.data.length == 0">
 		<div class="col-sm-12"><h3>No chargebacks found {{date.start.val | date:'MM/dd/yyyy'}} thru {{date.end.val | date:'MM/dd/yyyy'}}</h3></div>
-	</div>	
+	</div>
 	<div class="row" ng-if="!cbs.loaded">
 		<div class="col-sm-12"><h3 style="color: #999;">Loading Chargebacks...</h3></div>
-	</div>	
+	</div>
 </div>
