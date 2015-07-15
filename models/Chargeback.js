@@ -264,6 +264,11 @@ module.exports = function(app) {
 			];
 		}
 
+		match['$or'] = [
+			{'visible':{'$exists': false}},
+			{'visible': true}
+		];
+
 		return match;
 	};
 

@@ -70,6 +70,7 @@
 						.then(function(res){
 							res.data.visible = false;
 							$http.put('/api/v1/Chargeback/' + res.data._id, res.data)
+							window.location.reload();
 						});
 				}
 			});
