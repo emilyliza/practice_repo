@@ -69,12 +69,12 @@
 					$http.get('/api/v1/Chargeback/' + cb._id)
 						.then(function(res){
 							res.data.visible = false;
-							$http.put('/api/v1/Chargeback/' + res.data._id, res.data)
+							$http.put('/api/v1/Chargeback/' + res.data._id, res.data);
 							$scope.cbs.clearAndRun();
 						});
 				}
 			});
-		}
+		};
 
 		$scope.cbs = new ChargebacksService();	
 		
