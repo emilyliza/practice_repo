@@ -138,12 +138,6 @@ module.exports = function(app) {
 
 		}
 		
-		
-
-			
-
-		
-
 	});
 
 	app.get('/api/v1/chargeback/:_id', mw.auth(), function(req, res, next) {
@@ -160,7 +154,6 @@ module.exports = function(app) {
 			.pipe(res);
 
 	});
-
 
 	app.post('/api/v1/chargebacks', mw.auth(), function(req, res, next) {
 
@@ -550,6 +543,5 @@ module.exports = function(app) {
 		.pipe(res);
 
 	});
-
 
 };
