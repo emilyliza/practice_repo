@@ -34,7 +34,7 @@
 
 		<!-- Download Link -->
 		<div class="col-sm-2">
-			<span ng-if="n_pdfs_tobe_downloaded > 0"><a href="">Download PDFs</a></span>
+			<span ng-if="n_pdfs_tobe_downloaded > 0" ng_click="pdf_download_click()"><a href="">Download PDFs</a></span>
 			<span ng-if="0 == n_pdfs_tobe_downloaded">Download PDFs</span>
 		</div>
 
@@ -55,13 +55,12 @@
 				<span ng-if="cb.status == 'Won'" class="glyphicon glyphicon-thumbs-up"></span>
 				<span ng-if="cb.status == 'Lost'" class="glyphicon glyphicon-thumbs-down"></span>
 				<span ng-if="cb.status == 'Errored'" class="glyphicon glyphicon-exclamation-sign text-danger"></span>
-
 			</span>
 		</div>
 
 		<!-- Download checkbox -->
 		<div class="col-sm-2">
-			<input type="checkbox" ng-model="cb.checked" ng-click="pdf_checkbox(cb)">
+			<input type="checkbox" ng-model="cb.checked" ng-click="pdf_checkbox(cb)" ng-disabled="['Sent', 'Won', 'Lost'].indexOf(cb.status) < 0">
 		</div>
 
 	</div>
@@ -73,3 +72,16 @@
 		<div class="col-sm-12"><h3 style="color: #999;">Loading Chargebacks...</h3></div>
 	</div>
 </div>
+
+
+
+
+
+
+
+
+
+
+
+
+

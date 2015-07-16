@@ -1,6 +1,6 @@
 (function() {
 
-	angular.module('chargebacks', ['ui.router', 'ngAnimate', 'infinite-scroll', 'user'])
+	angular.module('chargebacks', ['chargeback', 'ui.router', 'ngAnimate', 'infinite-scroll', 'user'])
 
 	.config(['$stateProvider', function( $stateProvider ) {
 
@@ -13,7 +13,8 @@
 
 	}])
 
-	.controller('ChargebacksController', ['$scope', '$timeout', 'ChargebacksService', 'UserService', '$state', '$location', function($scope, $timeout, ChargebacksService, UserService, $state, $location) {
+	.controller('ChargebacksController', ['$scope', '$timeout', 'ChargebacksService', 'ChargebackService', 'UserService', '$state', '$location',
+            function($scope, $timeout, ChargebacksService, ChargebackService, UserService, $state, $location) {
 
 		var s = moment().utc().subtract(6, 'month').format(),
 			e = moment().utc().format();
@@ -36,8 +37,6 @@
 			}
 		};
 
-
-
 		$scope.filters = "";
 		_.forOwn($state.params, function(num,key) {
 			if ($state.params[key] && _.contains(['status', 'merchant', 'mid', 'cctype'], key)) {
@@ -46,6 +45,9 @@
 			}
 		});
 
+        $scope.cbs = new ChargebacksService();
+
+        // Code for handling selection and bulk PDF downloads
 		$scope.n_pdfs_tobe_downloaded = 0;
         $scope.pdf_checkbox  = function(cb) {
             if(cb.checked) {
@@ -56,8 +58,25 @@
                 }
             }
         };
-
-		$scope.cbs = new ChargebacksService();
+        $scope.pdf_download_list = [];
+        $scope.pdf_download_click = function() {
+            var cb, ret;
+            $scope.pdf_download_list = [];
+            for(var i = 0; i < $scope.cbs.data.length; i++) {
+                cb = $scope.cbs.data[i];
+                if(cb.checked) {
+                    ChargebackService.getLink(cb._id).then(function(res) {
+                        if (res.data.url) {
+                            window.open( res.data.url, "_blank");
+                            //window.location.href = res.data.url;
+                            //Content-Disposition: attachment;filename="whatever.mp3";
+                        } else {
+                            alert('Bug in getLink() -- contact system admin');
+                        }
+                    })
+                }
+            }
+        };
 
 		$scope.load_start = false;
 		$scope.load_end = false;
@@ -98,7 +117,7 @@
 
 	}])
 
-	.factory('ChargebacksService', ['$http', '$timeout', '$state', '$window', function ($http, $timeout, $state, $window) {
+    .factory('ChargebacksService', ['$http', '$timeout', '$state', '$window', function ($http, $timeout, $state, $window) {
 
 		var ChargebacksService = function() {
 			this.data = [];
