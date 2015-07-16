@@ -239,6 +239,37 @@ module.exports = function(app) {
 		});
 	};
 
+	/*
+	Remove any leading $ characters from the value for each path
+	 */
+	Chargeback.cleanDollarAmounts = function(data_dd, paths_ll) {
+		lodash.each(paths_ll, function(path ) {
+			// Split path into individual keys.
+			var keys_ll = path.split(".");
+			var path_dest = data_dd;	// start at the root
+			var finalKey = '';
+			// Follow the path in the object
+			lodash.each(keys_ll, function(key){
+				//Is the value at the next key an object
+				if( typeof path_dest[key] == 'object') {
+					path_dest = path_dest[key];
+				} else {
+					// Not object so at end.
+					finalKey = key;
+				}
+			});
+
+			var val = path_dest[finalKey];
+			if (lodash.isString(val)) {
+				val = val.trim();
+				if( val.slice(0, 1) == '$') {
+					val = val.slice(1);
+				}
+			}
+			path_dest[finalKey] = val;
+		});
+
+	};
 	
 	Chargeback.setMatch = function(req) {
 
