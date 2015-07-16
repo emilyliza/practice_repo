@@ -266,6 +266,7 @@ module.exports = function(app) {
 			Chargeback.clearNulls(cb, 'gateway_data');
 			Chargeback.clearNulls(cb, 'shipping_data');
 			Chargeback.clearNulls(cb, 'portal_data');
+			Chargeback.cleanDollarAmounts(cb, ["portal_data.ChargebackAmt","gateway_data.TransAmt","gateway_data.Originating.TransAmt","crm_data.PricePoint","crm_data.RefundAmount"])
 			
 			var chargeback = new Chargeback();
 			chargeback.crm_data = cb.crm_data;
@@ -274,8 +275,9 @@ module.exports = function(app) {
 			chargeback.gateway_data = cb.gateway_data;
 
 			chargeback.chargebackDate = cb.chargebackDate;
+
 			if(cb.hasOwnProperty("cardSwipe")) {
-				chargeback.type = cb.cardSwipe;
+				chargeback.type = cb.cardSwipe.toLowerCase();
 				chargeback.status = "In-Progress";
 			} else {
 				chargeback.status = "New";
