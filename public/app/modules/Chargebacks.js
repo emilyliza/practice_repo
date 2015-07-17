@@ -14,7 +14,7 @@
 	}])
 
 	.controller('ChargebacksController', ['$scope', '$timeout', 'ChargebacksService', 'ChargebackService', 'UserService', '$state', '$location', '$modal', '$http',
-            function($scope, $timeout, ChargebacksService, ChargebackService, UserService, $state, $location) {
+            function($scope, $timeout, ChargebacksService, ChargebackService, UserService, $state, $location, $modal, $http) {
 
 		var s = moment().utc().subtract(6, 'month').format(),
 			e = moment().utc().format();
@@ -87,37 +87,45 @@
                 }
             }
         };
-        $scope.pdf_download_click = function() {
+        //$scope.pdf_bulk_download_click = function() {
+        //    //var content = 'data:text/txt,Now is the time' + '\n';
+        //    var content = 'data:text,Now is the time' + '\n';
+        //    a = document.createElement("a");
+        //    a.href = content;
+        //    console.log(a.href);
+        //    a.download = "mydownload3";
+        //    a.click();
+        //};
+        var _get_save_download = function(res){
+            // for non-IE
+            if (!window.ActiveXObject) {
+                console.log("[1] " + res.data.url);
+                $http.get(res.data.url).then(function(res1) {
+                    var filename, case_num = cb.portal_data.CaseNumber;
+                    filename = 'Createdby_Chargeback.com_for_' + cb.user.name + '_' + case_num + '.pdf';
+                    var a = document.createElement('a');
+                    a.href = res1.data;
+                    a.download = filename;
+                    a.click();
+                    (window.URL || window.webkitURL).revokeObjectURL(a.href);
+                });
+            }
+            // for IE
+            else if (!!window.ActiveXObject && document.execCommand) {
+                var _window = window.open(fileURL, '_blank');
+                _window.document.close();
+                _window.document.execCommand('SaveAs', true, fileName || fileURL);
+                _window.close();
+            }
+        };
+        $scope.pdf_bulk_download_click = function() {
             for(var i = 0; i < $scope.cbs.data.length; i++) {
                 (function () {
                     var cb = $scope.cbs.data[i];
                     if (cb.checked) {
-                        ChargebackService.getLink(cb._id).then(function (res) {
-                            var case_num = cb.portal_data.CaseNumber;
-                            console.log("[1] " + case_num);
+                        ChargebackService.getLink(cb._id).then(function(res) {
                             if (res.data.url) {
-                                //$scope.saveUrlData(res.data.url, filename);
-                                //$scope.download_file2disk(res.data.url, filename);
-                                if (!window.ActiveXObject) {
-                                    var a = document.createElement('a');
-                                    document.body.appendChild(a);
-                                    a.style = "display: none";
-                                    a.href = res.data.url;
-                                    //save.target = '_blank';
-                                    a.download = 'Chargeback_for_' + cb.user.name + '_' + case_num + '.pdf';
-                                    a.click();
-                                    //var event = document.createEvent('Event');
-                                    //event.initEvent('click', true, true);
-                                    //a.dispatchEvent(event);
-                                    (window.URL || window.webkitURL).revokeObjectURL(a.href);
-                                }
-                                // for IE
-                                else if (!!window.ActiveXObject && document.execCommand) {
-                                    var _window = window.open(fileURL, '_blank');
-                                    _window.document.close();
-                                    _window.document.execCommand('SaveAs', true, fileName || fileURL);
-                                    _window.close();
-                                }
+                                _get_save_download(res);
                             } else {
                                 alert('URL for PDF not found -- contact system admin');
                             }
@@ -126,42 +134,46 @@
                 })();
             }
         };
-        //$scope.saveUrlData = (function () {
-        //    var a = document.createElement("a");
-        //    document.body.appendChild(a);
-        //    a.style = "display: none";
-        //    return function (data, fileName) {
-        //        var json = JSON.stringify(data),
-        //            blob = new Blob([json], {type: "octet/stream"}),
-        //            url = window.URL.createObjectURL(blob);
-        //        a.href = url;
-        //        a.download = fileName;
-        //        a.click();
-        //        window.URL.revokeObjectURL(url);
-        //    };
-        //}());
-        //$scope.download_file2disk = function(fileURL, fileName) {
-        //    // for non-IE
-        //    if (!window.ActiveXObject) {
-        //        var a = document.createElement('a');
-        //        document.body.appendChild(a);
-        //        a.style = "display: none";
-        //        a.href = fileURL;
-        //        //save.target = '_blank';
-        //        a.download = fileName;
-        //        console.log("[2] " + fileName);
-        //        a.click();
-        //        //var event = document.createEvent('Event');
-        //        //event.initEvent('click', true, true);
-        //        //a.dispatchEvent(event);
-        //        (window.URL || window.webkitURL).revokeObjectURL(a.href);
-        //    }
-        //    // for IE
-        //    else if ( !! window.ActiveXObject && document.execCommand)     {
-        //        var _window = window.open(fileURL, '_blank');
-        //        _window.document.close();
-        //        _window.document.execCommand('SaveAs', true, fileName || fileURL);
-        //        _window.close();
+
+        //$scope.pdf_bulk_download_click = function() {
+        //    for(var i = 0; i < $scope.cbs.data.length; i++) {
+        //        (function () {
+        //            var cb = $scope.cbs.data[i];
+        //            if (cb.checked) {
+        //                ChargebackService.getLink(cb._id).then(function (res) {
+        //                    var filename, case_num = cb.portal_data.CaseNumber;
+        //                    if (res.data.url) {
+        //                        //$scope.saveUrlData(res.data.url, filename);
+        //                        //$scope.download_file2disk(res.data.url, filename);
+        //                        if (!window.ActiveXObject) {
+        //                            filename = 'Createdby_Chargeback.com_for_' + cb.user.name + '_' + case_num + '.pdf';
+        //                            //saveAs(res.data.url, filename);
+        //                            var a = document.createElement('a');
+        //                            a.download = filename;
+        //                            document.body.appendChild(a);
+        //                            a.style = "display: none";
+        //                            a.href = res.data.url;
+        //                            a.target = '_blank';
+        //                            console.log("[1] " + a.getAttribute('download'));
+        //                            a.click();
+        //                            //var event = document.createEvent('Event');
+        //                            //event.initEvent('click', true, true);
+        //                            //a.dispatchEvent(event);
+        //                            (window.URL || window.webkitURL).revokeObjectURL(a.href);
+        //                        }
+        //                        // for IE
+        //                        else if (!!window.ActiveXObject && document.execCommand) {
+        //                            var _window = window.open(fileURL, '_blank');
+        //                            _window.document.close();
+        //                            _window.document.execCommand('SaveAs', true, fileName || fileURL);
+        //                            _window.close();
+        //                        }
+        //                    } else {
+        //                        alert('URL for PDF not found -- contact system admin');
+        //                    }
+        //                })
+        //            }
+        //        })();
         //    }
         //};
 
