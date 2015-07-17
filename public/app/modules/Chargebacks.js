@@ -13,7 +13,7 @@
 
 	}])
 
-	.controller('ChargebacksController', ['$scope', '$timeout', 'ChargebacksService', 'ChargebackService', 'UserService', '$state', '$location',
+	.controller('ChargebacksController', ['$scope', '$timeout', 'ChargebacksService', 'ChargebackService', 'UserService', '$state', '$location', '$modal', '$http',
             function($scope, $timeout, ChargebacksService, ChargebackService, UserService, $state, $location) {
 
 		var s = moment().utc().subtract(6, 'month').format(),
@@ -25,6 +25,8 @@
 		if ($state.params.end) {
 			e = moment( parseInt($state.params.end) ).utc().format();
 		}
+
+		$scope.methods = {};
 
 		$scope.date = {
 			start: {
@@ -45,6 +47,33 @@
 			}
 		});
 
+		$scope.methods.hideChargeback = function(cb, msg, confirmbtn, cancelbtn){
+			var modalInstance = $modal.open({
+				templateUrl: '/app/templates/confirm-modal.html',
+				controller: 'ModalInstanceCtrl',
+				size: "md",
+				resolve: {
+					data: function () {
+						return {
+							'msg': msg,
+							'confirm': confirmbtn,
+							'cancel': cancelbtn
+						};
+					}
+				}
+			});
+			modalInstance.result.then(function (confirm) {
+				if (confirm) {
+					$http.get('/api/v1/Chargeback/' + cb._id)
+						.then(function(res){
+							res.data.visible = false;
+							$http.put('/api/v1/Chargeback/' + res.data._id, res.data);
+							$scope.cbs.clearAndRun();
+						});
+				}
+			});
+		};
+
         $scope.cbs = new ChargebacksService();
 
         // Code for handling selection and bulk PDF downloads
@@ -58,25 +87,83 @@
                 }
             }
         };
-        $scope.pdf_download_list = [];
         $scope.pdf_download_click = function() {
-            var cb, ret;
-            $scope.pdf_download_list = [];
             for(var i = 0; i < $scope.cbs.data.length; i++) {
-                cb = $scope.cbs.data[i];
-                if(cb.checked) {
-                    ChargebackService.getLink(cb._id).then(function(res) {
-                        if (res.data.url) {
-                            window.open( res.data.url, "_blank");
-                            //window.location.href = res.data.url;
-                            //Content-Disposition: attachment;filename="whatever.mp3";
-                        } else {
-                            alert('Bug in getLink() -- contact system admin');
-                        }
-                    })
-                }
+                (function () {
+                    var cb = $scope.cbs.data[i];
+                    if (cb.checked) {
+                        ChargebackService.getLink(cb._id).then(function (res) {
+                            var case_num = cb.portal_data.CaseNumber;
+                            console.log("[1] " + case_num);
+                            if (res.data.url) {
+                                //$scope.saveUrlData(res.data.url, filename);
+                                //$scope.download_file2disk(res.data.url, filename);
+                                if (!window.ActiveXObject) {
+                                    var a = document.createElement('a');
+                                    document.body.appendChild(a);
+                                    a.style = "display: none";
+                                    a.href = res.data.url;
+                                    //save.target = '_blank';
+                                    a.download = 'Chargeback_for_' + cb.user.name + '_' + case_num + '.pdf';
+                                    a.click();
+                                    //var event = document.createEvent('Event');
+                                    //event.initEvent('click', true, true);
+                                    //a.dispatchEvent(event);
+                                    (window.URL || window.webkitURL).revokeObjectURL(a.href);
+                                }
+                                // for IE
+                                else if (!!window.ActiveXObject && document.execCommand) {
+                                    var _window = window.open(fileURL, '_blank');
+                                    _window.document.close();
+                                    _window.document.execCommand('SaveAs', true, fileName || fileURL);
+                                    _window.close();
+                                }
+                            } else {
+                                alert('URL for PDF not found -- contact system admin');
+                            }
+                        })
+                    }
+                })();
             }
         };
+        //$scope.saveUrlData = (function () {
+        //    var a = document.createElement("a");
+        //    document.body.appendChild(a);
+        //    a.style = "display: none";
+        //    return function (data, fileName) {
+        //        var json = JSON.stringify(data),
+        //            blob = new Blob([json], {type: "octet/stream"}),
+        //            url = window.URL.createObjectURL(blob);
+        //        a.href = url;
+        //        a.download = fileName;
+        //        a.click();
+        //        window.URL.revokeObjectURL(url);
+        //    };
+        //}());
+        //$scope.download_file2disk = function(fileURL, fileName) {
+        //    // for non-IE
+        //    if (!window.ActiveXObject) {
+        //        var a = document.createElement('a');
+        //        document.body.appendChild(a);
+        //        a.style = "display: none";
+        //        a.href = fileURL;
+        //        //save.target = '_blank';
+        //        a.download = fileName;
+        //        console.log("[2] " + fileName);
+        //        a.click();
+        //        //var event = document.createEvent('Event');
+        //        //event.initEvent('click', true, true);
+        //        //a.dispatchEvent(event);
+        //        (window.URL || window.webkitURL).revokeObjectURL(a.href);
+        //    }
+        //    // for IE
+        //    else if ( !! window.ActiveXObject && document.execCommand)     {
+        //        var _window = window.open(fileURL, '_blank');
+        //        _window.document.close();
+        //        _window.document.execCommand('SaveAs', true, fileName || fileURL);
+        //        _window.close();
+        //    }
+        //};
 
 		$scope.load_start = false;
 		$scope.load_end = false;
