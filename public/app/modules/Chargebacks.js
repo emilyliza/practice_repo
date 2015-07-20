@@ -107,7 +107,7 @@
                             } else {
                                 alert('URL for PDF not found -- contact system admin');
                             }
-                        })
+                        });
                     }
                 })();
             }
