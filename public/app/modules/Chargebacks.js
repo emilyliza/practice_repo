@@ -87,22 +87,22 @@
                 }
             }
         };
-        var _get_save_download = function(res, filename){
+        var _get_save_download = function(res){
             a = document.createElement("a");
             a.href = res.data.url;
             console.log(a.href);
-            a.download = filename;
+            a.download = 'MyDownload.pdf';
             a.click();
         };
         $scope.pdf_bulk_download_click = function() {
             for (var i = 0; i < $scope.cbs.data.length; i++) {
                 var cb = $scope.cbs.data[i];
-                var case_num = cb.portal_data.CaseNumber;
-                const filename = 'Createdby_Chargeback.com_for_' + cb.user.name + '_' + case_num + '.pdf';
+                case_num = cb.portal_data.CaseNumber;
+                filename = 'Createdby_Chargeback.com_for_' + cb.user.name + '_' + case_num + '.pdf';
                 if (cb.checked) {
                     ChargebackService.getLink(cb._id).then(function (res) {
                         if (res.data.url) {
-                            _get_save_download(res, filename);
+                            _get_save_download(res);
                         } else {
                             alert('URL for PDF not found -- contact system admin');
                         }
