@@ -25,7 +25,7 @@ module.exports = function(app) {
 			if (!pass) {
 				// if current user is not parent of filtered user, then we 
 				// have a security problem, so dump out...
-				log.log(req.user._id + ' trying to accsss ' + params.user);
+				log.log(req.user._id + ' trying to access ' + params.user);
 				return res.json(401, 'Unauthorized');
 			}
 			this();
