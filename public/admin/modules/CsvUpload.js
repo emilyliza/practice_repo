@@ -1,27 +1,3 @@
-/*********
- * Convert the dot notated items into a Javascript Object.
- * @param existing
- * @param map
- * @returns {{}}
- */
-function buildDataList(map, k, value, b) {
-	var key = map[k] || k,
-	second = false;
-	if (key.match(/\./)) {
-		var parts = key.split(".");		// only handles one level of nested json!
-		key = parts[0];
-		second = parts[1];
-	}
-	if (second) {
-		if (!b[key]) {
-			b[key] = {};
-		}
-		b[key][second] = value;
-	} else {
-		b[key] = value;
-	}
-}
-
 (function() {
 
 	angular.module('csvupload', ['ui.router', 'ngCsvImport'])
@@ -50,80 +26,133 @@ function buildDataList(map, k, value, b) {
 		$scope.user = "";
 		$scope.chargebacks = [];
 
-		$scope.cbFields = [
-			"status",
-			"merchant",
-			"chargebackDate",
-			"type",
-			"fullName",
-			"cardSwipe",
-			"sendTo",
-			'CardNumber',	// not stored, but used to determine prefix, suffix and type
-			'portal_data.CaseNumber',
-			'portal_data.RefNumber',
-			'portal_data.CcPrefix',
-			'portal_data.CcSuffix',
-			'portal_data.ChargebackAmt',
-			'portal_data.MidNumber',
-			'portal_data.ReasonCode',
-			'portal_data.ReasonText',
-			'gateway_data.AuthCode',
-			'gateway_data.AvsStatus',
-			'gateway_data.FirstName',
-			'gateway_data.MiddleName',
-			'gateway_data.LastName',
-			'gateway_data.BillingAddr1',
-			'gateway_data.BillingAddr2',
-			'gateway_data.BillingCity',
-			'gateway_data.BillingCountry',
-			'gateway_data.BillingPostal',
-			'gateway_data.BillingState',
-			'gateway_data.Phone',
-			'gateway_data.CcExpire',
-			'gateway_data.CcType',
-			'gateway_data.Currency',
-			'gateway_data.CvvStatus',
-			'gateway_data.OrderId',
-			'gateway_data.TransHistory',
-			'gateway_data.TransId',
-			'gateway_data.TransStatus',
-			'gateway_data.TransType',
-			'gateway_data.TransDate',
-			'crm_data.OrderDate',
-			'crm_data.DeliveryAddr1',
-			'crm_data.DeliveryAddr2',
-			'crm_data.DeliveryCity',
-			'crm_data.DeliveryCountry',
-			'crm_data.DeliveryPostal',
-			'crm_data.DeliveryState',
-			'crm_data.Email',
-			'crm_data.IpAddress',
-			'crm_data.PricePoint',
-			'crm_data.ProductName',
-			'crm_data.IsRecurring',
-			'crm_data.CancelDateSystem',
-			'crm_data.RefundDateFull',
-			'crm_data.RefundDatePartial',
-			'crm_data.RefundAmount',
-			'crm_data.Rma',
-			'shipping_data.has_tracking',
-			'shipping_data.ShippingDate',
-			'shipping_data.TrackingNum',
-			'shipping_data.TrackingSum'
-		];
+		$scope.cbFieldsObj = {
+			status:"status",
+			merchant:"merchant",
+			chargebackdate:"chargebackDate",
+			type:"type",
+			fullname:"fullName",
+			cardswipe:"cardSwipe",
+			sendto:"sendTo",
+			cardnumber:'CardNumber',	// not stored, but used to determine prefix, suffix and type
+			casenumber:'portal_data.CaseNumber',
+			refnumber:'portal_data.RefNumber',
+			ccprefix:'portal_data.CcPrefix',
+			ccsuffix:'portal_data.CcSuffix',
+			chargebackamt:'portal_data.ChargebackAmt',
+			midnumber:'portal_data.MidNumber',
+			reasoncode:'portal_data.ReasonCode',
+			reasontext:'portal_data.ReasonText',
+			authcode:'gateway_data.AuthCode',
+			avsstatus:'gateway_data.AvsStatus',
+			firstname:'gateway_data.FirstName',
+			middlename:'gateway_data.MiddleName',
+			lastname:'gateway_data.LastName',
+			billingaddr1:'gateway_data.BillingAddr1',
+			billingaddr2:'gateway_data.BillingAddr2',
+			billingcity:'gateway_data.BillingCity',
+			billingcountry:'gateway_data.BillingCountry',
+			billingpostal:'gateway_data.BillingPostal',
+			billingstate:'gateway_data.BillingState',
+			phone:'gateway_data.Phone',
+			ccexpire:'gateway_data.CcExpire',
+			cctype:'gateway_data.CcType',
+			currency:'gateway_data.Currency',
+			cvvstatus:'gateway_data.CvvStatus',
+			orderid:'gateway_data.OrderId',
+			transhistory:'gateway_data.TransHistory',
+			transid:'gateway_data.TransId',
+			transstatus:'gateway_data.TransStatus',
+			transtype:'gateway_data.TransType',
+			transdate:'gateway_data.TransDate',
+			transamt:'gateway_data.TransAmt',
+			'orig-transid':'gateway_data.Originating.TransId',
+			'orig-cvvstatus':'gateway_data.Originating.CvvStatus',
+			'orig-transdate':'gateway_data.Originating.TransDate',
+			'orig-transamt':'gateway_data.Originating.TransAmt',
+			'orig-authcode':'gateway_data.Originating.AuthCode',
+			'orig-orderid':'gateway_data.Originating.OrderId',
+			orderdate:'crm_data.OrderDate',
+			deliveryaddr1:'crm_data.DeliveryAddr1',
+			deliveryaddr2:'crm_data.DeliveryAddr2',
+			deliverycity:'crm_data.DeliveryCity',
+			deliverycountry:'crm_data.DeliveryCountry',
+			deliverypostal:'crm_data.DeliveryPostal',
+			deliverystate:'crm_data.DeliveryState',
+			email:'crm_data.Email',
+			ipaddress:'crm_data.IpAddress',
+			pricepoint:'crm_data.PricePoint',
+			productname:'crm_data.ProductName',
+			isrecurring:'crm_data.IsRecurring',
+			canceldatesystem:'crm_data.CancelDateSystem',
+			refunddatefull:'crm_data.RefundDateFull',
+			refunddatepartial:'crm_data.RefundDatePartial',
+			refundamount:'crm_data.RefundAmount',
+			rma:'crm_data.Rma',
+			has_tracking:'shipping_data.has_tracking',
+			shippingdate:'shipping_data.ShippingDate',
+			trackingnum:'shipping_data.TrackingNum',
+			trackingsum:'shipping_data.TrackingSum'
+		};
+
+
 
 		$scope.service = CsvService;
-		
-		$scope.blowItUp = function() {
-			var f = CsvService.mapAll($scope.json, $scope.map);
-			$scope.chargebacks = f;
+
+		/****************
+		 appendCbData
+		 @param: cb - the chargeback to modify
+		 @param: path - the dot notation path in the object to store value.
+		 @param: value - value to store
+
+		 @return:
+		 @out: The cb object is updated.
+		 **********************/
+		$scope.appendCbData = function(cb, path, value) {
+			// Break the path into its pieces
+			var path_ll = path.split(".");
+			// Get the last key in the path
+			var last_key = path_ll.slice(-1)[0];
+			// Remove the last key from the path list
+			path_ll = path_ll.slice(0,-1);
+			// Start with a reference to the root of cb
+			var dest = cb;
+
+			// Walk down the path, creating objects as we go if not there.
+			for( var i = 0; i < path_ll.length; i++) {
+				// Is there something here?
+				if( !dest[path_ll[i]]) {
+					// Nope, create an object
+					dest[path_ll[i]] = {};
+				}
+				// Move dest to next object
+				dest = dest[path_ll[i]];
+			}
+			// Save the value.
+			dest[last_key] = value;
 		};
 
 		$scope.save = function() {
-			
-			CsvService.save( { 'user': $scope.user, 'chargebacks': $scope.chargebacks } ).then(function () {
+			$scope.chargebacks = [];
+			// Now we need to convert the CSV objects to dispute objects.
+			_.each($scope.json, function( csvObj) {
+				var cb = {};	// start with empty object
+				// iterate over the key/value pairs for the CSV object
+				_.each(csvObj, function(value, key) {
+					// Did key get mapped? If not skip it.
+					if($scope.map.hasOwnProperty(key)) {
+						// Get the dot notated path into a chargeback object
+						var path = $scope.map[key];
+						// update the chargeback object
+						$scope.appendCbData(cb, path, value);
+					}
+				});
+				// add the chargeback object to the list
+				$scope.chargebacks.push(cb);
+			});
+
+			$scope.service.save( { 'user': $scope.user, 'chargebacks': $scope.chargebacks } ).then(function () {
 				$scope.json = {};
-				$scope.chargebacks = {};
 				$scope.user = "";
 				$state.go('dashboard');
 			}, function (res) {
@@ -141,18 +170,14 @@ function buildDataList(map, k, value, b) {
 				if ($scope.json.length) {
 					_.each($scope.json[0], function(value, key) {
 						key = key.trim();
-						if( key.charAt(0) != '#') {
-							var regex = new RegExp('^' + key + '$', "i");
-							_.each($scope.cbFields, function (test) {
-								var test_ll = test.split(".");
-								// Move element 0 to element 1 if length is 1 else move element 1 to preserve it.
-								test_ll[1] = test_ll.length == 1 ? test_ll[0] : test_ll[1];
-								if (test_ll[1].match(regex)) {
-									//							if (test_ll[1] == key) {
-									$scope.map[key] = test;
-									$scope.blowItUp();
-								}
-							});
+						if( key.charAt(0) !== '#') { // Do we skip this column
+							// Force the key to lower case for matching.
+							var testKey = key.toLowerCase();
+							// Get the path in a dispute if defined in the fields
+							if($scope.cbFieldsObj.hasOwnProperty(testKey)) {
+								var path = $scope.cbFieldsObj[testKey];
+								 $scope.map[key] = path;
+							}
 							$scope.fields.push({'field': key, 'example': value});
 						}
 					});
@@ -167,22 +192,6 @@ function buildDataList(map, k, value, b) {
 			
 		var service = {};
 
-		service.map = function(existing, map) {
-			var b = {};
-			_.each(existing, function(value, k) {
-				if(k.charAt(0) != '#') {
-					buildDataList(map, k, value, b);
-				}
-			});
-			return b;
-		};
-		service.mapAll = function(data, map) {
-			var out = [];
-			_.each(data, function(d) {
-				out.push( service.map(d, map) );
-			});
-			return out;
-		};
 		service.save = function(data) {
 			return $http
 				.post('/api/v1/chargebacks', data)
