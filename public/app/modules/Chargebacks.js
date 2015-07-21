@@ -82,33 +82,33 @@
             if(cb.checked) {
                 $scope.n_pdfs_tobe_downloaded += 1;
             } else {
-                if($scope.n_pdfs_tobe_downloaded > 0) {
+                if ($scope.n_pdfs_tobe_downloaded > 0) {
                     $scope.n_pdfs_tobe_downloaded -= 1;
                 }
+            }
+        };
+        var _download_file = function(res) {
+            if (res.data.url) {
+                var a = document.createElement('a');
+                a.href = res.data.url;
+                a.download = 'MyDownload.pdf';
+                a.click();
+            } else {
+                alert('PDF not found, contact system administrator');
             }
         };
         $scope.pdf_bulk_download_click = function() {
             for (var i = 0; i < $scope.cbs.data.length; i++) {
                 var cb = $scope.cbs.data[i];
                 if (cb.checked) {
-                    ChargebackService.getLink(cb._id).then(function(res) {
-                        if (res.data.url) {
-                            a = document.createElement('a');
-                            a.href = res.data.url;
-                            console.log(a.href);
-                            a.download = 'MyDownload.pdf';
-                            a.click();
-                        } else {
-                            alert('PDF not found, contact system administrator');
-                        }
-                    });
+                    ChargebackService.getLink(cb._id).then(_download_file);
                 }
             }
         };
 
         $scope.load_start = false;
         $scope.load_end = false;
-        $scope.$watch("date.start.val", function(newValue, oldValue){
+        $scope.$watch('date.start.val', function(newValue, oldValue) {
 			if ($scope.load_start) {
 				$location.search('start', moment(new Date(newValue)).utc().valueOf() );
 			}
