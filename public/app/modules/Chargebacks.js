@@ -1,21 +1,21 @@
 (function() {
 
-	angular.module('chargebacks', ['ui.router', 'ngAnimate', 'infinite-scroll', 'user'])
-	
+	angular.module('chargebacks', ['chargeback', 'ui.router', 'ngAnimate', 'infinite-scroll', 'user'])
+
 	.config(['$stateProvider', function( $stateProvider ) {
-		
+
 		$stateProvider.state('chargebacks', {
 			url: '/chargebacks?status&start&end&cctype&mid&merchant',
 			templateUrl: '/app/templates/chargebacks.html',
 			requiresAuth: true,
 			controller: 'ChargebacksController'
 		});
-	
+
 	}])
 
-	.controller('ChargebacksController', ['$scope', '$timeout', 'ChargebacksService', 'UserService', '$state', '$location', '$modal', '$http',
-			function($scope, $timeout, ChargebacksService, UserService, $state, $location, $modal, $http) {
-		
+	.controller('ChargebacksController', ['$scope', '$timeout', 'ChargebacksService', 'ChargebackService', 'UserService', '$state', '$location', '$modal', '$http',
+            function($scope, $timeout, ChargebacksService, ChargebackService, UserService, $state, $location, $modal, $http) {
+
 		var s = moment().utc().subtract(6, 'month').format(),
 			e = moment().utc().format();
 
@@ -38,8 +38,6 @@
 				opened: false
 			}
 		};
-
-		
 
 		$scope.filters = "";
 		_.forOwn($state.params, function(num,key) {
@@ -76,11 +74,41 @@
 			});
 		};
 
-		$scope.cbs = new ChargebacksService();	
-		
-		$scope.load_start = false;
-		$scope.load_end = false;
-		$scope.$watch("date.start.val", function(newValue, oldValue){
+        $scope.cbs = new ChargebacksService();
+
+        // Code for handling selection and bulk PDF downloads
+		$scope.n_pdfs_tobe_downloaded = 0;
+        $scope.pdf_checkbox  = function(cb) {
+            if(cb.checked) {
+                $scope.n_pdfs_tobe_downloaded += 1;
+            } else {
+                if ($scope.n_pdfs_tobe_downloaded > 0) {
+                    $scope.n_pdfs_tobe_downloaded -= 1;
+                }
+            }
+        };
+        var _download_file = function(res) {
+            if (res.data.url) {
+                var a = document.createElement('a');
+                a.href = res.data.url;
+                a.download = 'MyDownload.pdf';
+                a.click();
+            } else {
+                alert('PDF not found, contact system administrator');
+            }
+        };
+        $scope.pdf_bulk_download_click = function() {
+            for (var i = 0; i < $scope.cbs.data.length; i++) {
+                var cb = $scope.cbs.data[i];
+                if (cb.checked) {
+                    ChargebackService.getLink(cb._id).then(_download_file);
+                }
+            }
+        };
+
+        $scope.load_start = false;
+        $scope.load_end = false;
+        $scope.$watch('date.start.val', function(newValue, oldValue) {
 			if ($scope.load_start) {
 				$location.search('start', moment(new Date(newValue)).utc().valueOf() );
 			}
@@ -117,8 +145,8 @@
 
 	}])
 
-	.factory('ChargebacksService', ['$http', '$timeout', '$state', '$window', function ($http, $timeout, $state, $window) {
-		
+    .factory('ChargebacksService', ['$http', '$timeout', '$state', '$window', function ($http, $timeout, $state, $window) {
+
 		var ChargebacksService = function() {
 			this.data = [];
 			this.busy = false;
@@ -141,7 +169,7 @@
 			this.last_page = false;
 			return;
 		};
-		
+
 
 		ChargebacksService.prototype.clearAndRun = function(q) {
 			// reset
@@ -153,11 +181,11 @@
 			this.nextPage();
 			return;
 		};
-		
+
 
 		ChargebacksService.prototype.search = function(query) {
 			var _this = this;
-			
+
 			query = query.trim();
 
 			// min query length is 2 chars
@@ -199,11 +227,11 @@
     			this.data = [];
     			this.lastQuery = this.query;
     		}
-    		
+
     		var url = '/api/v1/chargebacks?page=' + this.page;
     		//url += '&start=' + this.start + "&end=" + this.end;
     		url += '&limit=30&query=' + this.query;
-    		
+
     		// additional params such as start, end, cctype, merchant, etc
     		if ($state.params) {
     			_.each(_.keys($state.params), function(k) {
@@ -217,7 +245,7 @@
     			_this.busy = false;
     			return url + '&export=csv&cbkey=' + $window.sessionStorage.token;
     		}
-    		
+
     		if (this.page == this.last_page) {
     			this.busy = false;
     			return;
@@ -233,7 +261,7 @@
 			.success(function (rows) {
 				_this.loaded = true;
 				var new_data = rows;
-				
+
 				_.each(new_data, function(d) {
 					_this.data.push(d);
 				});
@@ -242,7 +270,7 @@
 				if (rows.length == 30) {
 					_this.page++;
 				}
-				
+
 				$timeout(function() {
 					_this.busy = false;
 				},50);

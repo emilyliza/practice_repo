@@ -1,4 +1,4 @@
-module.exports = function(app) {
+	module.exports = function(app) {
 
 	const MODEL = 'S3Tracker';
 	if (app.Models.isLoaded(MODEL)) { return app.Models.get(MODEL); }
@@ -11,7 +11,7 @@ module.exports = function(app) {
 		Util = require(app.settings.root_dir + '/lib/Util'),
 		_ = require('underscore');
 
-	
+
 	var S3TrackerSchema = new Schema({
 		'_id': { 'type': String, 'required': true },
 		'extension': { 'type': String, 'required': true },
@@ -23,7 +23,7 @@ module.exports = function(app) {
 
 
 	S3Tracker.clear = function(obj, next) {
-		
+
 		if (_.isArray(obj)) {
 			_.each(obj, function(o) {
 				if (!o._id) {
@@ -31,7 +31,7 @@ module.exports = function(app) {
 				}
 				if (!o.extension) {
 					return next(new Error('No extension for S3Tracker.clear'));
-				}		
+				}
 			});
 		} else if (!obj._id) {
 			return next(new Error('No _id for S3Tracker.clear'));
@@ -39,7 +39,7 @@ module.exports = function(app) {
 			return next(new Error('No extension for S3Tracker.clear'));
 		}
 
-		
+
 		$()
 		.seq(function() {
 			if (_.isArray(obj)) {
