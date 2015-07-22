@@ -288,17 +288,21 @@ module.exports = function(app) {
 		if (params.user) {
 			match['parent._id'] = db.Types.ObjectId( req.user._id );
 			match['user._id'] = db.Types.ObjectId( params.user );
-		} else {
 			match['$or'] = [
+				{'visible':{'$exists': false}},
+				{'visible': true}
+			];
+
+		} else {
+			match['$and'] = [{'$or':[
 				{ 'parent._id': db.Types.ObjectId( req.user._id ) },
 				{ 'user._id': db.Types.ObjectId( req.user._id ) }
-			];
-		}
+			]}, {'$or':[
+				{'visible':{'$exists': false}},
+				{'visible': true}
+			]}];
 
-		match['$or'] = [
-			{'visible':{'$exists': false}},
-			{'visible': true}
-		];
+		}
 
 		return match;
 	};
