@@ -340,7 +340,7 @@ module.exports = function(app) {
 	});
 
 	
-	// POSTING JUST ONE CHARGEBACK (MAUNAL ENTRY)
+	// POSTING JUST ONE CHARGEBACK (MANUAL ENTRY)
 	app.post('/api/v1/chargeback', mw.auth(), function(req, res, next) {
 
 		req.assert('portal_data.MidNumber', 'A mid number is required.').isAlphanumeric();
@@ -544,4 +544,24 @@ module.exports = function(app) {
 
 	});
 
+	app.put('/api/v1/hidechargeback/:_id', mw.auth(), function(req, res) {
+		_( Chargeback.findOne()
+			.where('_id', req.params._id)
+			.or([
+				{ 'user._id': req.user._id },
+				{ 'parent._id': req.user._id }
+			])
+			.stream() )
+			.map(function( data ) {
+
+				data.set('visible', false);
+
+				return data;
+
+			})
+			.flatMap(Util.saveStream)
+			.map( JSON.stringify )
+			.pipe(res);
+
+	});
 };
