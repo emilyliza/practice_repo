@@ -59,15 +59,22 @@
 		['$scope', '$rootScope', '$state', 'AUTH_EVENTS', 'UserService', 'Idle', '$modal',
 		function ($scope, $rootScope, $state, AUTH_EVENTS, UserService, Idle, $modal) {
 			
-			var logoname = window.location.hostname.split(".").join("_");
-			logoname = logoname != "localhost" ? logoname : "cart_chargeback_com";
+			//var logoname = window.location.hostname.split(".").join("_");
+			var domain_ll = window.location.hostname.split(".");
+			var logoname = "cart_chargeback_com";
+			if( domain_ll[0] === 'cart' ) {
+				logoname = domain_ll.join("_");
+			} else {
+				logoname = domain_ll[0];
+			}
+			logoname = logoname !== "localhost" ? logoname : "cart_chargeback_com";
 
 			$scope.$state = $state;	// for navigation active to work
 			$scope.isCollapsed = true;
 			$scope.settings = {};
-			//$scope.settings.logo = "/images/"+ logoname + ".png";
-			//$scope.settings.whitelabelcss = "/css/" + logoname + ".css";
-			$scope.settings.logo = "/images/logo.png";
+			$scope.settings.logo = "/images/"+ logoname + ".png";
+			$scope.settings.whitelabelcss = "/css/" + logoname + ".css";
+			//$scope.settings.logo = "/images/logo.png";
 
 			function closeModals() {
 				if ($scope.warning) {

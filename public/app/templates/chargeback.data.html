@@ -327,14 +327,14 @@
 				<div class="form-group" show-errors>
 					<label>Transaction Id</label>
 					<input name="TransId" required type="text" class="form-control" pop-show="{{errors.TransId}}" pop="{{errors.TransId}}" pop-placement="right"
-						   ng-model="data.gateway_data.TransId" placeholder="" ng-blur="methods.ds()">
+						   ng-model="data.gateway_data.TransId" placeholder="Enter NA if not available." ng-blur="methods.ds()">
 				</div>
 			</div>
 			<div class="col-md-6">
 				<div class="form-group" show-errors>
 					<label>Order Id</label>
 					<input name="OrderId" required type="text" class="form-control" pop-show="{{errors.OrderId}}" pop="{{errors.OrderId}}" pop-placement="right"
-						   ng-model="data.gateway_data.OrderId" placeholder="Enter NA if not available" ng-blur="methods.ds()">
+						   ng-model="data.gateway_data.OrderId" placeholder="Enter NA if not available." ng-blur="methods.ds()">
 				</div>
 			</div>
 		</div>
@@ -401,7 +401,7 @@
 				<div class="form-group" show-errors>
 					<label>Authorization Code</label>
 					<input name="AuthCode" required type="text" class="form-control" pop-show="{{errors.AuthCode}}" pop="{{errors.AuthCode}}" pop-placement="right"
-						   ng-model="data.gateway_data.AuthCode" placeholder="" ng-blur="methods.ds()">
+						   ng-model="data.gateway_data.AuthCode" placeholder="Enter NA if not available." ng-blur="methods.ds()">
 				</div>
 			</div>
 			<div class="col-md-6">
@@ -516,15 +516,15 @@
 				<div class="form-group" show-errors>
 					<label>Originating Transaction ID</label>
 					<input name="OriginatingTransId"
+						   required
 						   type="text"
 						   data-tooltip-html-unsafe="The transaction id for the transaction that started the recurring transactions. (i.e. Introductory Offer)"
 						   tooltip-placement="top"
-
 						   class="form-control"
 						   pop-show="" pop=""
 						   pop-placement="right"
 						   ng-model="data.gateway_data.Originating.TransId"
-						   placeholder=""
+						   placeholder="Enter NA if not available."
 						   ng-blur="methods.ds()" >
 				</div>
 			</div>
@@ -556,6 +556,7 @@
 						   class="form-control"
 						   pop-show=""
 						   pop=""
+						   required
 						   pop-placement="right"
 						   ng-model="data.gateway_data.Originating.TransDate"
 						   placeholder="mm/dd/yyy"
@@ -580,6 +581,7 @@
 						   pop-placement="right"
 						   ng-model="data.gateway_data.Originating.TransAmt"
 						   placeholder=""
+						   required
 						   ng-blur="methods.ds()" >
 
 				</div>
@@ -596,9 +598,10 @@
 						   class="form-control"
 						   pop-show=""
 						   pop=""
+						   required
 						   pop-placement="right"
 						   ng-model="data.gateway_data.Originating.AuthCode"
-						   placeholder=""
+						   placeholder="Enter NA if not available."
 						   ng-blur="methods.ds()" >
 				</div>
 			</div>
@@ -612,9 +615,10 @@
 						   class="form-control"
 						   pop-show=""
 						   pop=""
+						   required
 						   pop-placement="right"
 						   ng-model="data.gateway_data.Originating.OrderId"
-						   placeholder=""
+						   placeholder="Enter NA if not available."
 						   ng-blur="methods.ds()" >
 				</div>
 			</div>
