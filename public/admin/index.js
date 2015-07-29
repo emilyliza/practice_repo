@@ -34,7 +34,21 @@
 	.controller('ApplicationController', 
 		['$scope', '$rootScope', '$state', 'AUTH_EVENTS', 'UserService',
 		function ($scope, $rootScope, $state, AUTH_EVENTS, UserService) {
-			
+
+			//var logoname = window.location.hostname.split(".").join("_");
+			var domain_ll = window.location.hostname.split(".");
+			var logoname = "cart_chargeback_com";
+			if( domain_ll[0] === 'cart' ) {
+				logoname = domain_ll.join("_");
+			} else {
+				logoname = domain_ll[0];
+			}
+			logoname = logoname !== "localhost" ? logoname : "cart_chargeback_com";
+
+			$scope.settings = {};
+			$scope.settings.logo = "/images/"+ logoname + ".png";
+			$scope.settings.whitelabelcss = "/css/" + logoname + ".css";
+
 			$scope.$state = $state;	// for navigation active to work
 			$scope.isCollapsed = true;
 
