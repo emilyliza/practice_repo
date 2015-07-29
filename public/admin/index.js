@@ -38,6 +38,12 @@
 			//var logoname = window.location.hostname.split(".").join("_");
 			var domain_ll = window.location.hostname.split(".");
 			var logoname = "cart_chargeback_com";
+			// KLUDGE!
+
+			if( domain_ll[0] === 'cartdev') {
+				domain_ll[0] = 'cart';
+			}
+
 			if( domain_ll[0] === 'cart' ) {
 				logoname = domain_ll.join("_");
 			} else {
