@@ -62,6 +62,12 @@
 			//var logoname = window.location.hostname.split(".").join("_");
 			var domain_ll = window.location.hostname.split(".");
 			var logoname = "cart_chargeback_com";
+
+			if( domain_ll[0] === 'cartdev') {
+				domain_ll[0] = 'cart';
+			}
+
+
 			if( domain_ll[0] === 'cart' ) {
 				logoname = domain_ll.join("_");
 			} else {
@@ -74,7 +80,7 @@
 			$scope.settings = {};
 			$scope.settings.logo = "/images/"+ logoname + ".png";
 			$scope.settings.whitelabelcss = "/css/" + logoname + ".css";
-			//$scope.settings.logo = "/images/logo.png";
+			$scope.settings.logo = "/images/logo.png";
 
 			function closeModals() {
 				if ($scope.warning) {
