@@ -80,10 +80,6 @@ module.exports = function(app) {
 				db_cb.should.have.property('gateway_data').with.property('FullName', config.get('chargebacks')[0].gateway_data.FirstName + " " + config.get('chargebacks')[0].gateway_data.LastName);
 				done();
 			});
-			//it('should have chargebackDate as Date', function(done){
-			//	db_cb.chargebackDate.should.be.an.instanceOf(Date);
-			//	done();
-			//});
 			it('should have gateway_data.TransDate as Date', function(done){
 				db_cb.gateway_data.TransDate.should.be.an.instanceOf(Date);
 				done();
