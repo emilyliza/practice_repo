@@ -188,6 +188,10 @@ module.exports = function(app) {
 	})
 
 	.pre('save', function(next) {
+		// clean up name
+		if (!this.chargebackDate) {
+			this.chargebackDate = new Date();
+		}
 		if (this.isNew) {
 			if (!this.gateway_data.FullName && (this.gateway_data.FirstName || this.gateway_data.LastName)) {
 				if (this.gateway_data.FirstName) {
