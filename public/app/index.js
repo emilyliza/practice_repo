@@ -56,13 +56,13 @@
 	})
 
 	.controller('ApplicationController', 
-		['$scope', '$rootScope', '$state', 'AUTH_EVENTS', 'UserService', 'Idle', '$modal',
-		function ($scope, $rootScope, $state, AUTH_EVENTS, UserService, Idle, $modal) {
+		['$scope', '$rootScope', '$state', 'AUTH_EVENTS', 'UserService', 'WhiteLabelService', 'Idle', '$modal',
+		function ($scope, $rootScope, $state, AUTH_EVENTS, UserService, WhiteLabelService, Idle, $modal) {
 			
 			//var logoname = window.location.hostname.split(".").join("_");
 			var domain_ll = window.location.hostname.split(".");
 			var logoname = "cart_chargeback_com";
-
+			var logo_url = ""
 			if( domain_ll[0] === 'cartdev') {
 				domain_ll[0] = 'cart';
 			}
@@ -75,12 +75,24 @@
 			}
 			logoname = logoname !== "localhost" ? logoname : "cart_chargeback_com";
 
+			WhiteLabelService.getImageLink(logoname).then(function(res) {
+				if (res.data.url) {
+					logo_url = res.data.url;
+					$scope.settings.logo = logo_url;
+				} else {
+					console.log('Bug in getLink()');
+				}
+			})
+			.catch(function(ex){
+					console.log(ex);
+				});
 			$scope.$state = $state;	// for navigation active to work
 			$scope.isCollapsed = true;
 			$scope.settings = {};
-			$scope.settings.logo = "/images/"+ logoname + ".png";
+			//$scope.settings.logo = logo_url;
 			$scope.settings.whitelabelcss = "/css/" + logoname + ".css";
-			$scope.settings.logo = "/images/logo.png";
+			//$scope.settings.logo = "/images/logo.png";
+			//$rootScope.hideFooter = false;
 
 			function closeModals() {
 				if ($scope.warning) {
@@ -139,6 +151,13 @@
 		$scope.cancel = function () {
 			$modalInstance.dismiss('cancel');
 		};
+	}])
+
+	.service('WhiteLabelService', ['$http', function ($http) {
+			this.getImageLink = function(prefix) {
+				return $http.get('/api/v1/s3-wlbl/lbl?prefix=' + prefix );
+			};
+
 	}]);
 	
 })();
