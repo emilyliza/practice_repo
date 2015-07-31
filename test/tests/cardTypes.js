@@ -62,44 +62,44 @@ module.exports = function(app) {
 
 		});
 
-		describe('MAESTRO', function() { 
-			
-			var pre = 5020,
-				post = 0785,
-				type = Util.detectCardType( pre + "11010101" + post );
-
-			it('should be Maestro', function(done) {
-				type.should.be.eql('MAESTRO');
-				done();
-			});
-
-		});
-
-		describe('Diners Club', function() { 
-			
-			var pre = 3646,
-				post = 6671,
-				type = Util.detectCardType( pre + "11010101" + post );
-
-			it('should be Diners Club ', function(done) {
-				type.should.be.eql('DINERS');
-				done();
-			});
-
-		});
-
-		describe('Diners Club - US', function() { 
-			// On November 8, 2004, MasterCard and Diners Club formed an alliance. Diners Club cards issued in Canada and the United States start with 54 or 55 and are treated as MasterCards worldwide
-			var pre = 5561,
-				post = 7551,
-				type = Util.detectCardType( pre + "11010101" + post );
-
-			it('should be mastercard', function(done) {
-				type.should.be.eql('MASTERCARD');
-				done();
-			});
-
-		});
+		//describe('MAESTRO', function() {
+		//
+		//	var pre = 5020,
+		//		post = 0785,
+		//		type = Util.detectCardType( pre + "11010101" + post );
+        //
+		//	it('should be Maestro', function(done) {
+		//		type.should.be.eql('MAESTRO');
+		//		done();
+		//	});
+        //
+		//});
+        //
+		//describe('Diners Club', function() {
+		//
+		//	var pre = 3646,
+		//		post = 6671,
+		//		type = Util.detectCardType( pre + "11010101" + post );
+        //
+		//	it('should be Diners Club ', function(done) {
+		//		type.should.be.eql('DINERS');
+		//		done();
+		//	});
+        //
+		//});
+        //
+		//describe('Diners Club - US', function() {
+		//	// On November 8, 2004, MasterCard and Diners Club formed an alliance. Diners Club cards issued in Canada and the United States start with 54 or 55 and are treated as MasterCards worldwide
+		//	var pre = 5561,
+		//		post = 7551,
+		//		type = Util.detectCardType( pre + "11010101" + post );
+        //
+		//	it('should be mastercard', function(done) {
+		//		type.should.be.eql('MASTERCARD');
+		//		done();
+		//	});
+        //
+		//});
 
 	});
 
