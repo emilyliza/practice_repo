@@ -31,6 +31,7 @@
 						   type="text"
 						   class="form-control"
 						   datepicker-popup="MM/dd/yyyy"
+						   placeholder="Click for Calendar"
 						   ng-model="data.chargebackDate"
 						   is-open="settings.chargeBackDateOpened"
 						   ng-click="settings.chargeBackDateOpened=true"
@@ -143,7 +144,8 @@
 						   ng-click="settings.transDateOpened=true"
 						   isdate ng-blur="methods.ds()"
 						   datepicker-popup="MM/dd/yyyy"
-							placeholder="MM/DD/YYYY">
+						   placeholder="Click for Calendar"
+							>
 				</div>
 			</div>
 			<div class="col-md-4">
@@ -181,7 +183,7 @@
 				<div class="form-group" show-errors>
 					<label>Reason Code</label>
 					<input name="ReasonCode" required type="text" class="form-control" pop-show="{{errors.ReasonCode}}" pop="{{errors.ReasonCode}}" pop-placement="right"
-						   ng-model="data.portal_data.ReasonCode" placeholder="Enter NA if not available" ng-blur="methods.ds()">
+						   ng-model="data.portal_data.ReasonCode" placeholder="Enter NA if not available." ng-blur="methods.ds()">
 				</div>
 			</div>
 			<div class="col-md-8">
@@ -366,7 +368,7 @@
 						   pop="{{errors.OrderDate}}"
 						   pop-placement="right"
 						   ng-model="data.crm_data.OrderDate"
-						   placeholder="MM/DD/YYYY"
+						   placeholder="Click for Calendar"
 						   ng-blur="methods.ds()"
 						   datepicker-popup="MM/dd/yyyy"
 						   is-open="settings.orderDateOpened"
@@ -504,7 +506,7 @@
 						   pop="{{errors.CancelDateSystem}}"
 						   pop-placement="right"
 						   ng-model="data.crm_data.CancelDateSystem"
-						   placeholder=""
+						   placeholder="Click for Calendar"
 						   ng-blur="methods.ds()"
 						   datepicker-popup="MM/dd/yyyy"
 						   is-open="settings.canceledDateOpened"
@@ -560,7 +562,7 @@
 						   required
 						   pop-placement="right"
 						   ng-model="data.gateway_data.Originating.TransDate"
-						   placeholder="mm/dd/yyy"
+						   placeholder="Click for Calendar"
 						   ng-blur="methods.ds()"
 						   datepicker-popup="MM/dd/yyyy"
 						   is-open="setting.transDateOrigOpened"
@@ -644,20 +646,68 @@
 
 	<div style="font-size: 12px; color: #999; padding-bottom: 10px;" ng-if="data.refunded">This information is typically found in your CRM or order information system.  You can use the transaction data to the right to look up the customer for this transaction.</div>
 
-	<div class="row bt" ng-if="data.refunded">
-		<div class="col-md-6">
-			<div class="form-group" show-errors>
-				<label>Refund Date</label>
-				<input class="form-control" name="RefundDateFull" type="text" class="form-control" pop-show="{{errors.RefundDateFull}}" pop="{{errors.RefundDateFull}}" pop-placement="right"
-					   ng-model="data.crm_data.RefundDateFull" is-open="opened" ng-click="opened=true" isdate  ng-blur="methods.ds()"
-					   datepicker-popup="MM/dd/yyyy">
+	<div ng-if="data.refunded">
+		<div class="row bt" >
+			<div class="col-md-6">
+				<div class="form-group" show-errors>
+					<label>Refund Date</label>
+					<input class="form-control"
+						   required
+						   name="RefundDateFull"
+						   type="text"
+						   class="form-control"
+						   pop-show="{{errors.RefundDateFull}}"
+						   pop="{{errors.RefundDateFull}}"
+						   pop-placement="right"
+						   ng-model="data.crm_data.RefundDateFull"
+						   is-open="opened"
+						   ng-click="opened=true"
+						   isdate
+						   ng-blur="methods.ds()"
+						   datepicker-popup="MM/dd/yyyy"
+						   placeholder="Click for Calendar"
+							>
+				</div>
+			</div>
+			<div class="col-md-6">
+				<div class="form-group" show-errors>
+					<label>Refund Amount</label>
+					<input name="RefundAmount"
+						   type="number"
+						   class="form-control"
+						   pop-show="{{errors.RefundAmount}}"
+						   pop="{{errors.RefundAmount}}"
+						   pop-placement="right"
+						   ng-model="data.crm_data.RefundAmount"
+						   placeholder=""
+						   ng-blur="methods.ds()">
+				</div>
 			</div>
 		</div>
-		<div class="col-md-6">
-			<div class="form-group" show-errors>
-				<label>Refund Amount</label>
-				<input name="RefundAmount" type="number" class="form-control" pop-show="{{errors.RefundAmount}}" pop="{{errors.RefundAmount}}" pop-placement="right"
-					   ng-model="data.crm_data.RefundAmount" placeholder="" ng-blur="methods.ds()">
+		<div class="row bt" >
+			<div class="col-md-6">
+				<div class="form-group" show-errors>
+					<label>Refund Transaction ID</label>
+					<input class="form-control"
+						   required
+						   name="RefundDateFull"
+						   placeholder="Enter NA if not available."
+						   type="text"
+						   class="form-control"
+						   pop-show=""
+						   pop=""
+						   pop-placement="right"
+						   ng-model="data.crm_data.RefundTransId"
+						   ng-blur="methods.ds()"
+					>
+				</div>
+			</div>
+			<div class="col-md-6">
+				<div class="form-group" show-errors>
+					<label></label>
+					<div class="form-control-static" style="background-color: #efefef;"></div>
+
+				</div>
 			</div>
 		</div>
 	</div>
@@ -741,8 +791,16 @@
 		<div class="col-md-3">
 			<div class="form-group" show-errors>
 				<label>Delivery Date</label>
-				<input class="form-control" required name="ShippingDate" type="text" datepicker-popup="MM/dd/yyyy"
-					   ng-model="data.shipping_data.ShippingDate" is-open="opened" ng-click="opened=true" isdate  ng-blur="methods.ds()">
+				<input class="form-control"
+					   required name="ShippingDate"
+					   type="text"
+					   datepicker-popup="MM/dd/yyyy"
+					   ng-model="data.shipping_data.ShippingDate"
+					   is-open="opened"
+					   ng-click="opened=true"
+					   isdate
+					   placeholder="Click for Calendar."
+					   ng-blur="methods.ds()">
 				
 			</div>
 		</div>

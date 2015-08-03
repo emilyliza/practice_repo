@@ -343,7 +343,7 @@ module.exports = function(app) {
 	// POSTING JUST ONE CHARGEBACK (MAUNAL ENTRY)
 	app.post('/api/v1/chargeback', mw.auth(), function(req, res, next) {
 
-		req.assert('portal_data.MidNumber', 'A mid number is required.').isAlphanumeric();
+		//req.assert('portal_data.MidNumber', 'A mid number is required.').isAlphanumeric();
 		req.assert('portal_data.ChargebackAmt', 'An amount is required.').isFloat();
 		req.assert('gateway_data.TransAmt', 'Must be an amount.').optional().isFloat();
 		req.assert('portal_data.CcPrefix', 'A valid credit card prefix is required.').len(1,6).isNumeric();
@@ -452,7 +452,7 @@ module.exports = function(app) {
 
 	app.put('/api/v1/chargeback/:_id', mw.auth(), function(req, res, next) {
 
-		req.assert('portal_data.MidNumber', 'A mid number is required.').isAlphanumeric();
+		//req.assert('portal_data.MidNumber', 'A mid number is required.').isAlphanumeric();
 		req.assert('portal_data.ChargebackAmt', 'An amount is required.').isFloat();
 		req.assert('gateway_data.TransAmt', 'Must be an amount.').optional().isFloat();
 		req.assert('portal_data.CcPrefix', 'A valid credit card prefix is required.').len(1,6).isNumeric();
