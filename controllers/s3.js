@@ -103,12 +103,26 @@ module.exports = function(app) {
 
 		AWS.config.update({ region: 'us-west-2' });
 
-		var s3 = new AWS.S3(),
-			params = { Bucket: "cart-pdfs", Key: req.params._id + ".pdf" };
+		//var s3 = new AWS.S3(),
+		//	params = { Bucket: "cart-pdfs", Key: req.params._id + ".pdf" };
 
-		s3.getSignedUrl('getObject', params, function (err, url) {
-			res.json({'url': url});
+		//s3.getSignedUrl('getObject', params, function (err, url) {
+		//	res.json({'url': url});
+		//});
+
+		var s3 = new AWS.S3(),
+			params = { Bucket: "cart-pdfs", Prefix: req.params._id };
+
+		s3.listObjects(params, function(err, data) {
+			if( data.Contents.length === 1) {
+				params = {Bucket: "cart-pdfs", Key: data.Contents[0].Key};
+				s3.getSignedUrl('getObject', params, function (err, url) {
+					res.json({'url': url});
+				});
+			}
 		});
+
+
 
 	});
 
