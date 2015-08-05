@@ -27,7 +27,17 @@
 						<span ng-if="!dbs.data_dashboard['In-Progress']">0</span>
 					</div>
 				</div>
-				<div class="row">
+                               <div class="row">
+                                        <div class="col-xs-7 col-xs-offset-1">
+                                                <span class="glyphicon glyphicon-circle-arrow-right"></span>
+                                                <a href="chargebacks?status=Accept">Accepted</a>
+                                        </div>
+                                        <div class="col-xs-4">
+                                                {{dbs.data_dashboard['Accept'].count | number}}
+                                                <span ng-if="!dbs.data_dashboard['Accept']">0</span>
+                                        </div>
+                                </div>	
+			<div class="row">
 					<div class="col-xs-7 col-xs-offset-1">
 						<span class="glyphicon glyphicon-send"></span>
 						<a href="chargebacks?status=Sent">Sent</a>
@@ -67,8 +77,8 @@
 		<a href="/chargeback" class="btn btn-lg btn-info" style="margin-bottom: 30px; width: 100%;">Add New Chargeback</a>
 
 		<div class="dateRange" ng-if="date.start && date.end">
-			<a href="#" datepicker-popup="MM/dd/yyyy" ng-model="date.start.val" is-open="date.start.opened" ng-click="date.start.opened=true" isdate >{{date.start.val | date:'MMM dd, yyyy'}}</a> thru
-			<a href="#" datepicker-popup="MM/dd/yyyy" ng-model="date.end.val" is-open="date.end.opened" ng-click="date.end.opened=true" isdate >{{date.end.val | date:'MMM dd, yyyy'}}</a>
+			<a href="#" datepicker-popup="MM/dd/yyyy" datepicker-options="dateOptions" ng-model="date.start.val" is-open="date.start.opened" ng-click="date.start.opened=true" isdate >{{date.start.val | date:'MMM dd, yyyy'}}</a> thru
+			<a href="#" datepicker-popup="MM/dd/yyyy" datepicker-options="dateOptions" ng-model="date.end.val" is-open="date.end.opened" ng-click="date.end.opened=true" isdate >{{date.end.val | date:'MMM dd, yyyy'}}</a>
 		</div>
 
 		<div class="dash-stat">

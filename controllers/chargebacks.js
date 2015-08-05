@@ -365,6 +365,7 @@ module.exports = function(app) {
 		if (!req.body.gateway_data.CcType && !Util.detectCardType( req.body.portal_data.CcPrefix + "11010101" + req.body.portal_data.CcSuffix )) {
 			return res.json(400, { 'CcPrefix': 'Invalid credit card prefix.' });	
 		}
+                
 
 		if (req.body.gateway_data && req.body.gateway_data.AvsStatus) {
 			req.body.gateway_data.AvsStatus = req.body.gateway_data.AvsStatus.toUpperCase();
@@ -495,6 +496,34 @@ module.exports = function(app) {
 
 		if ((!req.body.portal_data.CcPrefix || req.body.portal_data.CcPrefix.length < 4) && !req.body.gateway_data.CcType) {
 			return res.json(400, { 'CcPrefix': 'Enter 4 digits or select a credit card type.' });	
+		}
+
+
+		if(req.body.gateway_data && req.body.gateway_data.AuthCode && req.body.gateway_data.AuthCode.toLowerCase() != 'na' &&  req.body.gateway_data.AuthCode.length!=6) {
+			return res.json(400, {'AuthCode':'Enter 6 digits or NA if auth code is not available.'});
+
+		}	
+
+		if( req.body.gateway_data && req.body.gateway_data.AuthCode && req.body.gateway_data.AuthCode.length == 6)	{
+			req.assert('gateway_data.AuthCode', 'Enter 6 digits or NA if auth code is not available.').isNumeric();
+                
+			var errors2 = req.validationErrors();
+                	if (errors2) {
+                        	return res.json(400, errors2 );
+                	}	
+		}
+
+		if ( req.body.gateway_data && req.body.gateway_data.BillingAddr1 && (!req.body.gateway_data.BillingState || req.body.gateway_data.BillingState==''))
+		{
+			if( req.body.gateway_data.BillingCountry && req.body.gateway_data.BillingCountry.length>0 && req.body.gateway_data.BillingCountry != 'USA'  && req.body.gateway_data.BillingCountry != 'US')
+			{
+				req.assert('gateway_data.BillingState','Enter a valid state code or NA for an international address').notEmpty();
+				var errors = req.validationErrors();
+				if( errors)
+				{				
+					return res.json(400, errors);
+				}
+			}
 		}
 
 		if (req.body.gateway_data && req.body.gateway_data.AvsStatus) {

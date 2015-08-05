@@ -31,6 +31,7 @@
 						   type="text"
 						   class="form-control"
 						   datepicker-popup="MM/dd/yyyy"
+						   datepicker-options="dateOptions"
 						   ng-model="data.chargebackDate"
 						   is-open="settings.chargeBackDateOpened"
 						   ng-click="settings.chargeBackDateOpened=true"
@@ -143,6 +144,7 @@
 						   ng-click="settings.transDateOpened=true"
 						   isdate ng-blur="methods.ds()"
 						   datepicker-popup="MM/dd/yyyy"
+						   datepicker-options="dateOptions"
 							placeholder="MM/DD/YYYY">
 				</div>
 			</div>
@@ -262,8 +264,7 @@
 		<div class="col-md-3">
 			<div class="form-group" show-errors>
 				<label>Billing State</label>
-				<input name="BillingState" type="text" class="form-control" pop-show="{{errors.BillingState}}" pop="{{errors.BillingState}}" pop-placement="right"
-					   ng-model="data.gateway_data.BillingState" placeholder="" ng-blur="methods.ds()">
+				<input name="BillingState" type="text" class="form-control" pop-show="{{errors.BillingState}}" pop="{{errors.BillingState}}" pop-placement="right" ng-model="data.gateway_data.BillingState" placeholder='"NA" if International' ng-blur="methods.ds()">
 			</div>
 		</div>
 		<div class="col-md-3">
@@ -368,6 +369,7 @@
 						   placeholder="MM/DD/YYYY"
 						   ng-blur="methods.ds()"
 						   datepicker-popup="MM/dd/yyyy"
+						   datepicker-options="dateOptions"
 						   is-open="settings.orderDateOpened"
 						   ng-click="settings.orderDateOpened=true" isdate>
 				</div>
@@ -506,6 +508,7 @@
 						   placeholder=""
 						   ng-blur="methods.ds()"
 						   datepicker-popup="MM/dd/yyyy"
+						   datepicker-options="dateOptions"
 						   is-open="settings.canceledDateOpened"
 						   ng-click="settings.canceledDateOpened=true" isdate>
 				</div>
@@ -561,6 +564,7 @@
 						   placeholder="mm/dd/yyy"
 						   ng-blur="methods.ds()"
 						   datepicker-popup="MM/dd/yyyy"
+						   datepicker-options="dateOptions"
 						   is-open="setting.transDateOrigOpened"
 						   ng-click="setting.transDateOrigOpened=true"
 						   isdate>
@@ -645,8 +649,7 @@
 				<label>Refund Date</label>
 				<input class="form-control" name="RefundDateFull" type="text" class="form-control" pop-show="{{errors.RefundDateFull}}" pop="{{errors.RefundDateFull}}" pop-placement="right"
 					   ng-model="data.crm_data.RefundDateFull" is-open="opened" ng-click="opened=true" isdate  ng-blur="methods.ds()"
-					   datepicker-popup="MM/dd/yyyy">
-			</div>
+					   datepicker-popup="MM/dd/yyyy" datepicker-options="dateOptions">			</div>
 		</div>
 		<div class="col-md-6">
 			<div class="form-group" show-errors>
@@ -736,7 +739,7 @@
 		<div class="col-md-3">
 			<div class="form-group" show-errors>
 				<label>Delivery Date</label>
-				<input class="form-control" required name="ShippingDate" type="text" datepicker-popup="MM/dd/yyyy"
+				<input class="form-control" required name="ShippingDate" type="text" datepicker-popup="MM/dd/yyyy" datepicker-options="dateOptions"
 					   ng-model="data.shipping_data.ShippingDate" is-open="opened" ng-click="opened=true" isdate  ng-blur="methods.ds()">
 				
 			</div>
@@ -944,7 +947,6 @@
 						<div class="img" ng-show="uploaders.terms.isHTML5">
 							<div ng-thumb="{ file: item._file, width: 200 }"></div>
 							<div style="font-weight: bold; text-align: center;">{{ item.file.name }}</div>
-							
 							<div style="text-align: center;">
 								<div nowrap>{{ item.file.size/1024/1024|number:2 }} MB</div>
 								<div class="progress" style="margin-bottom: 0;">
