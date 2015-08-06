@@ -513,17 +513,27 @@ module.exports = function(app) {
                 	}	
 		}
 
-		if ( req.body.gateway_data && req.body.gateway_data.BillingAddr1 && (!req.body.gateway_data.BillingState || req.body.gateway_data.BillingState==''))
+		if( req.body.gateway_data && (	req.body.gateway_data.BillingAddr1 || 
+						req.body.gateway_data.BillingAddr2 || 
+						req.body.gateway_data.BillingCity || 
+						req.body.gateway_data.BillingState||
+						req.body.gateway_data.BillingCountry||
+						req.body.gateway_data.BillingPostal))
 		{
+			req.assert( 'gateway_data.BillingAddr1', 'You must provide billing address line 1.').notEmpty();
+			req.assert( 'gateway_data.BillingCity', 'Invalid Address: must specify city.').notEmpty();
+			req.assert( 'gateway_data.BillingPostal', 'Invalid Address: must specify billing postal code.').notEmpty();
+
+                        if( !req.body.gateway_data.BillingState)
+                                req.assert( 'gateway_data.BillingCountry','Invalid Address: must specify state or foreign country').notEmpty();
+
 			if( req.body.gateway_data.BillingCountry && req.body.gateway_data.BillingCountry.length>0 && req.body.gateway_data.BillingCountry != 'USA'  && req.body.gateway_data.BillingCountry != 'US')
-			{
 				req.assert('gateway_data.BillingState','Enter a valid state code or NA for an international address').notEmpty();
-				var errors = req.validationErrors();
-				if( errors)
-				{				
-					return res.json(400, errors);
-				}
-			}
+
+			var errors3 = req.validationErrors();
+                        if (errors3) {
+                                return res.json(400, errors3 );
+                        }
 		}
 
 		if (req.body.gateway_data && req.body.gateway_data.AvsStatus) {
