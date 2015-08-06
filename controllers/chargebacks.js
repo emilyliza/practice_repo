@@ -505,7 +505,7 @@ module.exports = function(app) {
 		}	
 
 		if( req.body.gateway_data && req.body.gateway_data.AuthCode && req.body.gateway_data.AuthCode.length == 6)	{
-			req.assert('gateway_data.AuthCode', 'Enter 6 digits or NA if auth code is not available.').isNumeric();
+			req.assert('gateway_data.AuthCode', 'Enter 6 digits or NA if auth code is not available.').isAlphanumeric();
                 
 			var errors2 = req.validationErrors();
                 	if (errors2) {
