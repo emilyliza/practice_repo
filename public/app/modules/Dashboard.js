@@ -18,7 +18,7 @@
 		$scope.winloss = {};
 		$scope.date = {
 			start: {
-				val: moment().utc().subtract(1, 'month').format(),
+				val: moment().utc().subtract(12, 'month').format(),
 				opened: false
 			},
 			end: {
@@ -27,6 +27,17 @@
 			}
 		};
 		$scope.dbs.setDates($scope.date);
+		
+		$scope.open=function($event) {
+			$event.preventDefault();
+			$event.stopPropagation();
+
+			$scope.opened = true;
+		};
+
+		$scope.dateOptions = {
+			showWeeks:'false'
+		};
 
 		$scope.dbs.loadDashboard().then(function(data) {
 			if (data.hwl) {

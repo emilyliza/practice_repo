@@ -47,6 +47,7 @@
 							<span ng-if="data.status == 'Sent'" class="glyphicon glyphicon-send"></span>
 							<span ng-if="data.status == 'In-Progress'" class="glyphicon glyphicon-circle-arrow-right"></span>
 							<span ng-if="data.status == 'Won'" class="glyphicon glyphicon-thumbs-up"></span> <a ng-if="data.status == 'Won'" ng-click="methods.undowonlost()"><span class="glyphicon glyphicon-remove-circle"></span></a>
+							<span ng-if="data.status == 'Accept'" class="glyphicon glyphicon-thumbs-down"></span> 
 							<span ng-if="data.status == 'Lost'" class="glyphicon glyphicon-thumbs-down"></span> <a ng-if="data.status == 'Lost'" ng-click="methods.undowonlost()"><span class="glyphicon glyphicon-remove-circle"></span></a>
 						</span>
 					</div>
@@ -113,9 +114,12 @@
 			</div>
 			<div class="form-group btns" style="text-align: center; margin-top: 40px;" ng-if="settings.state.current.name == 'chargeback.review'">
 				<button type="button" class="btn btn-success" ng-if="data.status == 'In-Progress' || data.status == 'Errored'" style="margin-right: 20px;" ng-click="methods.submit('Are you sure you want to submit this chargeback dispute?\nBy submitting, you confirm that you have not included any full card numbers or CVV numbers.\nYou also certify that the provided information is true and accurate.', 'Yes, submit it!', 'No, keep working.')" class="btn btn-danger">Submit Chargeback Dispute</button>
-				<button type="button" ng-if="data.docgen" ng-click="methods.download()" class="btn btn-info">Download Chargeback PDF</button>
+                                <button type="button" ng-if="data.docgen" ng-click="methods.download()" class="btn btn-info">Download Chargeback PDF</button>
 				<button type="button" ng-if="(data.status == 'Won' || data.status == 'Lost' || data.status == 'Sent') && !data.docgen" class="btn btn-default">PDF Document is Processing</button>
 			</div>
+			<div class="form-group btns" style="text-align: center; margin-top: 40px;" ng-if="settings.state.current.name == 'chargeback.review'">
+          <button type="button" class="btn btn-success" ng-if="data.status == 'In-Progress' || data.status == 'Errored'" style="margin-right: 20px;" ng-click="methods.accept('Are you sure you want to submit this chargeback dispute?\nBy submitting, you confirm that you have not included any full card numbers or CVV numbers.\nYou also certify that the provided information is true and accurate.', 'Yes, submit it!', 'No, keep working.')" class="btn btn-danger">Accept Chargeback</button>
+</div> 
 		</div>
 
 	</div>
