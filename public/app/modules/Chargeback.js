@@ -97,17 +97,46 @@
 			$state.go('chargeback.review', { '_id': res.data._id }, { location: "replace"} );
 		}
 		
-		$scope.methods = {};
-		$scope.settings = {
-			chargeBackDateOpened: false,
-			transDateOpened: false,
-			transDateOrigOpened: false,
-			canceledDateOpened: false,
-			orderDateOpened: false
+		// Setup data.
+		var setupData = function() {
+			$scope.methods = {};
+			$scope.settings = {
+				chargeBackDateOpened: false,
+				transDateOpened: false,
+				transDateOrigOpened: false,
+				canceledDateOpened: false,
+				orderDateOpened: false
 
+			};
+			$scope.data.chc = true;
+			$scope.settings.state = $state;
+			$scope.settings.disableReview = true;
+			$scope.settings.shipping_companies = ["USPS", "Fedex", "UPS", "DHL"];
+			$scope.settings.cctypes = [
+				"",
+				"VISA",
+				"MASTERCARD",
+				"AMEX",
+				"DISCOVER",
+				//"ELECTRON",
+				//"MAESTRO",
+				//"DANKORT",
+				//"INTERPAYMENT",
+				//"UNIONPAY",
+				//"DINERS",
+				//"JCB"
+			];
+			$scope.settings.internal_types = [
+				"Retrieval-Request",
+				"Chargeback",
+				"Pre-Arbitration"
+			];
 		};
-		$scope.settings.state = $state;
-		$scope.settings.disableReview = true;
+		setupData();
+
+
+
+
 		if (!$scope.data.attachments) { $scope.data.attachments = []; }
 
                 $scope.open=function($event) {
@@ -129,7 +158,7 @@
 			}
 		};
 
-		$scope.data.chc = true;
+
 		if ($scope.data.gateway_data && !$scope.data.gateway_data.TransDate) {
 			$scope.data.gateway_data.TransDate = "";
 		}
@@ -137,26 +166,6 @@
 			$scope.data.internal_type = "Chargeback";
 		}
 
-		$scope.settings.shipping_companies = ["USPS", "Fedex", "UPS", "DHL"];
-		$scope.settings.cctypes = [
-			"",
-			"VISA",
-			"MASTERCARD",
-			"AMEX",
-			"DISCOVER",
-			//"ELECTRON",
-			//"MAESTRO",
-			//"DANKORT",
-			//"INTERPAYMENT",
-			//"UNIONPAY",
-			//"DINERS",
-			//"JCB"
-		];
-		$scope.settings.internal_types = [
-			"Retrieval-Request",
-			"Chargeback",
-			"Pre-Arbitration"
-		];
 
 		$scope.$watch("data", function(newValue, oldValue){
 			$scope.errors = {};
