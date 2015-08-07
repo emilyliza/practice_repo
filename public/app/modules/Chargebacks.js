@@ -28,6 +28,17 @@
 
 		$scope.methods = {};
 
+                $scope.open=function($event) {
+                        $event.preventDefault();
+                        $event.stopPropagation();
+
+                        $scope.opened = true;
+                };
+
+                $scope.dateOptions = {
+                        showWeeks:'false'
+                };
+
 		$scope.date = {
 			start: {
 				val: s,

@@ -365,6 +365,7 @@ module.exports = function(app) {
 		if (!req.body.gateway_data.CcType && !Util.detectCardType( req.body.portal_data.CcPrefix + "11010101" + req.body.portal_data.CcSuffix )) {
 			return res.json(400, { 'CcPrefix': 'Invalid credit card prefix.' });	
 		}
+                
 
 		if (req.body.gateway_data && req.body.gateway_data.AvsStatus) {
 			req.body.gateway_data.AvsStatus = req.body.gateway_data.AvsStatus.toUpperCase();
@@ -497,6 +498,44 @@ module.exports = function(app) {
 			return res.json(400, { 'CcPrefix': 'Enter 4 digits or select a credit card type.' });	
 		}
 
+
+		if(req.body.gateway_data && req.body.gateway_data.AuthCode && req.body.gateway_data.AuthCode.toLowerCase() != 'na' &&  req.body.gateway_data.AuthCode.length!=6) {
+			return res.json(400, {'AuthCode':'Enter 6 digits or NA if auth code is not available.'});
+
+		}	
+
+		if( req.body.gateway_data && req.body.gateway_data.AuthCode && req.body.gateway_data.AuthCode.length == 6)	{
+			req.assert('gateway_data.AuthCode', 'Enter 6 digits or NA if auth code is not available.').isAlphanumeric();
+                
+			var errors2 = req.validationErrors();
+                	if (errors2) {
+                        	return res.json(400, errors2 );
+                	}	
+		}
+
+		if( req.body.gateway_data && (	req.body.gateway_data.BillingAddr1 || 
+						req.body.gateway_data.BillingAddr2 || 
+						req.body.gateway_data.BillingCity || 
+						req.body.gateway_data.BillingState||
+						req.body.gateway_data.BillingCountry||
+						req.body.gateway_data.BillingPostal))
+		{
+			req.assert( 'gateway_data.BillingAddr1', 'You must provide billing address line 1.').notEmpty();
+			req.assert( 'gateway_data.BillingCity', 'Invalid Address: must specify city.').notEmpty();
+			req.assert( 'gateway_data.BillingPostal', 'Invalid Address: must specify billing postal code.').notEmpty();
+
+                        if( !req.body.gateway_data.BillingState)
+                                req.assert( 'gateway_data.BillingCountry','Invalid Address: must specify state or foreign country').notEmpty();
+
+			if( req.body.gateway_data.BillingCountry && req.body.gateway_data.BillingCountry.length>0 && req.body.gateway_data.BillingCountry != 'USA'  && req.body.gateway_data.BillingCountry != 'US')
+				req.assert('gateway_data.BillingState','Enter a valid state code or NA for an international address').notEmpty();
+
+			var errors3 = req.validationErrors();
+                        if (errors3) {
+                                return res.json(400, errors3 );
+                        }
+		}
+
 		if (req.body.gateway_data && req.body.gateway_data.AvsStatus) {
 			req.body.gateway_data.AvsStatus = req.body.gateway_data.AvsStatus.toUpperCase();
 			// codes from http://www.emsecommerce.net/avs_cvv2_response_codes.htm
@@ -565,3 +604,4 @@ module.exports = function(app) {
 
 	});
 };
+

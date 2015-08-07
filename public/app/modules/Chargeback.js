@@ -93,7 +93,7 @@
 		
 		if ($scope.data.status == "In-Progress" && $state.current.name != "chargeback.data" && $state.current.name != "chargeback.review" && $state.current.name != "chargebackconfirmation") {
 			$state.go('chargeback.data', { '_id': res.data._id }, { location: "replace"} );
-		} else if (_.indexOf(["Sent","Won","Lost"], $scope.data.status ) != -1 && ($state.current.name != "chargeback.review" && $state.current.name != "chargebackconfirmation")) {
+		} else if (_.indexOf(["Accept","Sent","Won","Lost"], $scope.data.status ) != -1 && ($state.current.name != "chargeback.review" && $state.current.name != "chargebackconfirmation")) {
 			$state.go('chargeback.review', { '_id': res.data._id }, { location: "replace"} );
 		}
 		
@@ -110,6 +110,17 @@
 		$scope.settings.disableReview = true;
 		if (!$scope.data.attachments) { $scope.data.attachments = []; }
 
+                $scope.open=function($event) {
+                        $event.preventDefault();
+                        $event.stopPropagation();
+
+                        $scope.opened = true;
+                };
+
+                $scope.dateOptions = {
+                        showWeeks:'false'
+                };
+
 		$scope.methods.setCard = function(c) {
 			$scope.data.type = c;
 			save();
@@ -118,7 +129,6 @@
 			}
 		};
 
-		
 		$scope.data.chc = true;
 		if ($scope.data.gateway_data && !$scope.data.gateway_data.TransDate) {
 			$scope.data.gateway_data.TransDate = "";
@@ -305,6 +315,30 @@
 				}
 			});
 		};
+
+		$scope.methods.accept = function(msg, confirmbtn, cancelbtn) {
+                        var modalInstance = $modal.open({
+                                templateUrl: '/app/templates/confirm-modal.html',
+                                controller: 'ModalInstanceCtrl',
+                                size: "md",
+                                resolve: {
+                                        data: function () {
+                                                return {
+                                                        'msg': msg,
+                                                        'confirm': confirmbtn,
+                                                        'cancel': cancelbtn
+                                                };
+                                        }
+                                }
+                        });
+                        modalInstance.result.then(function (confirm) {
+                                if (confirm) {
+		                        $scope.data.status = "Accept";
+                		        save();
+                                        $state.go('chargebackconfirmation', { '_id': res.data._id });
+                                }
+                        });
+                };
 
 
 		var addUploaders = function() {
