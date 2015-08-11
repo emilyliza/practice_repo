@@ -313,9 +313,16 @@
 		<div class="col-md-3">
 			<div class="form-group" show-errors>
 				<label>IP Address</label>
-				<input name="IpAddress" required type="text" class="form-control" pop-show="{{errors.IpAddress}}" pop="{{errors.IpAddress}}" pop-placement="right"
-					   ng-model="data.crm_data.IpAddress" placeholder="" ng-blur="methods.ds()"
-						ng-pattern="/^(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/">
+				<input name="IpAddress"
+					   required type="text"
+					   class="form-control"
+					   pop-show="{{errors.IpAddress}}"
+					   pop="{{errors.IpAddress}}"
+					   pop-placement="right"
+					   ng-model="data.crm_data.IpAddress"
+					   placeholder="Enter NA if unavailable."
+					   ng-blur="methods.ds()"
+					   ng-pattern="/^NA|(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/i">
 			</div>
 		</div>
 	</div>
