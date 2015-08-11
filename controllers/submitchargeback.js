@@ -75,7 +75,7 @@ module.exports = function(app) {
 		.map(function(cb) {
 			cb.status = 'Sent';
 			return cb;
-		})
+		 })
 		.flatMap(Util.saveStream)
 		.map( JSON.stringify )
 		.pipe(res);

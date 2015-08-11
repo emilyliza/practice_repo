@@ -156,6 +156,17 @@
 		$scope.$state = $state;	// for navigation active to work		
 		$scope.winloss = {};
 
+                $scope.open=function($event) {
+                        $event.preventDefault();
+                        $event.stopPropagation();
+
+                        $scope.opened = true;
+                };
+
+                $scope.dateOptions = {
+                        showWeeks:'false'
+                };
+
 		// hack to fix auto activation of first tab
 		if ($state.current.url != "/overview") {
 			setTimeout(function() {
