@@ -64,6 +64,7 @@
 			// Default logo name
 			var logoname = "cart_chargeback_com";
 			var logo_url = "";
+			var css_url = "";
 			// If cart dev, treat as if it is cart for retrieving the logo.
 			if( domain_ll[0] === 'cartdev') {
 				domain_ll[0] = 'cart';
@@ -80,13 +81,22 @@
 			// Make sure it's not local host.
 			logoname = logoname !== "localhost" ? logoname : "cart_chargeback_com";
 
-			logo_url = cloudFrontUrl + "images/" + logoname + '.png';
+			if(domain_ll[1] === 'localhost') {
+				logo_url = "/images/" + logoname + '.png';
+				css_url = "/css/"+ logoname + ".css";
+			} else {
+				logo_url = cloudFrontUrl + "images/" + logoname + '.png';
+				css_url = cloudFrontUrl + "css/" + logoname + ".css";
+			}
+
+
 
 			$scope.$state = $state;	// for navigation active to work
 			$scope.isCollapsed = true;
 			$scope.settings = {};
 			$scope.settings.logo = logo_url;
-			$scope.settings.whitelabelcss = cloudFrontUrl + "css/" + logoname + ".css";
+			$scope.settings.footerLogo = "/images/logo.png";
+			$scope.settings.whitelabelcss = css_url;
 			//$scope.settings.logo = "/images/logo.png";
 			//$rootScope.hideFooter = false;
 
