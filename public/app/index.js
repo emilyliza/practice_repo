@@ -95,7 +95,7 @@
 			$scope.isCollapsed = true;
 			$scope.settings = {};
 			$scope.settings.logo = logo_url;
-			$scope.settings.footerLogo = "/images/logo.png"
+			$scope.settings.footerLogo = "/images/logo.png";
 			$scope.settings.whitelabelcss = css_url;
 			//$scope.settings.logo = "/images/logo.png";
 			//$rootScope.hideFooter = false;
