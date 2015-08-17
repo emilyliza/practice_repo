@@ -67,7 +67,7 @@
 			var css_url = "";
 			var whiteLabelPhone = '801-753-0800';
 			var whiteLabelHours = 'M-F 9-5 MDT';
-			var whiteLabelEmail = 'cartsupport@chargeback.com'
+			var whiteLabelEmail = 'cartsupport@chargeback.com';
 
 
 			// If cart dev, treat as if it is cart for retrieving the logo.
