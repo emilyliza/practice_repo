@@ -62,12 +62,8 @@
 			// Get the parts of the host name.
 			var domain_ll = window.location.hostname.split(".");
 			// Default logo name
-			var logoname = "cart_chargeback_com";
-			var logo_url = "";
-			var css_url = "";
-			var whiteLabelPhone = '801-753-0800';
-			var whiteLabelHours = 'M-F 9-5 MDT';
-			var whiteLabelEmail = 'cartsupport@chargeback.com';
+			var logoname = "cart_chargeback_com", logo_url = "", css_url = "";
+			var whiteLabelPhone = '801-753-0800', whiteLabelHours = 'M-F 9-5 MDT', whiteLabelEmail = 'cartsupport@chargeback.com';
 
 
 			// If cart dev, treat as if it is cart for retrieving the logo.
@@ -95,6 +91,19 @@
 				css_url = cloudFrontUrl + "css/" + logoname + ".css";
 			}
 
+			function setupWhiteLabelInfo() {
+				$scope.$state = $state;	// for navigation active to work
+				$scope.isCollapsed = true;
+				$scope.settings = {};
+				$scope.settings.logo = logo_url;
+				$scope.settings.footerLogo = "/images/logo.png";
+				$scope.settings.whitelabelcss = css_url;
+				$scope.settings.whiteLabelPhone = whiteLabelPhone;
+				$scope.settings.whiteLabelHours = whiteLabelHours;
+				$scope.settings.whiteLabelEmail = whiteLabelEmail;
+			}
+			setupWhiteLabelInfo();
+
 
 			// TODO: call endpoint to get additional whitelabel info.
 			WhiteLabelService.getInfo(logoname).then(function(res) {
@@ -104,15 +113,6 @@
 
 			});
 
-			$scope.$state = $state;	// for navigation active to work
-			$scope.isCollapsed = true;
-			$scope.settings = {};
-			$scope.settings.logo = logo_url;
-			$scope.settings.footerLogo = "/images/logo.png";
-			$scope.settings.whitelabelcss = css_url;
-			$scope.settings.whiteLabelPhone = whiteLabelPhone;
-			$scope.settings.whiteLabelHours = whiteLabelHours;
-			$scope.settings.whiteLabelEmail = whiteLabelEmail;
 			//$scope.settings.logo = "/images/logo.png";
 			//$rootScope.hideFooter = false;
 
