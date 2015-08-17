@@ -78,27 +78,6 @@ module.exports = function(app) {
 
 	});
 
-	app.get('/api/v1/s3-wlbl/:_id?', function(req, res, next) {
-
-		AWS.config.update({ region: 'us-west-2' });
-		// Get the prefix to look for.
-		var pfx = "images/" + req.query.prefix +'.';
-		var s3 = new AWS.S3(),
-			params = {Bucket:'chargebackcom', Prefix: pfx};
-
-		s3.listObjects(params, function(err, data) {
-			if( data.Contents.length === 1) {
-				params = {Bucket: process.env.BUCKET, Key: data.Contents[0].Key};
-				s3.getSignedUrl('getObject', params, function (err, url) {
-					res.json({'url': url});
-				});
-			}
-		});
-
-
-	});
-
-
 	app.get('/api/v1/s3-link/:_id?', mw.auth(), function(req, res, next) {
 
 		AWS.config.update({ region: 'us-west-2' });

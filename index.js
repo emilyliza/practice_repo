@@ -194,6 +194,7 @@ require('./controllers/processed')(app);
 require('./controllers/submitchargeback')(app);
 require('./controllers/cctype')(app);
 require('./controllers/docgen')(app);
+require('./controllers/whitelabel')(app);
 
 // Admin endpoints
 require('./controllers/admin/users')(app);

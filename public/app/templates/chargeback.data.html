@@ -314,7 +314,8 @@
 				<label>IP Address</label>
 				<input name="IpAddress" required type="text" class="form-control" pop-show="{{errors.IpAddress}}" pop="{{errors.IpAddress}}" pop-placement="right"
 					   ng-model="data.crm_data.IpAddress" placeholder="" ng-blur="methods.ds()"
-						ng-pattern="/^(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/">
+					   ng-pattern="settings.ipRegex"
+						ng-pattern_old="/^(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/">
 			</div>
 		</div>
 	</div>
@@ -673,6 +674,7 @@
 				<div class="form-group" show-errors>
 					<label>Refund Amount</label>
 					<input name="RefundAmount"
+						   required
 						   type="number"
 						   class="form-control"
 						   pop-show="{{errors.RefundAmount}}"
