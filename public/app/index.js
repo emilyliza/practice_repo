@@ -1,5 +1,5 @@
 (function() {
-
+	var cloudFrontUrl = "https://dksl2s5vm2cnl.cloudfront.net/whitelabel/";
 	var app = angular.module('app', [ 
 		"ui.router", 
 		"ui.bootstrap", 
@@ -58,13 +58,18 @@
 	.controller('ApplicationController', 
 		['$scope', '$rootScope', '$state', 'AUTH_EVENTS', 'UserService', 'WhiteLabelService', 'Idle', '$modal',
 		function ($scope, $rootScope, $state, AUTH_EVENTS, UserService, WhiteLabelService, Idle, $modal) {
-			var cloudFrontUrl = "https://dksl2s5vm2cnl.cloudfront.net/whitelabel/";
+
 			// Get the parts of the host name.
 			var domain_ll = window.location.hostname.split(".");
 			// Default logo name
 			var logoname = "cart_chargeback_com";
 			var logo_url = "";
 			var css_url = "";
+			var whiteLabelPhone = '801-753-0800';
+			var whiteLabelHours = 'M-F 9-5 MDT';
+			var whiteLabelEmail = 'cartsupport@chargeback.com'
+
+
 			// If cart dev, treat as if it is cart for retrieving the logo.
 			if( domain_ll[0] === 'cartdev') {
 				domain_ll[0] = 'cart';
@@ -82,6 +87,7 @@
 			logoname = logoname !== "localhost" ? logoname : "cart_chargeback_com";
 
 			if(domain_ll[1] === 'localhost') {
+				// Get the data locally of locahost
 				logo_url = "/images/" + logoname + '.png';
 				css_url = "/css/"+ logoname + ".css";
 			} else {
@@ -90,6 +96,13 @@
 			}
 
 
+			// TODO: call endpoint to get additional whitelabel info.
+			WhiteLabelService.getInfo(logoname).then(function(res) {
+				$scope.settings.whiteLabelPhone = res.data.phone;
+				$scope.settings.whiteLabelHours = res.data.hours;
+				$scope.settings.whiteLabelEmail = res.data.email;
+
+			});
 
 			$scope.$state = $state;	// for navigation active to work
 			$scope.isCollapsed = true;
@@ -97,6 +110,9 @@
 			$scope.settings.logo = logo_url;
 			$scope.settings.footerLogo = "/images/logo.png";
 			$scope.settings.whitelabelcss = css_url;
+			$scope.settings.whiteLabelPhone = whiteLabelPhone;
+			$scope.settings.whiteLabelHours = whiteLabelHours;
+			$scope.settings.whiteLabelEmail = whiteLabelEmail;
 			//$scope.settings.logo = "/images/logo.png";
 			//$rootScope.hideFooter = false;
 
@@ -160,8 +176,12 @@
 	}])
 
 	.service('WhiteLabelService', ['$http', function ($http) {
-			this.getImageLink = function(prefix) {
-				return $http.get('/api/v1/s3-wlbl/lbl?prefix=' + prefix );
+			this.getInfo = function(name) {
+				//var info = $http.get('/api/v1/whitelabel/?name=' + name );
+				var info = $http.get('/api/v1/whitelabel/?name=' + name );
+				//var info = $http.get(cloudFrontUrl + "/json/sps.json" );
+
+				return info;
 			};
 
 	}]);
