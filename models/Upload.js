@@ -32,9 +32,20 @@ module.exports = function(app) {
 	};
 
 	Upload.updateUploadArray = function(new_attachments, existing_attachments, deleted_attachments) {
-
-		var to_add = _.filter(new_attachments, function(obj) { return !existing_attachments.id(obj._id); }),
-			to_keep = _.filter(new_attachments, function(obj) { return existing_attachments.id(obj._id); }),
+		var dd_info = {};
+		var to_add = _.filter(new_attachments, function(obj) {
+			// Determine if this object already exists,
+			var bChk = dd_info[obj._id] === true;
+			// if bRes is false then not a duplicate
+			if(bChk === false) {
+				dd_info[obj._id] = true; // Save that we have this object.
+			}
+			bChk = !bChk; // We ant to return the NON duplicates.
+			return bChk;
+		});
+		// to_add has no duplicates in the list.
+		to_add = _.filter(to_add, function(obj) { return !existing_attachments.id(obj._id); });
+		var to_keep = _.filter(new_attachments, function(obj) { return existing_attachments.id(obj._id); }),
 			to_remove = _.filter(existing_attachments, function(obj) { return !_.findWhere(new_attachments, { '_id': obj._id + '' }); });
 
 		// add new uploads (processed will be false)
@@ -47,8 +58,6 @@ module.exports = function(app) {
 			existing_attachments.id(r).remove();
 			deleted_attachments.push(r);
 		});
-
-		return
 
 	};
 
