@@ -112,6 +112,8 @@ module.exports = function(app) {
 
 		chargeback.save(this);
 
+		return chargeback;
+
 	}
 
 	app.get('/api/v1/chargebacks?', mw.auth(), function(req, res, next) {
@@ -408,9 +410,9 @@ module.exports = function(app) {
 
 			var cb = req.body;
 
-			saveChargeback(cb, user, true);
+			var chargeback = saveChargeback(cb, user, true);
 
-			this(null, cb);
+			this(null, chargeback);
 
 		})
 		.seq(function(cb) {
