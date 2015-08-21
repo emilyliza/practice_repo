@@ -325,13 +325,20 @@ module.exports = function(app) {
 		var query = [],
 			params = req.query;
 
-		// restrict to just this user's chargebacks
+		// restrict to just this user's chargebacks and only visible chargebacks
 		query.push({
-			'$or': [
-				{ 'user._id': req.user._id },
-				{ 'parent._id': req.user._id }
-			]	
-		});
+				'$or': [
+					{ 'user._id': req.user._id },
+					{ 'parent._id': req.user._id }
+				]
+			},
+			{
+				'$or': [
+					{'visible':{'$exists': false}},
+					{'visible': true}
+				]
+			}
+		);
 
 		if (params.start) {
 			query.push({

@@ -105,7 +105,9 @@
 				transDateOpened: false,
 				transDateOrigOpened: false,
 				canceledDateOpened: false,
-				orderDateOpened: false
+				orderDateOpened: false,
+				ipRegex : /^NA|(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/
+
 
 			};
 			$scope.data.chc = true;
