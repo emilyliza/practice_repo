@@ -93,22 +93,64 @@
 		
 		if ($scope.data.status == "In-Progress" && $state.current.name != "chargeback.data" && $state.current.name != "chargeback.review" && $state.current.name != "chargebackconfirmation") {
 			$state.go('chargeback.data', { '_id': res.data._id }, { location: "replace"} );
-		} else if (_.indexOf(["Sent","Won","Lost"], $scope.data.status ) != -1 && ($state.current.name != "chargeback.review" && $state.current.name != "chargebackconfirmation")) {
+		} else if (_.indexOf(["Accept","Sent","Won","Lost"], $scope.data.status ) != -1 && ($state.current.name != "chargeback.review" && $state.current.name != "chargebackconfirmation")) {
 			$state.go('chargeback.review', { '_id': res.data._id }, { location: "replace"} );
 		}
 		
-		$scope.methods = {};
-		$scope.settings = {
-			chargeBackDateOpened: false,
-			transDateOpened: false,
-			transDateOrigOpened: false,
-			canceledDateOpened: false,
-			orderDateOpened: false
+		// Setup data.
+		var setupData = function() {
+			$scope.methods = {};
+			$scope.settings = {
+				chargeBackDateOpened: false,
+				transDateOpened: false,
+				transDateOrigOpened: false,
+				canceledDateOpened: false,
+				orderDateOpened: false,
+				ipRegex : /^NA|(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/
 
+
+			};
+			$scope.data.chc = true;
+			$scope.settings.state = $state;
+			$scope.settings.disableReview = true;
+			$scope.settings.shipping_companies = ["USPS", "Fedex", "UPS", "DHL"];
+			$scope.settings.cctypes = [
+				"",
+				"VISA",
+				"MASTERCARD",
+				"AMEX",
+				"DISCOVER",
+				//"ELECTRON",
+				//"MAESTRO",
+				//"DANKORT",
+				//"INTERPAYMENT",
+				//"UNIONPAY",
+				//"DINERS",
+				//"JCB"
+			];
+			$scope.settings.internal_types = [
+				"Retrieval-Request",
+				"Chargeback",
+				"Pre-Arbitration"
+			];
 		};
-		$scope.settings.state = $state;
-		$scope.settings.disableReview = true;
+		setupData();
+
+
+
+
 		if (!$scope.data.attachments) { $scope.data.attachments = []; }
+
+                $scope.open=function($event) {
+                        $event.preventDefault();
+                        $event.stopPropagation();
+
+                        $scope.opened = true;
+                };
+
+                $scope.dateOptions = {
+                        showWeeks:'false'
+                };
 
 		$scope.methods.setCard = function(c) {
 			$scope.data.type = c;
@@ -118,8 +160,7 @@
 			}
 		};
 
-		
-		$scope.data.chc = true;
+
 		if ($scope.data.gateway_data && !$scope.data.gateway_data.TransDate) {
 			$scope.data.gateway_data.TransDate = "";
 		}
@@ -127,26 +168,6 @@
 			$scope.data.internal_type = "Chargeback";
 		}
 
-		$scope.settings.shipping_companies = ["USPS", "Fedex", "UPS", "DHL"];
-		$scope.settings.cctypes = [
-			"",
-			"VISA",
-			"MASTERCARD",
-			"AMEX",
-			"DISCOVER",
-			//"ELECTRON",
-			//"MAESTRO",
-			//"DANKORT",
-			//"INTERPAYMENT",
-			//"UNIONPAY",
-			//"DINERS",
-			//"JCB"
-		];
-		$scope.settings.internal_types = [
-			"Retrieval-Request",
-			"Chargeback",
-			"Pre-Arbitration"
-		];
 
 		$scope.$watch("data", function(newValue, oldValue){
 			$scope.errors = {};
@@ -305,6 +326,30 @@
 				}
 			});
 		};
+
+		$scope.methods.accept = function(msg, confirmbtn, cancelbtn) {
+                        var modalInstance = $modal.open({
+                                templateUrl: '/app/templates/confirm-modal.html',
+                                controller: 'ModalInstanceCtrl',
+                                size: "md",
+                                resolve: {
+                                        data: function () {
+                                                return {
+                                                        'msg': msg,
+                                                        'confirm': confirmbtn,
+                                                        'cancel': cancelbtn
+                                                };
+                                        }
+                                }
+                        });
+                        modalInstance.result.then(function (confirm) {
+                                if (confirm) {
+		                        $scope.data.status = "Accept";
+                		        save();
+                                        $state.go('chargebackconfirmation', { '_id': res.data._id });
+                                }
+                        });
+                };
 
 
 		var addUploaders = function() {
