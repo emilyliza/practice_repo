@@ -36,7 +36,7 @@
 					<td>{{f.field}}</td>
 					<td>{{f.example}}</td>
 					<td>
-						<input ng-model="map[f.field]" typeahead="field for field in cbFields | filter:$viewValue | limitTo:8" class="form-control" placeholder="Find Corresponding Field" />
+						<input ng-model="map[f.field]" typeahead="cbField for cbField in cbFields | filter:$viewValue | limitTo:8" class="form-control" placeholder="Find Corresponding Field" />
 					</td>
 				</tr>
 			</table>
