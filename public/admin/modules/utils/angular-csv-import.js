@@ -43,7 +43,7 @@ csvImport.directive('ngCsvImport', function() {
 			result: '='
 		},
 		template: '<div><div ng-show="header && headerVisible"><div class="label">Header</div><input type="checkbox" ng-model="header"></div>'+
-			'<div ng-show="separator" ><div class="label">Seperator</div><input type="text" ng-change="changeSeparator" ng-model="separator"></div>'+
+			'<div ng-show="separator" ><div class="label">Separator</div><input type="text" ng-change="changeSeparator" ng-model="separator"></div>'+
 			'<div><input class="btn cta gray" type="file"/></div></div>',
 		link: function(scope, element) {            
 			element.on('keyup', function(e){
@@ -87,14 +87,14 @@ csvImport.directive('ngCsvImport', function() {
 			});
 
 			var csvToJSON = function(content) {
-				var lineSeperator = "\n";	// Start with linux
+				var lineSeparator = "\n";	// Start with linux
 				// Is this a 'windows' style new line?
 				if( content.csv.indexOf("\r\n") > -1){
-					lineSeperator = "\r\n";
+					lineSeparator = "\r\n";
 				} else if(content.csv.indexOf("\r") > -1) {
-					lineSeperator = "\r";
+					lineSeparator = "\r";
 				}
-				var lines=content.csv.split(lineSeperator);
+				var lines=content.csv.split(lineSeparator);
 				var result = [];
 				var start = 0;
 				var columnCount = lines[0].split(content.separator).length;
