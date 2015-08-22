@@ -27,7 +27,18 @@
 @import "graphs.less";		// for d3 formatting
 
 
+#dp {
+ border-top: transparent !important;	
+ border-bottom: none;
+ border-left: none;
+ box-shadow:none !important;
+}
 
+.required label:after {
+	content: "*";
+	font-weight: bold;
+	color: red; 
+}
 
 #pages {
 	margin-bottom: 150px;
