@@ -26,10 +26,9 @@
 				<div class="form-group required" show-errors>
 					<label>Chargeback Date</label><br><br>
 						<div class="input-group">
-							<input class="form-control"
+							<input class="form-control dp"
 								   required
 								   name="chargebackDate"
-								   id="dp"
 								   type="text"
 								   class="form-control"
 								   datepicker-popup="MM/dd/yyyy"
@@ -140,9 +139,8 @@
 				<div class="form-group required" show-errors>
 					<label>Transaction Date</label><br><br>
 						<div class="input-group">
-							<input name="TransDate"
-								   id="dp"	
-								   required class="form-control"
+							<input name="TransDate"	
+								   required class="form-control dp"
 								   pop-show="{{errors.TransDate}}"
 								   pop="{{errors.TransDate}}"
 								   pop-placement="right"
@@ -375,9 +373,8 @@
 					<label>Order Date</label><br><br>
 					<div class="input-group">
 						<input name="OrderDate"
-						   id="dp"	
 						   required type="text"
-						   class="form-control"
+						   class="form-control dp"
 						   pop-show="{{errors.OrderDate}}"
 						   pop="{{errors.OrderDate}}"
 						   pop-placement="right"
@@ -520,10 +517,9 @@
 				<div class="form-group" show-errors>
 					<label>Cancel Date</label><br><br>
 					<div class="input-group">
-					<input name="CancelDateSystem"
-						   id="dp"	
+					<input name="CancelDateSystem"	
 						   type="text"
-						   class="form-control"
+						   class="form-control dp"
 						   pop-show="{{errors.CancelDateSystem}}"
 						   pop="{{errors.CancelDateSystem}}"
 						   pop-placement="right"
@@ -580,12 +576,11 @@
 				<div class="form-group required" show-errors>
 					<label>Transaction Date</label><br><br>
 					<div class="input-group">
-					<input name="OriginatingTransDate"
-						   id = "dp"	
+					<input name="OriginatingTransDate"	
 						   type="text"
 						   data-tooltip-html-unsafe="Click for calendar."
 						   tooltip-placement="top"
-						   class="form-control"
+						   class="form-control dp"
 						   pop-show=""
 						   pop=""
 						   required
@@ -688,9 +683,8 @@
 					<input class="form-control"
 						   required
 						   name="RefundDateFull"
-						   id="dp"
 						   type="text"
-						   class="form-control"
+						   class="form-control dp"
 						   pop-show="{{errors.RefundDateFull}}"
 						   pop="{{errors.RefundDateFull}}"
 						   pop-placement="right"
@@ -832,9 +826,8 @@
 			<div class="form-group required" show-errors>
 				<label>Delivery Date</label><br><br>
 				<div class="input-group">
-					<input class="form-control"
+					<input class="form-control dp"
 						   required name="ShippingDate"
-						   id="dp"
 						   type="text"
 						   datepicker-popup="MM/dd/yyyy"
 						   ng-model="data.shipping_data.ShippingDate"
