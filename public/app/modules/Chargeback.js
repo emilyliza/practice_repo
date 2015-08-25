@@ -101,11 +101,14 @@
 		var setupData = function() {
 			$scope.methods = {};
 			$scope.settings = {
+				// Set up variables for the state of the various date pickers. Had issues with using only one variable.
 				chargeBackDateOpened: false,
 				transDateOpened: false,
 				transDateOrigOpened: false,
 				canceledDateOpened: false,
 				orderDateOpened: false,
+				refundDateOpened: false,
+				deliveryDateOpened: false,
 				ipRegex : /^NA|(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/
 
 

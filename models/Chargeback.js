@@ -91,6 +91,7 @@ module.exports = function(app) {
 			'RefundDateFull'     : Date,
 			'RefundDatePartial'  : Date,
 			'RefundAmount'       : Number,
+			'RefundTransId'      : String,
 			'Rma'                : String
 		},
 		'shipping_data' : {
