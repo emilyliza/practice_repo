@@ -26,18 +26,17 @@
 				<div class="form-group required" show-errors>
 					<label>Chargeback Date</label><br><br>
 						<div class="input-group">
-							<input class="form-control dp"
+							<input name="chargebackDate"
+								   class="form-control dp"
 								   required
-								   name="chargebackDate"
 								   type="text"
-								   class="form-control"
-								   datepicker-popup="MM/dd/yyyy"
-								   placeholder="MM/DD/YYYY"
-								   datepicker-options="dateOptions"
 								   ng-model="data.chargebackDate"
 								   is-open="settings.chargeBackDateOpened"
 								   isdate
-								   ng-blur="methods.ds()">
+								   ng-blur="methods.ds()"
+								   datepicker-popup="MM/dd/yyyy"
+								   datepicker-options="dateOptions"
+								   placeholder="MM/DD/YYYY">
 							<span class="input-group-btn">
             		   			<button type="button" class="btn btn-default"  ng-click="open($event, settings.chargeBackDateOpened=true)"><i class="glyphicon glyphicon-calendar"></i></button>
           					</span>
@@ -140,18 +139,19 @@
 					<label>Transaction Date</label><br><br>
 						<div class="input-group">
 							<input name="TransDate"	
-								   required class="form-control dp"
+								   class="form-control dp"
+								   required 
+								   type="text"
 								   pop-show="{{errors.TransDate}}"
 								   pop="{{errors.TransDate}}"
 								   pop-placement="right"
-								   type="text" class="form-control"
 								   ng-model="data.gateway_data.TransDate"
 								   is-open="settings.transDateOpened"
-								   isdate ng-blur="methods.ds()"
+								   isdate 
+								   ng-blur="methods.ds()"
 								   datepicker-popup="MM/dd/yyyy"
 								   datepicker-options="dateOptions"
-								   placeholder="MM/DD/YYYY"
-									>
+								   placeholder="MM/DD/YYYY">
 							<span class="input-group-btn">
             		   			<button type="button" class="btn btn-default"  ng-click="open($event, settings.transDateOpened=true)"><i class="glyphicon glyphicon-calendar"></i></button>
           					</span>
@@ -373,19 +373,19 @@
 					<label>Order Date</label><br><br>
 					<div class="input-group">
 						<input name="OrderDate"
-						   required type="text"
 						   class="form-control dp"
+						   required 
+						   type="text"
 						   pop-show="{{errors.OrderDate}}"
 						   pop="{{errors.OrderDate}}"
 						   pop-placement="right"
 						   ng-model="data.crm_data.OrderDate"
-						   placeholder="MM/DD/YYYY"
+						   is-open="settings.orderDateOpened"
+						   isdate
 						   ng-blur="methods.ds()"
 						   datepicker-popup="MM/dd/yyyy"
 						   datepicker-options="dateOptions"
-						   is-open="settings.orderDateOpened"
-						   idate
-						   >
+						   placeholder="MM/DD/YYYY">
 						<span class="input-group-btn">
                 		<button type="button" class="btn btn-default"  ng-click="open($event, settings.orderDateOpened=true)"><i class="glyphicon glyphicon-calendar"></i></button>
               		</span>
@@ -518,18 +518,18 @@
 					<label>Cancel Date</label><br><br>
 					<div class="input-group">
 					<input name="CancelDateSystem"	
-						   type="text"
 						   class="form-control dp"
+						   type="text"
 						   pop-show="{{errors.CancelDateSystem}}"
 						   pop="{{errors.CancelDateSystem}}"
 						   pop-placement="right"
 						   ng-model="data.crm_data.CancelDateSystem"
-						   placeholder="MM/DD/YYYY"
+						   is-open="settings.canceledDateOpened"
+						   isdate
 						   ng-blur="methods.ds()"
 						   datepicker-popup="MM/dd/yyyy"
 						   datepicker-options="dateOptions"
-						   is-open="settings.canceledDateOpened"
-						   isdate>
+						   placeholder="MM/DD/YYYY">
 					<span class="input-group-btn">
             		   <button type="button" class="btn btn-default"  ng-click="open($event, settings.canceledDateOpened=true)"><i class="glyphicon glyphicon-calendar"></i></button>
           			</span>
@@ -577,22 +577,19 @@
 					<label>Transaction Date</label><br><br>
 					<div class="input-group">
 					<input name="OriginatingTransDate"	
-						   type="text"
-						   data-tooltip-html-unsafe="Click for calendar."
-						   tooltip-placement="top"
 						   class="form-control dp"
+						   required
+						   type="text"
 						   pop-show=""
 						   pop=""
-						   required
 						   pop-placement="right"
 						   ng-model="data.gateway_data.Originating.TransDate"
-						   placeholder="MM/DD/YYYY"
+						   is-open="setting.transDateOrigOpened"
+						   isdate
 						   ng-blur="methods.ds()"
 						   datepicker-popup="MM/dd/yyyy"
 						   datepicker-options="dateOptions"
-						   is-open="setting.transDateOrigOpened"
-						   isdate>
-					
+						   placeholder="MM/DD/YYYY">
 					<span class="input-group-btn">
             		   <button type="button" class="btn btn-default"  ng-click="open($event, setting.transDateOrigOpened=true)"><i class="glyphicon glyphicon-calendar"></i></button>
           			</span>
@@ -680,11 +677,10 @@
 				<div class="form-group required" show-errors>
 					<label>Refund Date</label><br><br>
 					<div class="input-group">
-					<input class="form-control"
-						   required
-						   name="RefundDateFull"
-						   type="text"
+					<input name="RefundDateFull"
 						   class="form-control dp"
+						   required
+						   type="text"
 						   pop-show="{{errors.RefundDateFull}}"
 						   pop="{{errors.RefundDateFull}}"
 						   pop-placement="right"
@@ -694,8 +690,7 @@
 						   ng-blur="methods.ds()"
 						   datepicker-popup="MM/dd/yyyy"
 						   datepicker-options="dateOptions"
-						   placeholder="MM/DD/YYYY"
-							>
+						   placeholder="MM/DD/YYYY">
 					<span class="input-group-btn">
             		   <button type="button" class="btn btn-default"  ng-click="open($event, opened=true)"><i class="glyphicon glyphicon-calendar"></i></button>
           			</span>
@@ -826,16 +821,17 @@
 			<div class="form-group required" show-errors>
 				<label>Delivery Date</label><br><br>
 				<div class="input-group">
-					<input class="form-control dp"
-						   required name="ShippingDate"
+					<input name="ShippingDate"
+						   class="form-control dp"
+						   required 
 						   type="text"
-						   datepicker-popup="MM/dd/yyyy"
 						   ng-model="data.shipping_data.ShippingDate"
 						   is-open="opened"
 						   isdate
-						   placeholder="MM/DD/YYYY"
+						   ng-blur="methods.ds()"
+						   datepicker-popup="MM/dd/yyyy"
 						   datepicker-options="dateOptions"
-						   ng-blur="methods.ds()">
+						   placeholder="MM/DD/YYYY">
 					<span class="input-group-btn">
 	        		   <button type="button" class="btn btn-default"  ng-click="open($event, opened=true)"><i class="glyphicon glyphicon-calendar"></i></button>
 	          		</span>
