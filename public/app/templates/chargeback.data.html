@@ -657,7 +657,6 @@
 				<div class="form-group" show-errors>
 					<label>Refund Date</label>
 					<input class="form-control"
-						   required
 						   name="RefundDateFull"
 						   type="text"
 						   class="form-control"
@@ -665,8 +664,8 @@
 						   pop="{{errors.RefundDateFull}}"
 						   pop-placement="right"
 						   ng-model="data.crm_data.RefundDateFull"
-						   is-open="opened"
-						   ng-click="opened=true"
+						   is-open="settings.refundDateOpened"
+						   ng-click="settings.refundDateOpened=true"
 						   isdate
 						   ng-blur="methods.ds()"
 						   datepicker-popup="MM/dd/yyyy"
@@ -697,7 +696,7 @@
 					<label>Refund Transaction ID</label>
 					<input class="form-control"
 						   required
-						   name="RefundDateFull"
+						   name="RefundTransId"
 						   placeholder="Enter NA if not available."
 						   type="text"
 						   class="form-control"
@@ -803,8 +802,8 @@
 					   type="text"
 					   datepicker-popup="MM/dd/yyyy"
 					   ng-model="data.shipping_data.ShippingDate"
-					   is-open="opened"
-					   ng-click="opened=true"
+					   is-open="settings.deliverDateOpened"
+					   ng-click="settings.deliverDateOpened=true"
 					   isdate
 					   placeholder="Click for Calendar."
 					   datepicker-options="dateOptions"
