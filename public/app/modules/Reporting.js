@@ -224,13 +224,19 @@
 		UserService.getChildren().then(function(res) {
 			var current = all;
 			_.each(res.data, function(m) {
+				var parent = m.parent_id;
+				var child = m._id
+				
+				if (m.parent !== m.child) {
 				$scope.merchants.push({ '_id': m._id , 'name': '- ' + m.name });
-				if (m._id == ReportingService.getMerchant()) {
-					current = { '_id': m._id , 'name': '- ' + m.name };
 				}
+				
+				if (m._id == ReportingService.getMerchant()) {
+				current = { '_id': m._id , 'name': '- ' + m.name };
+				}		
 			});
 
-			// default is first
+			// default is first 
 			ReportingService.setMerchant( (ReportingService.getMerchant() || $scope.merchants[0]._id) );
 			$scope.selectedMerchant = current;
 		});	
