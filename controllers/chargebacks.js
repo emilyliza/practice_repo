@@ -12,8 +12,110 @@ module.exports = function(app) {
 		User = app.Models.get('User'),
 		Upload = app.Models.get('Upload'),
 		log = app.get('log');
-		
-		
+
+	/**
+	 * Saves a chargeback to a user, using the request body to create the chargeback
+	 * @param {object} cb - Object with chargeback information
+	 * @param {object} user - Object with user information
+	 * @param {boolean} isManual - If chargeback was entered manually, set to true
+	 * */
+	function saveChargeback(cb, user, isManual) {
+
+		if (!cb.portal_data) {
+			cb.portal_data = {};
+		}
+		if (!cb.portal_data.Portal) {
+			// sort of redundant, as it'll also be the parent, however import may set
+			// Portal if we're importing more than one Acquirer at once?
+			cb.portal_data.Portal = user.parent.name;
+		}
+
+		// Is CardNumber specified?
+		if(cb.hasOwnProperty('CardNumber')) {
+			// get the prefix and suffix.
+			var regx = new RegExp("x",'g');
+			var ccnum = cb.CardNumber.toLowerCase().replace(regx, "*");
+			var ccPrefix = ccnum.slice(0,4);
+			var ccSuffix = ccnum.slice(-4);
+			cb.portal_data.CcPrefix = ccPrefix;
+			cb.portal_data.CcSuffix = ccSuffix;
+		}
+
+		Chargeback.clearNulls(cb, 'crm_data');
+		Chargeback.clearNulls(cb, 'gateway_data');
+		Chargeback.clearNulls(cb, 'shipping_data');
+		Chargeback.clearNulls(cb, 'portal_data');
+		Chargeback.cleanDollarAmounts(cb, ["portal_data.ChargebackAmt","gateway_data.TransAmt","gateway_data.Originating.TransAmt","crm_data.PricePoint","crm_data.RefundAmount"])
+
+		var chargeback = new Chargeback();
+		chargeback.crm_data = cb.crm_data;
+		chargeback.portal_data = cb.portal_data;
+		chargeback.shipping_data = cb.shipping_data;
+		chargeback.gateway_data = cb.gateway_data;
+		chargeback.chargebackDate = new Date(cb.chargebackDate);
+		chargeback.manual = isManual;
+
+		if ('cardSwipe' in cb) {
+			chargeback.type = cb.cardSwipe.toLowerCase();
+			chargeback.status = "In-Progress";
+		} else {
+			chargeback.status = "New";
+		}
+
+		if ('internal_type' in cb) {
+			chargeback.internal_type = cb.internal_type;
+		}
+
+		if('fullName' in cb) {
+			chargeback.gateway_data.FullName = cb.fullName;
+			var name_ll = cb.fullName.split(" ");
+			if(name_ll.length > 2) {
+				// May have middle name
+				chargeback.gateway_data.FirstName = name_ll[0];
+				chargeback.gateway_data.MiddleName = name_ll[1];
+				chargeback.gateway_data.LastName = name_ll[name_ll.len -1];
+			} else {
+				chargeback.gateway_data.FirstName = name_ll[0];
+				chargeback.gateway_data.LastName = name_ll[1];
+			}
+
+		}
+
+		if (!chargeback.gateway_data.TransType) {
+			chargeback.gateway_data.TransType = "Card Settle";
+		}
+		if (!chargeback.gateway_data.TransStatus) {
+			chargeback.gateway_data.TransStatus = "Complete";
+		}
+
+		// Code for both 'sendTo' and 'send_to' existed before, so both are included here. "sendTo" may come from
+		// CSV Uploads while "send_to" may come from manual entries.
+		if('sendTo' in cb) {
+			var sendTo_ll = cb.sendTo.split(":");
+			chargeback.send_to[sendTo_ll[0]] = sendTo_ll[1];
+		}
+
+		if (cb.send_to && cb.send_to.email) {
+			chargeback.set('send_to.email', cb.send_to.email);
+		}
+		if (cb.send_to && cb.send_to.fax) {
+			chargeback.set('send_to.fax', cb.send_to.fax);
+		}
+
+		// If not a subuser, set the parent as themselves.
+		if ('parent' in user && typeof user.parent.name !== "undefined") {
+			chargeback.parent = User.toMicro(user.parent);
+		} else {
+			chargeback.parent = User.toMicro(user);
+		}
+
+		chargeback.user = User.toMicro(user);
+
+		chargeback.save(this);
+
+		return chargeback;
+
+	}
 
 	app.get('/api/v1/chargebacks?', mw.auth(), function(req, res, next) {
 
@@ -155,6 +257,7 @@ module.exports = function(app) {
 
 	});
 
+	// Used for CSV Uploads
 	app.post('/api/v1/chargebacks', mw.auth(), function(req, res, next) {
 
 		req.assert('chargebacks', 'An array of chargebacks is required.').notEmpty();
@@ -179,152 +282,67 @@ module.exports = function(app) {
 
 
 		$()
-		.par('parent', function() {
-			User.findById( req.body.user._id , this);	
+		.par('user', function() {
+			User.findById( req.body.user._id , this);
 		})
-		.par('users', function() {
-			var top = this;
-				var id = new mongoose.Types.ObjectId(req.body.user._id);
-
-			User.find({ 'parent._id': id }, function(err, data) {
-				if (err) { return top(err); }
-				var keyed_users = {};
-				//_.each(data, function(d, a) {
-				lodash.each(data, function(d) {
-					keyed_users[ d.username ] = d;
-				});	
-				top(null, keyed_users);
-			});	
+		// Deprecated by ZAD; 2015-08-31; This variable appears to be unused
+		//.par('users', function() {
+		//	var top = this;
+		//	var id = new mongoose.Types.ObjectId(req.body.user._id);
+        //
+		//	User.find({ 'parent._id': id }, function(err, data) {
+		//		if (err) { return top(err); }
+		//		var keyed_users = {};
+		//		//_.each(data, function(d, a) {
+		//		lodash.each(data, function(d) {
+		//			keyed_users[ d.username ] = d;
+		//		});
+		//		top(null, keyed_users);
+		//	});
+		//})
+		.seq(function() {
+			this(null, req.body.chargebacks);
 		})
+		.flatten()
+		// Deprecated by ZAD; 2015-08-31; Children are no longer created this way
+		//.seqEach(function(cb) {
+        //
+		//	// don't create children
+		//	if (!cc) { return this(); }
+        //
+		//	var top = this,
+		//		merchant = req.user.name;
+		//	if (cb.merchant) {
+		//		merchant = cb.merchant;
+		//	}
+        //
+		//	// if user does not exist, create it and add to ref array
+		//	if (!this.vars.users[ cb.portal_data.MidNumber ]) {
+		//		var user = new User({
+		//			'name': merchant,
+		//			'username': cb.portal_data.MidNumber,
+		//			'timestamps.createdOn': new Date(),
+		//			'parent': User.toMicro(top.vars.parent)
+		//		});
+		//		user.save(function(err,data) {
+		//			if (err) { return top(err); }
+		//			top.vars.users[ cb.portal_data.MidNumber ] = data;
+		//			top();
+		//		});
+		//	} else {
+		//		top();
+		//	}
+		//
+		//})
 		.seq(function() {
 			this(null, req.body.chargebacks);
 		})
 		.flatten()
 		.seqEach(function(cb) {
 
-			// don't create children
-			if (!cc) { return this(); }
+			saveChargeback(cb, this.vars.user, false);
 
-			var top = this,
-				merchant = req.user.name;
-			if (cb.merchant) {
-				merchant = cb.merchant;
-			}
-
-			// if user does not exist, create it and add to ref array
-			if (!this.vars.users[ cb.portal_data.MidNumber ]) {
-				var user = new User({
-					'name': merchant,
-					'username': cb.portal_data.MidNumber,
-					'timestamps.createdOn': new Date(),
-					'parent': User.toMicro(top.vars.parent)
-				});
-				user.save(function(err,data) {
-					if (err) { return top(err); }
-					top.vars.users[ cb.portal_data.MidNumber ] = data;
-					top();
-				});
-			} else {
-				top();
-			}
-		
-		})
-		.seq(function() {
-			this(null, req.body.chargebacks);
-		})
-		.flatten()
-		.seqEach(function(cb) {
-
-			if (!cb.portal_data) {
-				cb.portal_data = {};
-			}
-			if (!cb.portal_data.Portal) {
-				// sort of redundant, as it'll also be the parent, however import may set
-				// Portal if we're importing more than one Acquirer at once?
-				cb.portal_data.Portal = this.vars.parent.name;
-			}
-
-			// Is CardNumber specified?
-			if(cb.hasOwnProperty('CardNumber')) {
-				// get the prefix and suffix.
-				var regx = new RegExp("x",'g');
-				var ccnum = cb.CardNumber.toLowerCase().replace(regx, "*");
-				var ccPrefix = ccnum.slice(0,4);
-				var ccSuffix = ccnum.slice(-4);
-				cb.portal_data.CcPrefix = ccPrefix;
-				cb.portal_data.CcSuffix = ccSuffix;
-			}
-
-			Chargeback.clearNulls(cb, 'crm_data');
-			Chargeback.clearNulls(cb, 'gateway_data');
-			Chargeback.clearNulls(cb, 'shipping_data');
-			Chargeback.clearNulls(cb, 'portal_data');
-			Chargeback.cleanDollarAmounts(cb, ["portal_data.ChargebackAmt","gateway_data.TransAmt","gateway_data.Originating.TransAmt","crm_data.PricePoint","crm_data.RefundAmount"])
-			
-			var chargeback = new Chargeback();
-			chargeback.crm_data = cb.crm_data;
-			chargeback.portal_data = cb.portal_data;
-			chargeback.shipping_data = cb.shipping_data;
-			chargeback.gateway_data = cb.gateway_data;
-
-			chargeback.chargebackDate = cb.chargebackDate;
-
-			if(cb.hasOwnProperty("cardSwipe")) {
-				chargeback.type = cb.cardSwipe.toLowerCase();
-				chargeback.status = "In-Progress";
-			} else {
-				chargeback.status = "New";
-			}
-			if(cb.hasOwnProperty("fullName")) {
-				chargeback.gateway_data.FullName = cb.fullName;
-				var name_ll = cb.fullName.split(" ");
-				if(name_ll.length > 2) {
-					// May have middle name
-					chargeback.gateway_data.FirstName = name_ll[0];
-					chargeback.gateway_data.MiddleName = name_ll[1];
-					chargeback.gateway_data.LastName = name_ll[name_ll.len -1];
-				} else {
-					chargeback.gateway_data.FirstName = name_ll[0];
-					chargeback.gateway_data.LastName = name_ll[1];
-				}
-
-			}
-			if(cb.hasOwnProperty("sendTo")) {
-				var sendTo_ll = cb.sendTo.split(":");
-				//if( sendTo_ll[0] == "email") {
-				//	chargeback.send_to.email = sendTo_ll[1]
-				//} else if(sendTo_ll[0] == "fax") {
-				//	chargeback.send_to.fax = sendTo_ll[1]
-				//}
-				chargeback.send_to[sendTo_ll[0]] = sendTo_ll[1];
-
-			}
-			
-			if (!chargeback.gateway_data.TransType) {
-				chargeback.gateway_data.TransType = "Card Settle";
-			}
-			if (!chargeback.gateway_data.TransStatus) {
-				chargeback.gateway_data.TransStatus = "Complete";
-			}
-
-			if (cb.send_to && cb.send_to.email) {
-				chargeback.set('send_to.email', cb.send_to.email);
-			}
-			if (cb.send_to && cb.send_to.fax) {
-				chargeback.set('send_to.fax', cb.send_to.fax);
-			}
-			
-			if (cc) {
-				chargeback.user = User.toMicro( this.vars.users[ cb.portal_data.MidNumber ] );
-			
-				// parent user is one sent via post body
-				chargeback.parent = User.toMicro(this.vars.parent);
-			} else {
-				// if not creating children, set user to req.body.user, no parent
-				chargeback.user = User.toMicro(this.vars.parent);	
-			}
-			
-			chargeback.save(this);
+			this();
 
 		})
 		.seq(function() {
@@ -394,48 +412,9 @@ module.exports = function(app) {
 
 			var cb = req.body;
 
-			if (!cb.portal_data) {
-				cb.portal_data = {};
-			}
-			if (!cb.portal_data.Portal) {
-				// sort of redundant, as it'll also be the parent, however import may set
-				// Portal if we're importing more than one Acquirer at once?
-				cb.portal_data.Portal = req.user.name;
-			}
+			var chargeback = saveChargeback(cb, user, true);
 
-			var chargeback = new Chargeback();
-			chargeback.crm_data = cb.crm_data;
-			chargeback.portal_data = cb.portal_data;
-			chargeback.shipping_data = cb.shipping_data;
-			chargeback.gateway_data = cb.gateway_data;
-			chargeback.status = "New";
-			chargeback.manual = true;
-			chargeback.internal_type = cb.internal_type;
-			chargeback.chargebackDate = new Date(cb.chargebackDate);
-
-			if (!chargeback.gateway_data.TransType) {
-				chargeback.gateway_data.TransType = "Card Settle";
-			}
-			if (!chargeback.gateway_data.TransStatus) {
-				chargeback.gateway_data.TransStatus = "Complete";
-			}
-
-			if (cb.send_to && cb.send_to.email) {
-				chargeback.set('send_to.email', cb.send_to.email);
-			}
-			if (cb.send_to && cb.send_to.fax) {
-				chargeback.set('send_to.fax', cb.send_to.fax);
-			}
-			
-			if (user.parent) {
-				chargeback.parent = User.toMicro(user.parent);
-			} else {
-				chargeback.parent = User.toMicro(user);
-			}
-			
-			chargeback.user = User.toMicro(user);
-			
-			chargeback.save(this);
+			this(null, chargeback);
 
 		})
 		.seq(function(cb) {
@@ -471,7 +450,6 @@ module.exports = function(app) {
 		//req.assert('gateway_data.TransAmt', 'An order amount is required.').notEmpty();
 		//req.assert('gateway_data.BillingAddr1', 'You must provide a billing address.').notEmpty();
 		//req.assert('gateway_data.BillingCity', 'You must provide a billing city.').notEmpty();
-		//req.assert('gateway_data.BillingState', 'You must provide a billing state.').notEmpty();
 		//req.assert('gateway_data.BillingPostal', 'You must provide a billing postal code.').notEmpty();
 		//req.assert('gateway_data.BillingCountry', 'You must provide a billing country.').notEmpty();
 		//req.assert('gateway_data.TransId', 'A transaction id is required.').notEmpty();
@@ -523,9 +501,10 @@ module.exports = function(app) {
 		{
 			req.assert( 'gateway_data.BillingAddr1', 'You must provide billing address line 1.').notEmpty();
 			req.assert( 'gateway_data.BillingCity', 'Invalid Address: must specify city.').notEmpty();
-			req.assert( 'gateway_data.BillingState', 'Invalid Address: must specify state.').notEmpty();
 			req.assert( 'gateway_data.BillingPostal', 'Invalid Address: must specify billing postal code.').notEmpty();
-            req.assert( 'gateway_data.BillingCountry','Invalid Address: must specify country').notEmpty();
+
+                        if( !req.body.gateway_data.BillingState)
+                                req.assert( 'gateway_data.BillingCountry','Invalid Address: must specify state or foreign country').notEmpty();
 
 			if( req.body.gateway_data.BillingCountry && req.body.gateway_data.BillingCountry.length>0 && req.body.gateway_data.BillingCountry != 'USA'  && req.body.gateway_data.BillingCountry != 'US')
 				req.assert('gateway_data.BillingState','Enter a valid state code or NA for an international address').notEmpty();
