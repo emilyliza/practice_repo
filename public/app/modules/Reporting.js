@@ -225,7 +225,7 @@
 			var current = all;
 			_.each(res.data, function(m) {
 				var parent = m.parent_id;
-				var child = m._id
+				var child = m._id;
 				
 				if (m.parent !== m.child) {
 				$scope.merchants.push({ '_id': m._id , 'name': '- ' + m.name });
