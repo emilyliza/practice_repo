@@ -32,7 +32,7 @@
 						   class="form-control"
 						   datepicker-popup="MM/dd/yyyy"
 						   placeholder="Click for Calendar"
-						   datepicker-options="dateOptions"
+					   datepicker-options="dateOptions"
 						   ng-model="data.chargebackDate"
 						   is-open="settings.chargeBackDateOpened"
 						   ng-click="settings.chargeBackDateOpened=true"
@@ -266,7 +266,7 @@
 		<div class="col-md-3">
 			<div class="form-group" show-errors>
 				<label>Billing State</label>
-				<input name="BillingState" type="text" class="form-control" pop-show="{{errors.BillingState}}" pop="{{errors.BillingState}}" pop-placement="right" ng-model="data.gateway_data.BillingState" placeholder='"NA" if International' ng-blur="methods.ds()">
+				<input name="BillingState" required='' type="text" class="form-control" pop-show="{{errors.BillingState}}" pop="{{errors.BillingState}}" pop-placement="right" ng-model="data.gateway_data.BillingState" placeholder='"NA" if International' ng-blur="methods.ds()">
 			</div>
 		</div>
 		<div class="col-md-3">
