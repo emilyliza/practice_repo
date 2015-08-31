@@ -102,7 +102,8 @@ module.exports = function(app) {
 			chargeback.set('send_to.fax', cb.send_to.fax);
 		}
 
-		if ('parent' in user) {
+		// If not a subuser, set the parent as themselves.
+		if ('parent' in user && typeof user.parent.name !== "undefined") {
 			chargeback.parent = User.toMicro(user.parent);
 		} else {
 			chargeback.parent = User.toMicro(user);
@@ -281,64 +282,65 @@ module.exports = function(app) {
 
 
 		$()
-		.par('parent', function() {
-			User.findById( req.body.user._id , this);	
+		.par('user', function() {
+			User.findById( req.body.user._id , this);
 		})
-		.par('users', function() {
-			var top = this;
-				var id = new mongoose.Types.ObjectId(req.body.user._id);
-
-			User.find({ 'parent._id': id }, function(err, data) {
-				if (err) { return top(err); }
-				var keyed_users = {};
-				//_.each(data, function(d, a) {
-				lodash.each(data, function(d) {
-					keyed_users[ d.username ] = d;
-				});	
-				top(null, keyed_users);
-			});	
+		// Deprecated by ZAD; 2015-08-31; This variable appears to be unused
+		//.par('users', function() {
+		//	var top = this;
+		//	var id = new mongoose.Types.ObjectId(req.body.user._id);
+        //
+		//	User.find({ 'parent._id': id }, function(err, data) {
+		//		if (err) { return top(err); }
+		//		var keyed_users = {};
+		//		//_.each(data, function(d, a) {
+		//		lodash.each(data, function(d) {
+		//			keyed_users[ d.username ] = d;
+		//		});
+		//		top(null, keyed_users);
+		//	});
+		//})
+		.seq(function() {
+			this(null, req.body.chargebacks);
 		})
+		.flatten()
+		// Deprecated by ZAD; 2015-08-31; Children are no longer created this way
+		//.seqEach(function(cb) {
+        //
+		//	// don't create children
+		//	if (!cc) { return this(); }
+        //
+		//	var top = this,
+		//		merchant = req.user.name;
+		//	if (cb.merchant) {
+		//		merchant = cb.merchant;
+		//	}
+        //
+		//	// if user does not exist, create it and add to ref array
+		//	if (!this.vars.users[ cb.portal_data.MidNumber ]) {
+		//		var user = new User({
+		//			'name': merchant,
+		//			'username': cb.portal_data.MidNumber,
+		//			'timestamps.createdOn': new Date(),
+		//			'parent': User.toMicro(top.vars.parent)
+		//		});
+		//		user.save(function(err,data) {
+		//			if (err) { return top(err); }
+		//			top.vars.users[ cb.portal_data.MidNumber ] = data;
+		//			top();
+		//		});
+		//	} else {
+		//		top();
+		//	}
+		//
+		//})
 		.seq(function() {
 			this(null, req.body.chargebacks);
 		})
 		.flatten()
 		.seqEach(function(cb) {
 
-			// don't create children
-			if (!cc) { return this(); }
-
-			var top = this,
-				merchant = req.user.name;
-			if (cb.merchant) {
-				merchant = cb.merchant;
-			}
-
-			// if user does not exist, create it and add to ref array
-			if (!this.vars.users[ cb.portal_data.MidNumber ]) {
-				var user = new User({
-					'name': merchant,
-					'username': cb.portal_data.MidNumber,
-					'timestamps.createdOn': new Date(),
-					'parent': User.toMicro(top.vars.parent)
-				});
-				user.save(function(err,data) {
-					if (err) { return top(err); }
-					top.vars.users[ cb.portal_data.MidNumber ] = data;
-					top();
-				});
-			} else {
-				top();
-			}
-		
-		})
-		.seq(function() {
-			this(null, req.body.chargebacks);
-		})
-		.flatten()
-		.seqEach(function(cb) {
-
-			//TODO: Originally used "chargeback.save(this);", so "cb" and "this.vars" may need some massaging here first
-			saveChargeback(cb, this.vars, false);
+			saveChargeback(cb, this.vars.user, false);
 
 			this();
 
@@ -359,7 +361,6 @@ module.exports = function(app) {
 	// POSTING JUST ONE CHARGEBACK (MANUAL ENTRY)
 	app.post('/api/v1/chargeback', mw.auth(), function(req, res, next) {
 
-		//req.assert('portal_data.MidNumber', 'A mid number is required.').isAlphanumeric();
 		req.assert('portal_data.ChargebackAmt', 'An amount is required.').isFloat();
 		req.assert('gateway_data.TransAmt', 'Must be an amount.').optional().isFloat();
 		req.assert('portal_data.CcPrefix', 'A valid credit card prefix is required.').len(1,6).isNumeric();
@@ -430,40 +431,12 @@ module.exports = function(app) {
 
 	app.put('/api/v1/chargeback/:_id', mw.auth(), function(req, res, next) {
 
-		//req.assert('portal_data.MidNumber', 'A mid number is required.').isAlphanumeric();
 		req.assert('portal_data.ChargebackAmt', 'An amount is required.').isFloat();
 		req.assert('gateway_data.TransAmt', 'Must be an amount.').optional().isFloat();
 		req.assert('portal_data.CcPrefix', 'A valid credit card prefix is required.').len(1,6).isNumeric();
 		req.assert('portal_data.CcSuffix', 'A valid credit card suffix is required.').len(4,6).isNumeric();
 		req.assert('portal_data.ReasonText', 'Some reason text is required.').notEmpty();
 		req.assert('chargebackDate', 'A valid chargeback date is required.').isDate();
-
-
-		//// Additional required fields. (TJ)
-		//req.assert('portal_data.ReasonCode', 'A reason code is required.').isAlphanumeric();
-		//req.assert('gateway_data.TransDate', 'A valid transaction  date is required.').isDate();
-		//req.assert('gateway_data.Currency', 'A currency type is required.').isAlphanumeric();
-		//req.assert('gateway_data.FirstName', 'A first name for the customer is required.').isAlphanumeric();
-		//req.assert('gateway_data.LastName', 'A last name for the customer is required.').isAlphanumeric();
-		//req.assert('gateway_data.TransAmt', 'An order amount is required.').notEmpty();
-		//req.assert('gateway_data.BillingAddr1', 'You must provide a billing address.').notEmpty();
-		//req.assert('gateway_data.BillingCity', 'You must provide a billing city.').notEmpty();
-		//req.assert('gateway_data.BillingPostal', 'You must provide a billing postal code.').notEmpty();
-		//req.assert('gateway_data.BillingCountry', 'You must provide a billing country.').notEmpty();
-		//req.assert('gateway_data.TransId', 'A transaction id is required.').notEmpty();
-		//req.assert('gateway_data.OrderId', 'An order id is required.').notEmpty();
-		//req.assert('gateway_data.AuthCode', 'An athorization code is required.').notEmpty();
-		////if(req.body.crm_data.CancelDateSystem != undefined && !req.body.crm_data.CancelDateSystem.isEmpty()) {
-		////	req.assert('crm_data.CancelDateSystem', 'Invalid Date.').isDate();
-		////}
-		//req.assert('crm_data.RefundAmount', 'Invalid refund amount.').isFloat();
-		//req.assert('crm_data.RefundDateFull', 'Invalid Date.').isDate();
-        //
-		//req.assert('crm_data.DeliveryAddr1', 'You must provide a delivery address.').notEmpty();
-		//req.assert('crm_data.DeliveryCity', 'You must provide a delivery city.').notEmpty();
-		//req.assert('crm_data.DeliveryPostal', 'You must provide a delivery postal code.').notEmpty();
-		//req.assert('crm_data.DeliveryCountry', 'You must provide a delivery country.').notEmpty();
-
 
 
 		var errors = req.validationErrors();
