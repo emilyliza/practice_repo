@@ -43,7 +43,7 @@
 			</div>
 			<div class="row" ng-if="data.portal_data.ReasonCode || data.portal_data.ReasonText">
 				<div class="col-sm-6">Return Reason Code: {{data.portal_data.ReasonCode}}</div>
-				<div class="col-sm-6">{{data.portal_data.ReasonText}}</div>
+				<div class="col-sm-6">Reason Text: {{data.portal_data.ReasonText}}</div>
 			</div>
 		</div>
 	</div>
@@ -59,13 +59,13 @@
 				<div class="col-sm-6">
 					{{data.gateway_data.FirstName}} {{data.gateway_data.LastName}}
 				</div>
-				<div class="col-sm-6">{{data.crm_data.Email}}</div>
+				<div class="col-sm-6">Email: {{data.crm_data.Email}}</div>
 			</div>
 			<div class="row">
 				<div class="col-sm-6">
 					{{data.gateway_data.BillingAddr1}}<span ng-if="data.gateway_data.BillingAddr2">, {{data.gateway_data.BillingAddr2}}</span>
 				</div>
-				<div class="col-sm-6">{{data.gateway_data.Phone}}</div>
+				<div class="col-sm-6"> Phone: {{data.gateway_data.Phone}}</div>
 			</div>
 			<div class="row">
 				<div class="col-sm-6">
@@ -73,11 +73,15 @@
 					<span ng-if="data.gateway_data.BillingState">, {{data.gateway_data.BillingState}}</span>
 					<span ng-if="data.gateway_data.BillingPostal"> {{data.gateway_data.BillingPostal}}</span>
 				</div>
-				<div class="col-sm-6"><span ng-if="data.crm_data.IpAddress">IP: {{data.crm_data.IpAddress}}</span></div>
+				<div class="col-sm-6">
+					<span ng-if="data.send_to.fax"> Response Fax: {{data.send_to.fax}}</span>
+				</div>
 			</div>
-			
-		</div>
-		
+			<div class="row">
+				<div class="col-sm-6">
+					<span ng-if="data.crm_data.IpAddress">IP: {{data.crm_data.IpAddress}}</span>
+				</div>
+			</div>
 	</div>
 </div>
 
@@ -128,8 +132,8 @@
 				<div class="col-sm-6">Product CRM Name: {{data.crm_data.ProductCrmName}}</div>
 			</div>
 			<div class="row" ng-if="data.gateway_data.TransStatus || data.gateway_data.TransType">
-				<div class="col-sm-6">Tx Type: {{data.crm_data.TransType}}</div>
-				<div class="col-sm-6">Tx Status: {{data.crm_data.TransStatus}}</div>
+				<div class="col-sm-6">Transaction Type: {{data.crm_data.TransType}}</div>
+				<div class="col-sm-6">Transaction Status: {{data.crm_data.TransStatus}}</div>
 			</div>
 			<div class="row" ng-if="data.crm_data.RMA || data.gateway_data.Currency">
 				<div class="col-sm-6">RMA: {{data.crm_data.Rma}}</div>
