@@ -211,6 +211,8 @@ module.exports = function(app) {
 		});
 
 
+		//TODO: Child creation used to be tested here by passing "'createChildren': true" in the request, but
+		//child creation is no longer done in that way. A new test should be made for that.
 		describe('POST /api/v1/chargebacks', function(){
 			it('should return 200', function(done){
 				var cb = config.get('chargebacks');
@@ -218,107 +220,110 @@ module.exports = function(app) {
 					.post('/api/v1/chargebacks')
 					.send({
 						'chargebacks': cb,
-						'createChildren': true,
 						'user': login
 					})
 					.set('Content-Type', 'application/json')
 					.set('Accept', 'application/json')
 					.set('authorization', login.authtoken)
 					.expect(200)
-					.end(function(e, res) {  
-						if (e) { console.log(e); done(e); }
+					.end(function(e, res) {
+						if (e) {
+							console.log(e);
+							done(e);
+						}
 						done();
 					});
 			});
 		});
 
-		
-		describe('Test new data', function(){
-			var users,
-				other;
-			it('current users should now be 2', function(done){
-				request
-					.get('/api/v1/users')
-					.set('Content-Type', 'application/json')
-					.set('Accept', 'application/json')
-					.set('authorization', login.authtoken)
-					.expect(200)
-					.end(function(e, res) {  
-						if (e) { console.log(e); done(e); }
-						users = res.body;
-						users.should.be.instanceof(Array).and.have.lengthOf(2);
-						done();
-					});
-			});
-			// @TODO: count doesn't work here, adding users a lot, need to look for new user somehow
-			// it('total users should be 4', function(done){
-			// 	User.count(function(err,c) {
-			// 		if (err) { throw err; }
-			// 		c.should.equal(4);
-			// 		done();
-			// 	});
-			// });
-			it('should return array with length=2', function(done){
-				var q = Chargeback.search({
-					user: login,
-					query: {}
-				});
-
-				_( Chargeback.find()
-					.and(q)
-					.lean()
-					.stream() )
-				.stopOnError(function(err) { throw err; })
-				.toArray(function(data) {
-					data.should.be.instanceof(Array).and.have.lengthOf(2);
-					done();
-				});
-
-			});
-			it('new user should return array with length=1', function(done){
-				lodash.each(users, function(u) {
-					if (u._id + '' != login._id + '') {
-						other = u._id;
-					}
-				});
-				var q = Chargeback.search({
-					'user': {
-						'_id': other
-					},
-					query: {}
-				});
-
-				_( Chargeback.find()
-					.and(q)
-					.lean()
-					.stream() )
-				.stopOnError(function(err) { throw err; })
-				.toArray(function(data) {
-					data.should.be.instanceof(Array).and.have.lengthOf(1);
-					done();
-				});
-
-			});
-			it('chargeback query with user param should return array with length=1', function(done){
-				var q = Chargeback.search({
-					user: login,
-					query: {
-						user: other
-					}
-				});
-
-				_( Chargeback.find()
-					.and(q)
-					.lean()
-					.stream() )
-				.stopOnError(function(err) { throw err; })
-				.toArray(function(data) {
-					data.should.be.instanceof(Array).and.have.lengthOf(2);
-					done();
-				});
-
-			});
-		});
+		//TODO: The following tests are meant to be run after a child has been created, but currently no test exists.
+		//This should be repurposed once a new child creation test has been written.
+		//describe('Test new data', function(){
+		//	var users,
+		//		other;
+		//	it('current users should now be 2', function(done){
+		//		request
+		//			.get('/api/v1/users')
+		//			.set('Content-Type', 'application/json')
+		//			.set('Accept', 'application/json')
+		//			.set('authorization', login.authtoken)
+		//			.expect(200)
+		//			.end(function(e, res) {
+		//				if (e) { console.log(e); done(e); }
+		//				users = res.body;
+		//				users.should.be.instanceof(Array).and.have.lengthOf(2);
+		//				done();
+		//			});
+		//	});
+		//	// @TODO: count doesn't work here, adding users a lot, need to look for new user somehow
+		//	// it('total users should be 4', function(done){
+		//	// 	User.count(function(err,c) {
+		//	// 		if (err) { throw err; }
+		//	// 		c.should.equal(4);
+		//	// 		done();
+		//	// 	});
+		//	// });
+		//	it('should return array with length=2', function(done){
+		//		var q = Chargeback.search({
+		//			user: login,
+		//			query: {}
+		//		});
+        //
+		//		_( Chargeback.find()
+		//			.and(q)
+		//			.lean()
+		//			.stream() )
+		//		.stopOnError(function(err) { throw err; })
+		//		.toArray(function(data) {
+		//			data.should.be.instanceof(Array).and.have.lengthOf(2);
+		//			done();
+		//		});
+        //
+		//	});
+		//	it('new user should return array with length=1', function(done){
+		//		lodash.each(users, function(u) {
+		//			if (u._id + '' != login._id + '') {
+		//				other = u._id;
+		//			}
+		//		});
+		//		var q = Chargeback.search({
+		//			'user': {
+		//				'_id': other
+		//			},
+		//			query: {}
+		//		});
+        //
+		//		_( Chargeback.find()
+		//			.and(q)
+		//			.lean()
+		//			.stream() )
+		//		.stopOnError(function(err) { throw err; })
+		//		.toArray(function(data) {
+		//			data.should.be.instanceof(Array).and.have.lengthOf(1);
+		//			done();
+		//		});
+        //
+		//	});
+		//	it('chargeback query with user param should return array with length=1', function(done){
+		//		var q = Chargeback.search({
+		//			user: login,
+		//			query: {
+		//				user: other
+		//			}
+		//		});
+        //
+		//		_( Chargeback.find()
+		//			.and(q)
+		//			.lean()
+		//			.stream() )
+		//		.stopOnError(function(err) { throw err; })
+		//		.toArray(function(data) {
+		//			data.should.be.instanceof(Array).and.have.lengthOf(2);
+		//			done();
+		//		});
+        //
+		//	});
+		//});
 
 	});
 

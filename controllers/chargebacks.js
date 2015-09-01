@@ -269,16 +269,17 @@ module.exports = function(app) {
 		}
 
 		if (!req.body.chargebacks.length) {
-			return res.json(401, { 'chargebacks': 'an array of chargebacks is required.'});
+			return res.json(401, { 'chargebacks': 'An array of chargebacks is required.'});
 		}
 
-		var cc = false;
-		if (req.body.createChildren) {
-			cc = req.body.createChildren;
-		}
-		if (cc && (!req.body.chargebacks[0].portal_data || !req.body.chargebacks[0].portal_data.MidNumber)) {
-			return res.json(401, { 'createChildren': 'portal_data.MidNumber is required to createChildren accounts'});	
-		}
+		// Deprecated by ZAD; 2015-09-01; Children are no longer created this way
+		//var cc = false;
+		//if (req.body.createChildren) {
+		//	cc = req.body.createChildren;
+		//}
+		//if (cc && (!req.body.chargebacks[0].portal_data || !req.body.chargebacks[0].portal_data.MidNumber)) {
+		//	return res.json(401, { 'createChildren': 'portal_data.MidNumber is required to createChildren accounts'});
+		//}
 
 
 		$()
@@ -305,36 +306,35 @@ module.exports = function(app) {
 		})
 		.flatten()
 		// Deprecated by ZAD; 2015-08-31; Children are no longer created this way
-		// No longer deprecated in order to pass a test, but test should eventually be changed
-		.seqEach(function(cb) {
-
-			// don't create children
-			if (!cc) { return this(); }
-
-			var top = this,
-				merchant = req.user.name;
-			if (cb.merchant) {
-				merchant = cb.merchant;
-			}
-
-			// if user does not exist, create it and add to ref array
-			if (!this.vars.users[ cb.portal_data.MidNumber ]) {
-				var user = new User({
-					'name': merchant,
-					'username': cb.portal_data.MidNumber,
-					'timestamps.createdOn': new Date(),
-					'parent': User.toMicro(top.vars.parent)
-				});
-				user.save(function(err,data) {
-					if (err) { return top(err); }
-					top.vars.users[ cb.portal_data.MidNumber ] = data;
-					top();
-				});
-			} else {
-				top();
-			}
-
-		})
+		//.seqEach(function(cb) {
+        //
+		//	// don't create children
+		//	if (!cc) { return this(); }
+        //
+		//	var top = this,
+		//		merchant = req.user.name;
+		//	if (cb.merchant) {
+		//		merchant = cb.merchant;
+		//	}
+        //
+		//	// if user does not exist, create it and add to ref array
+		//	if (!this.vars.users[ cb.portal_data.MidNumber ]) {
+		//		var user = new User({
+		//			'name': merchant,
+		//			'username': cb.portal_data.MidNumber,
+		//			'timestamps.createdOn': new Date(),
+		//			'parent': User.toMicro(top.vars.parent)
+		//		});
+		//		user.save(function(err,data) {
+		//			if (err) { return top(err); }
+		//			top.vars.users[ cb.portal_data.MidNumber ] = data;
+		//			top();
+		//		});
+		//	} else {
+		//		top();
+		//	}
+        //
+		//})
 		.seq(function() {
 			this(null, req.body.chargebacks);
 		})
