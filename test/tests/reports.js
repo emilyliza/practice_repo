@@ -59,51 +59,52 @@ module.exports = function(app) {
 			});
 		});
 
-
-		describe('GET /api/v1/users', function(){
-			var data = [],
-				users;
-			it('current users should be 2', function(done){
-				request
-					.get('/api/v1/users')
-					.set('Content-Type', 'application/json')
-					.set('Accept', 'application/json')
-					.set('authorization', login.authtoken)
-					.expect(200)
-					.end(function(e, res) {  
-						if (e) { console.log(e); done(e); }
-						users = res.body;
-						users.should.be.instanceof(Array).and.have.lengthOf(2);
-						lodash.each(users, function(u) {
-							if (u._id + '' != login._id + '') {
-								other = u._id;
-							}
-						});
-						done();
-					});
-			});
-			it('GET /api/v1/history?user=other should return 200', function(done){
-				request
-					.get('/api/v1/history?user=' + other)
-					.set('Content-Type', 'application/json')
-					.set('Accept', 'application/json')
-					.set('authorization', login.authtoken)
-					.expect(200)
-					.end(function(e, res) {  
-						if (e) { console.log(e); done(e); }
-						data = res.body;
-						done();
-					});
-			});
-			it('result should have length=1', function(done) {
-				data.should.be.instanceof(Array).and.have.lengthOf(1);
-				done();
-			});
-			it('result should equal 1', function(done) {
-				data[0].count.should.be.equal(1);
-				done();
-			});
-		});
+		//TODO: The following tests are meant to be run after a child has been created, but currently no test exists.
+		//This should be repurposed once a new child creation test has been written.
+		//describe('GET /api/v1/users', function(){
+		//	var data = [],
+		//		users;
+		//	it('current users should be 2', function(done){
+		//		request
+		//			.get('/api/v1/users')
+		//			.set('Content-Type', 'application/json')
+		//			.set('Accept', 'application/json')
+		//			.set('authorization', login.authtoken)
+		//			.expect(200)
+		//			.end(function(e, res) {
+		//				if (e) { console.log(e); done(e); }
+		//				users = res.body;
+		//				users.should.be.instanceof(Array).and.have.lengthOf(2);
+		//				lodash.each(users, function(u) {
+		//					if (u._id + '' != login._id + '') {
+		//						other = u._id;
+		//					}
+		//				});
+		//				done();
+		//			});
+		//	});
+		//	it('GET /api/v1/history?user=other should return 200', function(done){
+		//		request
+		//			.get('/api/v1/history?user=' + other)
+		//			.set('Content-Type', 'application/json')
+		//			.set('Accept', 'application/json')
+		//			.set('authorization', login.authtoken)
+		//			.expect(200)
+		//			.end(function(e, res) {
+		//				if (e) { console.log(e); done(e); }
+		//				data = res.body;
+		//				done();
+		//			});
+		//	});
+		//	it('result should have length=1', function(done) {
+		//		data.should.be.instanceof(Array).and.have.lengthOf(1);
+		//		done();
+		//	});
+		//	it('result should equal 1', function(done) {
+		//		data[0].count.should.be.equal(1);
+		//		done();
+		//	});
+		//});
 		
 
 		describe('GET /api/v1/report/status', function(){
