@@ -162,7 +162,7 @@ There are two kinds of tests in the application: Unit tests and End to End tests
 
 To run tests locally, we'll also need .env-test installed with a copy of the values in the "install configs" section.
 However, use a test db when running tests at the tests clear out the entire contents to run tests from scratch.
-DOT NOT TEST ON ANY REAL DATA!!!! You can copy the above and simply change the MONGO_URI! E.g.,
+DO NOT TEST ON ANY REAL DATA!!!! You can copy the above and simply change the MONGO_URI! E.g.,
 
 ```
 MONGO_URI=mongodb://localhost:27017/chargeback-TEST
