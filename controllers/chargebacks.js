@@ -305,35 +305,36 @@ module.exports = function(app) {
 		})
 		.flatten()
 		// Deprecated by ZAD; 2015-08-31; Children are no longer created this way
-		//.seqEach(function(cb) {
-        //
-		//	// don't create children
-		//	if (!cc) { return this(); }
-        //
-		//	var top = this,
-		//		merchant = req.user.name;
-		//	if (cb.merchant) {
-		//		merchant = cb.merchant;
-		//	}
-        //
-		//	// if user does not exist, create it and add to ref array
-		//	if (!this.vars.users[ cb.portal_data.MidNumber ]) {
-		//		var user = new User({
-		//			'name': merchant,
-		//			'username': cb.portal_data.MidNumber,
-		//			'timestamps.createdOn': new Date(),
-		//			'parent': User.toMicro(top.vars.parent)
-		//		});
-		//		user.save(function(err,data) {
-		//			if (err) { return top(err); }
-		//			top.vars.users[ cb.portal_data.MidNumber ] = data;
-		//			top();
-		//		});
-		//	} else {
-		//		top();
-		//	}
-		//
-		//})
+		// No longer deprecated in order to pass a test, but test should eventually be changed
+		.seqEach(function(cb) {
+
+			// don't create children
+			if (!cc) { return this(); }
+
+			var top = this,
+				merchant = req.user.name;
+			if (cb.merchant) {
+				merchant = cb.merchant;
+			}
+
+			// if user does not exist, create it and add to ref array
+			if (!this.vars.users[ cb.portal_data.MidNumber ]) {
+				var user = new User({
+					'name': merchant,
+					'username': cb.portal_data.MidNumber,
+					'timestamps.createdOn': new Date(),
+					'parent': User.toMicro(top.vars.parent)
+				});
+				user.save(function(err,data) {
+					if (err) { return top(err); }
+					top.vars.users[ cb.portal_data.MidNumber ] = data;
+					top();
+				});
+			} else {
+				top();
+			}
+
+		})
 		.seq(function() {
 			this(null, req.body.chargebacks);
 		})
