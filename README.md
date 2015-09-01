@@ -11,20 +11,18 @@ To get you started you can simply clone the chargeback repository and install th
 
 ### Prerequisites
 
-You need git to clone the chargeback repository. You can get git from
-[http://git-scm.com/](http://git-scm.com/).
+You need git to clone the chargeback repository. You can get git [here][git].
 
 We also use a number of node.js tools to initialize and test chargeback. You must have node.js and
-its package manager (npm) installed.  You can get them from [http://nodejs.org/](http://nodejs.org/). 
-We're currently using version 0.12.2. It is nice to use [https://github.com/tj/n](https://github.com/tj/n)
-to manage nodejs versions.
+its package manager (npm) installed.  You can get them [here](http://nodejs.org/). 
+We're currently using version 0.12.2. You can use [n](https://github.com/tj/n) if you need to manage nodejs versions.
 
 ### Clone chargeback
 
 Clone the chargeback.com repository using [git][git]:
 
 ```
-git clone git@bitbucket.org:chargebackcomdev/cart.git
+git clone https://github.com/Chargeback/cart.git
 cd cart
 ```
 
@@ -98,14 +96,6 @@ CODEDEPLOY_SECRET=
 DOCGEN=https://s3-us-west-2.amazonaws.com/cart-pdfs/
 ```
 
-To run tests locally, we'll also need .env-test installed with a copy of the values above. However,
-use a test db when running tests at the tests clear out the entire contents to run tests from scratch.
-DOT NOT TEST ON ANY REAL DATA!!!! You can copy the above and simply change the MONGO_URI!
-
-MONGO_URI=mongodb://localhost:27017/chargeback-TEST
-
-
-
 ### Run the Application
 
 We have preconfigured the project with a simple development web server.  The simplest way to start
@@ -166,6 +156,17 @@ newrelic.js             --> new relic config info, newrelic is only run in produ
 There are two kinds of tests in the application: Unit tests and End to End tests.
 
 ### Running Unit Tests
+
+*Note: **DO NOT RUN TESTS LOCALLY**. This section is left here for archival purposes, but tests are handled through
+[Travis][travis] builds when committing/pull requesting to Github.*
+
+To run tests locally, we'll also need .env-test installed with a copy of the values in the "install configs" section.
+However, use a test db when running tests at the tests clear out the entire contents to run tests from scratch.
+DOT NOT TEST ON ANY REAL DATA!!!! You can copy the above and simply change the MONGO_URI! E.g.,
+
+```
+MONGO_URI=mongodb://localhost:27017/chargeback-TEST
+```
 
 The app comes preconfigured with unit tests for both the server and the web client.
 The client tests are written in [Jasmine][jasmine], which we run with the 
@@ -240,8 +241,8 @@ There are logs for forever (process manager), regular node, and errors.
 
 ### Bugs and errors
 
-Errors are being sent to Airbrake.io here: [https://cartdev.airbrake.io](https://cartdev.airbrake.io). This
-services is okay, not sure it is worth keeping, but can be used to detect some important errors.
+Errors are being sent to [Airbrake.io](https://cartdev.airbrake.io). This
+service is okay, not sure it is worth keeping, but can be used to detect some important errors.
 
 Username: chargeback@infoshreve.com, Password: achaiV0ien6iech
 
@@ -267,7 +268,7 @@ You can spin up new instances here and scale things within OpsWorks.
 
 ## Production Build Process
 
-The build process is taken care of by [https://magnum.travis-ci.com/Chargeback/cart](Travis). When you push a
+The build process is taken care of by [Travis][travis]. When you push a
 commit to github, Travis will automatically build the app and run unit tests (eventually end-to-end tests too).
 This will happen on ANY branch you push. If you push to the "dev" branch, then travis will build, test, and deploy
 to the dev servers set up in AWS's CodeDeploy. If you push to the "master" branch, then travis will build, test, and deploy
@@ -321,3 +322,10 @@ grunt build --target=(index|admin) // defaults to index if --target it not provi
 
 or run with --verbose for more information. Then check ./dist for the results. You can run the following to boot up the nodejs app using the production files for testing. Production mode basically uses ./dist directory versus ./public directory as the root web folder.
 
+[git]: http://git-scm.com/
+[npm]: https://www.npmjs.com/
+[bower]: http://bower.io/
+[jasmine]: http://jasmine.github.io/
+[protractor]: https://angular.github.io/protractor/#/
+[travis]: https://travis-ci.org/
+[karma]: http://karma-runner.github.io/0.13/index.html
