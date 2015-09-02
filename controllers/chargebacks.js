@@ -471,6 +471,7 @@ module.exports = function(app) {
 		//req.assert('gateway_data.TransAmt', 'An order amount is required.').notEmpty();
 		//req.assert('gateway_data.BillingAddr1', 'You must provide a billing address.').notEmpty();
 		//req.assert('gateway_data.BillingCity', 'You must provide a billing city.').notEmpty();
+		//req.assert('gateway_data.BillingState', 'You must provide a billing state.').notEmpty();
 		//req.assert('gateway_data.BillingPostal', 'You must provide a billing postal code.').notEmpty();
 		//req.assert('gateway_data.BillingCountry', 'You must provide a billing country.').notEmpty();
 		//req.assert('gateway_data.TransId', 'A transaction id is required.').notEmpty();
@@ -522,10 +523,9 @@ module.exports = function(app) {
 		{
 			req.assert( 'gateway_data.BillingAddr1', 'You must provide billing address line 1.').notEmpty();
 			req.assert( 'gateway_data.BillingCity', 'Invalid Address: must specify city.').notEmpty();
+			req.assert( 'gateway_data.BillingState', 'Invalid Address: must specify state.').notEmpty();
 			req.assert( 'gateway_data.BillingPostal', 'Invalid Address: must specify billing postal code.').notEmpty();
-
-                        if( !req.body.gateway_data.BillingState)
-                                req.assert( 'gateway_data.BillingCountry','Invalid Address: must specify state or foreign country').notEmpty();
+            req.assert( 'gateway_data.BillingCountry','Invalid Address: must specify country').notEmpty();
 
 			if( req.body.gateway_data.BillingCountry && req.body.gateway_data.BillingCountry.length>0 && req.body.gateway_data.BillingCountry != 'USA'  && req.body.gateway_data.BillingCountry != 'US')
 				req.assert('gateway_data.BillingState','Enter a valid state code or NA for an international address').notEmpty();

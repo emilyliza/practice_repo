@@ -94,7 +94,8 @@
 			trackingnum:'shipping_data.TrackingNum',
 			trackingsum:'shipping_data.TrackingSum'
 		};
-
+ 
+	
 		// typeahead uses this array to auto-complete fields if user deletes default match
 		$scope.cbFields = [
 			"status",
@@ -136,12 +137,12 @@
 			'gateway_data.TransType',
 			'gateway_data.TransDate',
 			'gateway_data.TransAmt',
-			{'orig-transid':'gateway_data.Originating.TransId'},
-			{'orig-cvvstatus':'gateway_data.Originating.CvvStatus'},
-			{'orig-transdate':'gateway_data.Originating.TransDate'},
-			{'orig-transamt':'gateway_data.Originating.TransAmt'},
-			{'orig-authcode':'gateway_data.Originating.AuthCode'},
-			{'orig-orderid':'gateway_data.Originating.OrderId'},
+			'gateway_data.Originating.TransId',
+			'gateway_data.Originating.CvvStatus',
+			'gateway_data.Originating.TransDate',
+			'gateway_data.Originating.TransAmt',
+			'gateway_data.Originating.AuthCode',
+			'gateway_data.Originating.OrderId',
 			'crm_data.OrderDate',
 			'crm_data.DeliveryAddr1',
 			'crm_data.DeliveryAddr2',
