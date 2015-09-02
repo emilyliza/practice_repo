@@ -326,7 +326,7 @@ module.exports = function(app) {
 					'name': merchant,
 					'username': cb.portal_data.MidNumber,
 					'timestamps.createdOn': new Date(),
-					'parent': User.toMicro(top.vars.parent)
+					'parent': User.toMicro(top.vars.user.parent)
 				});
 				user.save(function(err,data) {
 					if (err) { return top(err); }
