@@ -220,6 +220,7 @@ module.exports = function(app) {
 					.post('/api/v1/chargebacks')
 					.send({
 						'chargebacks': cb,
+						'createChildren': true,
 						'user': login
 					})
 					.set('Content-Type', 'application/json')
