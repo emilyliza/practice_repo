@@ -57,7 +57,7 @@ module.exports = function(app) {
 		next();
 	})
 
-	.plugin(UserMicro, { path: 'parent', objectid: ObjectId })
+	.plugin(UserMicro, { path: 'parent', objectid: ObjectId });
 
 
 	db.model('User', UserSchema);
