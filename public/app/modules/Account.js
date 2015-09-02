@@ -36,6 +36,7 @@
 		var parentName = '';
 		var parentId = '';
 		var parentInfoErr = false;
+		var password2 = "";
 
 		if(parentInfo[0]== 'parent' && parentInfo[1] !== '') {
 			createAcctHeader = "Create Sub Account for: ";
@@ -53,6 +54,7 @@
 		$scope.parentName = parentName;
 		$scope.parentId = parentId; // This is really the license key for the parent account.
 		$scope.parentInfoErr = parentInfoErr;
+		$scope.password2 = password2;
 
 		// watch for changes to clear out errors
 		$scope.$watch("currentUser", function(newValue, oldValue){
@@ -65,6 +67,12 @@
 		var _this = this;
 		$scope.save = function(data) {
 			$scope.$broadcast('show-errors-check-validity');
+			if ($scope.currentUser.password != $scope.password2) {
+				$scope.acctForm.$valid = false;
+				console.log('Passwords do not match');
+				console.log($scope.currentUser.password);
+				console.log($scope.password2);
+				}
 			if ($scope.acctForm.$valid) {
 
 				$scope.accountService = AccountService.save(data).then(function (user) {
