@@ -220,7 +220,7 @@ module.exports = function(app) {
 					.post('/api/v1/chargebacks')
 					.send({
 						'chargebacks': cb,
-						'createChildren': true,
+						'createChildren': false,
 						'user': login
 					})
 					.set('Content-Type', 'application/json')
@@ -237,12 +237,11 @@ module.exports = function(app) {
 			});
 		});
 
-		//TODO: The following tests are meant to be run after a child has been created, but currently no test exists.
-		//This should be repurposed once a new child creation test has been written.
 		describe('Test new data', function(){
 			var users,
 				other;
-			it('current users should now be 2', function(done){
+			//Make sure a child was not created, as the child creation process has changed
+			it('current users should now be 1', function(done){
 				request
 					.get('/api/v1/users')
 					.set('Content-Type', 'application/json')
@@ -252,7 +251,7 @@ module.exports = function(app) {
 					.end(function(e, res) {
 						if (e) { console.log(e); done(e); }
 						users = res.body;
-						users.should.be.instanceof(Array).and.have.lengthOf(2);
+						users.should.be.instanceof(Array).and.have.lengthOf(1);
 						done();
 					});
 			});
@@ -264,7 +263,7 @@ module.exports = function(app) {
 			// 		done();
 			// 	});
 			// });
-			it('should return array with length=2', function(done){
+			it('chargeback query should return array with length=2', function(done){
 				var q = Chargeback.search({
 					user: login,
 					query: {}
@@ -281,49 +280,51 @@ module.exports = function(app) {
 				});
 
 			});
-			it('new user should return array with length=1', function(done){
-				lodash.each(users, function(u) {
-					if (u._id + '' != login._id + '') {
-						other = u._id;
-					}
-				});
-				var q = Chargeback.search({
-					'user': {
-						'_id': other
-					},
-					query: {}
-				});
 
-				_( Chargeback.find()
-					.and(q)
-					.lean()
-					.stream() )
-				.stopOnError(function(err) { throw err; })
-				.toArray(function(data) {
-					data.should.be.instanceof(Array).and.have.lengthOf(1);
-					done();
-				});
-
-			});
-			it('chargeback query with user param should return array with length=1', function(done){
-				var q = Chargeback.search({
-					user: login,
-					query: {
-						user: other
-					}
-				});
-
-				_( Chargeback.find()
-					.and(q)
-					.lean()
-					.stream() )
-				.stopOnError(function(err) { throw err; })
-				.toArray(function(data) {
-					data.should.be.instanceof(Array).and.have.lengthOf(2);
-					done();
-				});
-
-			});
+			//These tests were meant to be run after a new user was created, but the child creation process has changed
+			//it('new user should return array with length=1', function(done){
+			//	lodash.each(users, function(u) {
+			//		if (u._id + '' != login._id + '') {
+			//			other = u._id;
+			//		}
+			//	});
+			//	var q = Chargeback.search({
+			//		'user': {
+			//			'_id': other
+			//		},
+			//		query: {}
+			//	});
+            //
+			//	_( Chargeback.find()
+			//		.and(q)
+			//		.lean()
+			//		.stream() )
+			//	.stopOnError(function(err) { throw err; })
+			//	.toArray(function(data) {
+			//		data.should.be.instanceof(Array).and.have.lengthOf(1);
+			//		done();
+			//	});
+            //
+			//});
+			//it('chargeback query with user param should return array with length=1', function(done){
+			//	var q = Chargeback.search({
+			//		user: login,
+			//		query: {
+			//			user: other
+			//		}
+			//	});
+            //
+			//	_( Chargeback.find()
+			//		.and(q)
+			//		.lean()
+			//		.stream() )
+			//	.stopOnError(function(err) { throw err; })
+			//	.toArray(function(data) {
+			//		data.should.be.instanceof(Array).and.have.lengthOf(2);
+			//		done();
+			//	});
+            //
+			//});
 		});
 
 	});
