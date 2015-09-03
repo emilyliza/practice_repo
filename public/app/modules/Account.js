@@ -67,21 +67,19 @@
 		var _this = this;
 		$scope.save = function(data) {
 			$scope.$broadcast('show-errors-check-validity');
+			//ensure passwords match, probably should be refactored as res error.
 			if ($scope.currentUser.password != $scope.password2) {
 				$scope.acctForm.$valid = false;
-				console.log('Passwords do not match');
-				console.log($scope.currentUser.password);
-				console.log($scope.password2);
-				}
+				$scope.notSaved = true;
+			}
+			//save edits
 			if ($scope.acctForm.$valid) {
-
 				$scope.accountService = AccountService.save(data).then(function (user) {
 					UserService.setUser(user);
 					$scope.saved = true;
 				}, function (res) {
 					$scope.errors = UtilService.formatErrors(res.data);
 				});
-
 			}
 		};
 
