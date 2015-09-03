@@ -172,7 +172,6 @@ module.exports = function(app) {
 		req.assert('email', 'Please enter your email.').notEmpty();
 		req.assert('username', 'Please enter your username.').notEmpty();
 		req.assert('name', 'Please enter your name.').notEmpty();
-		//req.assert('send_to.email', 'Please enter a valid email.').optional().isEmail();
 		
 		
 		var errors = req.validationErrors();
