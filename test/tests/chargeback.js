@@ -52,7 +52,7 @@ module.exports = function(app) {
 			});
 			// the following test all the data manipulation that goes on within
 			// the Chargeback model during presave.
-			it('should have statue=New', function(done){
+			it('should have status=New', function(done){
 				db_cb.should.have.property('status', 'New');
 				done();
 			});
@@ -108,19 +108,19 @@ module.exports = function(app) {
 				db_cb.shipping_data.ShippingDate.should.be.an.instanceOf(Date);
 				done();
 			});
-			it('should have crm_data.ProductCrmName should not exist', function(done){
+			it('should have crm_data. ProductCrmName should not exist', function(done){
 				db_cb.should.have.property('crm_data').and.should.not.have.property('ProductCrmName');
 				done();
 			});
-			it('should have portal_data.Portal should not exist', function(done){
+			it('should have portal_data. Portal should not exist', function(done){
 				db_cb.should.have.property('portal_data').and.should.not.have.property('Portal');
 				done();
 			});
-			it('should have parent with parent.name and parent._id', function(done){
+			it('should not have parent property', function(done){
 				db_cb.should.not.have.property('parent');
 				done();
 			});
-			it('should have parent with parent.name and parent._id', function(done){
+			it('should have user with user.name and user._id', function(done){
 				db_cb.should.have.property('user').with.property('_id');
 				db_cb.should.have.property('user').with.property('name', config.get('users')[0].name);
 				done();
@@ -191,7 +191,7 @@ module.exports = function(app) {
 			});
 			// the following test all the data manipulation that goes on within
 			// the Chargeback model during presave.
-			it('should have statue=In Progress', function(done){
+			it('should have status=In Progress', function(done){
 				data.should.have.property('status', 'In Progress');
 				done();
 			});
