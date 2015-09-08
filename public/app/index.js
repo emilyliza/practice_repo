@@ -138,7 +138,8 @@
 				if ($scope.currentUser) {
 					FS.identify($scope.currentUser._id, {
 						displayName: $scope.currentUser.name,
-						email: $scope.currentUser.email
+						email: $scope.currentUser.email,
+						pageType: 'User'
 					});
 				}
 			};

@@ -120,6 +120,9 @@
 </head>
 <body>
 
+<div id="currentUserFS">
+	{{currentUser}}
+</div>
 <!--[if lt IE 7]>
 	<p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
   <![endif]-->
@@ -140,17 +143,6 @@
 
   ga('create', 'UA-50518896-2', 'auto');
   //ga('send', 'pageview');
-</script>
-<script>
-
-	(function(){
-	  FS.identify('ADMIN', {
-		  displayName: 'Daniel Falko',
-		  email: 'danielfalko@example.com'
-		  // TODO: Add your own custom user variables here.
-	  });
-  })();
-
 </script>
 
 </body>
