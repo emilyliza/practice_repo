@@ -10,6 +10,8 @@
 					<li>Processors may ask for additional information.</li>
 					<li>It usually takes about one week for processors to respond.</li>
 					<li>Not all processors will notify chargeback.com, so check with your processor directly in about one week.</li>
+					<li> An errored status means that your dispute has not been sent. Please contact us and we will work with you to correct the error.
+					</li>
 				</ul>
 			</div>	
 		</div>
@@ -18,9 +20,13 @@
 	<div class="col-md-8 col-md-pull-4">
 		
 		<div class="jgs-form">
-		<h2 style="font-weight: bold;">Dispute Sent For {{data.portal_data.ChargebackAmt | currency}}</h2>
+		<h2 style="font-weight: bold;">Processing Dispute For {{data.portal_data.ChargebackAmt | currency}}</h2>
 			<div style="font-size: 16px; margin-top: 40px;">
-				We'll review the information you provided, create the dispute document and relay it to your processor. 
+				<h4 style="font-weight: bold;">If you provided a fax number:</h4>
+				We'll review the information, create the dispute document and relay it to your processor. <br>
+
+				<h4 style="font-weight: bold;">No fax number?</h4>
+				We'll review the information and create the dispute. Please go to your chargebacks, download the dispute and submit it to your processor per their guidelines.
 			</div>
 			<div style="margin-top: 50px;">
 				<a href="/chargebacks" class="btn btn-info">More Chargebacks</a>
@@ -31,5 +37,3 @@
 </div>
 
 	
-
-
