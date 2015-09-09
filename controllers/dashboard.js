@@ -91,7 +91,7 @@ module.exports = function(app) {
 				{ $sort: {
 					'sum': -1
 				}},
-				{ $limit: 10 }
+				{ $limit: 6}
 			];
 			
 			if (process.env.NODE_ENV == "development") {
@@ -100,6 +100,33 @@ module.exports = function(app) {
 			Chargeback.aggregate(agg, this);
 
 		})
+		.par('top_customers', function() {
+			
+			var agg = [
+				{ $match: Chargeback.setMatch(req) },
+				{ $project: {
+					_id: 0,
+					amt: '$portal_data.ChargebackAmt',
+					name: '$gateway_data.FullName'
+				}},
+				{ $group: {
+					'_id': { 'name': '$name' },
+					'sum': { '$sum': '$amt' },
+					'count': { '$sum': 1 }
+				}},
+				{ $sort: {
+					'count': -1
+				}},
+				{ $limit: 6 }
+			];
+			
+			if (process.env.NODE_ENV == "development") {
+				log.log(agg);
+			}
+			Chargeback.aggregate(agg, this);
+
+		})
+
 		.par('wonlost', function() {
 			
 			var search = [
@@ -157,6 +184,13 @@ module.exports = function(app) {
 				top_merchants.push( { mid: item._id.mid, amt: item.sum } );
 			});
 			out.tops = top_merchants;
+
+			var top_customers = [];
+			_.each(this.vars.top_customers, function(item) {
+				top_customers.push( { name: item._id.name, count: item.count } );
+			});
+
+			out.custs = top_customers;
 
 			//@TODO: billing and win-loss
 			out.billing = {

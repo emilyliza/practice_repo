@@ -7,6 +7,9 @@
 		
 		$urlRouterProvider.when('/reporting/status', '/reporting/status/overview');
 		$urlRouterProvider.when('/reporting/cctype', '/reporting/cctype/overview');
+		$urlRouterProvider.when('/reporting/reasoncode', '/reporting/reasoncode/overview');
+		$urlRouterProvider.when('/reporting/customer', '/reporting/customer/overview');
+
 		$stateProvider
 		.state('reporting', {
 			url: '/reporting',
@@ -76,6 +79,8 @@
 			requiresAuth: true,
 			templateUrl: '/app/templates/reporting.cctype.html'
 		})
+
+
 		.state('reporting.cctype.overview', {
 			url: '/overview',
 			requiresAuth: true,
@@ -118,6 +123,109 @@
 				}
 			}
 		})
+
+		.state('reporting.reasoncode', {
+			url: '/reasoncode',
+			requiresAuth: true,
+			templateUrl: '/app/templates/reporting.reasoncode.html'
+		})
+
+		.state('reporting.reasoncode.overview', {
+			url: '/overview',
+			requiresAuth: true,
+			views: {
+				'codeViews': {	
+					templateUrl: '/app/templates/reporting.reasoncode.overview.html',
+					controller: [ '$scope', '$timeout', function($scope, $timeout) {
+						$timeout(function() {
+							$scope.getReasonCodeData();
+						});
+					}]
+				}
+			}	
+		})
+		
+		.state('reporting.reasoncode.byProcessor', {
+			url: '/byProcessor',
+			requiresAuth: true,
+			views: {
+				'codeViews': {	
+					templateUrl: '/app/templates/reporting.byProcessor.html',
+					controller: [ '$scope', '$timeout', function($scope, $timeout) {
+						$timeout(function() {
+							$scope.getProcessorCodeData();
+						});
+					}]
+				}
+			}
+		})
+		
+		.state('reporting.reasoncode.byMid', {
+			url: '/byMid',
+			requiresAuth: true,
+			views: {
+				'codeViews': {
+					templateUrl: '/app/templates/reporting.byMid.html',
+					controller: [ '$scope', '$timeout', function($scope, $timeout) {
+						$timeout(function() {
+							$scope.getMidCodeData();
+						});
+					}]
+				}
+			}
+		})
+
+		.state('reporting.customer', {
+			url: '/customer',
+			requiresAuth: true,
+			templateUrl: '/app/templates/reporting.customer.html'
+		})
+
+		.state('reporting.customer.overview', {
+			url: '/overview',
+			requiresAuth: true,
+			views: {
+				'customerViews': {	
+					templateUrl: '/app/templates/reporting.customer.overview.html',
+					controller: [ '$scope', '$timeout', function($scope, $timeout) {
+						$timeout(function() {
+							$scope.getCustomerData();
+						});
+					}]
+				}
+			}	
+		})
+		
+		.state('reporting.customer.byProcessor', {
+			url: '/byProcessor',
+			requiresAuth: true,
+			views: {
+				'customerViews': {	
+					templateUrl: '/app/templates/reporting.byProcessor.html',
+					controller: [ '$scope', '$timeout', function($scope, $timeout) {
+						$timeout(function() {
+							$scope.getProcessorCustomerData();
+						});
+					}]
+				}
+			}
+		})
+		
+		.state('reporting.customer.byMid', {
+			url: '/byMid',
+			requiresAuth: true,
+			views: {
+				'customerViews': {
+					templateUrl: '/app/templates/reporting.byMid.html',
+					controller: [ '$scope', '$timeout', function($scope, $timeout) {
+						$timeout(function() {
+							$scope.getMidCustomerData();
+						});
+					}]
+				}
+			}
+		})
+
 		.state('reporting.billing', {
 			url: '/billing',
 			requiresAuth: true,
@@ -143,7 +251,6 @@
 				});
 			}]
 		});
-
 	
 	}])
 	
@@ -179,6 +286,8 @@
 		$scope.graphstatus2 = {};
 		$scope.graphtype1 = {};
 		$scope.graphtype2 = {};
+		$scope.graphcodes1 = {};
+		$scope.graphcodes2 = {};
 		$scope.graphBarHistory = {};
 		
 
@@ -314,6 +423,50 @@
 			});
 		};
 
+		$scope.getReasonCodeData = function() {
+			$scope.last = 'getReasonCodeData';
+			ReportingService.getReasonCodeData().then(function(res) {
+				// $scope.reasonData = res.data;
+				$scope.graphcodes1.update(res.data.byCount);
+				$scope.graphcodes2.update(res.data.byVolume);
+			});
+		};
+
+		$scope.getProcessorCodeData = function() {
+			$scope.last = 'getProcessorCodeData';
+			ReportingService.getProcessorCodeData().then(function(res) {
+				$scope.processorData = res.data;
+			});
+		};
+
+		$scope.getMidCodeData = function() {
+			$scope.last = 'getMidCodeData';
+			ReportingService.getMidCodeData().then(function(res) {
+				$scope.midData = res.data;
+			});
+		};
+
+		$scope.getCustomerData = function() {
+			$scope.last = 'getCustomerData';
+			ReportingService.getCustomerData().then(function(res) {
+				$scope.customerData = res.data;
+			});
+		};
+
+		$scope.getProcessorCustomerData = function() {
+			$scope.last = 'getProcessorCustomerData';
+			ReportingService.getProcessorCustomerData().then(function(res) {
+				$scope.processorData = res.data;
+			});
+		};
+
+		$scope.getMidCustomerData = function() {
+			$scope.last = 'getMidCustomerData';
+			ReportingService.getMidCustomerData().then(function(res) {
+				$scope.midData = res.data;
+			});
+		};
+
 		$scope.showList = function() {
 			var ngModelCtrl = angular.element('input').controller('ngModel');
         	ngModelCtrl.$setViewValue(' ');
@@ -322,7 +475,6 @@
 	}])
 
 	
-
 	
 	.factory('ReportingService', ['$http', '$window', function ($http, $window) {
 		var reportingService = {};
@@ -398,7 +550,29 @@
 			return $http.get('/api/v1/report/parentStatus?start=' + start + "&end=" + end + '&user=' + reportingService.getMerchant() );
 		};
 
+		reportingService.getReasonCodeData = function() {
+			return $http.get('/api/v1/report/reasonCodes?start=' + start + "&end=" + end + '&user=' + reportingService.getMerchant() );
+		};
+		
+		reportingService.getProcessorCodeData = function() {
+			return $http.get('/api/v1/report/parentCodes?start=' + start + "&end=" + end + '&user=' + reportingService.getMerchant() );
+		};
 
+		reportingService.getMidCodeData = function() {
+			return $http.get('/api/v1/report/midCodes?start=' + start + "&end=" + end + '&user=' + reportingService.getMerchant() );
+		};
+
+		reportingService.getCustomerData = function() {
+			return $http.get('/api/v1/customers?start=' + start + "&end=" + end + '&user=' + reportingService.getMerchant() );
+		};
+
+		reportingService.getProcessorCustomerData = function() {
+			return $http.get('/api/v1/report/parentCustomers?start=' + start + "&end=" + end + '&user=' + reportingService.getMerchant() );
+		};
+
+		reportingService.getMidCustomerData = function() {
+			return $http.get('/api/v1/report/midCustomers?start=' + start + "&end=" + end + '&user=' + reportingService.getMerchant() );
+		};
 
 		return reportingService;
 	}]);
