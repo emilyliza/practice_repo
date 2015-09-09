@@ -58,7 +58,8 @@
 
 			FileUploader.prototype.onSuccessItem = function(item, res, status, header) {
 				if (item.data.extension == ".pdf") {
-					item.data.urls.orig = "/images/placeholder.png";
+					item.data.urls.pdf = item.data.urls.orig;	// Save the url to the uploaded pdf. (TAJ)
+					item.data.urls.orig = "/images/placeholder.png"; // This is so thumbd will work. (Justin)
 				}
 				if (this.type) {
 					item.data.type = this.type;
