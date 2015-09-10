@@ -30,8 +30,18 @@
 	</div>
 
 	<div class="col-sm-3">
-		
-		<div class="dash-stat">
+
+	     <select name="type" ng-model="most" ng-dropdown required >
+	        <option ng-option value="mids">Top Mids</option>
+	        <option ng-option value="fliers">Frequent Fliers</option>
+	        <option ng-option value="Money Order">Other</option> 
+	     </select>
+			<select name="type" ng-model="most" ng-dropdown required >
+	        <option ng-option value="mids">Top Mids</option>
+	        <option ng-option value="fliers">Frequent Fliers</option>
+	        <option ng-option value="Money Order">Other</option> 
+	     </select>
+		<div class="dash-stat" id="mids" ng-if=" most == 'mids'">
 			<div class="stat-head">Top MIDs</div>
 			<div class="stat" ng-if="data.tops">
 				<div class="row" style="font-size: 12px;" ng-repeat="m in data.tops">
@@ -44,8 +54,8 @@
 			<div class="stat" ng-if="!data.tops">No MIDs yet!</div>
 		</div>
 
-		<div class="dash-stat">
-			<div class="stat-head">Top Customers</div>
+		<div class="dash-stat" id="fliers" ng-if=" most == 'fliers'">
+			<div class="stat-head">Frequent Fliers</div>
 			<div class="stat" ng-if="data.custs">
 				<div class="row" style="font-size: 12px;" ng-repeat="m in data.custs">
 					<div class="col-xs-6 col-xs-offset-1">
@@ -54,10 +64,9 @@
 					<div class="col-xs-5">{{m.count | number}}</div>
 				</div>
 			</div>
-			<div class="stat" ng-if="!data.custs">No MIDs yet!</div>
+			<div class="stat" ng-if="!data.custs">No Customers yet!</div>
 		</div>
-
-
+     </div>
 
 		<div class="dash-stat" ng-if="false">
 			<div class="stat-head">Billable Chargebacks</div>
@@ -70,8 +79,6 @@
 				<a style="font-size: 14px;" href="/reporting/billing">View Billing History</a>
 			</div>
 		</div>
-
-	</div>
 
 	<div class="col-sm-6">
 		
