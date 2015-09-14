@@ -427,27 +427,6 @@
 			});
 		};
 
-		$scope.getCustomerData = function() {
-			$scope.last = 'getCustomerData';
-			ReportingService.getCustomerData().then(function(res) {
-				$scope.customerData = res.data;
-			});
-		};
-
-		$scope.getProcessorCustomerData = function() {
-			$scope.last = 'getProcessorCustomerData';
-			ReportingService.getProcessorCustomerData().then(function(res) {
-				$scope.processorData = res.data;
-			});
-		};
-
-		$scope.getMidCustomerData = function() {
-			$scope.last = 'getMidCustomerData';
-			ReportingService.getMidCustomerData().then(function(res) {
-				$scope.midData = res.data;
-			});
-		};
-
 		$scope.showList = function() {
 			var ngModelCtrl = angular.element('input').controller('ngModel');
         	ngModelCtrl.$setViewValue(' ');

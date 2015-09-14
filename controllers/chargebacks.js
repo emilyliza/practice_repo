@@ -94,7 +94,6 @@ module.exports = function(app) {
 					testAndClean(dd, 'gateway_data', 'TransDate'),
 					testAndClean(dd, 'gateway_data', 'FirstName'),
 					testAndClean(dd, 'gateway_data', 'LastName'),
-					testAndClean(dd, 'gateway_data', 'FullName'),
 					testAndClean(dd, 'gateway_data', 'BillingAddr1'),
 					testAndClean(dd, 'gateway_data', 'BillingAddr2'),
 					testAndClean(dd, 'gateway_data', 'BillingCity'),

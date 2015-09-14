@@ -386,11 +386,11 @@ module.exports = function(app) {
 		}
 
 		if (params.cvv) {
-			query.push({'portal_data.MidNumber': params.cvv });
+			query.push({'gateway_data.CvvStatus': params.cvv });
 		}
 
 		if (params.avs) {
-			query.push({'portal_data.MidNumber': params.avs });
+			query.push({'gateway_data.AvsStatus': params.avs });
 		}
 		
 		if (params.cctype) {
