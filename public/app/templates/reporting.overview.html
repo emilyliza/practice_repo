@@ -89,9 +89,9 @@
 			<div class="stat" ng-show="!data.fliersCt">No Frequent Fliers yet!</div>
 		</div>
 
-     <div class="dash-stat ng-hide" ng-show="render.cvvVol()">
-     	<select class="form control custom" ng-model="filt" ng-options="filter for filter in filters">
-	     </select>
+     	<div class="dash-stat ng-hide" ng-show="render.cvvVol()">
+     		<select class="form control custom" ng-model="filt" ng-options="filter for filter in filters">
+	     	</select>
 			<div class="stat" ng-show="data.cvvVol" style="padding-top: 10px;">
 				<div class="row" style="font-size: 12px;" ng-repeat="m in data.cvvVol">
 					<div class="col-xs-6 col-xs-offset-1">
@@ -103,9 +103,9 @@
 			<div class="stat" ng-show="!data.cvvVol">No matches yet!</div>
 		</div>
 
-	<div class="dash-stat ng-hide" ng-show="render.cvvCt()">
-     	<select class="form control custom" ng-model="filt" ng-options="filter for filter in filters">
-	     </select>
+		<div class="dash-stat ng-hide" ng-show="render.cvvCt()">
+     		<select class="form control custom" ng-model="filt" ng-options="filter for filter in filters">
+	     	</select>
 			<div class="stat" ng-show="data.cvvCt" style="padding-top: 10px;">
 				<div class="row" style="font-size: 12px;" ng-repeat="m in data.cvvCt">
 					<div class="col-xs-6 col-xs-offset-1">
@@ -118,9 +118,9 @@
 		</div>
      
 
-     <div class="dash-stat ng-hide" ng-show= "render.avsVol()">
-     	<select class="form control custom" ng-model="filt" ng-options="filter for filter in filters">
-	     </select>
+     	<div class="dash-stat ng-hide" ng-show= "render.avsVol()">
+     		<select class="form control custom" ng-model="filt" ng-options="filter for filter in filters">
+	     	</select>
 			<div class="stat" ng-show="data.avsVol" style="padding-top: 10px;">
 				<div class="row" style="font-size: 12px;" ng-repeat="m in data.avsVol">
 					<div class="col-xs-6 col-xs-offset-1">
@@ -132,9 +132,9 @@
 			<div class="stat" ng-show="!data.avsVol">No matches yet!</div>
 		</div>
 
-	<div class="dash-stat ng-hide" ng-show= "render.avsCt()">
-     	<select class="form control custom" ng-model="filt" ng-options="filter for filter in filters">
-	     </select>
+		<div class="dash-stat ng-hide" ng-show= "render.avsCt()">
+     		<select class="form control custom" ng-model="filt" ng-options="filter for filter in filters">
+	     	</select>
 			<div class="stat" ng-show="data.avsCt" style="padding-top: 10px;">
 				<div class="row" style="font-size: 12px;" ng-repeat="m in data.avsCt">
 					<div class="col-xs-6 col-xs-offset-1">
@@ -145,7 +145,6 @@
 			</div>
 			<div class="stat" ng-show="!data.avsCt">No matches yet!</div>
 		</div>
-	</div>
 		
 		<div class="dash-stat" ng-if="false">
 			<div class="stat-head">Billable Chargebacks</div>
@@ -158,7 +157,8 @@
 				<a style="font-size: 14px;" href="/reporting/billing">View Billing History</a>
 			</div>
 		</div>
-
+	</div>
+		
 	<div class="col-sm-6">
 		
 
