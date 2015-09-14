@@ -22,6 +22,39 @@
 			requiresAuth: true,
 			templateUrl: '/app/templates/reporting.overview.html',
 			controller: [ '$scope', function($scope) {
+
+				$scope.items = ['Top MIDS', 'Frequent Fliers', 'CVV Matches', 'AVS Matches'];
+				$scope.filters = ['By Volume', 'By Count'];
+				$scope.most = $scope.items[0];
+				$scope.filt = $scope.filters[0];
+
+				$scope.render = {
+					  midVol: function() {
+					    return $scope.most == 'Top MIDS' && $scope.filt == 'By Volume';
+					  },
+					  midCt: function() {
+					    return $scope.most == 'Top MIDS' && $scope.filt == 'By Count';
+					  },
+					  fliersVol: function() {
+					    return $scope.most == 'Frequent Fliers' && $scope.filt == 'By Volume';
+					  },
+					  fliersCt: function () {
+					  	return $scope.most == 'Frequent Fliers' && $scope.filt == 'By Count';
+					  },
+					  cvvVol: function() {
+					    return $scope.most == 'CVV Matches' && $scope.filt == 'By Volume';
+					  },
+					  cvvCt: function () {
+					  	return $scope.most == 'CVV Matches' && $scope.filt == 'By Count';
+					  },
+					  avsVol: function() {
+					    return $scope.most == 'AVS Matches' && $scope.filt == 'By Volume';
+					  },
+					  avsCt: function () {
+					  	return $scope.most == 'AVS Matches' && $scope.filt == 'By Count';
+					  }
+				}
+
 				$scope.getOverview();
 			}]
 		})

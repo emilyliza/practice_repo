@@ -91,7 +91,7 @@ module.exports = function(app) {
 				{ $sort: {
 					'sum': -1
 				}},
-				{ $limit: 6}
+				{ $limit: 10}
 			];
 			
 			if (process.env.NODE_ENV == "development") {
@@ -100,7 +100,34 @@ module.exports = function(app) {
 			Chargeback.aggregate(agg, this);
 
 		})
-		.par('top_customers', function() {
+
+		.par('cvv_match', function() {
+			
+			var agg = [
+				{ $match: Chargeback.setMatch(req) },
+				{ $project: {
+					_id: 0,
+					amt: '$portal_data.ChargebackAmt',
+					cvv: '$gateway_data.CvvStatus'
+				}},
+				{ $group: {
+					'_id': { 'cvv': '$cvv' },
+					'sum': { '$sum': '$amt' },
+					'count': { '$sum': 1 }
+				}},
+				{ $sort: {
+					'count': -1
+				}},
+				{ $limit: 10 }
+			];
+			
+			if (process.env.NODE_ENV == "development") {
+				log.log(agg);
+			}
+			Chargeback.aggregate(agg, this);
+
+		})
+		.par('top_fliers', function() {
 			
 			var agg = [
 				{ $match: Chargeback.setMatch(req) },
@@ -117,7 +144,33 @@ module.exports = function(app) {
 				{ $sort: {
 					'count': -1
 				}},
-				{ $limit: 6 }
+				{ $limit: 10 }
+			];
+			
+			if (process.env.NODE_ENV == "development") {
+				log.log(agg);
+			}
+			Chargeback.aggregate(agg, this);
+
+		})
+		.par('avs_match', function() {
+			
+			var agg = [
+				{ $match: Chargeback.setMatch(req) },
+				{ $project: {
+					_id: 0,
+					amt: '$portal_data.ChargebackAmt',
+					avs: '$gateway_data.AvsStatus'
+				}},
+				{ $group: {
+					'_id': { 'avs': '$avs' },
+					'sum': { '$sum': '$amt' },
+					'count': { '$sum': 1 }
+				}},
+				{ $sort: {
+					'count': -1
+				}},
+				{ $limit: 10 }
 			];
 			
 			if (process.env.NODE_ENV == "development") {
@@ -179,19 +232,63 @@ module.exports = function(app) {
 				out.Complete.sum = out.Lost.sum;
 			}
 
-			var top_merchants = [];
+			var top_merchants_vol = [];
 			_.each(this.vars.top_merchants, function(item) {
-				top_merchants.push( { mid: item._id.mid, amt: item.sum } );
+				top_merchants_vol.push( { mid: item._id.mid, amt: item.sum } );
 			});
-			out.tops = top_merchants;
+			
+			out.midVol = top_merchants_vol;
 
-			var top_customers = [];
-			_.each(this.vars.top_customers, function(item) {
-				top_customers.push( { name: item._id.name, count: item.count } );
+			var top_merchants_ct = [];
+			_.each(this.vars.top_merchants, function(item) {
+				top_merchants_ct.push( { mid: item._id.mid, count: item.count } );
 			});
 
-			out.custs = top_customers;
+			out.midCt = top_merchants_ct;
 
+			var top_fliers_vol = [];
+			_.each(this.vars.top_fliers, function(item) {
+				top_fliers_vol.push( { name: item._id.name, amt: item.sum } );
+			});
+
+			out.fliersVol = top_fliers_vol;
+
+			var top_fliers_ct = [];
+			_.each(this.vars.top_fliers, function(item) {
+				top_fliers_ct.push( { name: item._id.name, count: item.count } );
+			});
+
+			out.fliersCt = top_fliers_ct;
+
+			var cvv_match_vol = [];
+			_.each(this.vars.cvv_match, function(item) {
+				cvv_match_vol.push( { cvv: item._id.cvv, amt: item.sum } );
+			});
+
+			out.cvvVol = cvv_match_vol;
+
+			var cvv_match_ct = [];
+			_.each(this.vars.cvv_match, function(item) {
+				cvv_match_ct.push( { cvv: item._id.cvv, count: item.count } );
+			});
+
+			out.cvvCt = cvv_match_ct;
+
+			var avs_match_vol = [];
+			_.each(this.vars.avs_match, function(item) {
+				avs_match_vol.push( { avs: item._id.avs, amt: item.sum } );
+			});
+
+			out.avsVol = avs_match_vol;
+
+			var avs_match_ct = [];
+			_.each(this.vars.avs_match, function(item) {
+				avs_match_ct.push( { avs: item._id.avs, count: item.count } );
+			});
+
+			out.avsCt = avs_match_ct;
+
+	
 			//@TODO: billing and win-loss
 			out.billing = {
 				count: out.total.count / 2,
@@ -207,6 +304,15 @@ module.exports = function(app) {
                 "lost": 0,
                 "count": 0
 			};
+
+			// out.cvv = {
+			// 	 "N": 0,
+			// 	 "M": 0,
+			// 	 "P": 0,
+			// 	 "S": 0,
+			// 	 "U": 0,
+			// 	 "Empty": 0
+			// };
 
 			_.each(this.vars.wonlost, function(wl) {
 				if (wl._id.status == "Won" || wl._id.status == "Lost") {
