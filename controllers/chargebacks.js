@@ -36,7 +36,6 @@ module.exports = function(app) {
 				'TransDate',
 				'FirstName',
 				'LastName',
-				'FullName',
 				'BillingAddr1',
 				'BillingAddr2',
 				'BillingCity',

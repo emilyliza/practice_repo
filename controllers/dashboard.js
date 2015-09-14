@@ -74,7 +74,7 @@ module.exports = function(app) {
 			Chargeback.aggregate(agg, this);
 
 		})
-		.par('top_merchants', function() {
+		.par('top_mids', function() {
 			
 			var agg = [
 				{ $match: Chargeback.setMatch(req) },
@@ -100,18 +100,17 @@ module.exports = function(app) {
 			Chargeback.aggregate(agg, this);
 
 		})
-
-		.par('cvv_match', function() {
+		.par('top_fliers', function() {
 			
 			var agg = [
 				{ $match: Chargeback.setMatch(req) },
 				{ $project: {
 					_id: 0,
 					amt: '$portal_data.ChargebackAmt',
-					cvv: '$gateway_data.CvvStatus'
+					name: '$gateway_data.FullName'
 				}},
 				{ $group: {
-					'_id': { 'cvv': '$cvv' },
+					'_id': { 'name': '$name' },
 					'sum': { '$sum': '$amt' },
 					'count': { '$sum': 1 }
 				}},
@@ -127,17 +126,17 @@ module.exports = function(app) {
 			Chargeback.aggregate(agg, this);
 
 		})
-		.par('top_fliers', function() {
+		.par('cvv_match', function() {
 			
 			var agg = [
 				{ $match: Chargeback.setMatch(req) },
 				{ $project: {
 					_id: 0,
 					amt: '$portal_data.ChargebackAmt',
-					name: '$gateway_data.FullName'
+					cvv: '$gateway_data.CvvStatus'
 				}},
 				{ $group: {
-					'_id': { 'name': '$name' },
+					'_id': { 'cvv': '$cvv' },
 					'sum': { '$sum': '$amt' },
 					'count': { '$sum': 1 }
 				}},
@@ -179,7 +178,6 @@ module.exports = function(app) {
 			Chargeback.aggregate(agg, this);
 
 		})
-
 		.par('wonlost', function() {
 			
 			var search = [
@@ -202,7 +200,6 @@ module.exports = function(app) {
 			Chargeback.aggregate(search, this);
 
 		})
-
 		.seq(function() {
 				
 			var out = {
@@ -232,19 +229,19 @@ module.exports = function(app) {
 				out.Complete.sum = out.Lost.sum;
 			}
 
-			var top_merchants_vol = [];
-			_.each(this.vars.top_merchants, function(item) {
-				top_merchants_vol.push( { mid: item._id.mid, amt: item.sum } );
+			var top_mids_vol = [];
+			_.each(this.vars.top_mids, function(item) {
+				top_mids_vol.push( { mid: item._id.mid, amt: item.sum } );
 			});
 			
-			out.midVol = top_merchants_vol;
+			out.midVol = top_mids_vol;
 
-			var top_merchants_ct = [];
-			_.each(this.vars.top_merchants, function(item) {
-				top_merchants_ct.push( { mid: item._id.mid, count: item.count } );
+			var top_mids_ct = [];
+			_.each(this.vars.top_mids, function(item) {
+				top_mids_ct.push( { mid: item._id.mid, count: item.count } );
 			});
 
-			out.midCt = top_merchants_ct;
+			out.midCt = top_mids_ct;
 
 			var top_fliers_vol = [];
 			_.each(this.vars.top_fliers, function(item) {
@@ -304,15 +301,6 @@ module.exports = function(app) {
                 "lost": 0,
                 "count": 0
 			};
-
-			// out.cvv = {
-			// 	 "N": 0,
-			// 	 "M": 0,
-			// 	 "P": 0,
-			// 	 "S": 0,
-			// 	 "U": 0,
-			// 	 "Empty": 0
-			// };
 
 			_.each(this.vars.wonlost, function(wl) {
 				if (wl._id.status == "Won" || wl._id.status == "Lost") {

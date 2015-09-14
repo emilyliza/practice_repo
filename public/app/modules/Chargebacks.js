@@ -5,7 +5,7 @@
 	.config(['$stateProvider', function( $stateProvider ) {
 
 		$stateProvider.state('chargebacks', {
-			url: '/chargebacks?status&start&end&cctype&mid&merchant',
+			url: '/chargebacks?status&start&end&cctype&mid&merchant&name&avs&cvv',
 			templateUrl: '/app/templates/chargebacks.html',
 			requiresAuth: true,
 			controller: 'ChargebacksController'
@@ -52,7 +52,7 @@
 
 		$scope.filters = "";
 		_.forOwn($state.params, function(num,key) {
-			if ($state.params[key] && _.contains(['status', 'merchant', 'mid', 'cctype'], key)) {
+			if ($state.params[key] && _.contains(['status', 'merchant', 'mid', 'name', 'cvs', 'avs', 'cctype'], key)) {
 				if ($scope.filters) { $scope.filters += ", "; }
 				$scope.filters += key + "=" + $state.params[key];
 			}

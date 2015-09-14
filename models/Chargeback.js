@@ -384,9 +384,21 @@ module.exports = function(app) {
 		if (params.mid) {
 			query.push({'portal_data.MidNumber': params.mid });
 		}
+
+		if (params.cvv) {
+			query.push({'portal_data.MidNumber': params.cvv });
+		}
+
+		if (params.avs) {
+			query.push({'portal_data.MidNumber': params.avs });
+		}
 		
 		if (params.cctype) {
 			query.push({'gateway_data.CcType': params.cctype });
+		}
+
+		if (params.name) {
+			query.push({'gateway_data.FullName': params.name });
 		}
 
 		if (params.status) {

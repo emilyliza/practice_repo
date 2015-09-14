@@ -8,7 +8,6 @@
 		$urlRouterProvider.when('/reporting/status', '/reporting/status/overview');
 		$urlRouterProvider.when('/reporting/cctype', '/reporting/cctype/overview');
 		$urlRouterProvider.when('/reporting/reasoncode', '/reporting/reasoncode/overview');
-		$urlRouterProvider.when('/reporting/customer', '/reporting/customer/overview');
 
 		$stateProvider
 		.state('reporting', {
@@ -202,57 +201,6 @@
 					controller: [ '$scope', '$timeout', function($scope, $timeout) {
 						$timeout(function() {
 							$scope.getMidCodeData();
-						});
-					}]
-				}
-			}
-		})
-
-		.state('reporting.customer', {
-			url: '/customer',
-			requiresAuth: true,
-			templateUrl: '/app/templates/reporting.customer.html'
-		})
-
-		.state('reporting.customer.overview', {
-			url: '/overview',
-			requiresAuth: true,
-			views: {
-				'customerViews': {	
-					templateUrl: '/app/templates/reporting.customer.overview.html',
-					controller: [ '$scope', '$timeout', function($scope, $timeout) {
-						$timeout(function() {
-							$scope.getCustomerData();
-						});
-					}]
-				}
-			}	
-		})
-		
-		.state('reporting.customer.byProcessor', {
-			url: '/byProcessor',
-			requiresAuth: true,
-			views: {
-				'customerViews': {	
-					templateUrl: '/app/templates/reporting.byProcessor.html',
-					controller: [ '$scope', '$timeout', function($scope, $timeout) {
-						$timeout(function() {
-							$scope.getProcessorCustomerData();
-						});
-					}]
-				}
-			}
-		})
-		
-		.state('reporting.customer.byMid', {
-			url: '/byMid',
-			requiresAuth: true,
-			views: {
-				'customerViews': {
-					templateUrl: '/app/templates/reporting.byMid.html',
-					controller: [ '$scope', '$timeout', function($scope, $timeout) {
-						$timeout(function() {
-							$scope.getMidCustomerData();
 						});
 					}]
 				}
@@ -593,18 +541,6 @@
 
 		reportingService.getMidCodeData = function() {
 			return $http.get('/api/v1/report/midCodes?start=' + start + "&end=" + end + '&user=' + reportingService.getMerchant() );
-		};
-
-		reportingService.getCustomerData = function() {
-			return $http.get('/api/v1/customers?start=' + start + "&end=" + end + '&user=' + reportingService.getMerchant() );
-		};
-
-		reportingService.getProcessorCustomerData = function() {
-			return $http.get('/api/v1/report/parentCustomers?start=' + start + "&end=" + end + '&user=' + reportingService.getMerchant() );
-		};
-
-		reportingService.getMidCustomerData = function() {
-			return $http.get('/api/v1/report/midCustomers?start=' + start + "&end=" + end + '&user=' + reportingService.getMerchant() );
 		};
 
 		return reportingService;
