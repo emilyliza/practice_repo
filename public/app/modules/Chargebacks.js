@@ -52,7 +52,7 @@
 
 		$scope.filters = "";
 		_.forOwn($state.params, function(num,key) {
-			if ($state.params[key] && _.contains(['status', 'merchant', 'mid', 'name', 'cvs', 'avs', 'cctype'], key)) {
+			if ($state.params[key] && _.contains(['status', 'merchant', 'mid', 'cctype', 'name', 'cvs', 'avs'], key)) {
 				if ($scope.filters) { $scope.filters += ", "; }
 				$scope.filters += key + "=" + $state.params[key];
 			}
