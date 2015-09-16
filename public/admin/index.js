@@ -84,6 +84,16 @@
 				$scope.currentUser = user;
 			}
 
+			$scope.runFS = function(FS) {
+				if ($scope.currentUser) {
+					FS.identify($scope.currentUser._id, {
+						displayName: $scope.currentUser.name,
+						email: $scope.currentUser.email,
+						pageType: 'Admin'
+					});
+				}
+			};
+
 			$rootScope.$on(AUTH_EVENTS.loginSuccess, function() {
 				$scope.currentUser = UserService.getCurrentUser();
 			});

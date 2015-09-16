@@ -5,3 +5,18 @@
 		<h2 style="margin-top: 0px;">Chargeback Admin</h2>
 	</div>
 </div>
+
+<script>
+
+	(function(){
+		var controllerElement = document.querySelector('#currentUserFS');
+		var controllerScope = angular.element(controllerElement).scope();
+
+		FS.identify(controllerScope.currentUser._id, {
+			displayName: controllerScope.currentUser.name,
+			email: controllerScope.currentUser.email,
+			pageType: 'Admin'
+		});
+	})();
+
+</script>
