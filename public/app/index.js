@@ -134,6 +134,16 @@
 				Idle.watch();
 			}
 
+			$scope.runFS = function(FS) {
+				if ($scope.currentUser) {
+					FS.identify($scope.currentUser._id, {
+						displayName: $scope.currentUser.name,
+						email: $scope.currentUser.email,
+						pageType: 'User'
+					});
+				}
+			};
+
 			$scope.$on('IdleStart', function() {
 				closeModals();
 				$scope.warning = $modal.open({
@@ -161,8 +171,8 @@
 				closeModals();
 				Idle.watch();
 			});
-        	
-		
+
+
     }])
 
     .controller('ModalInstanceCtrl', [ '$scope', '$modalInstance', 'data', function ($scope, $modalInstance, data) {
