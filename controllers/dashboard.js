@@ -91,7 +91,7 @@ module.exports = function(app) {
 				{ $sort: {
 					'sum': -1
 				}},
-				{ $limit: 10}
+				{ $limit: 8}
 			];
 			
 			if (process.env.NODE_ENV == "development") {
@@ -117,7 +117,7 @@ module.exports = function(app) {
 				{ $sort: {
 					'count': -1
 				}},
-				{ $limit: 10 }
+				{ $limit: 8 }
 			];
 			
 			if (process.env.NODE_ENV == "development") {
@@ -143,7 +143,7 @@ module.exports = function(app) {
 				{ $sort: {
 					'count': -1
 				}},
-				{ $limit: 10 }
+				{ $limit: 8 }
 			];
 			
 			if (process.env.NODE_ENV == "development") {
@@ -169,7 +169,7 @@ module.exports = function(app) {
 				{ $sort: {
 					'count': -1
 				}},
-				{ $limit: 10 }
+				{ $limit: 8 }
 			];
 			
 			if (process.env.NODE_ENV == "development") {
@@ -208,18 +208,8 @@ module.exports = function(app) {
 				{ '$project': {
 					'_id': 0,
 					'billAdd': '$gateway_data.BillingAddr1',
-					// 'delAdd': '$crm_data.DeliveryAddr1',
-					// 'eq': { $cond: [ { $eq: ['$billAdd', '$delAdd' ] }, 1, 0 ] },
 					'amt': '$portal_data.ChargebackAmt'
 				}},
-				// // { $match: { eq: 1 } },
-		  //   		{$unwind: '$billAdd'}, 
-		  //   		{$unwind: '$delAdd'},
-		  //   		{'$project' : { 
-		  //   			'_id' : 0,  
-		  //               'isMatch': { $eq : [ "$billAdd", "$delAdd" ] }}}, 
-		    		 
-		  //   		 {$match: {isMatch: true}},
 
 				{ '$group': {
 					'_id': { 'billAdd' : '$billAdd' }, 
@@ -349,7 +339,6 @@ module.exports = function(app) {
 			});		
 
 			out.delCt = del_match_ct;
-			// console.log(out.delCt, 55555);
 
 			var bill_match_ct = [];
 			_.each(this.vars.bill_add_match, function(item) {
@@ -359,6 +348,7 @@ module.exports = function(app) {
 
 			out.billCt = bill_match_ct;
 
+			//for address matching totals
 			var addTotal = 0;
 			var addMatch = 0;
 			var addPercent = "";
@@ -410,7 +400,6 @@ module.exports = function(app) {
 					out.winloss.pending += wl.count;
 				}
 			});
-			
 			
 			// cache busting on static api end point
 			res.header('Content-Type', 'application/json');
