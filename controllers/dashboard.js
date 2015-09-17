@@ -179,30 +179,59 @@ module.exports = function(app) {
 
 		})
 
-		.par('address_match', function() {
+		.par('del_add_match', function() {
+			
 			var agg = [
 				{ $match: Chargeback.setMatch(req) },
-				{ '$project': {
-					'_id': 0,
-					'billing': '$gateway_data.BillingAddr1',
-					'delivery': '$crm_data.DeliveryAddr1',
-					'addMatch': { $eq: ['$billing', '$delivery']},
-					'amt': '$portal_data.ChargebackAmt'
-				} },
-				{ '$group': {
-					'_id': { 'billing' : "billing" }, 
-					'count': { '$sum': 'addMatch' },
-					'sum': { '$sum': '$amt' }
+				{ $project: {
+					_id: 0,
+					amt: '$portal_data.ChargebackAmt',
+					delAdd: '$crm_data.DeliveryAddr1'
 				}},
-				{ $sort: {
-					'count': -1
-				}},
-				{ $limit: 10 }
+				{ $group: {
+					'_id': { 'delAdd': '$delAdd' },
+					'sum': { '$sum': '$amt' },
+					'count': { '$sum': 1 }
+				}}
 			];
 			
 			if (process.env.NODE_ENV == "development") {
 				log.log(agg);
 			}
+			Chargeback.aggregate(agg, this);
+
+		})
+
+		.par('bill_add_match', function() {
+			var agg = [
+				{ $match: Chargeback.setMatch(req) },
+				{ '$project': {
+					'_id': 0,
+					'billAdd': '$gateway_data.BillingAddr1',
+					// 'delAdd': '$crm_data.DeliveryAddr1',
+					// 'eq': { $cond: [ { $eq: ['$billAdd', '$delAdd' ] }, 1, 0 ] },
+					'amt': '$portal_data.ChargebackAmt'
+				}},
+				// // { $match: { eq: 1 } },
+		  //   		{$unwind: '$billAdd'}, 
+		  //   		{$unwind: '$delAdd'},
+		  //   		{'$project' : { 
+		  //   			'_id' : 0,  
+		  //               'isMatch': { $eq : [ "$billAdd", "$delAdd" ] }}}, 
+		    		 
+		  //   		 {$match: {isMatch: true}},
+
+				{ '$group': {
+					'_id': { 'billAdd' : '$billAdd' }, 
+					'count': { '$sum': 1 },
+					'sum': { '$sum': '$amt' }
+				}}
+			];
+			
+			if (process.env.NODE_ENV == "development") {
+				log.log(agg);
+			}
+
 			Chargeback.aggregate(agg, this);
 
 		})
@@ -313,14 +342,43 @@ module.exports = function(app) {
 
 			out.avsCt = avs_match_ct;
 
-			var address_match_ct = [];
-			_.each(this.vars.address_match, function(item) {
-				address_match_ct.push( {billing: item._id.billing, count: item.count } );
+			//address matching
+			var del_match_ct = [];
+			_.each(this.vars.del_add_match, function(item) {
+					del_match_ct.push( {delAdd: item._id.delAdd, count: item.count } );
+			});		
+
+			out.delCt = del_match_ct;
+			// console.log(out.delCt, 55555);
+
+			var bill_match_ct = [];
+			_.each(this.vars.bill_add_match, function(item) {
+					del_match_ct.push( {billAdd: item._id.billAdd, count: item.count } );
+					bill_match_ct.push({billAdd: item._id.billAdd, count: item.count } );
 			});
 
-			out.addCt = address_match_ct;
+			out.billCt = bill_match_ct;
 
-	
+			var addTotal = 0;
+			var addMatch = 0;
+			var addPercent = "";
+
+			_.each(out.billCt, function (){
+				addTotal += 1;
+			});
+				
+			_.each(out.delCt, function (d){
+				if (d.billAdd == d.delAdd) {
+					addMatch ++;
+					console.log(addMatch, 3333);
+				}
+				console.log(addTotal, 4444);
+				addPercent = Math.floor((addMatch / addTotal) * 100) + "%"; 
+			});
+
+			out.addMatch = addMatch;
+			out.addPercent = addPercent;
+
 			//@TODO: billing and win-loss
 			out.billing = {
 				count: out.total.count / 2,

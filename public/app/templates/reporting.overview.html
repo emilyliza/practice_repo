@@ -145,19 +145,21 @@
 			</div>
 			<div class="stat" ng-show="!data.avsCt">No matches yet!</div>
 		</div>
-		<div class="dash-stat ng-hide" ng-show= "render.addCt()">
-     		<select class="form control custom" ng-model="filt" ng-options="filter for filter in filters">
-	     	</select>
-			<div class="stat" ng-show="data.avsCt" style="padding-top: 10px;">
-				<div class="row" style="font-size: 12px;" ng-repeat="m in data.addCt">
-					<div class="col-xs-6 col-xs-offset-1">
-						<a href="chargebacks?avs={{m.avs}}">{{m.avs}}</a>
-					</div>
-				<div class="col-xs-5">{{m.count | number}}</div>
+
+		<div class="dash-stat dash-green">
+			<div class="stat-head">Billing Address Matches</div>
+			<div class="stat" style="cursor: pointer;">
+				{{ data.addPercent }}
+				<span ng-if="!data.addPercent">None yet!</span>
 			</div>
-			</div>
-			<div class="stat" ng-show="!data.addCt">No matches yet!</div>
 		</div>
+
+		<!-- <div class="dash-stat">
+			<div class="stat-head">Win Rate</div>
+			<div class="percentage" ng-if="data.hwl" percentage control="winloss"></div>
+			<div class="subtext" ng-if="data.hwl">{{data.winloss.won | number}} chargebacks won</div>
+			<div class="stat" style="padding-bottom: 40px;" ng-if="!data.hwl">No win's<br/>reported yet!</div>
+		</div> -->
 		
 		<div class="dash-stat" ng-if="false">
 			<div class="stat-head">Billable Chargebacks</div>

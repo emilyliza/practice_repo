@@ -392,6 +392,7 @@ select.custom {
 
 
 // large circles in dash
+
 .dash-stat {
 	width: 100%;
 	font-size: 30px;
@@ -402,27 +403,28 @@ select.custom {
 	.stat-head {
 		.border-top-radius(3px);
 		background-color: @jgsDarkBlue;
+		color: white;
+		font-size: 18px;
+		text-align: center;
+		margin-bottom: 15px;
+		padding: 10px 0px;
+	}
+	&.dash-green {
+		background-color: @jgsGreen;
+		.border-top-radius(3px);
+		color: white;
 	}
 	&.dash-grey {
 		background-color: #FFF5CC;
 		.border-top-radius(3px);
 		color: white;
 	}
-	&.dash-orange {
-		background-color: @jgsDarkOrange;
-		.border-top-radius(3px);
-		color: white;
+	.stat-head-red {
+		background-color: darken(@jgsBlue, 12%);
 	}
 	.stat-head-green {
 		background-color: @jgsGreen;
 	}
-	.stat-head-red {
-		background-color: darken(@jgsBlue, 12%);
-	}
-	.stat-head-orange {
-		background-color: @jgsDarkOrange;
-	}
-
 	.stat {
 		padding-bottom: 20px;
 		width: 100%;
