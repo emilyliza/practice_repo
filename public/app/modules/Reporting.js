@@ -52,6 +52,9 @@
 					  avsCt: function () {
 					  	return $scope.most == 'AVS Matches' && $scope.filt == 'By Count';
 					  }
+					  // addCt: function () {
+					  // 	return $scope.most == 'Add Matches' && $scope.filt == 'By Count';
+					  // }
 				}
 
 				$scope.getOverview();
@@ -200,7 +203,7 @@
 					templateUrl: '/app/templates/reporting.byMid.html',
 					controller: [ '$scope', '$timeout', function($scope, $timeout) {
 						$timeout(function() {
-							$scope.getMidCodeData();
+							$scope.getReasonCodeData();
 						});
 					}]
 				}
@@ -241,7 +244,7 @@
 		//$scope.data = res.data;
 		$scope.data = null;
 		$scope.last = null;
-		$scope.$state = $state;	// for navigation active to work		
+		$scope.$state = $state;	// for navigation active to work	
 		$scope.winloss = {};
 
                 $scope.open=function($event) {
@@ -270,6 +273,8 @@
 		$scope.graphcodes1 = {};
 		$scope.graphcodes2 = {};
 		$scope.graphBarHistory = {};
+		$scope.graphBarReasons = {};
+		$scope.graphBarReasons2 = {};
 		
 
 		$scope.date = {
@@ -397,19 +402,18 @@
 			});
 		};
 
+		$scope.getReasonCodeData = function() {
+			$scope.last = 'getReasonCodeData';
+			ReportingService.getReasonCodeData().then(function(res) {
+					$scope.graphBarReasons.update(res.data.byCount);
+					$scope.graphBarReasons2.update(res.data.byVolume);
+			});
+		};
+
 		$scope.getMidTypeData = function() {
 			$scope.last = 'getMidTypeData';
 			ReportingService.getMidTypeData().then(function(res) {
 				$scope.midData = res.data;
-			});
-		};
-
-		$scope.getReasonCodeData = function() {
-			$scope.last = 'getReasonCodeData';
-			ReportingService.getReasonCodeData().then(function(res) {
-				// $scope.reasonData = res.data;
-				$scope.graphcodes1.update(res.data.byCount);
-				$scope.graphcodes2.update(res.data.byVolume);
 			});
 		};
 

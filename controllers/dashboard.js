@@ -178,6 +178,34 @@ module.exports = function(app) {
 			Chargeback.aggregate(agg, this);
 
 		})
+
+		.par('address_match', function() {
+			var agg = [
+				{ $match: Chargeback.setMatch(req) },
+				{ '$project': {
+					'_id': 0,
+					'billing': '$gateway_data.BillingAddr1',
+					'delivery': '$crm_data.DeliveryAddr1',
+					'addMatch': { $eq: ['$billing', '$delivery']},
+					'amt': '$portal_data.ChargebackAmt'
+				} },
+				{ '$group': {
+					'_id': { 'billing' : "billing" }, 
+					'count': { '$sum': 'addMatch' },
+					'sum': { '$sum': '$amt' }
+				}},
+				{ $sort: {
+					'count': -1
+				}},
+				{ $limit: 10 }
+			];
+			
+			if (process.env.NODE_ENV == "development") {
+				log.log(agg);
+			}
+			Chargeback.aggregate(agg, this);
+
+		})
 		.par('wonlost', function() {
 			
 			var search = [
@@ -284,6 +312,13 @@ module.exports = function(app) {
 			});
 
 			out.avsCt = avs_match_ct;
+
+			var address_match_ct = [];
+			_.each(this.vars.address_match, function(item) {
+				address_match_ct.push( {billing: item._id.billing, count: item.count } );
+			});
+
+			out.addCt = address_match_ct;
 
 	
 			//@TODO: billing and win-loss

@@ -8,21 +8,36 @@
 		<a href="#" datepicker-popup="MM/dd/yyyy" datepicker-options="dateOptions" ng-model="date.end.val" is-open="date.end.opened" ng-click="date.end.opened=true" isdate >{{date.end.val | date:'MMM dd, yyyy'}}</a>
 	</div>
 </div>
+	<br>
+	<br>
+	<div class="row">
 
-<div class="row">
-	<div class="col-md-6" style="text-align: center;">
-		<div class="pie" pie control="graphcodes1" ></div>
-		<!--
-		<div class="btn-group">
-			<label class="btn btn-success" ng-model="graphToggle" btn-radio="graph1.update('/api/v1/report/byCount')">By Count</label>
-			<label class="btn btn-success" ng-model="graphToggle" btn-radio="graph1.update('/api/v1/report/byVolume')">By Volume</label>
+		<div class="col-md-8 col-md-offset-2">
+			<div class="btn-group">
+			<label class="btn" style="background-color: #A2DED0;" ng-model="graphToggle" btn-radio ng-click="volume=true"> By Volume</label>
+			<label class="btn" style="background-color: #A2DED0;" ng-model="graphToggle" btn-radio ng-click="volume=false"> By Count</label>
 		</div>
-		-->
+			<div class="dash-stat dash-grey" ng-show="volume">
+					<div class="stat-head stat-head-red">Reason Codes by Volume</div>
+					<div class="stat">
+						<div reason-bar control="graphBarReasons2"></div>
+					</div>	
+			</div>
+		</div>
 	</div>
-	<div class="col-md-6">
-		<div class="pie" pie control="graphcodes2" ></div>
-	</div>
-</div>
+	<div class="row">	
+		<div class="col-md-8 col-md-offset-2" ng-hide="volume">
+			<div class="dash-stat dash-grey">
+					<div class="stat-head stat-head-red">Reason Codes by Count</div>
+					<div class="stat" id="second">
+						<div reason-bar control="graphBarReasons"></div>
+					</div>	
+			</div>
+		</div>
+	</div>	
+</div>		
+<!-- 
+</div> -->
 
 <div id="tooltip" style="opacity: 0;">
     <div class="content"></div>
