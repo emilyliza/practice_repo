@@ -81,7 +81,8 @@
 				"ShippingDate": "2015-02-04",
 				"TrackingNum": "00987765554Z", 
 				"TrackingSum": "Delivered"
-			}
+			},
+		    "chargebackDate": "2015-05-12"
 		}
 	]	
 }
