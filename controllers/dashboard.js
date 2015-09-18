@@ -178,7 +178,6 @@ module.exports = function(app) {
 			Chargeback.aggregate(agg, this);
 
 		})
-
 		.par('del_add_match', function() {
 			
 			var agg = [
@@ -201,7 +200,6 @@ module.exports = function(app) {
 			Chargeback.aggregate(agg, this);
 
 		})
-
 		.par('bill_add_match', function() {
 			var agg = [
 				{ $match: Chargeback.setMatch(req) },
@@ -409,6 +407,5 @@ module.exports = function(app) {
 		.catch(next);
 
 	});
-
 
 };
