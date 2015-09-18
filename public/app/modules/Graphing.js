@@ -784,8 +784,7 @@
 					width = container.width() - margin.left - margin.right,
 					height = (container.width() * 0.45) - margin.top - margin.bottom,
 					d3 = $window.d3;
-					console.log(attrs);
-	
+					
 				// var parseDate = d3.time.format("%Y-%m-%d").parse;
 
 				// Width of bars, without padding. 

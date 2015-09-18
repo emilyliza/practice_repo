@@ -16,7 +16,7 @@
 			<label class="btn" style="background-color: #E0A366;" ng-model="graphToggle" btn-radio ng-click="volume=true"> By Volume</label>
 			<label class="btn" style="background-color: #E0A366;" ng-model="graphToggle" btn-radio ng-click="volume=false"> By Count</label>
 		</div>
-			<div class="dash-stat dash-grey" ng-show="volume">
+			<div class="dash-stat dash-darkblue" ng-show="volume">
 					<div class="stat-head stat-head-red">Reason Codes by Volume</div>
 					<div class="stat">
 						<div reason-bar control="graphBarReasons2"></div>
@@ -28,7 +28,7 @@
 		<div class="col-md-8 col-md-offset-1" ng-hide="volume">
 			<div class="dash-stat dash-darkblue">
 					<div class="stat-head stat-head-red">Reason Codes by Count</div>
-					<div class="stat" id="second">
+					<div class="stat">
 						<div reason-bar control="graphBarReasons"></div>
 					</div>	
 			</div>
