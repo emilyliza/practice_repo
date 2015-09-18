@@ -270,8 +270,6 @@
 		$scope.graphstatus2 = {};
 		$scope.graphtype1 = {};
 		$scope.graphtype2 = {};
-		$scope.graphcodes1 = {};
-		$scope.graphcodes2 = {};
 		$scope.graphBarHistory = {};
 		$scope.graphBarReasons = {};
 		$scope.graphBarReasons2 = {};
