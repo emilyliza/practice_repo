@@ -353,16 +353,16 @@ module.exports = function(app) {
 			var addMatch = 0;
 			var addPercent = "";
 
+			//count billing addresses
 			_.each(out.billCt, function (){
 				addTotal += 1;
 			});
-				
+			
+			//find shipping address matches	
 			_.each(out.delCt, function (d){
 				if (d.billAdd == d.delAdd) {
 					addMatch ++;
-					console.log(addMatch, 3333);
 				}
-				console.log(addTotal, 4444);
 				addPercent = Math.floor((addMatch / addTotal) * 100) + "%"; 
 			});
 
@@ -374,7 +374,6 @@ module.exports = function(app) {
 				count: out.total.count / 2,
 				sum: out.total.sum / 2
 			};
-
 
 			out.won_amount = 0;
 			out.hwl = false;
