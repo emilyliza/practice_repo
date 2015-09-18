@@ -116,7 +116,7 @@
 			$scope.data.chc = true;
 			$scope.settings.state = $state;
 			$scope.settings.disableReview = true;
-			$scope.settings.shipping_companies = ["", "USPS", "Fedex", "UPS", "DHL"];
+			$scope.settings.shipping_companies = ["USPS", "Fedex", "UPS", "DHL"];
 			$scope.settings.cctypes = [
 				"",
 				"VISA",

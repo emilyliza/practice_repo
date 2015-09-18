@@ -115,7 +115,7 @@
 			<div class="col-md-4">
 				<div ng-if="data.type == 'cnp'" class="form-group" show-errors
 					 data-tooltip-html-unsafe="<b>Card Verification Value (CVV2) Response Codes</b><br>M: CVV2 Match<br><br>N: CVV2 No Match<br><br>P: Not Processed<br><br>S: Issuer indicates that CVV2 data should be present on the card, but the merchant has indicated data is not present on the card<br><br>U: Issuer has not certified for CVV2 or Issuer has not provided Visa with the CVV2 encryption keys<br><br>Empty: Transaction failed because wrong CVV2 number was entered or no CVV2 number was entered"
-					 tooltip-placement="right"
+					 tooltip-placement="left"
 					 tooltip-append-to-body="true" >
 					<label>CVV Status</label>
 					<input name="CvvStatus"
@@ -203,7 +203,7 @@
 	<div style="font-size: 12px; color: #999; padding-bottom: 10px;">Your bank will usually provide a fax number to send the response to. The values are prepoulated with values set in <a href="/account">your account</a>.</div>
 
 	<div class="row bt">
-		<div class="col-md-12">
+		<div class="col-md-6">
 			<div class="form-group" show-errors>
 				<label>Response Fax</label>
 				<input name="send_to_fax"

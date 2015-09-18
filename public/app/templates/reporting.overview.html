@@ -30,21 +30,137 @@
 	</div>
 
 	<div class="col-sm-3">
+		<select class="form control custom" ng-model="most" ng-options="item for item in items">
+	    </select>
 		
-		<div class="dash-stat">
-			<div class="stat-head">Top MIDs</div>
-			<div class="stat" ng-if="data.tops">
-				<div class="row" style="font-size: 12px;" ng-repeat="m in data.tops">
+		<div class="dash-stat ng-hide" ng-show="render.midVol()">
+		<select class="form control custom" ng-model="filt" ng-options="filter for filter in filters">
+	     </select>
+			<div class="stat" ng-show="data.midVol" style="padding-top: 10px;">
+				<div class="row" style="font-size: 12px;" ng-repeat="m in data.midVol">
 					<div class="col-xs-6 col-xs-offset-1">
 						<a href="chargebacks?mid={{m.mid}}">{{m.mid}}</a>
 					</div>
 					<div class="col-xs-5">{{m.amt | currency:"$":0}}</div>
 				</div>
 			</div>
-			<div class="stat" ng-if="!data.tops">No MIDs yet!</div>
+			<div class="stat" ng-show="!data.midVol">No MIDs yet!</div>
 		</div>
 
+		<div class="dash-stat ng-hide" ng-show="render.midCt()">	
+			<select class="form control custom" ng-model="filt" ng-options="filter for filter in filters">
+	     	</select>
+			<div class="stat" ng-show="data.midCt" style="padding-top: 10px;">
+				<div class="row" style="font-size: 12px;" ng-repeat="m in data.midCt">
+					<div class="col-xs-6 col-xs-offset-1">
+						<a href="chargebacks?mid={{m.mid}}">{{m.mid}}</a>
+					</div>
+					<div class="col-xs-5">{{m.count | number}}</div>
+				</div>
+			</div>
+			<div class="stat" ng-show="!data.midCt">No MIDs yet!</div>
+		</div>
 
+		<div class="dash-stat ng-hide" ng-show="render.fliersVol()">	
+			<select class="form control custom" ng-model="filt" ng-options="filter for filter in filters">
+	     	</select>
+			<div class="stat" ng-show="data.fliersVol" style="padding-top: 10px;">
+				<div class="row" style="font-size: 12px;" ng-repeat="m in data.fliersVol">
+					<div class="col-xs-6 col-xs-offset-1">
+						<a href="chargebacks?name={{m.name}}">{{m.name}}</a>
+					</div>
+					<div class="col-xs-5">{{m.amt | currency:"$":0}}</div>
+				</div>
+			</div>
+			<div class="stat" ng-show="!data.fliersVol">No Frequent Fliers yet!</div>
+		</div>
+
+		<div class="dash-stat ng-hide" ng-show="render.fliersCt()">	
+			<select class="form control custom" ng-model="filt" ng-options="filter for filter in filters">
+	     	</select>
+			<div class="stat" ng-show="data.fliersCt" style="padding-top: 10px;">
+				<div class="row" style="font-size: 12px;" ng-repeat="m in data.fliersCt">
+					<div class="col-xs-6 col-xs-offset-1">
+						<a href="chargebacks?name={{m.name}}">{{m.name}}</a>
+					</div>
+					<div class="col-xs-5">{{m.count | number}}</div>
+				</div>
+			</div>
+			<div class="stat" ng-show="!data.fliersCt">No Frequent Fliers yet!</div>
+		</div>
+
+     	<div class="dash-stat ng-hide" ng-show="render.cvvVol()">
+     		<select class="form control custom" ng-model="filt" ng-options="filter for filter in filters">
+	     	</select>
+			<div class="stat" ng-show="data.cvvVol" style="padding-top: 10px;">
+				<div class="row" style="font-size: 12px;" ng-repeat="m in data.cvvVol">
+					<div class="col-xs-6 col-xs-offset-1">
+						<a href="chargebacks?cvv={{m.cvv}}">{{m.cvv}}</a>
+					</div>
+				<div class="col-xs-5">{{m.amt | currency:"$":0}}</div>
+			</div>
+			</div>
+			<div class="stat" ng-show="!data.cvvVol">No matches yet!</div>
+		</div>
+
+		<div class="dash-stat ng-hide" ng-show="render.cvvCt()">
+     		<select class="form control custom" ng-model="filt" ng-options="filter for filter in filters">
+	     	</select>
+			<div class="stat" ng-show="data.cvvCt" style="padding-top: 10px;">
+				<div class="row" style="font-size: 12px;" ng-repeat="m in data.cvvCt">
+					<div class="col-xs-6 col-xs-offset-1">
+						<a href="chargebacks?cvv={{m.cvv}}">{{m.cvv}}</a>
+					</div>
+				<div class="col-xs-5">{{m.count | number}}</div>
+			</div>
+			</div>
+			<div class="stat" ng-show="!data.cvvCt">No matches yet!</div>
+		</div>
+     
+
+     	<div class="dash-stat ng-hide" ng-show= "render.avsVol()">
+     		<select class="form control custom" ng-model="filt" ng-options="filter for filter in filters">
+	     	</select>
+			<div class="stat" ng-show="data.avsVol" style="padding-top: 10px;">
+				<div class="row" style="font-size: 12px;" ng-repeat="m in data.avsVol">
+					<div class="col-xs-6 col-xs-offset-1">
+						<a href="chargebacks?avs={{m.avs}}">{{m.avs}}</a>
+					</div>
+				<div class="col-xs-5">{{m.amt | currency:"$":0}}</div>
+			</div>
+			</div>
+			<div class="stat" ng-show="!data.avsVol">No matches yet!</div>
+		</div>
+
+		<div class="dash-stat ng-hide" ng-show= "render.avsCt()">
+     		<select class="form control custom" ng-model="filt" ng-options="filter for filter in filters">
+	     	</select>
+			<div class="stat" ng-show="data.avsCt" style="padding-top: 10px;">
+				<div class="row" style="font-size: 12px;" ng-repeat="m in data.avsCt">
+					<div class="col-xs-6 col-xs-offset-1">
+						<a href="chargebacks?avs={{m.avs}}">{{m.avs}}</a>
+					</div>
+				<div class="col-xs-5">{{m.count | number}}</div>
+			</div>
+			</div>
+			<div class="stat" ng-show="!data.avsCt">No matches yet!</div>
+		</div>
+
+		<div class="dash-stat dash-green">
+			<div class="stat-head" style="cursor: pointer;" tooltip-append-to-body="true" data-tooltip-html-unsafe="This is the percentage of your <br>chargebacks where the billing address <br> matches the shipping address."tooltip-placement="top">Bill/Ship Address Match</div>
+			<div class="stat">
+				{{ data.addPercent }}
+				<span ng-if="!data.addPercent">None yet!</span>
+			</div>
+		</div>
+
+		<!-- <div class="dash-stat">
+			<div class="stat-head">Win Rate</div>
+			<div class="percentage" ng-if="data.hwl" percentage control="winloss"></div>
+			<div class="subtext" ng-if="data.hwl">{{data.winloss.won | number}} chargebacks won</div>
+			<div class="stat" style="padding-bottom: 40px;" ng-if="!data.hwl">No win's<br/>reported yet!</div>
+		</div> -->
+		
 		<div class="dash-stat" ng-if="false">
 			<div class="stat-head">Billable Chargebacks</div>
 			<div class="stat" style="padding-bottom: 10px;">
@@ -56,9 +172,8 @@
 				<a style="font-size: 14px;" href="/reporting/billing">View Billing History</a>
 			</div>
 		</div>
-
 	</div>
-
+		
 	<div class="col-sm-6">
 		
 
