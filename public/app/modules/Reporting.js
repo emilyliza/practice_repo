@@ -52,10 +52,8 @@
 					  avsCt: function () {
 					  	return $scope.most == 'AVS Matches' && $scope.filt == 'By Count';
 					  }
-					  // addCt: function () {
-					  // 	return $scope.most == 'Add Matches' && $scope.filt == 'By Count';
-					  // }
-				}
+					  
+				};
 
 				$scope.getOverview();
 			}]

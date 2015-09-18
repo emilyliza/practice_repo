@@ -784,19 +784,14 @@
 					width = container.width() - margin.left - margin.right,
 					height = (container.width() * 0.45) - margin.top - margin.bottom,
 					d3 = $window.d3;
-					
-				// var parseDate = d3.time.format("%Y-%m-%d").parse;
 
 				// Width of bars, without padding. 
 				var barRawWidth = width / 12,
-					barPadding = 5;
+					barPadding = 5,
 					xStart = barPadding + (barRawWidth/2),
 					barWidth = barRawWidth - (barPadding*2);
 
-				// var x = d3.time.scale().range([xStart, width-xStart]);	
-
 				var x = d3.scale.ordinal().rangePoints([xStart, width-xStart]);	
-				// var x = d3.scale.ordinal().rangeRoundBands([0, width], .2);
 
 				var y = d3.scale.linear()
 					.range([height, 0]);
