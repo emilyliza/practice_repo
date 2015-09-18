@@ -13,11 +13,7 @@
 	 	"VISA": "#0d94c1",
 	 	"DISCOVER": "#E0E4CC",
 		"UNIONPAY": "#EF1054",
-		"DINERS": "#409352",
-		"NA": "#0d94c1", //bottom four are reason codes
-		"85": "#F38630",
-		"65": "#E06666",
-		"72": "#6CBAA5"
+		"DINERS": "#409352"
 	})
 	
 	.directive('percentage', 
@@ -843,7 +839,7 @@
 					data.forEach(function (d){
 						if (filter == "currency") {
 							var sum = d.sum;
-							d.count = d.sum;
+							d.count = sum;
 						}
 					});
 				
