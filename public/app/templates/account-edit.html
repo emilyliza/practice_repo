@@ -5,7 +5,9 @@
 		<h2 style="margin-top: 0px;">My Account</h2>
 		<h4 ng-if="currentUser.parent.name !=''">Sub account for {{ currentUser.parent.name }}</h4>
 	</div>
-	<div class="col-md-6"><h4> {{ currentUser.username }}</h4></div>
+	<div class="col-md-6">
+		<h4>{{ currentUser.username }}</h4>
+	</div>
 </div>
 
 <div class="row">
@@ -19,6 +21,10 @@
 		<div class="alert alert-success alert-dismissable" ng-show="saved">
 			<button type="button" class="close" ng-click="saved=false" data-dismiss="alert" aria-hidden="true">&times;</button>
 			<strong>Success!</strong> Your changes have been saved.
+		</div>
+		<div class="alert alert-danger alert-dismissable" ng-show="notSaved">
+			<button type="button" class="close" ng-click="notSaved=false" data-dismiss="alert" aria-hidden="true">&times;</button>
+			<strong>Oops!</strong> Something went wrong. Please be sure your passwords match and try saving again.
 		</div>
 		
 
@@ -77,6 +83,14 @@
 								   tooltip-placement="right"
 								   tooltip-append-to-body="true"
 									/>
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-md-12">
+					<div class="form-group">
+						<label class="control-label" for="reset-password2">Confirm New Password</label>
+						<input type="password" placeholder="" required class="form-control" pop-show="{{errors.password2}}" pop="{{errors.password2}}" pop-placement="right" ng-model="password2" pop-append-to-body>
 					</div>
 				</div>
 			</div>
