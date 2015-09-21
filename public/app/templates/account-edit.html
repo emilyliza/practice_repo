@@ -7,7 +7,7 @@
 	</div>
 	<div class="col-md-6">
 		<h4>{{ currentUser.username }}</h4>
-	</div>	
+	</div>
 </div>
 
 <div class="row">
@@ -70,7 +70,19 @@
 				<div class="col-md-12">
 					<div class="form-group" show-errors>
 						<label>Password</label>
-						<input type="password" name="pass" class="form-control" pop-show="{{errors.password}}" pop="{{errors.password}}" placeholder="Only enter to change." pop-placement="right" ng-model="currentUser.password" />
+						<input type="password"
+								   name="pass"
+								   class="form-control"
+								   pop-show="{{errors.password}}"
+								   pop="{{errors.password}}"
+								   pop-placement="right"
+								   ng-model="currentUser.password" 
+								   ng-pattern="/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/"
+								   placeholder="Only enter to change"
+								   data-tooltip-html-unsafe="Your password must contain 7 characters<br>with a combination of letters and numbers"
+								   tooltip-placement="right"
+								   tooltip-append-to-body="true"
+									/>
 					</div>
 				</div>
 			</div>
