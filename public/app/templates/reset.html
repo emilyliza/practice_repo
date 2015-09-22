@@ -19,6 +19,8 @@
 			<div ng-if="link_error" class="alert alert-danger" >There was a problem with your reset link. Please try again.</div>
 			<div ng-if="done" class="alert alert-success">Your password has been reset. <a href="/login">Login</a></div>
 
+			<div ng-if="errors.password1" class="alert alert-danger"> Oops! Passwords must match. </div>
+
 			<div ng-if="data.reset_token">
 				<div class="row bt">
 					<div class="col-md-12">
@@ -33,7 +35,6 @@
 								   pop-placement="right"
 								   ng-model="data.password1"
 								   pop-append-to-body
-								   ng-model="user.password"
 								   ng-pattern="/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/"
 								   data-tooltip-html-unsafe="Your password must contain 7 characters<br>with a combination of letters and numbers"
 								   tooltip-placement="right"
