@@ -44,7 +44,7 @@
 					<div class="col-xs-5">{{m.amt | currency:"$":0}}</div>
 				</div>
 			</div>
-			<div class="stat" ng-show="!data.midVol">No MIDs yet!</div>
+			<div class="stat" ng-if="!data.midVol">No MIDs yet!</div>
 		</div>
 
 		<div class="dash-stat ng-hide" ng-show="render.midCt()">	
@@ -58,7 +58,7 @@
 					<div class="col-xs-5">{{m.count | number}}</div>
 				</div>
 			</div>
-			<div class="stat" ng-show="!data.midCt">No MIDs yet!</div>
+			<div class="stat" ng-if="!data.midCt">No MIDs yet!</div>
 		</div>
 
 		<div class="dash-stat ng-hide" ng-show="render.fliersVol()">	
@@ -72,7 +72,7 @@
 					<div class="col-xs-5">{{m.amt | currency:"$":0}}</div>
 				</div>
 			</div>
-			<div class="stat" ng-show="!data.fliersVol">No Frequent Fliers yet!</div>
+			<div class="stat" ng-if="!data.fliersVol">No Frequent Fliers yet!</div>
 		</div>
 
 		<div class="dash-stat ng-hide" ng-show="render.fliersCt()">	
@@ -86,7 +86,7 @@
 					<div class="col-xs-5">{{m.count | number}}</div>
 				</div>
 			</div>
-			<div class="stat" ng-show="!data.fliersCt">No Frequent Fliers yet!</div>
+			<div class="stat" ng-if="!data.fliersCt">No Frequent Fliers yet!</div>
 		</div>
 
      	<div class="dash-stat ng-hide" ng-show="render.cvvVol()">
@@ -100,7 +100,7 @@
 				<div class="col-xs-5">{{m.amt | currency:"$":0}}</div>
 			</div>
 			</div>
-			<div class="stat" ng-show="!data.cvvVol">No matches yet!</div>
+			<div class="stat" ng-if="!data.cvvVol">No matches yet!</div>
 		</div>
 
 		<div class="dash-stat ng-hide" ng-show="render.cvvCt()">
@@ -114,7 +114,7 @@
 				<div class="col-xs-5">{{m.count | number}}</div>
 			</div>
 			</div>
-			<div class="stat" ng-show="!data.cvvCt">No matches yet!</div>
+			<div class="stat" ng-if="!data.cvvCt">No matches yet!</div>
 		</div>
      
 
@@ -129,7 +129,7 @@
 				<div class="col-xs-5">{{m.amt | currency:"$":0}}</div>
 			</div>
 			</div>
-			<div class="stat" ng-show="!data.avsVol">No matches yet!</div>
+			<div class="stat" ng-if="!data.avsVol">No matches yet!</div>
 		</div>
 
 		<div class="dash-stat ng-hide" ng-show= "render.avsCt()">
@@ -143,7 +143,7 @@
 				<div class="col-xs-5">{{m.count | number}}</div>
 			</div>
 			</div>
-			<div class="stat" ng-show="!data.avsCt">No matches yet!</div>
+			<div class="stat" ng-if="!data.avsCt">No matches yet!</div>
 		</div>
 
 		<div class="dash-stat dash-green">
