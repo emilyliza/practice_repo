@@ -786,7 +786,7 @@
 					d3 = $window.d3;
 
 				// Width of bars, without padding. 
-				var barRawWidth = width / 12,
+				var barRawWidth = width / 15,
 					barPadding = 5,
 					xStart = barPadding + (barRawWidth/2),
 					barWidth = barRawWidth - (barPadding*2);
