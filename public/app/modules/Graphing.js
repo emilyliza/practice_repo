@@ -785,7 +785,7 @@
 					height = (container.width() * 0.45) - margin.top - margin.bottom,
 					d3 = $window.d3;
 
-				var barOuterPad = .3,
+				var barOuterPad = .2,
 					barPad = .2;
 
 				// Width of bars, without padding. 
@@ -795,7 +795,7 @@
 				// 	barWidth = barRawWidth - (barPadding*2);
 
 				// var x = d3.scale.ordinal().rangePoints([xStart, width-xStart]);	
-				var x = d3.scale.ordinal().rangeRoundBands([0, width], barPad, barOuterPad);
+				var x = d3.scale.ordinal().rangeRoundBands([5, width], barPad, barOuterPad);
 
 				var y = d3.scale.linear()
 					.range([height, 0]);
@@ -840,8 +840,6 @@
 							d.count = sum;
 						}
 					});
-				
-					// var barWidth = width / data.length;
 
 					x.domain(data.map(function(d) { return d.name; }));
 					y.domain([0, d3.max(data, function(d) { return d.count; })]);
@@ -853,12 +851,10 @@
 					chart.append("g")
 						.attr("class", "y axis1")
 						.call(yAxis)
-						.append("text")
 						.attr("transform", "rotate(-90)")
 						.attr("y", 6)
 						.attr("dy", ".71em")
 						.style("text-anchor", "end")
-						.text("Total ReasonCodes");
 
 					var bar = chart.selectAll(".bar1")
 						.data(data, function(d) { return d.name; });
