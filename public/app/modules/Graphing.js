@@ -785,13 +785,17 @@
 					height = (container.width() * 0.45) - margin.top - margin.bottom,
 					d3 = $window.d3;
 
-				// Width of bars, without padding. 
-				var barRawWidth = width / 12,
-					barPadding = 5,
-					xStart = barPadding + (barRawWidth/2),
-					barWidth = barRawWidth - (barPadding*2);
+				var barOuterPad = .3,
+					barPad = .2;
 
-				var x = d3.scale.ordinal().rangePoints([xStart, width-xStart]);	
+				// Width of bars, without padding. 
+				// var barRawWidth = width / 12,
+				// 	barPadding = 5,
+				// 	xStart = barPadding + (barRawWidth/2),
+				// 	barWidth = barRawWidth - (barPadding*2);
+
+				// var x = d3.scale.ordinal().rangePoints([xStart, width-xStart]);	
+				var x = d3.scale.ordinal().rangeRoundBands([0, width], barPad, barOuterPad);
 
 				var y = d3.scale.linear()
 					.range([height, 0]);
@@ -837,6 +841,8 @@
 						}
 					});
 				
+					// var barWidth = width / data.length;
+
 					x.domain(data.map(function(d) { return d.name; }));
 					y.domain([0, d3.max(data, function(d) { return d.count; })]);
 
@@ -860,14 +866,16 @@
 					// new data:
 					bar.enter().append("rect")
 						.attr("class", "bar1")
-						.attr("x", function(d) { return x(d.name) - (barWidth/2); })
+						.attr("x", function(d) { return x(d.name); })
+						.attr('width', x.rangeBand())
 						.attr("y", function(d) { return y(d.count); })
-						.attr("width", barWidth)
 						.attr("height", function(d) { return height - y(d.count); });
 					bar
 						.transition()
 						.duration(750)
+						.attr("x", function(d) { return x(d.name); })
 						.attr("y", function(d) { return y(d.count); })
+						.attr("width", x.rangeBand())
 						.attr("height", function(d) { return height - y(d.count); });
 
 					// removed data:
@@ -878,7 +886,9 @@
 					bar
 						.transition()
 						.duration(750)
+						.attr("x", function(d) { return x(d.name); })
 						.attr("y", function(d) { return y(d.count); })
+						.attr("width", x.rangeBand())
 						.attr("height", function(d) { return height - y(d.count); });
 
 
