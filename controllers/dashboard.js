@@ -154,7 +154,6 @@ module.exports = function(app) {
 			Chargeback.aggregate(agg, this);
 
 		})
-
 		.par('top_fliers_count', function() {
 			
 			var agg = [

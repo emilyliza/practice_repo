@@ -787,14 +787,7 @@
 
 				var barOuterPad = .2,
 					barPad = .2;
-
-				// Width of bars, without padding. 
-				// var barRawWidth = width / 12,
-				// 	barPadding = 5,
-				// 	xStart = barPadding + (barRawWidth/2),
-				// 	barWidth = barRawWidth - (barPadding*2);
-
-				// var x = d3.scale.ordinal().rangePoints([xStart, width-xStart]);	
+	
 				var x = d3.scale.ordinal().rangeRoundBands([5, width], barPad, barOuterPad);
 
 				var y = d3.scale.linear()
