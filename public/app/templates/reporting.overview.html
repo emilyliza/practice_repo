@@ -30,12 +30,12 @@
 	</div>
 
 	<div class="col-sm-3">
-		<select class="form control custom" ng-model="most" ng-options="item for item in items">
+		<select class="form control custom" width="100%" ng-model="most" ng-options="item for item in items">
 	    </select>
-		
-		<div class="dash-stat ng-hide" ng-show="render.midVol()">
 		<select class="form control custom" ng-model="filt" ng-options="filter for filter in filters">
 	     </select>
+	     <div class="dash-stat ng-hide" ng-show="render.midVol()">
+
 			<div class="stat" ng-show="data.midVol" style="padding-top: 10px;">
 				<div class="row" style="font-size: 12px;" ng-repeat="m in data.midVol">
 					<div class="col-xs-6 col-xs-offset-1">
@@ -48,8 +48,6 @@
 		</div>
 
 		<div class="dash-stat ng-hide" ng-show="render.midCt()">	
-			<select class="form control custom" ng-model="filt" ng-options="filter for filter in filters">
-	     	</select>
 			<div class="stat" ng-show="data.midCt" style="padding-top: 10px;">
 				<div class="row" style="font-size: 12px;" ng-repeat="m in data.midCt">
 					<div class="col-xs-6 col-xs-offset-1">
@@ -62,8 +60,6 @@
 		</div>
 
 		<div class="dash-stat ng-hide" ng-show="render.fliersVol()">	
-			<select class="form control custom" ng-model="filt" ng-options="filter for filter in filters">
-	     	</select>
 			<div class="stat" ng-show="data.fliersVol" style="padding-top: 10px;">
 				<div class="row" style="font-size: 12px;" ng-repeat="m in data.fliersVol">
 					<div class="col-xs-6 col-xs-offset-1">
@@ -76,8 +72,6 @@
 		</div>
 
 		<div class="dash-stat ng-hide" ng-show="render.fliersCt()">	
-			<select class="form control custom" ng-model="filt" ng-options="filter for filter in filters">
-	     	</select>
 			<div class="stat" ng-show="data.fliersCt" style="padding-top: 10px;">
 				<div class="row" style="font-size: 12px;" ng-repeat="m in data.fliersCt">
 					<div class="col-xs-6 col-xs-offset-1">
@@ -90,8 +84,6 @@
 		</div>
 
      	<div class="dash-stat ng-hide" ng-show="render.cvvVol()">
-     		<select class="form control custom" ng-model="filt" ng-options="filter for filter in filters">
-	     	</select>
 			<div class="stat" ng-show="data.cvvVol" style="padding-top: 10px;">
 				<div class="row" style="font-size: 12px;" ng-repeat="m in data.cvvVol">
 					<div class="col-xs-6 col-xs-offset-1">
@@ -104,8 +96,6 @@
 		</div>
 
 		<div class="dash-stat ng-hide" ng-show="render.cvvCt()">
-     		<select class="form control custom" ng-model="filt" ng-options="filter for filter in filters">
-	     	</select>
 			<div class="stat" ng-show="data.cvvCt" style="padding-top: 10px;">
 				<div class="row" style="font-size: 12px;" ng-repeat="m in data.cvvCt">
 					<div class="col-xs-6 col-xs-offset-1">
@@ -119,8 +109,6 @@
      
 
      	<div class="dash-stat ng-hide" ng-show= "render.avsVol()">
-     		<select class="form control custom" ng-model="filt" ng-options="filter for filter in filters">
-	     	</select>
 			<div class="stat" ng-show="data.avsVol" style="padding-top: 10px;">
 				<div class="row" style="font-size: 12px;" ng-repeat="m in data.avsVol">
 					<div class="col-xs-6 col-xs-offset-1">
@@ -133,8 +121,6 @@
 		</div>
 
 		<div class="dash-stat ng-hide" ng-show= "render.avsCt()">
-     		<select class="form control custom" ng-model="filt" ng-options="filter for filter in filters">
-	     	</select>
 			<div class="stat" ng-show="data.avsCt" style="padding-top: 10px;">
 				<div class="row" style="font-size: 12px;" ng-repeat="m in data.avsCt">
 					<div class="col-xs-6 col-xs-offset-1">

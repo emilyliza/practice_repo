@@ -74,7 +74,7 @@ module.exports = function(app) {
 			Chargeback.aggregate(agg, this);
 
 		})
-		.par('top_mids', function() {
+		.par('top_mids_volume', function() {
 			
 			var agg = [
 				{ $match: Chargeback.setMatch(req) },
@@ -91,7 +91,8 @@ module.exports = function(app) {
 				{ $sort: {
 					'sum': -1
 				}},
-				{ $limit: 8}
+				
+				{ $limit: 8 }
 			];
 			
 			if (process.env.NODE_ENV == "development") {
@@ -100,7 +101,61 @@ module.exports = function(app) {
 			Chargeback.aggregate(agg, this);
 
 		})
-		.par('top_fliers', function() {
+		.par('top_mids_count', function() {
+			
+			var agg = [
+				{ $match: Chargeback.setMatch(req) },
+				{ $project: {
+					_id: 0,
+					amt: '$portal_data.ChargebackAmt',
+					mid: '$portal_data.MidNumber'
+				}},
+				{ $group: {
+					'_id': { 'mid': '$mid' },
+					'sum': { '$sum': '$amt' },
+					'count': { '$sum': 1 }
+				}},
+				{ $sort: {
+					'count': -1
+				}},
+				
+				{ $limit: 8 }
+			];
+			
+			if (process.env.NODE_ENV == "development") {
+				log.log(agg);
+			}
+			Chargeback.aggregate(agg, this);
+
+		})
+		.par('top_fliers_volume', function() {
+			
+			var agg = [
+				{ $match: Chargeback.setMatch(req) },
+				{ $project: {
+					_id: 0,
+					amt: '$portal_data.ChargebackAmt',
+					name: '$gateway_data.FullName'
+				}},
+				{ $group: {
+					'_id': { 'name': '$name' },
+					'sum': { '$sum': '$amt' },
+					'count': { '$sum': 1 }
+				}},
+				{ $sort: {
+					'sum': -1
+				}},
+				{ $limit: 8 }
+			];
+			
+			if (process.env.NODE_ENV == "development") {
+				log.log(agg);
+			}
+			Chargeback.aggregate(agg, this);
+
+		})
+
+		.par('top_fliers_count', function() {
 			
 			var agg = [
 				{ $match: Chargeback.setMatch(req) },
@@ -126,7 +181,33 @@ module.exports = function(app) {
 			Chargeback.aggregate(agg, this);
 
 		})
-		.par('cvv_match', function() {
+		.par('cvv_match_volume', function() {
+			
+			var agg = [
+				{ $match: Chargeback.setMatch(req) },
+				{ $project: {
+					_id: 0,
+					amt: '$portal_data.ChargebackAmt',
+					cvv: '$gateway_data.CvvStatus'
+				}},
+				{ $group: {
+					'_id': { 'cvv': '$cvv' },
+					'sum': { '$sum': '$amt' },
+					'count': { '$sum': 1 }
+				}},
+				{ $sort: {
+					'sum': -1
+				}},
+				{ $limit: 8 }
+			];
+			
+			if (process.env.NODE_ENV == "development") {
+				log.log(agg);
+			}
+			Chargeback.aggregate(agg, this);
+
+		})
+		.par('cvv_match_count', function() {
 			
 			var agg = [
 				{ $match: Chargeback.setMatch(req) },
@@ -152,7 +233,33 @@ module.exports = function(app) {
 			Chargeback.aggregate(agg, this);
 
 		})
-		.par('avs_match', function() {
+		.par('avs_match_volume', function() {
+			
+			var agg = [
+				{ $match: Chargeback.setMatch(req) },
+				{ $project: {
+					_id: 0,
+					amt: '$portal_data.ChargebackAmt',
+					avs: '$gateway_data.AvsStatus'
+				}},
+				{ $group: {
+					'_id': { 'avs': '$avs' },
+					'sum': { '$sum': '$amt' },
+					'count': { '$sum': 1 }
+				}},
+				{ $sort: {
+					'sum': -1
+				}},
+				{ $limit: 8 }
+			];
+			
+			if (process.env.NODE_ENV == "development") {
+				log.log(agg);
+			}
+			Chargeback.aggregate(agg, this);
+
+		})
+		.par('avs_match_count', function() {
 			
 			var agg = [
 				{ $match: Chargeback.setMatch(req) },
@@ -275,56 +382,56 @@ module.exports = function(app) {
 			}
 
 			var top_mids_vol = [];
-			_.each(this.vars.top_mids, function(item) {
+			_.each(this.vars.top_mids_volume, function(item) {
 				top_mids_vol.push( { mid: item._id.mid, amt: item.sum } );
 			});
 			
 			out.midVol = top_mids_vol;
 
 			var top_mids_ct = [];
-			_.each(this.vars.top_mids, function(item) {
+			_.each(this.vars.top_mids_count, function(item) {
 				top_mids_ct.push( { mid: item._id.mid, count: item.count } );
 			});
 
 			out.midCt = top_mids_ct;
 
 			var top_fliers_vol = [];
-			_.each(this.vars.top_fliers, function(item) {
+			_.each(this.vars.top_fliers_volume, function(item) {
 				top_fliers_vol.push( { name: item._id.name, amt: item.sum } );
 			});
 
 			out.fliersVol = top_fliers_vol;
 
 			var top_fliers_ct = [];
-			_.each(this.vars.top_fliers, function(item) {
+			_.each(this.vars.top_fliers_count, function(item) {
 				top_fliers_ct.push( { name: item._id.name, count: item.count } );
 			});
 
 			out.fliersCt = top_fliers_ct;
 
 			var cvv_match_vol = [];
-			_.each(this.vars.cvv_match, function(item) {
+			_.each(this.vars.cvv_match_volume, function(item) {
 				cvv_match_vol.push( { cvv: item._id.cvv, amt: item.sum } );
 			});
 
 			out.cvvVol = cvv_match_vol;
 
 			var cvv_match_ct = [];
-			_.each(this.vars.cvv_match, function(item) {
+			_.each(this.vars.cvv_match_count, function(item) {
 				cvv_match_ct.push( { cvv: item._id.cvv, count: item.count } );
 			});
 
 			out.cvvCt = cvv_match_ct;
 
 			var avs_match_vol = [];
-			_.each(this.vars.avs_match, function(item) {
+			_.each(this.vars.avs_match_volume, function(item) {
 				avs_match_vol.push( { avs: item._id.avs, amt: item.sum } );
 			});
 
 			out.avsVol = avs_match_vol;
 
 			var avs_match_ct = [];
-			_.each(this.vars.avs_match, function(item) {
+			_.each(this.vars.avs_match_count, function(item) {
 				avs_match_ct.push( { avs: item._id.avs, count: item.count } );
 			});
 
