@@ -847,7 +847,7 @@
 						.attr("transform", "rotate(-90)")
 						.attr("y", 6)
 						.attr("dy", ".71em")
-						.style("text-anchor", "end")
+						.style("text-anchor", "end");
 
 					var bar = chart.selectAll(".bar1")
 						.data(data, function(d) { return d.name; });
