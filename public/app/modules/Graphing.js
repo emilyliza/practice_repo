@@ -785,8 +785,8 @@
 					height = (container.width() * 0.45) - margin.top - margin.bottom,
 					d3 = $window.d3;
 
-				var barOuterPad = .2,
-					barPad = .2;
+				var barOuterPad = 0.2,
+					barPad = 0.2;
 	
 				var x = d3.scale.ordinal().rangeRoundBands([5, width], barPad, barOuterPad);
 
