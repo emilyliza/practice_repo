@@ -7,7 +7,6 @@
 		
 		$urlRouterProvider.when('/reporting/status', '/reporting/status/overview');
 		$urlRouterProvider.when('/reporting/cctype', '/reporting/cctype/overview');
-		$urlRouterProvider.when('/reporting/reasoncode', '/reporting/reasoncode/overview');
 
 		$stateProvider
 		.state('reporting', {
@@ -160,54 +159,13 @@
 		.state('reporting.reasoncode', {
 			url: '/reasoncode',
 			requiresAuth: true,
-			templateUrl: '/app/templates/reporting.reasoncode.html'
-		})
-
-		.state('reporting.reasoncode.overview', {
-			url: '/overview',
-			requiresAuth: true,
-			views: {
-				'codeViews': {	
-					templateUrl: '/app/templates/reporting.reasoncode.overview.html',
-					controller: [ '$scope', '$timeout', function($scope, $timeout) {
+			templateUrl: '/app/templates/reporting.reasoncode.html',
+			controller: [ '$scope', '$timeout', function($scope, $timeout) {
 						$timeout(function() {
 							$scope.getReasonCodeData();
 						});
-					}]
-				}
-			}	
+			}]
 		})
-		
-		.state('reporting.reasoncode.byProcessor', {
-			url: '/byProcessor',
-			requiresAuth: true,
-			views: {
-				'codeViews': {	
-					templateUrl: '/app/templates/reporting.byProcessor.html',
-					controller: [ '$scope', '$timeout', function($scope, $timeout) {
-						$timeout(function() {
-							$scope.getProcessorCodeData();
-						});
-					}]
-				}
-			}
-		})
-		
-		.state('reporting.reasoncode.byMid', {
-			url: '/byMid',
-			requiresAuth: true,
-			views: {
-				'codeViews': {
-					templateUrl: '/app/templates/reporting.byMid.html',
-					controller: [ '$scope', '$timeout', function($scope, $timeout) {
-						$timeout(function() {
-							$scope.getReasonCodeData();
-						});
-					}]
-				}
-			}
-		})
-
 		.state('reporting.billing', {
 			url: '/billing',
 			requiresAuth: true,
@@ -413,20 +371,6 @@
 			});
 		};
 
-		$scope.getProcessorCodeData = function() {
-			$scope.last = 'getProcessorCodeData';
-			ReportingService.getProcessorCodeData().then(function(res) {
-				$scope.processorData = res.data;
-			});
-		};
-
-		$scope.getMidCodeData = function() {
-			$scope.last = 'getMidCodeData';
-			ReportingService.getMidCodeData().then(function(res) {
-				$scope.midData = res.data;
-			});
-		};
-
 		$scope.showList = function() {
 			var ngModelCtrl = angular.element('input').controller('ngModel');
         	ngModelCtrl.$setViewValue(' ');
@@ -512,14 +456,6 @@
 
 		reportingService.getReasonCodeData = function() {
 			return $http.get('/api/v1/report/reasonCodes?start=' + start + "&end=" + end + '&user=' + reportingService.getMerchant() );
-		};
-		
-		reportingService.getProcessorCodeData = function() {
-			return $http.get('/api/v1/report/parentCodes?start=' + start + "&end=" + end + '&user=' + reportingService.getMerchant() );
-		};
-
-		reportingService.getMidCodeData = function() {
-			return $http.get('/api/v1/report/midCodes?start=' + start + "&end=" + end + '&user=' + reportingService.getMerchant() );
 		};
 
 		return reportingService;
