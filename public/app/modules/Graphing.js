@@ -813,7 +813,12 @@
 					.append("g")
 					.attr("class", "x axis")
 					.attr("transform", "translate(0," + height + ")") 
-					.call(xAxis);
+					.call(xAxis)
+				.selectAll("text")
+				    .style("text-anchor", "end")
+				    .attr("dx", "-.8em")
+				    .attr("dy", "-.55em")
+				    .attr("transform", "rotate(-90)" );	
 
 				
 				var ctrl = this;
@@ -885,7 +890,12 @@
 					chart.append("g")
 						.attr("class", "x axis1")
 						.attr("transform", "translate(0," + height + ")")
-						.call(xAxis);
+						.call(xAxis)
+					.selectAll("text")
+					    .style("text-anchor", "end")
+					    .attr("dx", "-.8em")
+					    .attr("dy", "-.55em")
+					    .attr("transform", "rotate(-90)" );	
 
 					chart.select(".y.axis1").remove();
 					chart.append("g")
