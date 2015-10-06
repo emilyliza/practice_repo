@@ -394,6 +394,7 @@ module.exports = function(app) {
 
 			out.midCt = top_mids_ct;
 
+			// top fliers by volume
 			var top_fliers_vol = [];
 			_.each(this.vars.top_fliers_volume, function(item) {
 				top_fliers_vol.push( { name: item._id.name, amt: item.sum } );
@@ -401,6 +402,7 @@ module.exports = function(app) {
 
 			out.fliersVol = top_fliers_vol;
 
+			//top fliers by count
 			var top_fliers_ct = [];
 			_.each(this.vars.top_fliers_count, function(item) {
 				top_fliers_ct.push( { name: item._id.name, count: item.count } );
@@ -408,29 +410,45 @@ module.exports = function(app) {
 
 			out.fliersCt = top_fliers_ct;
 
+			//top cvvv matches by volume
 			var cvv_match_vol = [];
 			_.each(this.vars.cvv_match_volume, function(item) {
+				if (item._id.cvv == null ){
+					item._id.cvv = "No CVV Status";
+				}
 				cvv_match_vol.push( { cvv: item._id.cvv, amt: item.sum } );
 			});
 
 			out.cvvVol = cvv_match_vol;
 
+			//top cvv matchex by count
 			var cvv_match_ct = [];
 			_.each(this.vars.cvv_match_count, function(item) {
+				if (item._id.cvv == null ){
+					item._id.cvv = "No CVV Status";
+				}
 				cvv_match_ct.push( { cvv: item._id.cvv, count: item.count } );
 			});
 
 			out.cvvCt = cvv_match_ct;
 
+			//top avs matches by volume
 			var avs_match_vol = [];
 			_.each(this.vars.avs_match_volume, function(item) {
+				if (item._id.avs == null ){
+					item._id.avs = "No AVS Status";
+				}
 				avs_match_vol.push( { avs: item._id.avs, amt: item.sum } );
 			});
 
 			out.avsVol = avs_match_vol;
 
+			//top avs matches by count
 			var avs_match_ct = [];
 			_.each(this.vars.avs_match_count, function(item) {
+				if (item._id.avs == null ){
+					item._id.avs = "No AVS Status";
+				}
 				avs_match_ct.push( { avs: item._id.avs, count: item.count } );
 			});
 
