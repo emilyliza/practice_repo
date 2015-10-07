@@ -13,8 +13,8 @@
 
 	}])
 
-	.controller('ChargebacksController', ['$scope', '$timeout', 'ChargebacksService', 'ChargebackService', 'UserService', '$state', '$location', '$modal', '$http',
-            function($scope, $timeout, ChargebacksService, ChargebackService, UserService, $state, $location, $modal, $http) {
+	.controller('ChargebacksController', ['$scope', '$timeout', 'ChargebacksService', 'ChargebackService', 'ReportingService','UserService', '$state', '$location', '$modal', '$http',
+            function($scope, $timeout, ChargebacksService, ChargebackService, ReportingService, UserService, $state, $location, $modal, $http) {
 
 		var s = moment().utc().subtract(6, 'month').format(),
 			e = moment().utc().format();
@@ -50,6 +50,39 @@
 			}
 		};
 
+		
+		var all = {'_id': '', 'name': '- All'};
+		$scope.selectedMerchants = all;
+		$scope.cu = UserService.getCurrentUser();
+		$scope.merchants = [all];
+		UserService.getChildren().then(function(res) {
+			var current = all;
+			_.each(res.data, function(m) {
+				var parent = m.parent_id;
+				var child = m._id;
+				
+				if (m.parent !== m.child) {
+				$scope.merchants.push({ '_id': m._id , 'name': '- ' + m.name });
+				}
+				
+				if (m._id == ReportingService.getMerchant()) {
+				current = { '_id': m._id , 'name': '- ' + m.name };
+				}		
+			});
+
+			// default is first 
+			ReportingService.setMerchant( (ReportingService.getMerchant() || $scope.merchants[0]._id) );
+			$scope.selectedMerchants = current;
+		});	
+
+		$scope.setMerchant = function(m) {
+			ReportingService.setMerchant(m._id);
+			if (m._id != $scope.last_merchant_id) {
+				$scope[$scope.last]();
+			}
+			$scope.last_merchant_id = m._id;
+		};
+		
 		$scope.filters = "";
 		_.forOwn($state.params, function(num,key) {
 			if ($state.params[key] && _.contains(['status', 'merchant', 'mid', 'cctype', 'name', 'cvs', 'avs'], key)) {
