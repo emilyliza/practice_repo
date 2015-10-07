@@ -65,8 +65,7 @@ module.exports = function(app) {
 				{ 'email': pattern }
 			]);
 		}
-
-		
+	
 		query.skip( (params.page ? ((+params.page - 1) * params.limit) : 0) );
 		query.limit((params.limit ? params.limit : 50));
 
@@ -88,8 +87,5 @@ module.exports = function(app) {
 		});
 	
 	});
-
-	
-
-
+		
 };
