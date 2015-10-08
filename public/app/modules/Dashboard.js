@@ -10,7 +10,6 @@
 			requiresAuth: true,
 			controller: 'DashboardController'
 		});
-
 	}])
 
 	.controller('DashboardController', [ '$scope', 'DashboardService', 'UserService','ReportingService', '$timeout', function($scope, DashboardService, UserService, ReportingService, $timeout) {

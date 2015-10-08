@@ -1,8 +1,14 @@
-<div style="display: block; overflow: hidden; margin-bottom: 25px;">	
-	<div class="pull-right">
+<div class="row">
+<div style="display: block; overflow: hidden; margin-bottom: 25px;">
+	<div class="pull-right merchantSelect">
     	<input ng-model="selectedMerchant" typeahead="merchant as merchant.name for merchant in merchants | filter:$viewValue" class="form-control" placeholder="Filter By Merchant" ng-click="showList()" typeahead-on-select='setMerchant($item, $model, $label)' />
-    </div> 
-</div>      
+    </div>
+	<div class="pull-right dateRange" style="margin-right: 10px">
+		<a href="#" datepicker-popup="MM/dd/yyyy" datepicker-options="dateOptions" ng-model="date.start.val" is-open="date.start.opened" ng-click="date.start.opened=true" isdate >{{date.start.val | date:'MMM dd, yyyy'}}</a> thru
+		<a href="#" datepicker-popup="MM/dd/yyyy" datepicker-options="dateOptions" ng-model="date.end.val" is-open="date.end.opened" ng-click="date.end.opened=true" isdate >{{date.end.val | date:'MMM dd, yyyy'}}</a>
+	</div> 
+	<h3 style="margin-top: 10px;">Chargebacks Overview</h3>
+</div>	 
 <div class="row">
 	<div class="col-sm-4">
 		<div class="dash-stat">
@@ -75,10 +81,6 @@
 	
 		<a href="/chargeback" class="btn btn-lg btn-info" style="margin-bottom: 30px; width: 100%;">Add New Chargeback</a>
 
-		<div class="dateRange" ng-if="date.start && date.end">
-			<a href="#" datepicker-popup="MM/dd/yyyy" datepicker-options="dateOptions" ng-model="date.start.val" is-open="date.start.opened" ng-click="date.start.opened=true" isdate >{{date.start.val | date:'MMM dd, yyyy'}}</a> thru
-			<a href="#" datepicker-popup="MM/dd/yyyy" datepicker-options="dateOptions" ng-model="date.end.val" is-open="date.end.opened" ng-click="date.end.opened=true" isdate >{{date.end.val | date:'MMM dd, yyyy'}}</a>
-		</div>
 		<div class="dash-stat">
 			<div class="stat-head">Win Rate</div>
 			<div class="percentage" ng-if="dbs.data_dashboard.hwl" percentage control="winloss"></div>
