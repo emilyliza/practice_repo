@@ -224,7 +224,7 @@
 			// reset
 			this.page = 1;
 			this.data = [];
-			this.current = ReportingService.setMerchant(ReportingService.getMerchant());;
+			this.current = ReportingService.setMerchant(ReportingService.getMerchant());
 			this.query = (q || (this.lastQuery || ""));
 			this.loaded = false;
 			this.last_page = false;
