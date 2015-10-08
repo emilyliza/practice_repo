@@ -360,7 +360,6 @@
 		};
 
 		
-
 		$scope.getStatusData = function() {
 			$scope.last = 'getStatusData';
 			ReportingService.getStatusData().then(function(res) {
@@ -433,8 +432,6 @@
 		};
 		
 	}])
-
-	
 	
 	.factory('ReportingService', ['$http', '$window', function ($http, $window) {
 		var reportingService = {};

@@ -14,7 +14,7 @@
 
 	<div class="col-md-2" style="padding-top: 20px;">
 		<div class="merchantSelect">
-    	<input ng-model="selectedMerchants" typeahead="merchant as merchant.name for merchant in merchants | filter:$viewValue" class="form-control" placeholder="Filter By Merchant" ng-click="showList()" typeahead-on-select='setMerchant($item, $model, $label)' />
+    	<input ng-model="selectedMerchant" typeahead="merchant as merchant.name for merchant in merchants | filter:$viewValue" class="form-control" placeholder="Filter By Merchant" ng-click="showList()" typeahead-on-select='setMerchant($item, $model, $label)' />
     </div>
 </div>
 	<div class="col-md-2" style="padding-top: 16px; font-size: 32px; text-align: right;">

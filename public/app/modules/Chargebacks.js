@@ -28,16 +28,16 @@
 
 		$scope.methods = {};
 
-                $scope.open=function($event) {
-                        $event.preventDefault();
-                        $event.stopPropagation();
+        $scope.open= function($event) {
+                $event.preventDefault();
+                $event.stopPropagation();
 
-                        $scope.opened = true;
-                };
+                $scope.opened = true;
+        };
 
-                $scope.dateOptions = {
-                        showWeeks:'false'
-                };
+        $scope.dateOptions = {
+                showWeeks:'false'
+        };
 
 		$scope.date = {
 			start: {
@@ -49,10 +49,9 @@
 				opened: false
 			}
 		};
-
 		
 		var all = {'_id': '', 'name': '- All'};
-		$scope.selectedMerchants = all;
+		$scope.selectedMerchant = all;
 		$scope.cu = UserService.getCurrentUser();
 		$scope.merchants = [all];
 		UserService.getChildren().then(function(res) {
@@ -72,15 +71,20 @@
 
 			// default is first 
 			ReportingService.setMerchant( (ReportingService.getMerchant() || $scope.merchants[0]._id) );
-			$scope.selectedMerchants = current;
+			$scope.selectedMerchant = current;
 		});	
 
 		$scope.setMerchant = function(m) {
 			ReportingService.setMerchant(m._id);
 			if (m._id != $scope.last_merchant_id) {
-				$scope[$scope.last]();
+				$scope.cbs.clearAndRun();
 			}
 			$scope.last_merchant_id = m._id;
+		};
+
+		$scope.showList = function() {
+			var ngModelCtrl = angular.element('input').controller('ngModel');
+        	ngModelCtrl.$setViewValue(' ');
 		};
 		
 		$scope.filters = "";
@@ -163,6 +167,7 @@
 			$scope.load_end = true;
 		});
 
+
 		$scope.goTo = function(d) {
 			if (d.status == "In-Progress" || d.status == "Errored") {
 				$state.go('chargeback.data', { '_id': d._id });
@@ -187,10 +192,11 @@
 
 	}])
 
-    .factory('ChargebacksService', ['$http', '$timeout', '$state', '$window', function ($http, $timeout, $state, $window) {
+    .factory('ChargebacksService', ['$http', '$timeout', '$state', '$window', 'ReportingService', function ($http, $timeout, $state, $window, ReportingService) {
 
 		var ChargebacksService = function() {
 			this.data = [];
+			this.current = ReportingService.setMerchant(ReportingService.getMerchant());
 			this.busy = false;
 			this.done = false;
 			this.page = 1;
@@ -205,6 +211,7 @@
 		ChargebacksService.prototype.clear = function() {
 			// reset
 			this.page = 1;
+			this.current = '';
 			this.data = [];
 			this.query = "";
 			this.loaded = false;
@@ -217,6 +224,7 @@
 			// reset
 			this.page = 1;
 			this.data = [];
+			this.current = ReportingService.setMerchant(ReportingService.getMerchant());;
 			this.query = (q || (this.lastQuery || ""));
 			this.loaded = false;
 			this.last_page = false;
@@ -272,7 +280,7 @@
 
     		var url = '/api/v1/chargebacks?page=' + this.page;
     		//url += '&start=' + this.start + "&end=" + this.end;
-    		url += '&limit=30&query=' + this.query;
+    		url += '&limit=30&query=' + this.query + '&merchant=' + this.current;
 
     		// additional params such as start, end, cctype, merchant, etc
     		if ($state.params) {
@@ -318,7 +326,7 @@
 				},50);
 			});
 		};
-
+		
 		return ChargebacksService;
 
 	}]);
