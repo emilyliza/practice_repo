@@ -11,15 +11,28 @@
 			<div class="col-md-4">
 				<div class="form-group" show-errors>
 					<label>Mid Number</label>
-					<input name="MidNumber" required type="text" class="form-control" pop-show="{{errors.MidNumber}}" pop="{{errors.MidNumber}}" pop-placement="right"
-						   ng-model="data.portal_data.MidNumber" placeholder="" ng-blur="methods.ds()" >
+					<input name="MidNumber" 
+						required type="text" 
+						class="form-control" 
+						pop-show="{{errors.MidNumber}}" 
+						pop="{{errors.MidNumber}}" 
+						pop-placement="right"
+						ng-model="data.portal_data.MidNumber" 
+						placeholder="" ng-blur="methods.ds()" >
 				</div>
 			</div>
 			<div class="col-md-4">
 				<div class="form-group" show-errors>
 					<label>Chargeback Amount</label>
-					<input name="ChargebackAmt" required type="text" class="form-control" pop-show="{{errors.ChargebackAmt}}" pop="{{errors.ChargebackAmt}}" pop-placement="right"
-						   ng-model="data.portal_data.ChargebackAmt" placeholder="" ng-blur="methods.ds()">
+					<input name="ChargebackAmt" 
+						required type="text" 
+						class="form-control" 
+						pop-show="{{errors.ChargebackAmt}}" 
+						pop="{{errors.ChargebackAmt}}" 
+						pop-placement="right"
+						ng-model="data.portal_data.ChargebackAmt" 
+						placeholder="" 
+						ng-blur="methods.ds()">
 				</div>
 			</div>
 			<div class="col-md-4">
@@ -27,16 +40,16 @@
 					<label>Chargeback Date</label><br><br>
 						<div class="input-group">
 							<input name="chargebackDate"
-								   class="form-control dp"
-								   required
-								   type="text"
-								   ng-model="data.chargebackDate"
-								   is-open="settings.chargeBackDateOpened"
-								   isdate
-								   ng-blur="methods.ds()"
-								   datepicker-popup="MM/dd/yyyy"
-								   datepicker-options="dateOptions"
-								   placeholder="MM/DD/YYYY">
+							   class="form-control dp"
+							   required
+							   type="text"
+							   ng-model="data.chargebackDate"
+							   is-open="settings.chargeBackDateOpened"
+							   isdate
+							   ng-blur="methods.ds()"
+							   datepicker-popup="MM/dd/yyyy"
+							   datepicker-options="dateOptions"
+							   placeholder="MM/DD/YYYY">
 							<span class="input-group-btn">
             		   			<button type="button" class="btn btn-default"  ng-click="open($event, settings.chargeBackDateOpened=true)"><i class="glyphicon glyphicon-calendar"></i></button>
           					</span>
@@ -47,50 +60,77 @@
 		<div class="row">
 			<div class="col-md-4">
 				<div class="form-group" show-errors data-tooltip-html-unsafe="This is the first 1 to 6 digits of your customers credit card number.<br> NOTE:<br>Never include the full credit card number!" tooltip-placement="top">
-					<label>CC Prefix</label>
-					<input name="CcPrefix" ng-minlength="1" ng-maxlength="6" required type="text" class="form-control" pop-show="{{errors.CcPrefix}}" pop="{{errors.CcPrefix}}" pop-placement="bottom"
-						   ng-model="data.portal_data.CcPrefix" placeholder="" ng-blur="methods.ds('CcPrefix')">
+					<label>CC Prefix
+						<span class="pull-right">
+							<span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span>
+						</span>
+					</label>
+					<input name="CcPrefix" 
+						ng-minlength="1" 
+						ng-maxlength="6" 
+						required type="text" 
+						class="form-control" 
+						pop-show="{{errors.CcPrefix}}" 
+						pop="{{errors.CcPrefix}}" 
+						pop-placement="bottom"
+						ng-model="data.portal_data.CcPrefix" 
+						placeholder="" 
+						ng-blur="methods.ds('CcPrefix')">
 				</div>
 			</div>
 			<div class="col-md-4">
 				<div class="form-group" show-errors data-tooltip-html-unsafe="This is the last 4 to 6 digits of your customers credit card number.<br> NOTE:<br>Never include the full credit card number!" tooltip-placement="top">
-					<label>CC Suffix</label>
-					<input name="CcSuffix" ng-minlength="4" ng-maxlength="6" required type="text" class="form-control" pop-show="{{errors.CcSuffix}}" pop="{{errors.CcSuffix}}" pop-placement="right"
-						   ng-model="data.portal_data.CcSuffix" placeholder="" ng-blur="methods.ds('CcSuffix')">
+					<label>CC Suffix
+						<span class="pull-right">
+							<span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span>
+						</span>
+					</label>
+					<input name="CcSuffix" 
+						ng-minlength="4" 
+						ng-maxlength="6" 
+						required type="text" 
+						class="form-control" 
+						pop-show="{{errors.CcSuffix}}" 
+						pop="{{errors.CcSuffix}}" 
+						pop-placement="right"
+						ng-model="data.portal_data.CcSuffix" 
+						placeholder="" 
+						ng-blur="methods.ds('CcSuffix')">
 				</div>
 			</div>
 			<div class="col-md-4">
 				<div class="form-group select">
 					<label>CC Type</label>
 					<select xng-disabled="data.portal_data.CcPrefix.length >= 4"
-							ng-disabled="true"
-							class="form-control"
-							ng-model="data.gateway_data.CcType"
-							ng-options="ct for ct in settings.cctypes"
-							ng-blur="methods.ds()"></select>
+						ng-disabled="true"
+						class="form-control"
+						ng-model="data.gateway_data.CcType"
+						ng-options="ct for ct in settings.cctypes"
+						ng-blur="methods.ds()">
+					</select>
 				</div>
 			</div>
 		</div>
 		<div class="row">
 			<div class="col-md-4">
-				<div class="form-group required" show-errors>
-					<label >CC Expires</label>
+				<div class="form-group required" show-errors data-tooltip-html-unsafe="If you don't have the expiration date, please enter NA." tooltip-placement="top">
+					<label >CC Expires
+						<span class="pull-right">
+							<span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span>
+						</span>
+					</label>
 					<input name="CcExpire"
-						  required=""
-						  type="text"
-						  class="form-control"
-						  pop-show="{{errors.CcExpire}}"
-						  pop="{{errors.CcExpire}}"
-						  pop-placement="right"
-						  ng-model="data.gateway_data.CcExpire"
-						  placeholder="Format: MM/YYYY or NA"
-						  ng-blur="methods.ds()"
-						  ng-pattern="/^[0-1][0-9]\/[2][0][1-9][0-9]$|^NA$/i"
-					      data-tooltip-html-unsafe="If you don't have the expiration date,<br>Please enter NA."
-						  tooltip-placement="right"
-						  tooltip-append-to-body="true"
-						  >
-
+						required=""
+						type="text"
+						class="form-control"
+						pop-show="{{errors.CcExpire}}"
+						pop="{{errors.CcExpire}}"
+						pop-placement="right"
+						ng-model="data.gateway_data.CcExpire"
+						placeholder="Format: MM/YYYY or NA"
+						ng-blur="methods.ds()"
+						ng-pattern="/^[0-1][0-9]\/[2][0][1-9][0-9]$|^NA$/i"
+						>
 				</div>
 			</div>
 			<div  class="col-md-4">
@@ -101,36 +141,44 @@
 					 tooltip-placement="right"
 					 tooltip-append-to-body="true"
 						>
-					<label>AVS Status</label>
-					<input name="AvsStatus"
-
-						type="text"
-						class="form-control"
-						pop-show="{{errors.AvsStatus}}"
-						pop="{{errors.AvsStatus}}"
-						pop-placement="right"
-						ng-model="data.gateway_data.AvsStatus"
-						placeholder=""
-						ng-blur="methods.ds()">
+						<label>AVS Status
+							<span class="pull-right">
+								<span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span>
+							</span>
+						</label>
+						<input name="AvsStatus"
+							type="text"
+							class="form-control"
+							pop-show="{{errors.AvsStatus}}"
+							pop="{{errors.AvsStatus}}"
+							pop-placement="right"
+							ng-model="data.gateway_data.AvsStatus"
+							placeholder=""
+							ng-blur="methods.ds()">
 				</div>
-				<div ng-if="data.type == 'cp'" class="form-control-static" style="background-color: #efefef;"></div>
+					<div ng-if="data.type == 'cp'" class="form-control-static" style="background-color: #efefef;"></div>
 			</div>
 			<div class="col-md-4">
 				<div ng-if="data.type == 'cnp'" class="form-group" show-errors
 					 data-tooltip-html-unsafe="<b>Card Verification Value (CVV2) Response Codes</b><br>M: CVV2 Match<br><br>N: CVV2 No Match<br><br>P: Not Processed<br><br>S: Issuer indicates that CVV2 data should be present on the card, but the merchant has indicated data is not present on the card<br><br>U: Issuer has not certified for CVV2 or Issuer has not provided Visa with the CVV2 encryption keys<br><br>Empty: Transaction failed because wrong CVV2 number was entered or no CVV2 number was entered"
-					 tooltip-placement="left"
-					 tooltip-append-to-body="true" >
-					<label>CVV Status</label>
-					<input name="CvvStatus"
-						   type="text"
-						   class="form-control"
-						   pop-show="{{errors.CvvStatus}}"
-						   pop="{{errors.CvvStatus}}"
-						   pop-placement="right"
-						   ng-model="data.gateway_data.CvvStatus"
-						   placeholder="" ng-blur="methods.ds()">
+					 tooltip-placement="right"
+					 tooltip-append-to-body="true"
+					 >
+						<label>CVV Status
+							<span class="pull-right">
+								<span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span>
+							</span>
+						</label>
+						<input name="CvvStatus"
+					   		type="text"
+					   		class="form-control"
+					   		pop-show="{{errors.CvvStatus}}"
+					   		pop="{{errors.CvvStatus}}"
+					   		pop-placement="right"
+					   		ng-model="data.gateway_data.CvvStatus"
+					   		placeholder="" ng-blur="methods.ds()">
 				</div>
-				<div ng-if="data.type == 'cp'" class="form-control-static" style="background-color: #efefef;"></div>
+					<div ng-if="data.type == 'cp'" class="form-control-static" style="background-color: #efefef;"></div>
 			</div>
 		</div>	
 		<div class="row">
@@ -139,19 +187,19 @@
 					<label>Transaction Date</label><br><br>
 						<div class="input-group">
 							<input name="TransDate"	
-								   class="form-control dp"
-								   required 
-								   type="text"
-								   pop-show="{{errors.TransDate}}"
-								   pop="{{errors.TransDate}}"
-								   pop-placement="right"
-								   ng-model="data.gateway_data.TransDate"
-								   is-open="settings.transDateOpened"
-								   isdate 
-								   ng-blur="methods.ds()"
-								   datepicker-popup="MM/dd/yyyy"
-								   datepicker-options="dateOptions"
-								   placeholder="MM/DD/YYYY">
+								class="form-control dp"
+								required 
+								type="text"
+								pop-show="{{errors.TransDate}}"
+								pop="{{errors.TransDate}}"
+								pop-placement="right"
+								ng-model="data.gateway_data.TransDate"
+								is-open="settings.transDateOpened"
+								isdate 
+								ng-blur="methods.ds()"
+								datepicker-popup="MM/dd/yyyy"
+								datepicker-options="dateOptions"
+								placeholder="MM/DD/YYYY">
 							<span class="input-group-btn">
             		   			<button type="button" class="btn btn-default"  ng-click="open($event, settings.transDateOpened=true)"><i class="glyphicon glyphicon-calendar"></i></button>
           					</span>
@@ -161,15 +209,29 @@
 			<div class="col-md-4">
 				<div class="form-group" show-errors>
 					<label>Case Number</label>
-					<input name="CaseNumber" type="text" class="form-control" pop-show="{{errors.CaseNumber}}" pop="{{errors.CaseNumber}}" pop-placement="right"
-						   ng-model="data.portal_data.CaseNumber" placeholder="" ng-blur="methods.ds()">
+					<input name="CaseNumber" 
+						type="text" 
+						class="form-control" 
+						pop-show="{{errors.CaseNumber}}" 
+						pop="{{errors.CaseNumber}}" 
+						pop-placement="right"
+						ng-model="data.portal_data.CaseNumber" 
+						placeholder="" 
+						ng-blur="methods.ds()">
 				</div>
 			</div>
 			<div class="col-md-4">
 				<div class="form-group" show-errors>
 					<label>Reference Number</label>
-					<input name="RefNumber" type="text" class="form-control" pop-show="{{errors.RefNumber}}" pop="{{errors.RefNumber}}" pop-placement="right"
-						   ng-model="data.portal_data.RefNumber" placeholder="" ng-blur="methods.ds()">
+					<input name="RefNumber" 
+						type="text" 
+						class="form-control" 
+						pop-show="{{errors.RefNumber}}" 
+						pop="{{errors.RefNumber}}" 
+						pop-placement="right"
+						ng-model="data.portal_data.RefNumber" 
+						placeholder="" 
+						ng-blur="methods.ds()">
 				</div>
 			</div>
 		</div>
@@ -178,29 +240,43 @@
 				<div class="form-group required" show-errors >
 					<label>Currency</label>
 					<input name="Currency"
-						   required=""
-						   type="text"
-						   class="form-control"
-						   pop-show="{{errors.Currency}}"
-						   pop="{{errors.Currency}}"
-						   pop-placement="right"
-						   ng-model="data.gateway_data.Currency"
-						   placeholder=""
-						   ng-blur="methods.ds()">
+					   required=""
+					   type="text"
+					   class="form-control"
+					   pop-show="{{errors.Currency}}"
+					   pop="{{errors.Currency}}"
+					   pop-placement="right"
+					   ng-model="data.gateway_data.Currency"
+					   placeholder=""
+					   ng-blur="methods.ds()">
 				</div>
 			</div>
 			<div class="col-md-2">
 				<div class="form-group" show-errors>
 					<label>Reason Code</label>
-					<input name="ReasonCode" required type="text" class="form-control" pop-show="{{errors.ReasonCode}}" pop="{{errors.ReasonCode}}" pop-placement="right"
-						   ng-model="data.portal_data.ReasonCode" placeholder="Enter NA if not available." ng-blur="methods.ds()">
+					<input name="ReasonCode" 
+						required type="text" 
+						class="form-control" 
+						pop-show="{{errors.ReasonCode}}" 
+						pop="{{errors.ReasonCode}}" 
+						pop-placement="right"
+						ng-model="data.portal_data.ReasonCode" 
+						placeholder="Enter NA if not available." 
+						ng-blur="methods.ds()">
 				</div>
 			</div>
 			<div class="col-md-8">
 				<div class="form-group" show-errors>
 					<label>Reason Text</label>
-					<input name="ReasonText" required type="text" class="form-control" pop-show="{{errors.ReasonText}}" pop="{{errors.ReasonText}}" pop-placement="right"
-						   ng-model="data.portal_data.ReasonText" placeholder="" ng-blur="methods.ds()">
+					<input name="ReasonText" 
+						required type="text" 
+						class="form-control" 
+						pop-show="{{errors.ReasonText}}" 
+						pop="{{errors.ReasonText}}" 
+						pop-placement="right"
+						ng-model="data.portal_data.ReasonText" 
+						placeholder="" 
+						ng-blur="methods.ds()">
 				</div>
 			</div>
 		</div>
@@ -215,13 +291,13 @@
 			<div class="form-group" show-errors>
 				<label>Response Fax</label>
 				<input name="send_to_fax"
-					   type="text" class="form-control"
-					   pop-show="{{errors.send_to_fax}}"
-					   pop="{{errors.send_to_fax}}"
-					   pop-placement="right"
-					   ng-model="data.send_to.fax"
-					   pop-append-to-body
-					   ng-blur="methods.ds()" >
+				   type="text" class="form-control"
+				   pop-show="{{errors.send_to_fax}}"
+				   pop="{{errors.send_to_fax}}"
+				   pop-placement="right"
+				   ng-model="data.send_to.fax"
+				   pop-append-to-body
+				   ng-blur="methods.ds()" >
 			</div>
 		</div>
 	</div>
@@ -235,15 +311,29 @@
 		<div class="col-md-6">
 			<div class="form-group required" show-errors>
 				<label>First Name</label>
-				<input name="FirstName" required type="text" class="form-control" pop-show="{{errors.FirstName}}" pop="{{errors.FirstName}}" pop-placement="right"
-					   ng-model="data.gateway_data.FirstName" placeholder="" ng-blur="methods.ds()">
+				<input name="FirstName" 
+					required type="text" 
+					class="form-control" 
+					pop-show="{{errors.FirstName}}" 
+					pop="{{errors.FirstName}}" 
+					pop-placement="right"
+					ng-model="data.gateway_data.FirstName" 
+					placeholder="" 
+					ng-blur="methods.ds()">
 			</div>
 		</div>
 		<div class="col-md-6">
 			<div class="form-group required" show-errors>
 				<label>Last Name</label>
-				<input name="LastName" required type="text" class="form-control" pop-show="{{errors.LastName}}" pop="{{errors.LastName}}" pop-placement="right"
-					   ng-model="data.gateway_data.LastName" placeholder="" ng-blur="methods.ds()">
+				<input name="LastName" 
+					required type="text" 
+					class="form-control" 
+					pop-show="{{errors.LastName}}" 
+					pop="{{errors.LastName}}" 
+					pop-placement="right"
+					ng-model="data.gateway_data.LastName" 
+					placeholder="" 
+					ng-blur="methods.ds()">
 			</div>
 		</div>
 	</div>
@@ -251,15 +341,30 @@
 		<div class="col-md-6">
 			<div class="form-group required" show-errors>
 				<label>Billing Address One</label>
-				<input name="BillingAddr1" required='' type="text" class="form-control" pop-show="{{errors.BillingAddr1}}" pop="{{errors.BillingAddr1}}" pop-placement="right"
-					   ng-model="data.gateway_data.BillingAddr1" placeholder="" ng-blur="methods.ds()">
+				<input name="BillingAddr1" 
+					required='' 
+					type="text" 
+					class="form-control" 
+					pop-show="{{errors.BillingAddr1}}" 
+					pop="{{errors.BillingAddr1}}" 
+					pop-placement="right"
+					ng-model="data.gateway_data.BillingAddr1" 
+					placeholder="" 
+					ng-blur="methods.ds()">
 			</div>
 		</div>
 		<div class="col-md-6">
 			<div class="form-group" show-errors>
 				<label>Billing Address Two</label>
-				<input name="BillingAddr2" type="text" class="form-control" pop-show="{{errors.BillingAddr2}}" pop="{{errors.BillingAddr2}}" pop-placement="right"
-					   ng-model="data.gateway_data.BillingAddr2" placeholder="" ng-blur="methods.ds()">
+				<input name="BillingAddr2" 
+					type="text" 
+					class="form-control" 
+					pop-show="{{errors.BillingAddr2}}" 
+					pop="{{errors.BillingAddr2}}" 
+					pop-placement="right"
+					ng-model="data.gateway_data.BillingAddr2" 
+					placeholder="" 
+					ng-blur="methods.ds()">
 			</div>
 		</div>
 	</div>
@@ -267,33 +372,58 @@
 		<div class="col-md-3">
 			<div class="form-group required" show-errors>
 				<label>Billing City</label>
-				<input name="BillingCity" required='' type="text" class="form-control" pop-show="{{errors.BillingCity}}" pop="{{errors.BillingCity}}" pop-placement="right"
-					   ng-model="data.gateway_data.BillingCity" placeholder="" ng-blur="methods.ds()">
+				<input name="BillingCity" 
+					required='' 
+					type="text" 
+					class="form-control" 
+					pop-show="{{errors.BillingCity}}" 
+					pop="{{errors.BillingCity}}" 
+					pop-placement="right"
+					ng-model="data.gateway_data.BillingCity" 
+					placeholder="" 
+					ng-blur="methods.ds()">
 			</div>
 		</div>
 		<div class="col-md-3">
 			<div class="form-group required" show-errors>
 				<label>Billing State</label>
-				<input name="BillingState" required='' type="text" class="form-control" pop-show="{{errors.BillingState}}" pop="{{errors.BillingState}}" pop-placement="right" ng-model="data.gateway_data.BillingState" placeholder='"NA" if International' ng-blur="methods.ds()">
+				<input name="BillingState" 
+					required='' 
+					type="text" 
+					class="form-control" 
+					pop-show="{{errors.BillingState}}" 
+					pop="{{errors.BillingState}}" 
+					pop-placement="right" 
+					ng-model="data.gateway_data.BillingState" 
+					placeholder='"NA" if International' 
+					ng-blur="methods.ds()">
 			</div>
 		</div>
 		<div class="col-md-3">
 			<div class="form-group required" show-errors>
 				<label>Billing Postal</label>
-				<input name="BillingPostal" required='' type="text" class="form-control" pop-show="{{errors.BillingPostal}}" pop="{{errors.BillingPostal}}" pop-placement="right"
-					   ng-model="data.gateway_data.BillingPostal" placeholder="" ng-blur="methods.ds()">
+				<input name="BillingPostal" 
+					required='' 
+					type="text" 
+					class="form-control" 
+					pop-show="{{errors.BillingPostal}}" 
+					pop="{{errors.BillingPostal}}" 
+					pop-placement="right"
+					ng-model="data.gateway_data.BillingPostal" 
+					placeholder="" 
+					ng-blur="methods.ds()">
 			</div>
 		</div>
 		<div class="col-md-3" >
 			<div class="form-group required" show-errors>
 				<label>Billing Country</label>
 				<input name="BillingCountry"
-					   type="text"
-					   required
-					   class="form-control"
-					   pop-show="{{errors.BillingCountry}}"
-					   pop="{{errors.BillingCountry}}" pop-placement="right"
-					   ng-model="data.gateway_data.BillingCountry" placeholder="" ng-blur="methods.ds()">
+				   type="text"
+				   required
+				   class="form-control"
+				   pop-show="{{errors.BillingCountry}}"
+				   pop="{{errors.BillingCountry}}" pop-placement="right"
+				   ng-model="data.gateway_data.BillingCountry" placeholder="" ng-blur="methods.ds()">
 			</div>
 		</div>
 	</div>
@@ -301,30 +431,59 @@
 		<div class="col-md-3">	
 			<div class="form-group" show-errors>
 				<label>Middle Name</label>
-				<input name="MiddleName" type="text" class="form-control" pop-show="{{errors.MiddleName}}" pop="{{errors.MiddleName}}" pop-placement="right"
-					   ng-model="data.gateway_data.MiddleName" placeholder="" ng-blur="methods.ds()">
+				<input name="MiddleName" 
+					type="text" 
+					class="form-control" 
+					pop-show="{{errors.MiddleName}}" 
+					pop="{{errors.MiddleName}}" 
+					pop-placement="right"
+					ng-model="data.gateway_data.MiddleName" 
+					placeholder="" 
+					ng-blur="methods.ds()">
 			</div>
 		</div>
 		<div class="col-md-3">
 			<div class="form-group" show-errors>
 				<label>Phone</label>
-				<input name="Phone" type="text" class="form-control" pop-show="{{errors.Phone}}" pop="{{errors.Phone}}" pop-placement="right"
-					   ng-model="data.gateway_data.Phone" placeholder="" ng-blur="methods.ds()">
+				<input name="Phone" 
+					type="text" 
+					class="form-control" 
+					pop-show="{{errors.Phone}}" 
+					pop="{{errors.Phone}}" 
+					pop-placement="right"
+					ng-model="data.gateway_data.Phone" 
+					placeholder="" 
+					ng-blur="methods.ds()">
 			</div>
 		</div>
 		<div class="col-md-3">
 			<div class="form-group" show-errors>
 				<label>Email</label>
-				<input name="Email" type="text" class="form-control" pop-show="{{errors.Email}}" pop="{{errors.Email}}" pop-placement="right" ng-model="data.crm_data.Email" placeholder="" ng-blur="methods.ds()">
+				<input name="Email" 
+					type="text" 
+					class="form-control" 
+					pop-show="{{errors.Email}}" 
+					pop="{{errors.Email}}" 
+					pop-placement="right" 
+					ng-model="data.crm_data.Email" 
+					placeholder="" 
+					ng-blur="methods.ds()">
 			</div>
 		</div>
 		<div class="col-md-3">
 			<div class="form-group required" show-errors>
 				<label>IP Address</label>
-				<input name="IpAddress" required type="text" class="form-control" pop-show="{{errors.IpAddress}}" pop="{{errors.IpAddress}}" pop-placement="right"
-					   ng-model="data.crm_data.IpAddress" placeholder="" ng-blur="methods.ds()"
-					   ng-pattern="settings.ipRegex"
-						ng-pattern_old="/^(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/">
+				<input name="IpAddress" 
+					required type="text" 
+					class="form-control" 
+					pop-show="{{errors.IpAddress}}" 
+					pop="{{errors.IpAddress}}" 
+					pop-placement="right"
+					ng-model="data.crm_data.IpAddress" 
+					placeholder="" 
+					ng-blur="methods.ds()"
+					ng-pattern="settings.ipRegex"
+					ng-pattern_old="/^(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/">
 			</div>
 		</div>
 	</div>
@@ -339,15 +498,31 @@
 			<div class="col-md-6">
 				<div class="form-group required" show-errors>
 					<label>Transaction Id</label>
-					<input name="TransId" required type="text" class="form-control" pop-show="{{errors.TransId}}" pop="{{errors.TransId}}" pop-placement="right"
-						   ng-model="data.gateway_data.TransId" placeholder="Enter NA if not available." ng-blur="methods.ds()">
+					<input name="TransId" 
+						required 
+						type="text" 
+						class="form-control" 
+						pop-show="{{errors.TransId}}" 
+						pop="{{errors.TransId}}" 
+						pop-placement="right"
+						ng-model="data.gateway_data.TransId" 
+						placeholder="Enter NA if not available." 
+						ng-blur="methods.ds()">
 				</div>
 			</div>
 			<div class="col-md-6">
 				<div class="form-group required" show-errors>
 					<label>Order Id</label>
-					<input name="OrderId" required type="text" class="form-control" pop-show="{{errors.OrderId}}" pop="{{errors.OrderId}}" pop-placement="right"
-						   ng-model="data.gateway_data.OrderId" placeholder="Enter NA if not available." ng-blur="methods.ds()">
+					<input name="OrderId" 
+						required 
+						type="text" 
+						class="form-control" 
+						pop-show="{{errors.OrderId}}" 
+						pop="{{errors.OrderId}}" 
+						pop-placement="right"
+						ng-model="data.gateway_data.OrderId" 
+						placeholder="Enter NA if not available." 
+						ng-blur="methods.ds()">
 				</div>
 			</div>
 		</div>
@@ -355,15 +530,31 @@
 			<div class="col-md-6">
 				<div class="form-group" show-errors>
 					<label>Transaction Type</label>
-					<input name="TransType" required type="text" class="form-control" pop-show="{{errors.TransType}}" pop="{{errors.TransType}}" pop-placement="right"
-						   ng-model="data.gateway_data.TransType" placeholder="" ng-blur="methods.ds()">
+					<input name="TransType" 
+						required 
+						type="text" 
+						class="form-control" 
+						pop-show="{{errors.TransType}}" 
+						pop="{{errors.TransType}}" 
+						pop-placement="right"
+						ng-model="data.gateway_data.TransType" 
+						placeholder="" 
+						ng-blur="methods.ds()">
 				</div>
 			</div>
 			<div class="col-md-6">
 				<div class="form-group" show-errors>
 					<label>Transaction Status</label>
-					<input name="TransStatus" required type="text" class="form-control" pop-show="{{errors.TransStatus}}" pop="{{errors.TransStatus}}" pop-placement="right"
-						   ng-model="data.gateway_data.TransStatus" placeholder="" ng-blur="methods.ds()">
+					<input name="TransStatus" 
+						required 
+						type="text" 
+						class="form-control" 
+						pop-show="{{errors.TransStatus}}" 
+						pop="{{errors.TransStatus}}" 
+						pop-placement="right"
+						ng-model="data.gateway_data.TransStatus" 
+						placeholder="" 
+						ng-blur="methods.ds()">
 				</div>
 			</div>
 		</div>
@@ -395,8 +586,15 @@
 			<div class="col-md-6">
 				<div class="form-group" show-errors>
 					<label>Product Name</label>
-					<input name="ProductName" type="text" class="form-control" pop-show="{{errors.ProductName}}" pop="{{errors.ProductName}}" pop-placement="right"
-						   ng-model="data.crm_data.ProductName" placeholder="" ng-blur="methods.ds()">
+					<input name="ProductName" 
+						type="text" 
+						class="form-control" 
+						pop-show="{{errors.ProductName}}" 
+						pop="{{errors.ProductName}}" 
+						pop-placement="right"
+						ng-model="data.crm_data.ProductName" 
+						placeholder="" 
+						ng-blur="methods.ds()">
 				</div>
 			</div>
 		</div>
@@ -404,15 +602,29 @@
 			<div class="col-md-6">
 				<div class="form-group" show-errors>
 					<label>RMA</label>
-					<input name="Rma" type="text" class="form-control" pop-show="{{errors.Rma}}" pop="{{errors.Rma}}" pop-placement="right"
-						   ng-model="data.crm_data.Rma" placeholder="" ng-blur="methods.ds()">
+					<input name="Rma" 
+						type="text" 
+						class="form-control" 
+						pop-show="{{errors.Rma}}" 
+						pop="{{errors.Rma}}" 
+						pop-placement="right"
+						ng-model="data.crm_data.Rma" 
+						placeholder="" 
+						ng-blur="methods.ds()">
 				</div>
 			</div>
 			<div class="col-md-6">
 				<div class="form-group required" show-errors>
 					<label>Transaction Amount</label>
-					<input name="TransAmt" required type="text" class="form-control" pop-show="{{errors.TransAmt}}" pop="{{errors.TransAmt}}" pop-placement="right"
-						   ng-model="data.gateway_data.TransAmt" placeholder="" ng-blur="methods.ds()">
+					<input name="TransAmt" 
+						required 
+						type="text" 
+						class="form-control" 
+						pop-show="{{errors.TransAmt}}" 
+						pop="{{errors.TransAmt}}" 
+						pop-placement="right"
+						ng-model="data.gateway_data.TransAmt" 
+						placeholder="" ng-blur="methods.ds()">
 				</div>
 			</div>
 		</div>
@@ -420,8 +632,16 @@
 			<div class="col-md-6">
 				<div class="form-group required" show-errors>
 					<label>Authorization Code</label>
-					<input name="AuthCode" required type="text" class="form-control" pop-show="{{errors.AuthCode}}" pop="{{errors.AuthCode}}" pop-placement="right"
-						   ng-model="data.gateway_data.AuthCode" placeholder="Enter NA if not available." ng-blur="methods.ds()">
+					<input name="AuthCode" 
+						required 
+						type="text" 
+						class="form-control" 
+						pop-show="{{errors.AuthCode}}" 
+						pop="{{errors.AuthCode}}" 
+						pop-placement="right"
+						ng-model="data.gateway_data.AuthCode" 
+						placeholder="Enter NA if not available." 
+						ng-blur="methods.ds()">
 				</div>
 			</div>
 			<div class="col-md-6">
@@ -440,15 +660,31 @@
 			<div class="col-md-6">
 				<div class="form-group required" show-errors>
 					<label>Transaction Id</label>
-					<input name="TransId" required type="text" class="form-control" pop-show="{{errors.TransId}}" pop="{{errors.TransId}}" pop-placement="right"
-						   ng-model="data.gateway_data.TransId" placeholder="" ng-blur="methods.ds()">
+					<input name="TransId" 
+						required 
+						type="text" 
+						class="form-control" 
+						pop-show="{{errors.TransId}}" 
+						pop="{{errors.TransId}}" 
+						pop-placement="right"
+						ng-model="data.gateway_data.TransId" 
+						placeholder="" 
+						ng-blur="methods.ds()">
 				</div>
 			</div>
 			<div class="col-md-6">
 				<div class="form-group required" show-errors>
 					<label>Authorization Code</label>
-					<input name="AuthCode" required type="text" class="form-control" pop-show="{{errors.AuthCode}}" pop="{{errors.AuthCode}}" pop-placement="right"
-						   ng-model="data.gateway_data.AuthCode" placeholder="" ng-blur="methods.ds()">
+					<input name="AuthCode" 
+						required 
+						type="text" 
+						class="form-control" 
+						pop-show="{{errors.AuthCode}}" 
+						pop="{{errors.AuthCode}}" 
+						pop-placement="right"
+						ng-model="data.gateway_data.AuthCode" 
+						placeholder="" 
+						ng-blur="methods.ds()">
 				</div>
 			</div>
 
@@ -457,15 +693,30 @@
 			<div class="col-md-6">
 				<div class="form-group required" show-errors>
 					<label>Transaction Amount</label>
-					<input name="TransAmt" required type="text" class="form-control" pop-show="{{errors.TransAmt}}" pop="{{errors.TransAmt}}" pop-placement="right"
-						   ng-model="data.gateway_data.TransAmt" placeholder="" ng-blur="methods.ds()">
+					<input name="TransAmt" 
+						required 
+						type="text" 
+						class="form-control" 
+						pop-show="{{errors.TransAmt}}" 
+						pop="{{errors.TransAmt}}" 
+						pop-placement="right"
+						ng-model="data.gateway_data.TransAmt" 
+						placeholder="" 
+						ng-blur="methods.ds()">
 				</div>
 			</div>
 			<div class="col-md-6">
 				<div class="form-group" show-errors>
 					<label>Product Name</label>
-					<input name="ProductName" type="text" class="form-control" pop-show="{{errors.ProductName}}" pop="{{errors.ProductName}}" pop-placement="right"
-						   ng-model="data.crm_data.ProductName" placeholder="" ng-blur="methods.ds()">
+					<input name="ProductName" 
+						type="text" 
+						class="form-control" 
+						pop-show="{{errors.ProductName}}" 
+						pop="{{errors.ProductName}}" 
+						pop-placement="right"
+						ng-model="data.crm_data.ProductName" 
+						placeholder="" 
+						ng-blur="methods.ds()">
 				</div>
 			</div>
 		</div>
@@ -473,8 +724,15 @@
 			<div class="col-md-6">
 				<div class="form-group" show-errors>
 					<label>RMA</label>
-					<input name="Rma" type="text" class="form-control" pop-show="{{errors.Rma}}" pop="{{errors.Rma}}" pop-placement="right"
-						   ng-model="data.crm_data.Rma" placeholder="" ng-blur="methods.ds()">
+					<input name="Rma" 
+						type="text" 
+						class="form-control" 
+						pop-show="{{errors.Rma}}" 
+						pop="{{errors.Rma}}" 
+						pop-placement="right"
+						ng-model="data.crm_data.Rma" 
+						placeholder="" 
+						ng-blur="methods.ds()">
 				</div>
 			</div>
 			<div class="col-md-6">
@@ -508,7 +766,10 @@
 				<div class="form-group">
 					<label>Is this a recurring transaction?</label>
 					<div class="form-control-static">
-						<input name="IsRecurring" type="checkbox" ng-model="data.crm_data.IsRecurring" ng-blur="methods.ds()">
+						<input name="IsRecurring" 
+							type="checkbox" 
+							ng-model="data.crm_data.IsRecurring" 
+							ng-blur="methods.ds()">
 						<span style="font-size: 12px;">The product purchased is on a subscription plan</span>
 					</div>
 				</div>
@@ -518,18 +779,18 @@
 					<label>Cancel Date</label><br><br>
 					<div class="input-group">
 					<input name="CancelDateSystem"	
-						   class="form-control dp"
-						   type="text"
-						   pop-show="{{errors.CancelDateSystem}}"
-						   pop="{{errors.CancelDateSystem}}"
-						   pop-placement="right"
-						   ng-model="data.crm_data.CancelDateSystem"
-						   is-open="settings.canceledDateOpened"
-						   isdate
-						   ng-blur="methods.ds()"
-						   datepicker-popup="MM/dd/yyyy"
-						   datepicker-options="dateOptions"
-						   placeholder="MM/DD/YYYY">
+					   class="form-control dp"
+					   type="text"
+					   pop-show="{{errors.CancelDateSystem}}"
+					   pop="{{errors.CancelDateSystem}}"
+					   pop-placement="right"
+					   ng-model="data.crm_data.CancelDateSystem"
+					   is-open="settings.canceledDateOpened"
+					   isdate
+					   ng-blur="methods.ds()"
+					   datepicker-popup="MM/dd/yyyy"
+					   datepicker-options="dateOptions"
+					   placeholder="MM/DD/YYYY">
 					<span class="input-group-btn">
             		   <button type="button" class="btn btn-default"  ng-click="open($event, settings.canceledDateOpened=true)"><i class="glyphicon glyphicon-calendar"></i></button>
           			</span>
@@ -539,35 +800,39 @@
 		</div>
 		<div class="row">
 			<div class="col-md-6">
-				<div class="form-group required" show-errors>
-					<label>Originating Transaction ID</label>
+					<div class="form-group required" show-errors data-tooltip-html-unsafe="The transaction id for the transaction that started the recurring transactions. (i.e. Introductory Offer)" tooltip-placement="top">
+					<label>Originating Transaction ID
+						<span class="pull-right">
+							<span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span>
+						</span>
+					</label>
 					<input name="OriginatingTransId"
-						   required
-						   type="text"
-						   data-tooltip-html-unsafe="The transaction id for the transaction that started the recurring transactions. (i.e. Introductory Offer)"
-						   tooltip-placement="top"
-						   class="form-control"
-						   pop-show="" pop=""
-						   pop-placement="right"
-						   ng-model="data.gateway_data.Originating.TransId"
-						   placeholder="Enter NA if not available."
-						   ng-blur="methods.ds()" >
+					   required
+					   type="text"
+					   class="form-control"
+					   pop-show="" pop=""
+					   pop-placement="right"
+					   ng-model="data.gateway_data.Originating.TransId"
+					   placeholder="Enter NA if not available."
+					   ng-blur="methods.ds()" >
 				</div>
 			</div>
 			<div class="col-md-6">
-				<div class="form-group" show-errors>
-					<label>Originating Transaction CVV Status</label>
+					<div class="form-group" show-errors data-tooltip-html-unsafe="The CVV status for the transaction that started the recurring transactions. (i.e. Introductory Offer)" tooltip-placement="top">
+					<label>Originating Transaction CVV Status
+						<span class="pull-right">
+							<span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span>
+						</span>
+					</label>
 					<input name="OriginatingTransCVV"
-						   type="text"
-						   data-tooltip-html-unsafe="The CVV status for the transaction that started the recurring transactions. (i.e. Introductory Offer)"
-						   tooltip-placement="top"
-						   class="form-control"
-						   pop-show=""
-						   pop=""
-						   pop-placement="right"
-						   ng-model="data.gateway_data.Originating.CvvStatus"
-						   placeholder=""
-						   ng-blur="methods.ds()" >
+					   type="text"
+					   class="form-control"
+					   pop-show=""
+					   pop=""
+					   pop-placement="right"
+					   ng-model="data.gateway_data.Originating.CvvStatus"
+					   placeholder=""
+					   ng-blur="methods.ds()" >
 				</div>
 			</div>
 		</div>
@@ -577,19 +842,19 @@
 					<label>Transaction Date</label><br><br>
 					<div class="input-group">
 					<input name="OriginatingTransDate"	
-						   class="form-control dp"
-						   required
-						   type="text"
-						   pop-show=""
-						   pop=""
-						   pop-placement="right"
-						   ng-model="data.gateway_data.Originating.TransDate"
-						   is-open="setting.transDateOrigOpened"
-						   isdate
-						   ng-blur="methods.ds()"
-						   datepicker-popup="MM/dd/yyyy"
-						   datepicker-options="dateOptions"
-						   placeholder="MM/DD/YYYY">
+					   class="form-control dp"
+					   required
+					   type="text"
+					   pop-show=""
+					   pop=""
+					   pop-placement="right"
+					   ng-model="data.gateway_data.Originating.TransDate"
+					   is-open="setting.transDateOrigOpened"
+					   isdate
+					   ng-blur="methods.ds()"
+					   datepicker-popup="MM/dd/yyyy"
+					   datepicker-options="dateOptions"
+					   placeholder="MM/DD/YYYY">
 					<span class="input-group-btn">
             		   <button type="button" class="btn btn-default"  ng-click="open($event, setting.transDateOrigOpened=true)"><i class="glyphicon glyphicon-calendar"></i></button>
           			</span>
@@ -597,57 +862,65 @@
 				</div>
 			</div>
 			<div class="col-md-6">
-				<div class="form-group required" show-errors>
-					<label>Transaction Amount</label>
+				<div class="form-group required" show-errors data-tooltip-html-unsafe="The amount of the originating transaction." tooltip-placement="top">
+					<label>Transaction Amount
+						<span class="pull-right">
+							<span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span>
+						</span>
+					</label>
 					<input name="OriginatingTransAmount"
-						   type="text"
-						   data-tooltip-html-unsafe="The amount of the originating transaction."
-						   tooltip-placement="top"
-						   class="form-control"
-						   pop-show=""
-						   pop=""
-						   pop-placement="right"
-						   ng-model="data.gateway_data.Originating.TransAmt"
-						   placeholder=""
-						   required
-						   ng-blur="methods.ds()" >
+					   type="text"
+					   class="form-control"
+					   pop-show=""
+					   pop=""
+					   pop-placement="right"
+					   ng-model="data.gateway_data.Originating.TransAmt"
+					   placeholder=""
+					   required
+					   ng-blur="methods.ds()" >
 
 				</div>
 			</div>
 		</div>
 		<div class="row">
 			<div class="col-md-6">
-				<div class="form-group required" show-errors>
-					<label>Authorization Code</label>
+				<div class="form-group required" show-errors data-tooltip-html-unsafe="The authorization code of the originating transaction." tooltip-placement="top">
+					<label>Authorization Code
+						<span class="pull-right">
+							<span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span>
+						</span>
+					</label>
 					<input name="OriginatingAuthCode"
-						   type="text"
-						   data-tooltip-html-unsafe="The authorization code of the originating transaction."
-						   tooltip-placement="top"
-						   class="form-control"
-						   pop-show=""
-						   pop=""
-						   required
-						   pop-placement="right"
-						   ng-model="data.gateway_data.Originating.AuthCode"
-						   placeholder="Enter NA if not available."
-						   ng-blur="methods.ds()" >
+					   type="text"
+					   data-tooltip-html-unsafe="The authorization code of the originating transaction."
+					   tooltip-placement="top"
+					   class="form-control"
+					   pop-show=""
+					   pop=""
+					   required
+					   pop-placement="right"
+					   ng-model="data.gateway_data.Originating.AuthCode"
+					   placeholder="Enter NA if not available."
+					   ng-blur="methods.ds()" >
 				</div>
 			</div>
 			<div class="col-md-6">
-				<div class="form-group required" show-errors>
-					<label>Order ID</label>
+				<div class="form-group required" show-errors data-tooltip-html-unsafe="The order id originating transaction." tooltip-placement="top">
+					<label>Order ID
+						<span class="pull-right">
+							<span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span>
+						</span>
+					</label>
 					<input name="OriginatingOrderId"
-						   type="text"
-						   data-tooltip-html-unsafe="The order id originating transaction."
-						   tooltip-placement="top"
-						   class="form-control"
-						   pop-show=""
-						   pop=""
-						   required
-						   pop-placement="right"
-						   ng-model="data.gateway_data.Originating.OrderId"
-						   placeholder="Enter NA if not available."
-						   ng-blur="methods.ds()" >
+					   type="text"
+					   class="form-control"
+					   pop-show=""
+					   pop=""
+					   required
+					   pop-placement="right"
+					   ng-model="data.gateway_data.Originating.OrderId"
+					   placeholder="Enter NA if not available."
+					   ng-blur="methods.ds()" >
 				</div>
 			</div>
 		</div>
@@ -678,20 +951,20 @@
 					<label>Refund Date</label><br><br>
 					<div class="input-group">
 					<input name="RefundDateFull"
-						   class="form-control dp"
-						   required
-						   type="text"
-						   pop-show="{{errors.RefundDateFull}}"
-						   pop="{{errors.RefundDateFull}}"
-						   pop-placement="right"
-						   ng-model="data.crm_data.RefundDateFull"
-						   is-open="settings.refundDateOpened"
-						   ng-click="settings.refundDateOpened=true"
-						   isdate
-						   ng-blur="methods.ds()"
-						   datepicker-popup="MM/dd/yyyy"
-						   datepicker-options="dateOptions"
-						   placeholder="MM/DD/YYYY">
+					   class="form-control dp"
+					   required
+					   type="text"
+					   pop-show="{{errors.RefundDateFull}}"
+					   pop="{{errors.RefundDateFull}}"
+					   pop-placement="right"
+					   ng-model="data.crm_data.RefundDateFull"
+					   is-open="settings.refundDateOpened"
+					   ng-click="settings.refundDateOpened=true"
+					   isdate
+					   ng-blur="methods.ds()"
+					   datepicker-popup="MM/dd/yyyy"
+					   datepicker-options="dateOptions"
+					   placeholder="MM/DD/YYYY">
 					<span class="input-group-btn">
             		   <button type="button" class="btn btn-default"  ng-click="open($event, opened=true)"><i class="glyphicon glyphicon-calendar"></i></button>
           			</span>
@@ -702,15 +975,15 @@
 				<div class="form-group required" show-errors>
 					<label>Refund Amount</label>
 					<input name="RefundAmount"
-						   required
-						   type="number"
-						   class="form-control"
-						   pop-show="{{errors.RefundAmount}}"
-						   pop="{{errors.RefundAmount}}"
-						   pop-placement="right"
-						   ng-model="data.crm_data.RefundAmount"
-						   placeholder=""
-						   ng-blur="methods.ds()">
+					   required
+					   type="number"
+					   class="form-control"
+					   pop-show="{{errors.RefundAmount}}"
+					   pop="{{errors.RefundAmount}}"
+					   pop-placement="right"
+					   ng-model="data.crm_data.RefundAmount"
+					   placeholder=""
+					   ng-blur="methods.ds()">
 				</div>
 			</div>
 		</div>
@@ -719,16 +992,16 @@
 				<div class="form-group required" show-errors>
 					<label>Refund Transaction ID</label>
 					<input class="form-control"
-						   required
-						   name="RefundTransId"
-						   placeholder="Enter NA if not available."
-						   type="text"
-						   class="form-control"
-						   pop-show=""
-						   pop=""
-						   pop-placement="right"
-						   ng-model="data.crm_data.RefundTransId"
-						   ng-blur="methods.ds()"
+					   required
+					   name="RefundTransId"
+					   placeholder="Enter NA if not available."
+					   type="text"
+					   class="form-control"
+					   pop-show=""
+					   pop=""
+					   pop-placement="right"
+					   ng-model="data.crm_data.RefundTransId"
+					   ng-blur="methods.ds()"
 					>
 				</div>
 			</div>
@@ -769,15 +1042,30 @@
 		<div class="col-md-6">
 			<div class="form-group required" show-errors>
 				<label>Delivery Address One</label>
-				<input name="DeliveryAddr1" type="text" required class="form-control" pop-show="{{errors.DeliveryAddr1}}" pop="{{errors.DeliveryAddr1}}" pop-placement="right"
-					   ng-model="data.crm_data.DeliveryAddr1" placeholder="" ng-blur="methods.ds()">
+				<input name="DeliveryAddr1" 
+					type="text" 
+					required 
+					class="form-control" 
+					pop-show="{{errors.DeliveryAddr1}}" 
+					pop="{{errors.DeliveryAddr1}}" 
+					pop-placement="right"
+					ng-model="data.crm_data.DeliveryAddr1" 
+					placeholder="" 
+					ng-blur="methods.ds()">
 			</div>
 		</div>
 		<div class="col-md-6">
 			<div class="form-group" show-errors>
 				<label>Delivery Address Two</label>
-				<input name="DeliveryAddr2" type="text" class="form-control" pop-show="{{errors.DeliveryAddr2}}" pop="{{errors.DeliveryAddr2}}" pop-placement="right"
-					   ng-model="data.crm_data.DeliveryAddr2" placeholder="" ng-blur="methods.ds()">
+				<input name="DeliveryAddr2" 
+					type="text" 
+					class="form-control" 
+					pop-show="{{errors.DeliveryAddr2}}" 
+					pop="{{errors.DeliveryAddr2}}" 
+					pop-placement="right"
+					ng-model="data.crm_data.DeliveryAddr2" 
+					placeholder="" 
+					ng-blur="methods.ds()">
 			</div>
 		</div>
 	</div>
@@ -785,29 +1073,60 @@
 		<div class="col-md-3">
 			<div class="form-group required" show-errors>
 				<label>Delivery City</label>
-				<input name="DeliveryCity"  type="text" required class="form-control" pop-show="{{errors.DeliveryCity}}" pop="{{errors.DeliveryCity}}" pop-placement="right"
-					   ng-model="data.crm_data.DeliveryCity" placeholder="" ng-blur="methods.ds()">
+				<input name="DeliveryCity"  
+					type="text" 
+					required 
+					class="form-control" 
+					pop-show="{{errors.DeliveryCity}}" 
+					pop="{{errors.DeliveryCity}}" 
+					pop-placement="right"
+					ng-model="data.crm_data.DeliveryCity" 
+					placeholder="" 
+					ng-blur="methods.ds()">
 			</div>
 		</div>
 		<div class="col-md-3">
 			<div class="form-group" show-errors>
 				<label>Delivery State</label>
-				<input name="DeliveryState" type="text" class="form-control" pop-show="{{errors.DeliveryState}}" pop="{{errors.DeliveryState}}" pop-placement="right"
-					   ng-model="data.crm_data.DeliveryState" placeholder="" ng-blur="methods.ds()">
+				<input name="DeliveryState" 
+					type="text" 
+					class="form-control" 
+					pop-show="{{errors.DeliveryState}}" 
+					pop="{{errors.DeliveryState}}" 
+					pop-placement="right"
+					ng-model="data.crm_data.DeliveryState" 
+					placeholder="" 
+					ng-blur="methods.ds()">
 			</div>
 		</div>
 		<div class="col-md-3">
 			<div class="form-group required" show-errors>
 				<label>Delivery Postal</label>
-				<input name="DeliveryPostal"  type="text" required class="form-control" pop-show="{{errors.DeliveryPostal}}" pop="{{errors.DeliveryPostal}}" pop-placement="right"
-					   ng-model="data.crm_data.DeliveryPostal" placeholder="" ng-blur="methods.ds()">
+				<input name="DeliveryPostal"  
+					type="text" 
+					required 
+					class="form-control" 
+					pop-show="{{errors.DeliveryPostal}}" 
+					pop="{{errors.DeliveryPostal}}" 
+					pop-placement="right"
+					ng-model="data.crm_data.DeliveryPostal" 
+					placeholder="" 
+					ng-blur="methods.ds()">
 			</div>
 		</div>
 		<div class="col-md-3">
 			<div class="form-group required" show-errors>
 				<label>Delivery Country</label>
-				<input name="DeliveryCountry"  type="text" required class="form-control" pop-show="{{errors.DeliveryCountry}}" pop="{{errors.DeliveryCountry}}" pop-placement="right"
-					   ng-model="data.crm_data.DeliveryCountry" placeholder="" ng-blur="methods.ds()">
+				<input name="DeliveryCountry"  
+					type="text" 
+					required 
+					class="form-control" 
+					pop-show="{{errors.DeliveryCountry}}" 
+					pop="{{errors.DeliveryCountry}}" 
+					pop-placement="right"
+					ng-model="data.crm_data.DeliveryCountry" 
+					placeholder="" 
+					ng-blur="methods.ds()">
 			</div>
 		</div>
 	</div>
@@ -815,7 +1134,13 @@
 		<div class="col-md-3">
 			<div class="form-group select">
 				<label>Shipping Company</label>
-				<select id="shipping-co" style="padding-top: 0px; padding-bottom: 0px;" class="form-control" ng-model="data.shipping_data.company" ng-options="s for s in settings.shipping_companies" ng-blur="methods.ds()"></select>
+				<select id="shipping-co" 
+					style="padding-top: 0px; padding-bottom: 0px;" 
+					class="form-control" 
+					ng-model="data.shipping_data.company" 
+					ng-options="s for s in settings.shipping_companies" 
+					ng-blur="methods.ds()">
+				</select>
 			</div>
 		</div>
 		<div class="col-md-3">
@@ -823,16 +1148,16 @@
 				<label>Delivery Date</label><br><br>
 				<div class="input-group">
 					<input name="ShippingDate"
-						   class="form-control dp"
-						   required 
-						   type="text"
-						   ng-model="data.shipping_data.ShippingDate"
-						   is-open="opened"
-						   isdate
-						   ng-blur="methods.ds()"
-						   datepicker-popup="MM/dd/yyyy"
-						   datepicker-options="dateOptions"
-						   placeholder="MM/DD/YYYY">
+					   class="form-control dp"
+					   required 
+					   type="text"
+					   ng-model="data.shipping_data.ShippingDate"
+					   is-open="opened"
+					   isdate
+					   ng-blur="methods.ds()"
+					   datepicker-popup="MM/dd/yyyy"
+					   datepicker-options="dateOptions"
+					   placeholder="MM/DD/YYYY">
 					<span class="input-group-btn">
 	        		   <button type="button" class="btn btn-default"  ng-click="open($event, opened=true)"><i class="glyphicon glyphicon-calendar"></i></button>
 	          		</span>
@@ -842,8 +1167,16 @@
 		<div class="col-md-6">
 			<div class="form-group required" show-errors>
 				<label>Tracking Number</label>
-				<input name="TrackingNum" required type="text" class="form-control" pop-show="{{errors.TrackingNum}}" pop="{{errors.TrackingNum}}" pop-placement="right"
-					   ng-model="data.shipping_data.TrackingNum" placeholder="" ng-blur="methods.ds()">
+				<input name="TrackingNum" 
+					required 
+					type="text" 
+					class="form-control" 
+					pop-show="{{errors.TrackingNum}}" 
+					pop="{{errors.TrackingNum}}" 
+					pop-placement="right"
+					ng-model="data.shipping_data.TrackingNum" 
+					placeholder="" 
+					ng-blur="methods.ds()">
 			</div>
 		</div>
 	</div>
