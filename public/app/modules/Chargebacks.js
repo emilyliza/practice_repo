@@ -163,7 +163,6 @@
 		$scope.$watch("date.end.val", function(newValue, oldValue){
 			if ($scope.load_end) {
 				$location.search('end', moment(new Date(newValue)).utc().valueOf() );
-				ReportingService.setDates(newValue);
 			}
 			$scope.load_end = true;
 		});
