@@ -275,7 +275,7 @@
 
 		$scope.date = {
 			start: {
-				val: moment().utc().subtract(12, 'month').format(),
+				val: moment().utc().subtract(1, 'month').format(),
 				opened: false
 			},
 			end: {

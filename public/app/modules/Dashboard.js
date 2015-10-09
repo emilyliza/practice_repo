@@ -17,7 +17,7 @@
 		$scope.winloss = {};
 		$scope.date = {
 			start: {
-				val: moment().utc().subtract(12, 'month').format(),
+				val: moment().utc().subtract(1, 'month').format(),
 				opened: false
 			},
 			end: {
@@ -50,8 +50,7 @@
 		$scope.$watch("date.start.val", function(newValue, oldValue){
 			//@TODO: alert location for history option, like chargeback list
 			if (newValue == oldValue) { return; }
-			ReportingService.setDates($scope.date);
-			// $scope.dbs.setDates($scope.date);
+			$scope.dbs.setDates($scope.date);
 			$scope.dbs.loadDashboard().then(function(data) {
 				if (data.hwl) {
 					$timeout(function() {
@@ -67,7 +66,6 @@
 		$scope.$watch("date.end.val", function(newValue, oldValue){
 			//@TODO: alert location for history option, like chargeback list
 			if (newValue == oldValue) { return; }
-			ReportingService.setDates($scope.date);
 			$scope.dbs.setDates($scope.date);
 			$scope.dbs.loadDashboard().then(function(data) {
 				if (data.hwl) {
@@ -111,8 +109,15 @@
 			ReportingService.setMerchant(m._id);
 			if (m._id != $scope.last_merchant_id) {
 				$scope.dbs.setMerchant();
-				$scope.dbs.loadDashboard();
 				$scope.dbs.loadChargebacks();
+				$scope.dbs.loadDashboard().then(function(data) {
+					if (data.hwl) {
+						$timeout(function() {
+							$scope.winloss.update(data.winloss);
+						},150);
+
+					}
+				});
 			}
 			$scope.last_merchant_id = m._id;
 		};
