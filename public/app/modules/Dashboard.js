@@ -109,8 +109,15 @@
 			ReportingService.setMerchant(m._id);
 			if (m._id != $scope.last_merchant_id) {
 				$scope.dbs.setMerchant();
-				$scope.dbs.loadDashboard();
 				$scope.dbs.loadChargebacks();
+				$scope.dbs.loadDashboard().then(function(data) {
+					if (data.hwl) {
+						$timeout(function() {
+							$scope.winloss.update(data.winloss);
+						},150);
+
+					}
+				});
 			}
 			$scope.last_merchant_id = m._id;
 		};
