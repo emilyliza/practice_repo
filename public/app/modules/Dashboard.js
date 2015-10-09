@@ -51,7 +51,6 @@
 			//@TODO: alert location for history option, like chargeback list
 			if (newValue == oldValue) { return; }
 			$scope.dbs.setDates($scope.date);
-			$scope.dbs.setMerchant();
 			$scope.dbs.loadDashboard().then(function(data) {
 				if (data.hwl) {
 					$timeout(function() {
@@ -139,13 +138,12 @@
 		};
 
 		DashboardService.prototype.setMerchant = function(){
-			var _this = this;
-			_this.current = ReportingService.setMerchant(ReportingService.getMerchant());
+			this.current = ReportingService.setMerchant(ReportingService.getMerchant());
 		}
 
 		DashboardService.prototype.loadChargebacks = function() {
 			var _this = this;
-			$http.get('/api/v1/chargebacks?status=New&limit=10&user=' + _this.current)
+			$http.get('/api/v1/chargebacks?status=New&limit=10&user=' + this.current)
 			.success(function (rows) {
 				_this.data_chargebacks = rows;
 				_this.loaded_chargebacks = true;
