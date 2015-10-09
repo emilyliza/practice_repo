@@ -50,7 +50,8 @@
 		$scope.$watch("date.start.val", function(newValue, oldValue){
 			//@TODO: alert location for history option, like chargeback list
 			if (newValue == oldValue) { return; }
-			$scope.dbs.setDates($scope.date);
+			ReportingService.setDates($scope.date);
+			// $scope.dbs.setDates($scope.date);
 			$scope.dbs.loadDashboard().then(function(data) {
 				if (data.hwl) {
 					$timeout(function() {
@@ -66,6 +67,7 @@
 		$scope.$watch("date.end.val", function(newValue, oldValue){
 			//@TODO: alert location for history option, like chargeback list
 			if (newValue == oldValue) { return; }
+			ReportingService.setDates($scope.date);
 			$scope.dbs.setDates($scope.date);
 			$scope.dbs.loadDashboard().then(function(data) {
 				if (data.hwl) {
