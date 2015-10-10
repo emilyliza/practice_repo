@@ -68,8 +68,34 @@ module.exports = function(app) {
 	
 	});
 
+	//get all users in the system
+	app.get('/api/v2/users', mw.auth(), function(req, res, next) {
 
+		res.header('Content-Type', 'application/json');
+		var query = {};
+		
+		if (req.query.query) {
+			var pattern = new RegExp('.*'+req.query.query+'.*', 'i');
+			query = [
+						{ 'name': pattern },
+						{ 'username': pattern },
+						{ 'email': pattern }
+					];
+		}
+		_(User.find(query)
+			.skip( (req.query.page ? ((+req.query.page - 1) * req.query.limit) : 0) )
+			.limit( req.query.limit || 50 )
+			.sort( req.query.sort || 'name' )
+			.lean()
+			.stream()
+		)
+		.stopOnError(next)
+		.toArray(function(data) {
+			res.header('Content-Type', 'application/json');
+			res.send(data);
+		});
 
+	});
 
 
 	app.post('/api/v1/user', function(req, res, next) {
