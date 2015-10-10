@@ -146,7 +146,7 @@
 
 		DashboardService.prototype.setMerchant = function(){
 			this.current = ReportingService.setMerchant(ReportingService.getMerchant());
-		}
+		};
 
 		DashboardService.prototype.loadChargebacks = function() {
 			var _this = this;
