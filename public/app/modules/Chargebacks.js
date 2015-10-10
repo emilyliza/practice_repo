@@ -16,7 +16,8 @@
 	.controller('ChargebacksController', ['$scope', '$timeout', 'ChargebacksService', 'ChargebackService', 'ReportingService','UserService', '$state', '$location', '$modal', '$http',
             function($scope, $timeout, ChargebacksService, ChargebackService, ReportingService, UserService, $state, $location, $modal, $http) {
 
-		var s = moment().utc().subtract(6, 'month').format(),
+
+		var s = moment().utc().subtract(1, 'month').format(),
 			e = moment().utc().format();
 
 		if ($state.params.start) {

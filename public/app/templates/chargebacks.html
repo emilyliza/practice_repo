@@ -3,9 +3,10 @@
 	<div class="col-md-2">
 		<h2>Chargebacks</h2>
 	</div>
+
 	<div class="col-md-4 dateRange" style="text-align: center; margin-top: 20px;">
-		<a href="#" datepicker-popup="MM/dd/yyyy" datepicker-options="dateOptions" ng-model="date.start.val" is-open="date.start.opened" ng-click="date.start.opened=true" isdate >{{date.start.val | date:'MM/dd/yyyy'}}</a> thru
-		<a href="#" datepicker-popup="MM/dd/yyyy" datepicker-options="dateOptions" ng-model="date.end.val" is-open="date.end.opened" ng-click="date.end.opened=true" isdate >{{date.end.val | date:'MM/dd/yyyy'}}</a>
+		<a href="#" datepicker-popup="MM/dd/yyyy" datepicker-options="dateOptions" ng-model="date.start.val" is-open="date.start.opened" ng-click="date.start.opened=true" isdate >{{date.start.val | date:'MMM dd, yyyy'}}</a> thru
+		<a href="#" datepicker-popup="MM/dd/yyyy" datepicker-options="dateOptions" ng-model="date.end.val" is-open="date.end.opened" ng-click="date.end.opened=true" isdate >{{date.end.val | date:'MMM dd,yyyy'}}</a>
 	</div>
 
 	<div class="col-md-2" style="padding-top: 20px;">
