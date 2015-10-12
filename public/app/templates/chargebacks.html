@@ -1,24 +1,28 @@
 
 <div class="row search" style="margin-bottom: 20px;">
-	<div class="col-md-3">
+	<div class="col-md-2">
 		<h2>Chargebacks</h2>
 	</div>
 
 	<div class="col-md-4 dateRange" style="text-align: center; margin-top: 20px;">
-		<a href="#" datepicker-popup="MM/dd/yyyy" datepicker-options="dateOptions" ng-model="date.start.val" is-open="date.start.opened" ng-click="date.start.opened=true" isdate >{{date.start.val | date:'MM/dd/yyyy'}}</a> thru
-		<a href="#" datepicker-popup="MM/dd/yyyy" datepicker-options="dateOptions" ng-model="date.end.val" is-open="date.end.opened" ng-click="date.end.opened=true" isdate >{{date.end.val | date:'MM/dd/yyyy'}}</a>
+		<a href="#" datepicker-popup="MM/dd/yyyy" datepicker-options="dateOptions" ng-model="date.start.val" is-open="date.start.opened" ng-click="date.start.opened=true" isdate >{{date.start.val | date:'MMM dd, yyyy'}}</a> thru
+		<a href="#" datepicker-popup="MM/dd/yyyy" datepicker-options="dateOptions" ng-model="date.end.val" is-open="date.end.opened" ng-click="date.end.opened=true" isdate >{{date.end.val | date:'MMM dd,yyyy'}}</a>
 	</div>
 
-	<div class="col-md-3" style="padding-top: 20px;">
+	<div class="col-md-2" style="padding-top: 20px;">
 		<input ng-model="q" type="text" class="form-control pull-right" name="query" autocomplete="off" placeholder="Search" ng-keyup="cbs.search(q)">
 	</div>
 
+	<div class="col-md-2" style="padding-top: 20px;">
+		<div class="merchantSelect">
+    	<input ng-model="selectedMerchant" typeahead="merchant as merchant.name for merchant in merchants | filter:$viewValue" class="form-control" placeholder="Filter By Merchant" ng-click="showList()" typeahead-on-select='setMerchant($item, $model, $label)' />
+    </div>
+</div>
 	<div class="col-md-2" style="padding-top: 16px; font-size: 32px; text-align: right;">
 		<a href="#" ng-click="download()" tooltip="Download Chargebacks"><span class="glyphicon glyphicon-download"></span></a>
 		<a href="/chargeback" tooltip="Add Chargebacks"><span class="glyphicon glyphicon-plus-sign"></span></a>
 	</div>
 </div>
-
 <div class="row" style="margin-bottom: 20px;" ng-if="filters">
 	<div class="col-sm-12" style="text-align: center;">Additional Filters: {{filters}} (<a href="/chargebacks">Clear</a>)</div>
 </div>

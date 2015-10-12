@@ -1,6 +1,6 @@
 (function() {
 
-	angular.module('dashboard', ['ui.router', 'ngAnimate', 'graphing', 'angularMoment'])
+	angular.module('dashboard', ['ui.router', 'ngAnimate', 'graphing', 'angularMoment','user'])
 	
 	.config(['$stateProvider', function( $stateProvider ) {
 		
@@ -10,15 +10,14 @@
 			requiresAuth: true,
 			controller: 'DashboardController'
 		});
-
 	}])
 
-	.controller('DashboardController', [ '$scope', 'DashboardService', '$timeout', function($scope, DashboardService, $timeout) {
+	.controller('DashboardController', [ '$scope', 'DashboardService', 'UserService','ReportingService', '$timeout', function($scope, DashboardService, UserService, ReportingService, $timeout) {
 		$scope.dbs = new DashboardService();
 		$scope.winloss = {};
 		$scope.date = {
 			start: {
-				val: moment().utc().subtract(12, 'month').format(),
+				val: moment().utc().subtract(1, 'month').format(),
 				opened: false
 			},
 			end: {
@@ -80,15 +79,63 @@
 				$scope[$scope.last]();
 			}
 		});
+
+		var all = {'_id': '', 'name': '- All'};
+		$scope.selectedMerchant = all;
+		$scope.cu = UserService.getCurrentUser();
+		$scope.merchants = [all];
+		UserService.getChildren().then(function(res) {
+			var current = all;
+			_.each(res.data, function(m) {
+				var parent = m.parent_id;
+				var child = m._id;
+				
+				if (m.parent !== m.child) {
+				$scope.merchants.push({ '_id': m._id , 'name': '- ' + m.name });
+				}
+				
+				if (m._id == ReportingService.getMerchant()) {
+				current = { '_id': m._id , 'name': '- ' + m.name };
+				}		
+			});
+
+			// default is first 
+			ReportingService.setMerchant( (ReportingService.getMerchant() || $scope.merchants[0]._id) );
+			$scope.selectedMerchant = current;
+		});	
+		
+		// ng-change will call setMerchant
+		$scope.setMerchant = function(m) {
+			ReportingService.setMerchant(m._id);
+			if (m._id != $scope.last_merchant_id) {
+				$scope.dbs.setMerchant();
+				$scope.dbs.loadChargebacks();
+				$scope.dbs.loadDashboard().then(function(data) {
+					if (data.hwl) {
+						$timeout(function() {
+							$scope.winloss.update(data.winloss);
+						},150);
+
+					}
+				});
+			}
+			$scope.last_merchant_id = m._id;
+		};
+
+		$scope.showList = function() {
+			var ngModelCtrl = angular.element('input').controller('ngModel');
+        	ngModelCtrl.$setViewValue(' ');
+		};
 	}])
 
 
-	.factory('DashboardService', ['$http', '$timeout', function ($http, $timeout) {
+	.factory('DashboardService', ['$http', '$timeout', 'ReportingService', function ($http, $timeout, ReportingService) {
 
 		var DashboardService = function() {
 			this.data_chargebacks = [];
 			this.data_dashboard = [];
 			this.loaded_chargebacks = false;
+			this.current = ReportingService.setMerchant(ReportingService.getMerchant());
 		};
 
 		var start, end;
@@ -97,9 +144,13 @@
 			end = moment(d.end.val).valueOf();
 		};
 
+		DashboardService.prototype.setMerchant = function(){
+			this.current = ReportingService.setMerchant(ReportingService.getMerchant());
+		};
+
 		DashboardService.prototype.loadChargebacks = function() {
 			var _this = this;
-			$http.get('/api/v1/chargebacks?status=New&limit=10')
+			$http.get('/api/v1/chargebacks?status=New&limit=10&user=' + this.current)
 			.success(function (rows) {
 				_this.data_chargebacks = rows;
 				_this.loaded_chargebacks = true;
@@ -109,7 +160,7 @@
 		DashboardService.prototype.loadDashboard = function() {
 			var _this = this;
 			if (start !== undefined && end !== undefined) {
-				return $http.get('/api/v1/dashboard?start=' + start + '&end=' + end)
+				return $http.get('/api/v1/dashboard?start=' + start + '&end=' + end + '&user=' + _this.current)
 					.then(function (res) {
 
 						res.data.hwl = true;
@@ -121,7 +172,7 @@
 						return res.data;
 					});
 			} else {
-				return $http.get('/api/v1/dashboard')
+				return $http.get('/api/v1/dashboard?user=' + _this.current)
 					.then(function (res) {
 
 						res.data.hwl = true;
