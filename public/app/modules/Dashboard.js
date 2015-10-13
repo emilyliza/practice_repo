@@ -12,10 +12,10 @@
 		});
 	}])
 
-	.controller('DashboardController', [ '$scope', 'DashboardService', 'UserService','ReportingService', '$timeout', function($scope, DashboardService, UserService, ReportingService, $timeout) {
+	.controller('DashboardController', [ '$scope', '$rootScope','DashboardService', 'UserService','ReportingService', '$timeout', function($scope, $rootScope, DashboardService, UserService, ReportingService, $timeout) {
 		$scope.dbs = new DashboardService();
 		$scope.winloss = {};
-		$scope.date = {
+		$rootScope.date = {
 			start: {
 				val: moment().utc().subtract(1, 'month').format(),
 				opened: false
@@ -25,9 +25,10 @@
 				opened: false
 			}
 		};
-		$scope.dbs.setDates($scope.date);
 		
-		$scope.open=function($event) {
+		$scope.dbs.setDates($rootScope.date);
+		
+		$scope.open = function($event) {
 			$event.preventDefault();
 			$event.stopPropagation();
 
@@ -50,7 +51,7 @@
 		$scope.$watch("date.start.val", function(newValue, oldValue){
 			//@TODO: alert location for history option, like chargeback list
 			if (newValue == oldValue) { return; }
-			$scope.dbs.setDates($scope.date);
+			$scope.dbs.setDates($rootScope.date);
 			$scope.dbs.loadDashboard().then(function(data) {
 				if (data.hwl) {
 					$timeout(function() {
@@ -66,7 +67,7 @@
 		$scope.$watch("date.end.val", function(newValue, oldValue){
 			//@TODO: alert location for history option, like chargeback list
 			if (newValue == oldValue) { return; }
-			$scope.dbs.setDates($scope.date);
+			$scope.dbs.setDates($rootScope.date);
 			$scope.dbs.loadDashboard().then(function(data) {
 				if (data.hwl) {
 					$timeout(function() {
@@ -142,6 +143,11 @@
 		DashboardService.prototype.setDates = function(d){
 			start = moment(d.start.val).valueOf();
 			end = moment(d.end.val).valueOf();
+		};
+
+		DashboardService.prototype.getDates = function(){
+			start = start;
+			end = end;
 		};
 
 		DashboardService.prototype.setMerchant = function(){

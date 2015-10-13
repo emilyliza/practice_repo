@@ -40,7 +40,7 @@
                 showWeeks:'false'
         };
 
-		$scope.date = {
+		$scope.$emit.date = {
 			start: {
 				val: s,
 				opened: false

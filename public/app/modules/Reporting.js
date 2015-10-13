@@ -195,24 +195,24 @@
 	}])
 	
 	.controller('ReportingController',
-		['$scope', '$rootScope', 'ReportingService', '$state', '$timeout', 'UserService',
-		function($scope, $rootScope, ReportingService, $state, $timeout, UserService) {
+		['$scope', '$rootScope', 'ReportingService', 'DashboardService', '$state', '$timeout', 'UserService',
+		function($scope, $rootScope, ReportingService, DashboardService, $state, $timeout, UserService) {
 		//$scope.data = res.data;
 		$scope.data = null;
 		$scope.last = null;
 		$scope.$state = $state;	// for navigation active to work	
 		$scope.winloss = {};
 
-                $scope.open=function($event) {
-                        $event.preventDefault();
-                        $event.stopPropagation();
+        $scope.open = function($event) {
+                // $event.preventDefault();
+                // $event.stopPropagation();
 
-                        $scope.opened = true;
-                };
+                $scope.opened = true;
+        };
 
-                $scope.dateOptions = {
-                        showWeeks:'false'
-                };
+        $scope.dateOptions = {
+                showWeeks:'false'
+        };
 
 		// hack to fix auto activation of first tab
 		if ($state.current.url != "/overview") {
@@ -231,7 +231,7 @@
 		$scope.graphBarReasons2 = {};
 		
 
-		$scope.date = {
+		$scope.$emit.date = {
 			start: {
 				val: moment().utc().subtract(1, 'month').format(),
 				opened: false
@@ -241,6 +241,8 @@
 				opened: false
 			}
 		};
+
+		
 		ReportingService.setDates($scope.date);
 
 		
