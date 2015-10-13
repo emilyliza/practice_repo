@@ -82,11 +82,6 @@
 			}
 			$scope.last_merchant_id = m._id;
 		};
-
-		$scope.showList = function() {
-			var ngModelCtrl = angular.element('input').controller('ngModel');
-        	ngModelCtrl.$setViewValue(' ');
-		};
 		
 		$scope.filters = "";
 		_.forOwn($state.params, function(num,key) {
@@ -190,6 +185,11 @@
 				$timeout.cancel( $scope.cbs.filterTextTimeout );
 			}
 		);
+
+		$scope.showList = function() {
+			var ngModelCtrl = angular.element('input').controller('ngModel');
+        	ngModelCtrl.$setViewValue(' ');
+		};
 
 	}])
 
