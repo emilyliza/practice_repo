@@ -15,7 +15,7 @@
 	.controller('DashboardController', [ '$scope', '$rootScope','DashboardService', 'UserService','ReportingService', '$timeout', function($scope, $rootScope, DashboardService, UserService, ReportingService, $timeout) {
 		$scope.dbs = new DashboardService();
 		$scope.winloss = {};
-		$rootScope.date = {
+		$scope.$emit.date = {
 			start: {
 				val: moment().utc().subtract(1, 'month').format(),
 				opened: false
@@ -26,7 +26,7 @@
 			}
 		};
 		
-		$scope.dbs.setDates($rootScope.date);
+		$scope.dbs.setDates($scope.date);
 		
 		$scope.open = function($event) {
 			$event.preventDefault();
