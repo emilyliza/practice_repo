@@ -21,8 +21,7 @@
 		"chargeback",
 		"account",
 		"reporting",
-		"dashboard",
-		"datefilter"
+		"dashboard"
 	])
 
 	.config([
