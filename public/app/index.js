@@ -172,6 +172,16 @@
 				Idle.watch();
 			});
 
+			$rootScope.date = {
+			start: {
+				val: moment().utc().subtract(1, 'month').format(),
+				opened: false
+			},
+			end: {
+				val: moment().utc().format(),
+				opened: false
+			}
+		};
 
     }])
 
