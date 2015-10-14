@@ -195,8 +195,8 @@
 	}])
 	
 	.controller('ReportingController',
-		['$scope', '$rootScope', 'ReportingService', 'DashboardService', '$state', '$timeout', 'UserService',
-		function($scope, $rootScope, ReportingService, DashboardService, $state, $timeout, UserService) {
+		['$scope', '$rootScope', 'ReportingService', '$state', '$timeout', 'UserService',
+		function($scope, $rootScope, ReportingService, $state, $timeout, UserService) {
 		//$scope.data = res.data;
 		$scope.data = null;
 		$scope.last = null;
@@ -204,8 +204,8 @@
 		$scope.winloss = {};
 
         $scope.open = function($event) {
-                // $event.preventDefault();
-                // $event.stopPropagation();
+                $event.preventDefault();
+                $event.stopPropagation();
 
                 $scope.opened = true;
         };
