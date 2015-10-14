@@ -12,7 +12,7 @@
 		});
 	}])
 
-	.controller('DashboardController', [ '$scope', '$rootScope','DashboardService', 'UserService','ReportingService', '$timeout', function($scope, $rootScope, DashboardService, UserService, ReportingService, $timeout) {
+	.controller('DashboardController', [ '$scope', 'DashboardService', 'UserService','ReportingService', '$timeout', function($scope, DashboardService, UserService, ReportingService, $timeout) {
 		$scope.dbs = new DashboardService();
 		$scope.winloss = {};
 		$scope.$emit.date = {
@@ -51,7 +51,7 @@
 		$scope.$watch("date.start.val", function(newValue, oldValue){
 			//@TODO: alert location for history option, like chargeback list
 			if (newValue == oldValue) { return; }
-			$scope.dbs.setDates($rootScope.date);
+			$scope.dbs.setDates($scope.date);
 			$scope.dbs.loadDashboard().then(function(data) {
 				if (data.hwl) {
 					$timeout(function() {
@@ -67,7 +67,7 @@
 		$scope.$watch("date.end.val", function(newValue, oldValue){
 			//@TODO: alert location for history option, like chargeback list
 			if (newValue == oldValue) { return; }
-			$scope.dbs.setDates($rootScope.date);
+			$scope.dbs.setDates($scope.date);
 			$scope.dbs.loadDashboard().then(function(data) {
 				if (data.hwl) {
 					$timeout(function() {
