@@ -17,7 +17,7 @@
 		$scope.winloss = {};
 		$scope.$emit.date = {
 			start: {
-				val: moment().utc().subtract(1, 'month').format(),
+				val: moment().utc().subtract($scope.daterange, 'month').format(),
 				opened: false
 			},
 			end: {
