@@ -17,16 +17,6 @@
             function($scope, $timeout, ChargebacksService, ChargebackService, ReportingService, UserService, $state, $location, $modal, $http) {
 
 
-		var s = moment().utc().subtract(1, 'month').format(),
-			e = moment().utc().format();
-
-		if ($state.params.start) {
-			s = moment( parseInt($state.params.start) ).utc().format();
-		}
-		if ($state.params.end) {
-			e = moment( parseInt($state.params.end) ).utc().format();
-		}
-
 		$scope.methods = {};
 
         $scope.open= function($event) {
@@ -40,13 +30,13 @@
                 showWeeks:'false'
         };
 
-		$scope.date = {
+		$scope.$emit.date = {
 			start: {
-				val: s,
+				val: moment().utc().subtract($scope.daterange, 'month').format(),
 				opened: false
 			},
 			end: {
-				val: e,
+				val: moment().utc().format(),
 				opened: false
 			}
 		};
@@ -81,11 +71,6 @@
 				$scope.cbs.clearAndRun();
 			}
 			$scope.last_merchant_id = m._id;
-		};
-
-		$scope.showList = function() {
-			var ngModelCtrl = angular.element('input').controller('ngModel');
-        	ngModelCtrl.$setViewValue(' ');
 		};
 		
 		$scope.filters = "";
@@ -190,6 +175,11 @@
 				$timeout.cancel( $scope.cbs.filterTextTimeout );
 			}
 		);
+
+		$scope.showList = function() {
+			var ngModelCtrl = angular.element('input').controller('ngModel');
+        	ngModelCtrl.$setViewValue(' ');
+		};
 
 	}])
 

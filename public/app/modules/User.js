@@ -6,7 +6,6 @@
 		
 		$scope.data = null;
 		
-		
 	}])
 
 	.service('UserService', ['$http', '$window', '$timeout', function ($http, $window, $timeout) {
