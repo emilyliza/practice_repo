@@ -59,6 +59,7 @@
 		['$scope', '$rootScope', '$state', 'AUTH_EVENTS', 'UserService', 'WhiteLabelService', 'Idle', '$modal',
 		function ($scope, $rootScope, $state, AUTH_EVENTS, UserService, WhiteLabelService, Idle, $modal) {
 
+			$scope.daterange = 12;	// 12 months back.
 			// Get the parts of the host name.
 			var domain_ll = window.location.hostname.split(".");
 			// Default logo name
@@ -172,6 +173,16 @@
 				Idle.watch();
 			});
 
+			$rootScope.date = {
+			start: {
+				val: moment().utc().subtract($scope.daterange, 'month').format(),
+				opened: false
+			},
+			end: {
+				val: moment().utc().format(),
+				opened: false
+			}
+		};
 
     }])
 

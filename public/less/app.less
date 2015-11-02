@@ -28,7 +28,6 @@
 
 
 
-
 #pages {
 	margin-bottom: 150px;
 	margin-top: 110px;
@@ -312,6 +311,20 @@ footer {
         }
 }
 
+// chargeback required fields
+.required label:after {
+	content: "*";
+	font-weight: bold;
+	color: red; 
+}
+
+// chargeback datepicker input box
+.dp {
+ 	border-top: none;	
+ 	border-bottom: none;
+ 	border-left: none;
+ 	box-shadow: none;
+}
 
 // working chargebacks...
 
@@ -375,10 +388,8 @@ footer {
 	width: 100%;
 }
 
-
-
-
 // large circles in dash
+
 .dash-stat {
 	width: 100%;
 	font-size: 30px;
@@ -399,6 +410,15 @@ footer {
 		background-color: @jgsGreen;
 		.border-top-radius(3px);
 		color: white;
+	}
+	&.dash-darkblue {
+		background-color: darken(@jgsBlue, 16%);
+		.border-top-radius(3px);
+		color: white;
+	}
+	.stat-head-red {
+		background-color: #B84D4D;
+		font-size: 24px;
 	}
 	.stat-head-green {
 		background-color: @jgsGreen;

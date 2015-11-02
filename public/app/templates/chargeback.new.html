@@ -32,79 +32,163 @@
 				<div class="row bt">
 					<div class="col-md-4">
 						<div class="form-group" show-errors>
-							<label>Case Number</label>
-							<input name="CaseNumber" type="text" class="form-control" pop-show="{{errors.CaseNumber}}" pop="{{errors.CaseNumber}}" pop-placement="right" ng-model="data.portal_data.CaseNumber" placeholder="">
+							<label>Case Number </label>
+							<input name="CaseNumber" 
+								type="text" 
+								class="form-control" 
+								pop-show="{{errors.CaseNumber}}" 
+								pop="{{errors.CaseNumber}}" 
+								pop-placement="right" 
+								ng-model="data.portal_data.CaseNumber" 
+								placeholder="">
 						</div>
 					</div>
 					<div class="col-md-4">
 						<div class="form-group" show-errors>
 							<label>Reference Number</label>
-							<input name="RefNumber" type="text" class="form-control" pop-show="{{errors.RefNumber}}" pop="{{errors.RefNumber}}" pop-placement="right" ng-model="data.portal_data.RefNumber" placeholder="">
+							<input name="RefNumber" 
+								type="text" 
+								class="form-control" 
+								pop-show="{{errors.RefNumber}}" 
+								pop="{{errors.RefNumber}}" 
+								pop-placement="right" 
+								ng-model="data.portal_data.RefNumber" 
+								placeholder="">
 						</div>
 					</div>
 					<div class="col-md-4 ">
 						<div class="form-group select">
 							<label>Type</label>
-							<select required class="form-control" ng-model="data.internal_type" ng-options="s for s in settings.internal_types" pop-show="{{errors.internal_number}}" pop="{{errors.internal_number}}" pop-placement="top"></select>
+							<select class="form-control" 
+								required
+								ng-model="data.internal_type" 
+								ng-options="s for s in settings.internal_types" 
+								pop-show="{{errors.internal_number}}" 
+								pop="{{errors.internal_number}}" 
+								pop-placement="top">
+							</select>
 						</div>
 					</div>
 				</div>
 				<div class="row">
 					<div class="col-md-4">
-						<div class="form-group" show-errors>
-							<label>Mid Number</label>
-							<input name="MidNumber" required type="text" class="form-control" pop-show="{{errors.MidNumber}}" pop="{{errors.MidNumber}}" pop-placement="right" ng-model="data.portal_data.MidNumber" placeholder="">
+						<div class="form-group required" show-errors>
+							<label>Mid Number </label>
+							<input name="MidNumber" 
+							required 
+							type="text" 
+							class="form-control" 
+							pop-show="{{errors.MidNumber}}" 
+							pop="{{errors.MidNumber}}" 
+							pop-placement="right" 
+							ng-model="data.portal_data.MidNumber" 
+							placeholder="">
 						</div>
 					</div>
 					<div class="col-md-4">
-						<div class="form-group" show-errors>
-							<label>Chargeback Amount</label>
+						<div class="form-group required" show-errors>
+							<label>Chargeback Amount </label>
 							<input name="ChargebackAmt" required type="text" class="form-control" pop-show="{{errors.ChargebackAmt}}" pop="{{errors.ChargebackAmt}}" pop-placement="right" ng-model="data.portal_data.ChargebackAmt" placeholder="">
 						</div>
 					</div>
 					<div class="col-md-4">
-						<div class="form-group" show-errors>
-							<label>Chargeback Date</label>
-							<input class="form-control" required name="chargebackDate" type="text" class="form-control" datepicker-popup="MM/dd/yyyy"  datepicker-options="dateOptions" ng-model="data.chargebackDate" is-open="opened" ng-click="opened=true" isdate placeholder="Click for Calendar">
+						<div class="form-group required" show-errors>
+							<label>Chargeback Date </label><br><br>
+							<div class="input-group">
+								<input name="chargebackDate"
+								   class="form-control dp" 
+								   required  
+								   type="text" 
+								   ng-model="data.chargebackDate" 
+								   is-open="opened" 
+								   isdate 
+								   datepicker-popup="MM/dd/yyyy"  
+								   datepicker-options="dateOptions" 
+								   placeholder="MM/DD/YYYY">
+								<span class="input-group-btn">
+	                				<button type="button" class="btn btn-default"  ng-click="open($event, opened=true)"><i class="glyphicon glyphicon-calendar"></i></button>
+              					</span>
+							</div>
 						</div>
 					</div>
-				</div>
+				</div>	
 				<div class="row">
 					<div class="col-md-4">
-						<div class="form-group" show-errors data-tooltip-html-unsafe="This is the first 1 to 6 digits of your customers credit card number.<br> NOTE:<br>Never include the full credit card number!">
-							<label>CC Prefix</label>
-							<input name="CcPrefix" ng-minlength="1" ng-maxlength="6" required type="text" class="form-control" pop-show="{{errors.CcPrefix}}" pop="{{errors.CcPrefix}}" pop-placement="right" ng-model="data.portal_data.CcPrefix" placeholder="" ng-blur="methods.getCardType()">
+						<div class="form-group required" show-errors data-tooltip-html-unsafe="This is the first 1 to 6 digits of your customers credit card number.<br> NOTE:<br>Never include the full credit card number!">
+							<label>CC Prefix  
+								<span class="pull-right">
+									<span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span>
+								</span>
+							</label>
+							<input name="CcPrefix" 
+								ng-minlength="1" 
+								ng-maxlength="6" 
+								required type="text" 
+								class="form-control" 
+								pop-show="{{errors.CcPrefix}}" 
+								pop="{{errors.CcPrefix}}" 
+								pop-placement="right" ng-model="data.portal_data.CcPrefix" placeholder="" ng-blur="methods.getCardType()">
 						</div>
 					</div>
 					<div class="col-md-4">
-						<div class="form-group" show-errors
+						<div class="form-group required" show-errors
 							 data-tooltip-html-unsafe="This is the last 4 to 6 digits of your customers credit card number.<br> NOTE:<br>Never include the full credit card number!">
-							<label>CC Suffix</label>
-							<input name="CcSuffix" ng-minlength="4" ng-maxlength="6" required type="text" class="form-control" pop-show="{{errors.CcSuffix}}" pop="{{errors.CcSuffix}}" pop-placement="right" ng-model="data.portal_data.CcSuffix" placeholder="" ng-blur="methods.getCardType()">
+							<label>CC Suffix 
+								<span class="pull-right">
+									<span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span>
+								</span>
+							</label>
+							<input name="CcSuffix" 
+								ng-minlength="4" 
+								ng-maxlength="6" 
+								required 
+								type="text" 
+								class="form-control" 
+								pop-show="{{errors.CcSuffix}}" 
+								pop="{{errors.CcSuffix}}" 
+								pop-placement="right" 
+								ng-model="data.portal_data.CcSuffix" 
+								placeholder="" 
+								ng-blur="methods.getCardType()">
 						</div>
 					</div>
 					<div class="col-md-4">
-						<div class="form-group select">
-							<label>CC Type</label>
-							<select ng-disabled="data.portal_data.CcPrefix.length >= 4" class="form-control" ng-model="data.gateway_data.CcType" ng-options="ct for ct in settings.cctypes"></select>
+						<div class="form-group select" required="required">
+							<label>CC Type </label>
+							<select ng-disabled="data.portal_data.CcPrefix.length >= 4" 
+								class="form-control" 
+								ng-model="data.gateway_data.CcType" 
+								ng-options="ct for ct in settings.cctypes">
+							</select>
 						</div>
 					</div>
 				</div>
 				<div class="row">
 					<div class="col-md-4">
-						<div class="form-group" show-errors>
-							<label>Reason Code</label>
-							<input name="ReasonCode" required type="text" class="form-control" pop-show="{{errors.ReasonCode}}"
-								   pop="{{errors.ReasonCode}}" pop-placement="right" ng-model="data.portal_data.ReasonCode"
-								   placeholder="Enter NA if not available">
+						<div class="form-group required" show-errors>
+							<label>Reason Code </label>
+							<input name="ReasonCode" 
+								required type="text" 
+								class="form-control" 
+								pop-show="{{errors.ReasonCode}}"
+								pop="{{errors.ReasonCode}}" 
+								pop-placement="right" 
+								ng-model="data.portal_data.ReasonCode"
+								placeholder="Enter NA if not available">
 						</div>
 					</div>
 					<div class="col-md-8">
-						<div class="form-group" show-errors>
-							<label>Reason Text</label>
-							<input name="ReasonText" required type="text" class="form-control" pop-show="{{errors.ReasonText}}"
-								   pop="{{errors.ReasonText}}" pop-placement="right" ng-model="data.portal_data.ReasonText"
-								   placeholder="Enter NA if not available">
+						<div class="form-group required" show-errors>
+							<label>Reason Text </label>
+							<input name="ReasonText" 
+								required 
+								type="text" 
+								class="form-control" 
+								pop-show="{{errors.ReasonText}}"
+								pop="{{errors.ReasonText}}" 
+								pop-placement="right" 
+								ng-model="data.portal_data.ReasonText"
+								placeholder="Enter NA if not available">
 						</div>
 					</div>
 				</div>
@@ -119,7 +203,14 @@
 					<div class="col-md-6">
 						<div class="form-group" show-errors>
 							<label>Response Fax</label>
-							<input name="send_to_fax" type="text" class="form-control" pop-show="{{errors.send_to_fax}}" pop="{{errors.send_to_fax}}" pop-placement="right" ng-model="data.send_to.fax" pop-append-to-body>
+							<input name="send_to_fax" 
+								type="text" 
+								class="form-control" 
+								pop-show="{{errors.send_to_fax}}" 
+								pop="{{errors.send_to_fax}}" 
+								pop-placement="right" 
+								ng-model="data.send_to.fax" 
+								pop-append-to-body>
 						</div>
 					</div>
 				</div>

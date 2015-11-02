@@ -7,6 +7,7 @@
 		
 		$urlRouterProvider.when('/reporting/status', '/reporting/status/overview');
 		$urlRouterProvider.when('/reporting/cctype', '/reporting/cctype/overview');
+
 		$stateProvider
 		.state('reporting', {
 			url: '/reporting',
@@ -19,6 +20,40 @@
 			requiresAuth: true,
 			templateUrl: '/app/templates/reporting.overview.html',
 			controller: [ '$scope', function($scope) {
+
+				$scope.items = ['Top MIDS', 'Frequent Fliers', 'CVV Matches', 'AVS Matches'];
+				$scope.filters = ['By Volume', 'By Count'];
+				$scope.most = $scope.items[0];
+				$scope.filt = $scope.filters[0];
+
+				$scope.render = {
+					  midVol: function() {
+					    return $scope.most == 'Top MIDS' && $scope.filt == 'By Volume';
+					  },
+					  midCt: function() {
+					    return $scope.most == 'Top MIDS' && $scope.filt == 'By Count';
+					  },
+					  fliersVol: function() {
+					    return $scope.most == 'Frequent Fliers' && $scope.filt == 'By Volume';
+					  },
+					  fliersCt: function () {
+					  	return $scope.most == 'Frequent Fliers' && $scope.filt == 'By Count';
+					  },
+					  cvvVol: function() {
+					    return $scope.most == 'CVV Matches' && $scope.filt == 'By Volume';
+					  },
+					  cvvCt: function () {
+					  	return $scope.most == 'CVV Matches' && $scope.filt == 'By Count';
+					  },
+					  avsVol: function() {
+					    return $scope.most == 'AVS Matches' && $scope.filt == 'By Volume';
+					  },
+					  avsCt: function () {
+					  	return $scope.most == 'AVS Matches' && $scope.filt == 'By Count';
+					  }
+					  
+				};
+
 				$scope.getOverview();
 			}]
 		})
@@ -76,6 +111,8 @@
 			requiresAuth: true,
 			templateUrl: '/app/templates/reporting.cctype.html'
 		})
+
+
 		.state('reporting.cctype.overview', {
 			url: '/overview',
 			requiresAuth: true,
@@ -118,6 +155,17 @@
 				}
 			}
 		})
+
+		.state('reporting.reasoncode', {
+			url: '/reasoncode',
+			requiresAuth: true,
+			templateUrl: '/app/templates/reporting.reasoncode.html',
+			controller: [ '$scope', '$timeout', function($scope, $timeout) {
+						$timeout(function() {
+							$scope.getReasonCodeData();
+						});
+			}]
+		})
 		.state('reporting.billing', {
 			url: '/billing',
 			requiresAuth: true,
@@ -143,7 +191,6 @@
 				});
 			}]
 		});
-
 	
 	}])
 	
@@ -153,19 +200,19 @@
 		//$scope.data = res.data;
 		$scope.data = null;
 		$scope.last = null;
-		$scope.$state = $state;	// for navigation active to work		
+		$scope.$state = $state;	// for navigation active to work	
 		$scope.winloss = {};
 
-                $scope.open=function($event) {
-                        $event.preventDefault();
-                        $event.stopPropagation();
+        $scope.open = function($event) {
+                $event.preventDefault();
+                $event.stopPropagation();
 
-                        $scope.opened = true;
-                };
+                $scope.opened = true;
+        };
 
-                $scope.dateOptions = {
-                        showWeeks:'false'
-                };
+        $scope.dateOptions = {
+                showWeeks:'false'
+        };
 
 		// hack to fix auto activation of first tab
 		if ($state.current.url != "/overview") {
@@ -180,11 +227,13 @@
 		$scope.graphtype1 = {};
 		$scope.graphtype2 = {};
 		$scope.graphBarHistory = {};
+		$scope.graphBarReasons = {};
+		$scope.graphBarReasons2 = {};
 		
 
-		$scope.date = {
+		$scope.$emit.date = {
 			start: {
-				val: moment().utc().subtract(1, 'month').format(),
+				val: moment().utc().subtract($scope.daterange, 'month').format(),
 				opened: false
 			},
 			end: {
@@ -192,6 +241,8 @@
 				opened: false
 			}
 		};
+
+		
 		ReportingService.setDates($scope.date);
 
 		
@@ -269,7 +320,6 @@
 		};
 
 		
-
 		$scope.getStatusData = function() {
 			$scope.last = 'getStatusData';
 			ReportingService.getStatusData().then(function(res) {
@@ -307,6 +357,14 @@
 			});
 		};
 
+		$scope.getReasonCodeData = function() {
+			$scope.last = 'getReasonCodeData';
+			ReportingService.getReasonCodeData().then(function(res) {
+					$scope.graphBarReasons.update(res.data.byCount);
+					$scope.graphBarReasons2.update(res.data.byVolume);
+			});
+		};
+
 		$scope.getMidTypeData = function() {
 			$scope.last = 'getMidTypeData';
 			ReportingService.getMidTypeData().then(function(res) {
@@ -320,9 +378,6 @@
 		};
 		
 	}])
-
-	
-
 	
 	.factory('ReportingService', ['$http', '$window', function ($http, $window) {
 		var reportingService = {};
@@ -398,7 +453,9 @@
 			return $http.get('/api/v1/report/parentStatus?start=' + start + "&end=" + end + '&user=' + reportingService.getMerchant() );
 		};
 
-
+		reportingService.getReasonCodeData = function() {
+			return $http.get('/api/v1/report/reasonCodes?start=' + start + "&end=" + end + '&user=' + reportingService.getMerchant() );
+		};
 
 		return reportingService;
 	}]);

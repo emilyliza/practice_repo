@@ -6,7 +6,6 @@
 		
 		$scope.data = null;
 		
-		
 	}])
 
 	.service('UserService', ['$http', '$window', '$timeout', function ($http, $window, $timeout) {
@@ -126,6 +125,10 @@
 
 		this.getChildren = function() {
 			return $http.get('/api/v1/users');
+		};
+
+		this.getAllUsers = function() {
+			return $http.get('/api/v2/users');
 		};
 
 	}]);	

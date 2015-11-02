@@ -766,6 +766,155 @@
 				
 			}
 		};
+	}])
+
+.directive('reasonBar', ['$parse', '$window', '$http', 'ReportingService', function($parse, $window, $http, ReportingService){
+		return {
+			restrict:'EA',
+			template: "<div></div>",
+			scope: {
+				control: '='
+			},
+			link: function(scope, elem, attrs) {
+				
+				var	container = elem.find('div'),
+					outerWidth = container.width(),
+					outerHeight = container.width() * 0.45,
+					margin = {top: 20, right: 40, bottom: 30, left: 70},
+					width = container.width() - margin.left - margin.right,
+					height = (container.width() * 0.45) - margin.top - margin.bottom,
+					d3 = $window.d3;
+
+				var barOuterPad = 0.2,
+					barPad = 0.2;
+	
+				var x = d3.scale.ordinal().rangeRoundBands([5, width], barPad, barOuterPad);
+
+				var y = d3.scale.linear()
+					.range([height, 0]);
+				
+				var xAxis = d3.svg.axis()
+					.scale(x)
+					.orient("bottom");
+
+				var yAxis = d3.svg.axis()
+					.scale(y)
+					.orient("left");
+
+					
+				var chart = d3.select(container[0]).append("svg")
+					.attr("width", outerWidth)
+					.attr("height", outerHeight)
+					.append("g")
+					.attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+				// x-axis
+				chart
+					.append("g")
+					.attr("class", "x axis")
+					.attr("transform", "translate(0," + height + ")") 
+					.call(xAxis)
+				.selectAll("text")
+				    .style("text-anchor", "end")
+				    .attr("dx", "-.8em")
+				    .attr("dy", "-.55em")
+				    .attr("transform", "rotate(-90)" );	
+
+				
+				var ctrl = this;
+				if (scope.control) {
+					ctrl = scope.control;
+				}
+				console.log(ctrl);
+
+				ctrl.update = function(data) {
+					var filter = data.data_type;
+					data = data.data;
+
+					// if data_type is currency, sum will take the place of count on y axix.
+					data.forEach(function (d){
+						if (filter == "currency") {
+							var sum = d.sum;
+							d.count = sum;
+						}
+					});
+
+					x.domain(data.map(function(d) { return d.name; }));
+					y.domain([0, d3.max(data, function(d) { return d.count; })]);
+
+					// svg.selectAll('g.axis').remove();
+
+					// y-axis
+					chart.select(".y.axis1").remove();
+					chart.append("g")
+						.attr("class", "y axis1")
+						.call(yAxis)
+						.attr("transform", "rotate(-90)")
+						.attr("y", 6)
+						.attr("dy", ".71em")
+						.style("text-anchor", "end");
+
+					var bar = chart.selectAll(".bar1")
+						.data(data, function(d) { return d.name; });
+
+					// new data:
+					bar.enter().append("rect")
+						.attr("class", "bar1")
+						.attr("x", function(d) { return x(d.name); })
+						.attr('width', x.rangeBand())
+						.attr("y", function(d) { return y(d.count); })
+						.attr("height", function(d) { return height - y(d.count); });
+					bar
+						.transition()
+						.duration(750)
+						.attr("x", function(d) { return x(d.name); })
+						.attr("y", function(d) { return y(d.count); })
+						.attr("width", x.rangeBand())
+						.attr("height", function(d) { return height - y(d.count); });
+
+					// removed data:
+					bar.exit().transition().remove();
+					
+					
+					// updated data:
+					bar
+						.transition()
+						.duration(750)
+						.attr("x", function(d) { return x(d.name); })
+						.attr("y", function(d) { return y(d.count); })
+						.attr("width", x.rangeBand())
+						.attr("height", function(d) { return height - y(d.count); });
+
+
+					chart.select(".x.axis1").remove();
+					chart.append("g")
+						.attr("class", "x axis1")
+						.attr("transform", "translate(0," + height + ")")
+						.call(xAxis)
+					.selectAll("text")
+					    .style("text-anchor", "end")
+					    .attr("dx", "-.8em")
+					    .attr("dy", "-.55em")
+					    .attr("transform", "rotate(-90)" );	
+
+					chart.select(".y.axis1").remove();
+					chart.append("g")
+						.attr("class", "y axis1")
+						.call(yAxis)
+						.append("text")
+						.attr("transform", "rotate(-90)")
+						.attr("y", 6)
+						.attr("dy", ".71em")
+						.style("text-anchor", "end");
+					
+				};
+
+				if (attrs.graphData) {
+					ctrl.update(JSON.parse(attrs.graphData));
+				}
+				
+			}
+		};
 	}]);
 
 })();
