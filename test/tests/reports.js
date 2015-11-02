@@ -110,6 +110,8 @@ module.exports = function(app) {
 
 		describe('GET /api/v1/report/status', function(){
 			var data;
+			var start = new Date("2015-05-10").getTime().toString();
+			var end = new Date("2015-05-14").getTime().toString();
 			it('should return 200', function(done){
 				request
 //					.get('/api/v1/report/status?start=' + moment().subtract(2, 'day').valueOf() + "&end=" + moment().add(2, 'day').valueOf())
