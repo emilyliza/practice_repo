@@ -115,7 +115,7 @@ module.exports = function(app) {
 			it('should return 200', function(done){
 				request
 //					.get('/api/v1/report/status?start=' + moment().subtract(2, 'day').valueOf() + "&end=" + moment().add(2, 'day').valueOf())
-					.get('/api/v1/report/status?start=' + '2015-05-10' + "&end=" + '2015-05-14')
+					.get('/api/v1/report/status?start=' + start + "&end=" + end)
 					.set('Content-Type', 'application/json')
 					.set('Accept', 'application/json')
 					.set('authorization', login.authtoken)
