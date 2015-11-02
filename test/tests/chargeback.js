@@ -43,6 +43,7 @@ module.exports = function(app) {
 				cb.set('gateway_data', c.gateway_data);
 				cb.set('user', login);
 				cb.set('status', 'New');
+				cb.set('chargebackDate', c.chargebackDate);
 				cb.save(function(err,d) {
 					if (err) { throw err; }
 					db_cb = d.toJSON();
@@ -52,7 +53,7 @@ module.exports = function(app) {
 			});
 			// the following test all the data manipulation that goes on within
 			// the Chargeback model during presave.
-			it('should have statue=New', function(done){
+			it('should have status=New', function(done){
 				db_cb.should.have.property('status', 'New');
 				done();
 			});
@@ -108,19 +109,19 @@ module.exports = function(app) {
 				db_cb.shipping_data.ShippingDate.should.be.an.instanceOf(Date);
 				done();
 			});
-			it('should have crm_data.ProductCrmName should not exist', function(done){
+			it('should have crm_data. ProductCrmName should not exist', function(done){
 				db_cb.should.have.property('crm_data').and.should.not.have.property('ProductCrmName');
 				done();
 			});
-			it('should have portal_data.Portal should not exist', function(done){
+			it('should have portal_data. Portal should not exist', function(done){
 				db_cb.should.have.property('portal_data').and.should.not.have.property('Portal');
 				done();
 			});
-			it('should have parent with parent.name and parent._id', function(done){
+			it('should not have parent property', function(done){
 				db_cb.should.not.have.property('parent');
 				done();
 			});
-			it('should have parent with parent.name and parent._id', function(done){
+			it('should have user with user.name and user._id', function(done){
 				db_cb.should.have.property('user').with.property('_id');
 				db_cb.should.have.property('user').with.property('name', config.get('users')[0].name);
 				done();
@@ -191,7 +192,7 @@ module.exports = function(app) {
 			});
 			// the following test all the data manipulation that goes on within
 			// the Chargeback model during presave.
-			it('should have statue=In Progress', function(done){
+			it('should have status=In Progress', function(done){
 				data.should.have.property('status', 'In Progress');
 				done();
 			});
@@ -211,6 +212,8 @@ module.exports = function(app) {
 		});
 
 
+		//TODO: Child creation used to be tested here by passing "'createChildren': true" in the request, but
+		//child creation is no longer done in that way. A new test should be made for that.
 		describe('POST /api/v1/chargebacks', function(){
 			it('should return 200', function(done){
 				var cb = config.get('chargebacks');
@@ -218,35 +221,38 @@ module.exports = function(app) {
 					.post('/api/v1/chargebacks')
 					.send({
 						'chargebacks': cb,
-						'createChildren': true,
+						'createChildren': false,
 						'user': login
 					})
 					.set('Content-Type', 'application/json')
 					.set('Accept', 'application/json')
 					.set('authorization', login.authtoken)
 					.expect(200)
-					.end(function(e, res) {  
-						if (e) { console.log(e); done(e); }
+					.end(function(e, res) {
+						if (e) {
+							console.log(e);
+							done(e);
+						}
 						done();
 					});
 			});
 		});
 
-		
 		describe('Test new data', function(){
 			var users,
 				other;
-			it('current users should now be 2', function(done){
+			//Make sure a child was not created, as the child creation process has changed
+			it('current users should now be 1', function(done){
 				request
 					.get('/api/v1/users')
 					.set('Content-Type', 'application/json')
 					.set('Accept', 'application/json')
 					.set('authorization', login.authtoken)
 					.expect(200)
-					.end(function(e, res) {  
+					.end(function(e, res) {
 						if (e) { console.log(e); done(e); }
 						users = res.body;
-						users.should.be.instanceof(Array).and.have.lengthOf(2);
+						users.should.be.instanceof(Array).and.have.lengthOf(1);
 						done();
 					});
 			});
@@ -258,7 +264,7 @@ module.exports = function(app) {
 			// 		done();
 			// 	});
 			// });
-			it('should return array with length=2', function(done){
+			it('chargeback query should return array with length=2', function(done){
 				var q = Chargeback.search({
 					user: login,
 					query: {}
@@ -275,49 +281,51 @@ module.exports = function(app) {
 				});
 
 			});
-			it('new user should return array with length=1', function(done){
-				lodash.each(users, function(u) {
-					if (u._id + '' != login._id + '') {
-						other = u._id;
-					}
-				});
-				var q = Chargeback.search({
-					'user': {
-						'_id': other
-					},
-					query: {}
-				});
 
-				_( Chargeback.find()
-					.and(q)
-					.lean()
-					.stream() )
-				.stopOnError(function(err) { throw err; })
-				.toArray(function(data) {
-					data.should.be.instanceof(Array).and.have.lengthOf(1);
-					done();
-				});
-
-			});
-			it('chargeback query with user param should return array with length=1', function(done){
-				var q = Chargeback.search({
-					user: login,
-					query: {
-						user: other
-					}
-				});
-
-				_( Chargeback.find()
-					.and(q)
-					.lean()
-					.stream() )
-				.stopOnError(function(err) { throw err; })
-				.toArray(function(data) {
-					data.should.be.instanceof(Array).and.have.lengthOf(2);
-					done();
-				});
-
-			});
+			//These tests were meant to be run after a new user was created, but the child creation process has changed
+			//it('new user should return array with length=1', function(done){
+			//	lodash.each(users, function(u) {
+			//		if (u._id + '' != login._id + '') {
+			//			other = u._id;
+			//		}
+			//	});
+			//	var q = Chargeback.search({
+			//		'user': {
+			//			'_id': other
+			//		},
+			//		query: {}
+			//	});
+            //
+			//	_( Chargeback.find()
+			//		.and(q)
+			//		.lean()
+			//		.stream() )
+			//	.stopOnError(function(err) { throw err; })
+			//	.toArray(function(data) {
+			//		data.should.be.instanceof(Array).and.have.lengthOf(1);
+			//		done();
+			//	});
+            //
+			//});
+			//it('chargeback query with user param should return array with length=1', function(done){
+			//	var q = Chargeback.search({
+			//		user: login,
+			//		query: {
+			//			user: other
+			//		}
+			//	});
+            //
+			//	_( Chargeback.find()
+			//		.and(q)
+			//		.lean()
+			//		.stream() )
+			//	.stopOnError(function(err) { throw err; })
+			//	.toArray(function(data) {
+			//		data.should.be.instanceof(Array).and.have.lengthOf(2);
+			//		done();
+			//	});
+            //
+			//});
 		});
 
 	});
