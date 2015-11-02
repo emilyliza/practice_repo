@@ -43,6 +43,7 @@ module.exports = function(app) {
 				cb.set('gateway_data', c.gateway_data);
 				cb.set('user', login);
 				cb.set('status', 'New');
+				cb.set('chargebackDate', c.chargebackDate);
 				cb.save(function(err,d) {
 					if (err) { throw err; }
 					db_cb = d.toJSON();
