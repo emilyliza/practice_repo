@@ -59,21 +59,21 @@ module.exports = function(app) {
 			});
 		});
 
-
 		describe('GET /api/v1/users', function(){
 			var data = [],
 				users;
-			it('current users should be 2', function(done){
+			//Make sure a child was not created, as the child creation process has changed
+			it('current users should be 1', function(done){
 				request
 					.get('/api/v1/users')
 					.set('Content-Type', 'application/json')
 					.set('Accept', 'application/json')
 					.set('authorization', login.authtoken)
 					.expect(200)
-					.end(function(e, res) {  
+					.end(function(e, res) {
 						if (e) { console.log(e); done(e); }
 						users = res.body;
-						users.should.be.instanceof(Array).and.have.lengthOf(2);
+						users.should.be.instanceof(Array).and.have.lengthOf(1);
 						lodash.each(users, function(u) {
 							if (u._id + '' != login._id + '') {
 								other = u._id;
@@ -82,35 +82,40 @@ module.exports = function(app) {
 						done();
 					});
 			});
-			it('GET /api/v1/history?user=other should return 200', function(done){
-				request
-					.get('/api/v1/history?user=' + other)
-					.set('Content-Type', 'application/json')
-					.set('Accept', 'application/json')
-					.set('authorization', login.authtoken)
-					.expect(200)
-					.end(function(e, res) {  
-						if (e) { console.log(e); done(e); }
-						data = res.body;
-						done();
-					});
-			});
-			it('result should have length=1', function(done) {
-				data.should.be.instanceof(Array).and.have.lengthOf(1);
-				done();
-			});
-			it('result should equal 1', function(done) {
-				data[0].count.should.be.equal(1);
-				done();
-			});
+
+			//These tests were meant to be run after a new user was created, but the child creation process has changed
+			//it('GET /api/v1/history?user=other should return 200', function(done){
+			//	request
+			//		.get('/api/v1/history?user=' + other)
+			//		.set('Content-Type', 'application/json')
+			//		.set('Accept', 'application/json')
+			//		.set('authorization', login.authtoken)
+			//		.expect(200)
+			//		.end(function(e, res) {
+			//			if (e) { console.log(e); done(e); }
+			//			data = res.body;
+			//			done();
+			//		});
+			//});
+			//it('result should have length=1', function(done) {
+			//	data.should.be.instanceof(Array).and.have.lengthOf(1);
+			//	done();
+			//});
+			//it('result should equal 1', function(done) {
+			//	data[0].count.should.be.equal(1);
+			//	done();
+			//});
 		});
 		
 
 		describe('GET /api/v1/report/status', function(){
 			var data;
+			var start = new Date("2015-05-10").getTime().toString();
+			var end = new Date("2015-05-14").getTime().toString();
 			it('should return 200', function(done){
 				request
-					.get('/api/v1/report/status?start=' + moment().subtract(2, 'day').valueOf() + "&end=" + moment().add(2, 'day').valueOf())
+//					.get('/api/v1/report/status?start=' + moment().subtract(2, 'day').valueOf() + "&end=" + moment().add(2, 'day').valueOf())
+					.get('/api/v1/report/status?start=' + start + "&end=" + end)
 					.set('Content-Type', 'application/json')
 					.set('Accept', 'application/json')
 					.set('authorization', login.authtoken)
@@ -134,29 +139,29 @@ module.exports = function(app) {
 			})
 		});
 
-
-		describe('GET /api/v1/report/status?user=other', function(){
-			var data;
-			it('should return 200', function(done){
-				request
-					.get('/api/v1/report/status?user=' + other + '&start=' + moment().subtract(2, 'day').valueOf() + "&end=" + moment().add(2, 'day').valueOf())
-					.set('Content-Type', 'application/json')
-					.set('Accept', 'application/json')
-					.set('authorization', login.authtoken)
-					.expect(200)
-					.end(function(e, res) {  
-						if (e) { console.log(e); done(e); }
-						data = res.body;
-						done();
-					});
-			});
-			it('should have object with data', function(done) {
-				data.byVolume.should.be.an.instanceOf(Object).and.have.property('data');
-				data.byVolume.data[0].should.be.an.instanceOf(Object).and.have.property('sum', 8.98);
-				done();
-			});
-			
-		});
+		//These tests were meant to be run after a new user was created, but the child creation process has changed
+		//describe('GET /api/v1/report/status?user=other', function(){
+		//	var data;
+		//	it('should return 200', function(done){
+		//		request
+		//			.get('/api/v1/report/status?user=' + other + '&start=' + moment().subtract(2, 'day').valueOf() + "&end=" + moment().add(2, 'day').valueOf())
+		//			.set('Content-Type', 'application/json')
+		//			.set('Accept', 'application/json')
+		//			.set('authorization', login.authtoken)
+		//			.expect(200)
+		//			.end(function(e, res) {
+		//				if (e) { console.log(e); done(e); }
+		//				data = res.body;
+		//				done();
+		//			});
+		//	});
+		//	it('should have object with data', function(done) {
+		//		data.byVolume.should.be.an.instanceOf(Object).and.have.property('data');
+		//		data.byVolume.data[0].should.be.an.instanceOf(Object).and.have.property('sum', 8.98);
+		//		done();
+		//	});
+		//
+		//});
 
 	});
 

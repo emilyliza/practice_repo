@@ -69,8 +69,8 @@ module.exports = function(app) {
 
 			var out = [];
 			_.each(data, function(row) {
-				var pre = ''
-				if (row._id.month < 9) {
+				var pre = '';
+				if (row._id.month <= 9) {
 					pre = '0';
 				}
 				out.push({
