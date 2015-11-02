@@ -116,7 +116,7 @@
 			$scope.data.chc = true;
 			$scope.settings.state = $state;
 			$scope.settings.disableReview = true;
-			$scope.settings.shipping_companies = ["USPS", "Fedex", "UPS", "DHL"];
+			$scope.settings.shipping_companies = ["", "USPS", "Fedex", "UPS", "DHL"];
 			$scope.settings.cctypes = [
 				"",
 				"VISA",
@@ -357,6 +357,7 @@
 
 		var addUploaders = function() {
 			if ($scope.uploaders) {
+				if( !$scope.data.attachments ){$scope.data.attachments = [];}
 				$scope.uploaders['receipt'].setUploads($scope.data.attachments);
 				$scope.uploaders['add'].setUploads($scope.data.attachments);
 				$scope.uploaders['terms'].setUploads($scope.data.attachments);
@@ -365,7 +366,7 @@
 			}
 			$scope.uploaders = {};
 			$scope.uploaders['receipt'] = new FileUploader({
-				queueLimit: 5,
+				queueLimit: 1,
 				type: "receipt"
 			});
 			$scope.uploaders['receipt'].setUploads($scope.data.attachments);
@@ -375,7 +376,7 @@
 			};
 
 			$scope.uploaders['add'] = new FileUploader({
-				queueLimit: 5,
+				queueLimit: 1,
 				type: "additional"
 			});
 			$scope.uploaders['add'].setUploads($scope.data.attachments);
@@ -384,7 +385,7 @@
 			};
 			
 			$scope.uploaders['terms'] = new FileUploader({
-				queueLimit: 5, 
+				queueLimit: 1,
 				type: "terms"
 			});
 			$scope.uploaders['terms'].setUploads($scope.data.attachments);
@@ -393,7 +394,7 @@
 			};
 
 			$scope.uploaders['checkout'] = new FileUploader({
-				queueLimit: 5, 
+				queueLimit: 1,
 				type: "checkout"
 			});
 			$scope.uploaders['checkout'].setUploads($scope.data.attachments);

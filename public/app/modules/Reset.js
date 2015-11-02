@@ -27,7 +27,6 @@
 		$scope.service = new ResetService();
 		$scope.errors = {};
 		
-		
 		// watch for changes to clear out errors
 		$scope.$watch("data", function(newValue, oldValue){
 			$scope.errors = {};

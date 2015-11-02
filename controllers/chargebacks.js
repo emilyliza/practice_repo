@@ -45,7 +45,7 @@ module.exports = function(app) {
 		Chargeback.clearNulls(cb, 'gateway_data');
 		Chargeback.clearNulls(cb, 'shipping_data');
 		Chargeback.clearNulls(cb, 'portal_data');
-		Chargeback.cleanDollarAmounts(cb, ["portal_data.ChargebackAmt","gateway_data.TransAmt","gateway_data.Originating.TransAmt","crm_data.PricePoint","crm_data.RefundAmount"])
+		Chargeback.cleanDollarAmounts(cb, ["portal_data.ChargebackAmt","gateway_data.TransAmt","gateway_data.Originating.TransAmt","crm_data.PricePoint","crm_data.RefundAmount"]);
 
 		var chargeback = new Chargeback();
 		chargeback.crm_data = cb.crm_data;
@@ -343,6 +343,8 @@ module.exports = function(app) {
 		})
 		.flatten()
 		.seqEach(function(cb) {
+			console.log("CSV cb");
+			console.log(cb);
 
 			saveChargeback(cb, this.vars.user, false);
 
@@ -415,6 +417,9 @@ module.exports = function(app) {
 			if (!user) { return res.json(400, {'user': 'User not found.'} ); }
 
 			var cb = req.body;
+
+			console.log("Manual cb");
+			console.log(cb);
 
 			var chargeback = saveChargeback(cb, user, true);
 
