@@ -127,10 +127,6 @@
 			return $http.get('/api/v1/users');
 		};
 
-		this.getAllUsers = function() {
-			return $http.get('/api/v2/users');
-		};
-
 	}]);	
 
 })();
