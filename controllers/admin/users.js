@@ -10,7 +10,7 @@ module.exports = function(app) {
 		
 
 
-	app.get('/api/v2/admin/users', mw.auth(), function(req, res, next){
+	app.get('/api/v1/admin/users', mw.auth(), function(req, res, next){
 
 		res.header('Content-Type', 'application/json');
 		var query = {};
