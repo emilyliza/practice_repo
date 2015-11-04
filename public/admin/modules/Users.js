@@ -112,7 +112,7 @@
     			this.lastQuery = this.query;
     		}
     		
-    		var url = '/api/v2/users?page=' + this.page;
+    		var url = '/api/v1/users?page=' + this.page;
     		url += '&query=' + this.query;
     		
     		// additional params such as start, end, cctype, merchanct, etc
