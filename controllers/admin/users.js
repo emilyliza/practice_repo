@@ -9,7 +9,6 @@ module.exports = function(app) {
 		User = app.Models.get('User');
 		
 
-
 	app.get('/api/v2/admin/users', mw.auth(), function(req, res, next){
 
 		res.header('Content-Type', 'application/json');
@@ -50,7 +49,7 @@ module.exports = function(app) {
 			res.header('Content-Type', 'application/json');
 			res.send(data);
 		});
-	});
+	});	
 
 	app.get('/api/v1/admin/users', mw.auth(), function(req, res, next) {
 
@@ -65,7 +64,8 @@ module.exports = function(app) {
 				{ 'email': pattern }
 			]);
 		}
-	
+
+		
 		query.skip( (params.page ? ((+params.page - 1) * params.limit) : 0) );
 		query.limit((params.limit ? params.limit : 50));
 
@@ -87,5 +87,8 @@ module.exports = function(app) {
 		});
 	
 	});
-		
+
+	
+
+
 };
