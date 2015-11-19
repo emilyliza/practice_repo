@@ -457,15 +457,19 @@ module.exports = function(app) {
 			//address matching
 			var del_match_ct = [];
 			_.each(this.vars.del_add_match, function(item) {
-					del_match_ct.push( {delAdd: item._id.delAdd, count: item.count } );
+					if (item._id.delAdd != null) {
+						del_match_ct.push( {delAdd: item._id.delAdd, count: item.count } );
+					}
 			});		
 
 			out.delCt = del_match_ct;
 
 			var bill_match_ct = [];
 			_.each(this.vars.bill_add_match, function(item) {
-					del_match_ct.push( {billAdd: item._id.billAdd, count: item.count } );
-					bill_match_ct.push({billAdd: item._id.billAdd, count: item.count } );
+					if (item._id.billAdd != null) {
+						del_match_ct.push( {billAdd: item._id.billAdd, count: item.count } );
+						bill_match_ct.push({billAdd: item._id.billAdd, count: item.count } );
+					}
 			});
 
 			out.billCt = bill_match_ct;
@@ -487,6 +491,12 @@ module.exports = function(app) {
 				}
 				addPercent = Math.floor((addMatch / addTotal) * 100) + "%"; 
 			});
+
+			console.log("addTotal", addTotal);
+			console.log("percent", addPercent);
+			console.log("add match", addMatch);
+			console.log ("out billct", out.billCt);
+			console.log("out delCt", out.delCt);
 
 			out.addMatch = addMatch;
 			out.addPercent = addPercent;
