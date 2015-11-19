@@ -477,7 +477,7 @@ module.exports = function(app) {
 			//for address matching totals
 			var addTotal = 0;
 			var addMatch = 0;
-			var addPercent = "";
+			var matchPercent = "";
 
 			//count billing addresses
 			_.each(out.billCt, function (){
@@ -489,17 +489,11 @@ module.exports = function(app) {
 				if (d.billAdd == d.delAdd) {
 					addMatch ++;
 				}
-				addPercent = Math.floor((addMatch / addTotal) * 100) + "%"; 
+				matchPercent = Math.floor((addMatch / addTotal) * 100) + "%"; 
 			});
 
-			console.log("addTotal", addTotal);
-			console.log("percent", addPercent);
-			console.log("add match", addMatch);
-			console.log ("out billct", out.billCt);
-			console.log("out delCt", out.delCt);
-
 			out.addMatch = addMatch;
-			out.addPercent = addPercent;
+			out.matchPercent = matchPercent;
 
 			//@TODO: billing and win-loss
 			out.billing = {
