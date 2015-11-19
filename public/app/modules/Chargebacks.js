@@ -30,6 +30,7 @@
                 showWeeks:'false'
         };
 
+
 		$scope.$emit.date = {
 			start: {
 				val: moment().utc().subtract($scope.daterange, 'month').format(),

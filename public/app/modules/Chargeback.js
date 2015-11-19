@@ -140,7 +140,7 @@
 		setupData();
 
 
-
+		$scope.dtmax = new Date();
 
 		if (!$scope.data.attachments) { $scope.data.attachments = []; }
 

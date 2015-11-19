@@ -370,6 +370,7 @@ module.exports = function(app) {
 		//req.assert('portal_data.MidNumber', 'A mid number is required.').isAlphanumeric();
 		req.assert('portal_data.ChargebackAmt', 'An amount is required.').isFloat();
 		req.assert('gateway_data.TransAmt', 'Must be an amount.').optional().isFloat();
+		req.assert('crm_data.RefundAmount', 'Must be an amount.').optional().isFloat();
 		req.assert('portal_data.CcPrefix', 'A valid credit card prefix is required.').len(1,6).isNumeric();
 		req.assert('portal_data.CcSuffix', 'A valid credit card suffix is required.').len(4,6).isNumeric();
 		req.assert('portal_data.ReasonCode', 'A reason code is required.').isAlphanumeric();
@@ -443,6 +444,7 @@ module.exports = function(app) {
 
 		req.assert('portal_data.ChargebackAmt', 'An amount is required.').isFloat();
 		req.assert('gateway_data.TransAmt', 'Must be an amount.').optional().isFloat();
+		req.assert('crm_data.RefundAmount', 'Must be an amount.').optional().isFloat();
 		req.assert('portal_data.CcPrefix', 'A valid credit card prefix is required.').len(1,6).isNumeric();
 		req.assert('portal_data.CcSuffix', 'A valid credit card suffix is required.').len(4,6).isNumeric();
 		req.assert('portal_data.ReasonText', 'Some reason text is required.').notEmpty();
@@ -457,7 +459,10 @@ module.exports = function(app) {
 			return res.json(400, { 'CcPrefix': 'Enter 4 digits or select a credit card type.' });	
 		}
 
-
+		if (!req.body.gateway_data.CcType && !Util.detectCardType( req.body.portal_data.CcPrefix + "11010101" + req.body.portal_data.CcSuffix )) {
+			return res.json(400, { 'CcPrefix': 'Invalid credit card prefix.' });	
+		}
+		
 		if(req.body.gateway_data && req.body.gateway_data.AuthCode && req.body.gateway_data.AuthCode.toLowerCase() != 'na' &&  req.body.gateway_data.AuthCode.length!=6) {
 			return res.json(400, {'AuthCode':'Enter 6 digits or NA if auth code is not available.'});
 
