@@ -113,6 +113,10 @@
 
 
 			};
+
+			$scope.data.gateway_data.TransAmt = $scope.data.gateway_data.TransAmt.toFixed(2);
+			$scope.data.portal_data.ChargebackAmt = $scope.data.portal_data.ChargebackAmt.toFixed(2);
+			$scope.data.crm_data.RefundAmount = $scope.data.data.crm_data.RefundAmount.toFixed(2);
 			$scope.data.chc = true;
 			$scope.settings.state = $state;
 			$scope.settings.disableReview = true;
@@ -138,7 +142,6 @@
 			];
 		};
 		setupData();
-
 
 		$scope.dtmax = new Date();
 
@@ -171,14 +174,12 @@
 			$scope.data.internal_type = "Chargeback";
 		}
 
-
 		$scope.$watch("data", function(newValue, oldValue){
 			$scope.errors = {};
 			$scope.$broadcast('show-errors-reset');	
 			var popups = document.querySelectorAll('.popover');
 			_.each(popups, function(p) { p.remove(); });
 		},true);
-
 
 		$scope.methods.getCardType = function() {
 			ChargebackService.getCardType( ($scope.data.portal_data.CcPrefix || '') + "11010101" + ($scope.data.portal_data.CcSuffix || '') ).then(function(res) {
@@ -251,6 +252,11 @@
 				return;
 			}
 
+			//add trailing zeros to form
+			$scope.data.portal_data.ChargebackAmt = $scope.data.portal_data.ChargebackAmt.toFixed(2);
+			$scope.data.gateway_data.TransAmt = $scope.data.gateway_data.TransAmt.toFixed(2);
+			$scope.data.crm_data.RefundAmount = $scope.data.data.crm_data.RefundAmount.toFixed(2);
+			
 			// save no matter what, but don't let user proceed without fixing errors!
 			ChargebackService.save($scope.data).then(function (res) {
 				$scope.data = res.data;

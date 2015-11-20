@@ -389,8 +389,7 @@ module.exports = function(app) {
 		
 		if (!req.body.gateway_data.CcType && !Util.detectCardType( req.body.portal_data.CcPrefix + "11010101" + req.body.portal_data.CcSuffix )) {
 			return res.json(400, { 'CcPrefix': 'Invalid credit card prefix.' });	
-		}
-                
+		}      
 
 		if (req.body.gateway_data && req.body.gateway_data.AvsStatus) {
 			req.body.gateway_data.AvsStatus = req.body.gateway_data.AvsStatus.toUpperCase();
