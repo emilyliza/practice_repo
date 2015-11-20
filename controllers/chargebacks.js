@@ -370,7 +370,6 @@ module.exports = function(app) {
 		//req.assert('portal_data.MidNumber', 'A mid number is required.').isAlphanumeric();
 		req.assert('portal_data.ChargebackAmt', 'An amount is required.').isFloat();
 		req.assert('gateway_data.TransAmt', 'Must be an amount.').optional().isFloat();
-		req.assert('gateway_data.Originating.TransAmt', 'Must be an amount.').optional().isFloat();
 		req.assert('crm_data.RefundAmount', 'Must be an amount.').optional().isFloat();
 		req.assert('portal_data.CcPrefix', 'A valid credit card prefix is required.').len(1,6).isNumeric();
 		req.assert('portal_data.CcSuffix', 'A valid credit card suffix is required.').len(4,6).isNumeric();
@@ -387,7 +386,7 @@ module.exports = function(app) {
 		if ((!req.body.portal_data.CcPrefix || req.body.portal_data.CcPrefix.length < 4) && !req.body.gateway_data.CcType) {
 			return res.json(400, { 'CcPrefix': 'Enter 4 digits or select a credit card type.' });	
 		}
-
+		
 		if (!req.body.gateway_data.CcType && !Util.detectCardType( req.body.portal_data.CcPrefix + "11010101" + req.body.portal_data.CcSuffix )) {
 			return res.json(400, { 'CcPrefix': 'Invalid credit card prefix.' });	
 		}
