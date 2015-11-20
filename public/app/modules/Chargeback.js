@@ -243,7 +243,6 @@
 			if (!$scope.cbForm) { return; }
 			if ($scope.cbForm.$valid) {
 				$scope.settings.disableReview = false;
-				$scope.cbForm.$setPristine();
 			} else {
 				$scope.settings.disableReview = true;
 			}
