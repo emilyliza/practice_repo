@@ -243,6 +243,7 @@
 			if (!$scope.cbForm) { return; }
 			if ($scope.cbForm.$valid) {
 				$scope.settings.disableReview = false;
+				$scope.cbForm.$setPristine();
 			} else {
 				$scope.settings.disableReview = true;
 			}
@@ -261,7 +262,7 @@
 			});
 		};
 
-		$scope.methods.ds = _.debounce(save, 2000, { leading: false, trailing: true});
+		$scope.methods.ds = _.debounce(save, 1000, { leading: false, trailing: true});
 		
 
 		// clicking drag-n-drop zones triggers old-school upload dialog
