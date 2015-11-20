@@ -114,9 +114,7 @@
 
 			};
 
-			$scope.data.gateway_data.TransAmt = $scope.data.gateway_data.TransAmt.toFixed(2);
-			$scope.data.portal_data.ChargebackAmt = $scope.data.portal_data.ChargebackAmt.toFixed(2);
-			$scope.data.crm_data.RefundAmount = $scope.data.data.crm_data.RefundAmount.toFixed(2);
+			
 			$scope.data.chc = true;
 			$scope.settings.state = $state;
 			$scope.settings.disableReview = true;
@@ -251,17 +249,13 @@
 			if (halt_save_on_error && $scope.cbForm[halt_save_on_error]['$invalid']) {
 				return;
 			}
-
-			//add trailing zeros to form
-			$scope.data.portal_data.ChargebackAmt = $scope.data.portal_data.ChargebackAmt.toFixed(2);
-			$scope.data.gateway_data.TransAmt = $scope.data.gateway_data.TransAmt.toFixed(2);
-			$scope.data.crm_data.RefundAmount = $scope.data.data.crm_data.RefundAmount.toFixed(2);
-			
+		
 			// save no matter what, but don't let user proceed without fixing errors!
 			ChargebackService.save($scope.data).then(function (res) {
 				$scope.data = res.data;
 				$scope.methods.checkForErrors($scope.data);
 				addUploaders();
+				$scope.ngModel.setPristine();
 			}, function (res) {
 				$scope.errors = UtilService.formatErrors(res.data);
 			});
