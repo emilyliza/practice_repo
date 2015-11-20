@@ -255,7 +255,6 @@
 				$scope.data = res.data;
 				$scope.methods.checkForErrors($scope.data);
 				addUploaders();
-				$scope.ngModel.setPristine();
 			}, function (res) {
 				$scope.errors = UtilService.formatErrors(res.data);
 			});
