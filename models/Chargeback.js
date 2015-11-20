@@ -415,4 +415,4 @@ module.exports = function(app) {
 	};
 
 	return Chargeback;
-};1
+};

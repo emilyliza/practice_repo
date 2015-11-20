@@ -419,6 +419,7 @@
 				}
 			});
 		};
+		
 		$scope.methods.checkForReceipt();
 
 
