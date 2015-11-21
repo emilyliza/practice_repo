@@ -21,7 +21,7 @@
 						placeholder="" ng-blur="methods.ds()" >
 				</div>
 			</div>
-			<div class="col-md-4">
+			<div class="col-md-4" ng-controller="UpperCtrl">
 				<div class="form-group" show-errors>
 					<label>Chargeback Amount</label>
 					<input name="ChargebackAmt" 
@@ -616,7 +616,7 @@
 						ng-blur="methods.ds()">
 				</div>
 			</div>
-			<div class="col-md-6">
+			<div class="col-md-6" ng-controller="UpperCtrl">
 				<div class="form-group required" show-errors>
 					<label>Transaction Amount</label>
 					<input name="TransAmt" 
@@ -693,7 +693,7 @@
 
 		</div>
 		<div class="row">
-			<div class="col-md-6">
+			<div class="col-md-6" ng-controller="UpperCtrl">
 				<div class="form-group required" show-errors>
 					<label>Transaction Amount</label>
 					<input name="TransAmt" 
@@ -866,7 +866,7 @@
             		</div>
 				</div>
 			</div>
-			<div class="col-md-6">
+			<div class="col-md-6" ng-controller="UpperCtrl">
 				<div class="form-group required" show-errors data-tooltip-html-unsafe="The amount of the originating transaction." tooltip-placement="top">
 					<label>Transaction Amount
 						<span class="pull-right">
@@ -977,7 +977,7 @@
             		</div>
 				</div>
 			</div>
-			<div class="col-md-6">
+			<div class="col-md-6" ng-controller="UpperCtrl">
 				<div class="form-group required" show-errors>
 					<label>Refund Amount</label>
 					<input name="RefundAmount"
