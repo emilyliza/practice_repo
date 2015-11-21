@@ -399,11 +399,6 @@ module.exports = function(app) {
 			}
 		}
 
-		if (req.body.portal_data && req.body.portal_data.ChargebackAmt) {
-			req.body.portal_data.ChargebackAmt = req.body.portal_data.ChargebackAmt.toFixed(2);
-			return req.body.portal_data.ChargebackAmt;
-		}
-
 		if (req.body.gateway_data && req.body.gateway_data.CvvStatus) {
 			req.body.gateway_data.CvvStatus = req.body.gateway_data.CvvStatus.toUpperCase();
 			// codes from http://www.emsecommerce.net/avs_cvv2_response_codes.htm

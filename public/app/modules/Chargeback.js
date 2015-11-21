@@ -120,7 +120,7 @@
 				orderDateOpened: false,
 				refundDateOpened: false,
 				deliveryDateOpened: false,
-				ipRegex : /^NA|(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/,
+				ipRegex : /^NA|(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/
 				
 
 			};
@@ -249,37 +249,6 @@
 			$scope.data.status = "Sent";
 			save();
 		};
-
-		// var toFixed = function(){
-		// 	return $scope.data.portal_data.ChargebackAmt.toFixed(2);
-		// }
-
-		// toFixed();
-
-		// $scope.chargebackAmt = $scope.data.portal_data.ChargebackAmt;
-		// $scope.test = $scope.chargebackAmt.toFixed(2);
-		// console.log("here is a test", $scope.test);
-		
-		// console.log("here is ng-model", $scope.data.portal_data.ChargebackAmt.toFixed(2));
-
-		// $scope.methods.getTrailingZeros = function(){
-		//   	if ($scope.data.portal_data && $scope.data.portal_data.ChargebackAmt){
-		// 		$scope.data.portal_data.chargebackAmt = $scope.data.portal_data.ChargebackAmt.toFixed(2);
-		// 	}
-
-		// 	if ($scope.data.gateway_data && $scope.data.gateway_data.TransAmt){
-		// 		$scope.data.gateway_data.TransAmt.toFixed(2);
-		// 	}
-
-		// 	// if ($scope.data.crm_data && $scope.data.crm_data.RefundAmount){
-		// 	// 	return $scope.data.crm_data.RefundAmount.toFixed(2);
-		// 	// }
-		// };
-
-		// $scope.methods.getTrailingZeros();
-
-		// $scope.data.portal_data.ChargebackAmt = $scope.data.portal_data.ChargebackAmt.toFixed(2);
-		// $scope.data.gateway_data.TransAmt = $scope.data.gateway_data.TransAmt.toFixed(2);
 		
 		var save = function(halt_save_on_error) {
 			$scope.$broadcast('show-errors-check-validity');
@@ -305,7 +274,7 @@
 
 		};
 
-		$scope.methods.ds = _.debounce(save, 2000, { leading: false, trailing: true });
+		$scope.methods.ds = _.debounce(save, 2000, {leading: false, trailing: true});
 		
 
 		// clicking drag-n-drop zones triggers old-school upload dialog
