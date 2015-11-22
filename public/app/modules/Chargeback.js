@@ -82,17 +82,13 @@
 			$scope.$watch('data.gateway_data.BillingCountry', function(val){
 				$scope.data.gateway_data.BillingCountry = $filter('uppercase')(val);
 			});
-			$scope.$watch('data.portal_data.ChargebackAmt', function(val){
-				$scope.data.portal_data.ChargebackAmt = $filter('number')(val, 2);
-			});
-			$scope.$watch('data.gateway_data.TransAmt', function(val){
-				$scope.data.gateway_data.TransAmt = $filter('number')(val, 2);
-			});
-			$scope.$watch('data.crm_data.RefundAmount', function(val){
-				$scope.data.crm_data.RefundAmount = $filter('number')(val, 2);
-			});
-
-		}])
+			// $scope.$watch('data.gateway_data.TransAmt', function(val){
+			// 	$scope.data.gateway_data.TransAmt = $filter('number')(val, 2);
+			// });
+			// $scope.$watch('data.crm_data.RefundAmount', function(val){
+			// 	$scope.data.crm_data.RefundAmount = $filter('number')(val, 2);
+			// });
+	}])
 
 	.controller('ChargebackController',
 			['$scope', '$rootScope', 'ChargebackService', 'FileUploader', '$timeout', 'res', '$state', '$modal', 'UtilService',
@@ -121,11 +117,8 @@
 				refundDateOpened: false,
 				deliveryDateOpened: false,
 				ipRegex : /^NA|(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/
-				
-
 			};
 
-			
 			$scope.data.chc = true;
 			$scope.settings.state = $state;
 			$scope.settings.disableReview = true;
@@ -175,11 +168,9 @@
 			}
 		};
 
-
 		if ($scope.data.gateway_data && !$scope.data.gateway_data.TransDate) {
 			$scope.data.gateway_data.TransDate = "";
 		}
-
 
 		if (!$scope.data.internal_type) {
 			$scope.data.internal_type = "Chargeback";
@@ -203,7 +194,6 @@
 			});
 		};
 
-
 		var _this = this;
 		$scope.methods.saveNew = function(data) {
 			$scope.$broadcast('show-errors-check-validity');
@@ -216,7 +206,6 @@
 				});
 			}
 		};
-
 
 		$scope.methods.wonlost = function(wonlost, msg, confirmbtn, cancelbtn) {
 			var modalInstance = $modal.open({
@@ -267,6 +256,8 @@
 			ChargebackService.save($scope.data).then(function (res) {
 				$scope.data = res.data;
 				$scope.methods.checkForErrors($scope.data);
+				angular.copy($scope.cbForm);
+				$scope.cbForm = "";
 				addUploaders();
 			}, function (res) {
 				$scope.errors = UtilService.formatErrors(res.data);
@@ -276,13 +267,10 @@
 
 		$scope.methods.ds = _.debounce(save, 2000, { leading: false, trailing: true });
 		
-
 		// clicking drag-n-drop zones triggers old-school upload dialog
 		$scope.methods.triggerUpload = function(el) {
 			angular.element(el).trigger('click');
 		};
-
-		
 		
 		$scope.methods.download = function() {
 			if ($scope.data.docgen) {
@@ -298,7 +286,6 @@
 			}
 		};
 		
-
 		$scope.methods.removeItem = function(item) {
 			var i = 0;
 			_.each($scope.data.attachments, function(a) {
@@ -344,28 +331,28 @@
 		};
 
 		$scope.methods.accept = function(msg, confirmbtn, cancelbtn) {
-                        var modalInstance = $modal.open({
-                                templateUrl: '/app/templates/confirm-modal.html',
-                                controller: 'ModalInstanceCtrl',
-                                size: "md",
-                                resolve: {
-                                        data: function () {
-                                                return {
-                                                        'msg': msg,
-                                                        'confirm': confirmbtn,
-                                                        'cancel': cancelbtn
-                                                };
-                                        }
-                                }
-                        });
-                        modalInstance.result.then(function (confirm) {
-                                if (confirm) {
-		                        $scope.data.status = "Accept";
-                		        save();
-                                        $state.go('chargebackconfirmation', { '_id': res.data._id });
-                                }
-                        });
-                };
+            var modalInstance = $modal.open({
+                templateUrl: '/app/templates/confirm-modal.html',
+                controller: 'ModalInstanceCtrl',
+                size: "md",
+                resolve: {
+                        data: function () {
+                                return {
+                                        'msg': msg,
+                                        'confirm': confirmbtn,
+                                        'cancel': cancelbtn
+                                };
+                        }
+                }
+            });
+            modalInstance.result.then(function (confirm) {
+                if (confirm) {
+                $scope.data.status = "Accept";
+		        save();
+                        $state.go('chargebackconfirmation', { '_id': res.data._id });
+                }
+            });
+	    };
 
 
 		var addUploaders = function() {
@@ -461,6 +448,22 @@
 
 
 	}])
+
+	.directive('test', function(){
+	    return {
+	        require: 'ngModel',
+	        link: function($scope, elem, attrs, ngModel){
+	            ngModel.$formatters.push(function(val){
+						// $scope.data.portal_data.ChargebackAmt = val
+						return $scope.data.portal_data.ChargebackAmt.toFixed(2);
+				});
+	            ngModel.$parsers.push(function(val){
+	            	// $scope.data.portal_data.ChargebackAmt = val
+	                return $scope.data.portal_data.ChargebackAmt(val); 
+	            });
+	        }
+	    };
+	})
 
 	.service('ChargebackService', ['$http', 'UserService', function ($http, UserService) {
 		
