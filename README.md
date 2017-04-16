@@ -1,27 +1,27 @@
-CART
+practice_repo
 ====
 
-The merchant portal for Chargeback.com.
+The merchant portal for XXXX
 
 ## Getting Started
 
-To get you started you can simply clone the chargeback repository and install the dependencies:
+To get you started you can simply clone the xxx repository and install the dependencies:
 
 ### Prerequisites
 
-You need git to clone the chargeback repository. You can get git [here][git].
+You need git to clone the xxx repository. You can get git [here][git].
 
-We also use a number of node.js tools to initialize and test CART. You must have node.js and
+We also use a number of node.js tools to initialize and test practice_repo. You must have node.js and
 its package manager (npm) installed.  You can get them [here][node]. 
 We're currently using version 0.12.2. You can use [n][n] if you need to manage nodejs versions.
 
-### Clone CART
+### Clone practice_repo
 
-Clone the chargeback.com repository using [git][git]:
+Clone the xxx.com repository using [git][git]:
 
 ```
-git clone https://github.com/Chargeback/cart.git
-cd cart
+git clone https://github.com/xxx/practice_repo.git
+cd practice_repo
 ```
 
 ### Install Dependencies
@@ -70,12 +70,12 @@ PORT=
 NODE_ENV=development
 SSL=off
 TOKEN_SECRET=
-MONGO_URI=mongodb://localhost:27017/chargeback
+MONGO_URI=mongodb://localhost:27017/xxx
 NEWRELIC=
 AIRBRAKE=
 AWS_KEY=
 AWS_SECRET=
-BUCKET=chargebackcom
+BUCKET=xxxcom
 AWS_REGION=us-west-2
 S3_ACL=public-read
 S3_STORAGE_CLASS=STANDARD
@@ -86,11 +86,11 @@ CDN=
 AWS_ACCESS_KEY_ID=$AWS_KEY
 AWS_SECRET_ACCESS_KEY=$AWS_SECRET
 POSTMARK_API_KEY=
-MAIL_FROM_NAME=Chargeback
-MAIL_FROM_EMAIL=pull.user@chargeback.com
+MAIL_FROM_NAME=xxx
+MAIL_FROM_EMAIL=pull.user@xxx.com
 CODEDEPLOY=
 CODEDEPLOY_SECRET=
-DOCGEN=https://s3-us-west-2.amazonaws.com/cart-pdfs/
+DOCGEN=https://s3-us-west-2.amazonaws.com/practice_repo-pdfs/
 ```
 
 ### Run the Application
@@ -112,7 +112,7 @@ Now browse to the app at `http://localhost:5000/`.
 .env                    --> ENV variables, including AWS credentials for builds (should not be in repo!!!)
 .env-test               --> ENV variables for testing (should not be in repo!!!)
 public/                 --> all of the source files for the client side application
-  app/                  --> custom CART angular code
+  app/                  --> custom practice_repo angular code
     modules/            --> Angular JS modules per view
     templates/          --> HTML files 
     tests/              --> unit tests per controller, run via npm test and during build
@@ -159,7 +159,7 @@ However, use a test db when running tests at the tests clear out the entire cont
 DO NOT TEST ON ANY REAL DATA!!!! You can copy the above and simply change the MONGO_URI! E.g.,
 
 ```
-MONGO_URI=mongodb://localhost:27017/chargeback-TEST
+MONGO_URI=mongodb://localhost:27017/xxx-TEST
 ```
 
 The app comes preconfigured with unit tests for both the server and the web client.
@@ -236,7 +236,7 @@ There are logs for forever (process manager), regular node, and errors.
 Errors are being sent to [Airbrake.io][airbrake]. This
 service is okay, not sure it is worth keeping, but can be used to detect some important errors.
 
-Username: chargeback@infoshreve.com, Password: achaiV0ien6iech
+Username: xxx@infoshreve.com, Password: achaiV0ien6iech
 
 Free account only allows one user.
 
@@ -248,7 +248,7 @@ Servers can be monitored in a variety of ways:
 You can spin up new instances here and scale things within OpsWorks. (See *AWS* below)
 2. [MMS](https://mms.mongodb.com/host/list/54bd6bd6e4b047dcccb3e48d) - the mongo monitoring and configuration tool. This is where mongo should be scaled. This service is on free tier as well.
 3. [NewRelic](https://rpm.newrelic.com/accounts/889104/applications/4976726) -  shows requests, timing, traffic, responses, and much much more. We're on free tier right now. There are ping alerts set up to monitor the app here too.
-4. GA - CART is being fully tracked inside the main Chargeback GA account.
+4. GA - practice_repo is being fully tracked inside the main xxx GA account.
 
 ## Production Build Process
 
@@ -289,8 +289,8 @@ Gruntfile.js contains a full configuration to fully build the app for production
 10. uglify - compress and minify js file
 11. karma - run karam unit tests on production code (single)
 12. cssmin - minify newly created css file into new css file
-13. clean:origcss - remove original chargeback.css
-14. copy:cssmin - move chargeback.min.css to chargeback.css
+13. clean:origcss - remove original xxx.css
+14. copy:cssmin - move xxx.min.css to xxx.css
 15. filerev - get md5 versions for all asset files for cache-busting
 16. usemin - usemin swaps out code from index.html to index.html with new settings from above scripts, renames stuff like versioned files
 17. clean:tmp - clean up all the generated garbage
@@ -311,15 +311,15 @@ or run with --verbose for more information. Then check ./dist for the results. Y
 To deploy a new EC2 instance, do the following:
 
 * Log in to the [AWS console](https://529278774801.signin.aws.amazon.com/console)
-* Select OpsWorks, select "cart dev" or "cart prod", select "Instances" from the sidebar, and click `+ Instance`
+* Select OpsWorks, select "practice_repo dev" or "practice_repo prod", select "Instances" from the sidebar, and click `+ Instance`
 * Enter a name, select "t2.micro" for the size, leave the other options as is, click "Add Instance", then click `> Start` for the new instance
 * Once the instance is started, open a console and ssh into `<username>@<PublicIP>`
     * If you are unable to log in, contact someone to get your key set up
-* Edit `/etc/environment` (use `sudo`) and replace the contents with the contents of either `environment-dev` or `environment-prod` (currently found at `office_share/system/files/cart`)
-* In AWS, go to CodeDeploy, select "cart", expand "devs" or "production", click the "details" button, and click "edit"
+* Edit `/etc/environment` (use `sudo`) and replace the contents with the contents of either `environment-dev` or `environment-prod` (currently found at `office_share/system/files/practice_repo`)
+* In AWS, go to CodeDeploy, select "practice_repo", expand "devs" or "production", click the "details" button, and click "edit"
 * At the bottom of the table under "Add Instances", add a new "Amazon EC2" entry, with the key being `opsworks:instance` and the value being the name of the new instance. Click "save" at the bottom afterwards.
-* Return the "CodeDeploy -> cart" screen, then on the revision list, expand revisions until you find the latest revision that was deployed to your desired group, then select "Deploy This Revision"
-* Set "Application" to `cart` and "Deployment Group" to your desired group, leave the rest as is, and click "Deploy Now"
+* Return the "CodeDeploy -> practice_repo" screen, then on the revision list, expand revisions until you find the latest revision that was deployed to your desired group, then select "Deploy This Revision"
+* Set "Application" to `practice_repo` and "Deployment Group" to your desired group, leave the rest as is, and click "Deploy Now"
     * After the deployment finishes, you can test the new instance by entering its IP address into your browser
 
 [git]: http://git-scm.com/
@@ -331,5 +331,5 @@ To deploy a new EC2 instance, do the following:
 [protractor]: https://angular.github.io/protractor/#/
 [travis]: https://travis-ci.org/
 [karma]: http://karma-runner.github.io/0.13/index.html
-[airbrake]: https://cartdev.airbrake.io
+[airbrake]: https://practice_repodev.airbrake.io
 [grunt]: http://gruntjs.com/

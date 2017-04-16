@@ -452,14 +452,13 @@
 	.directive('test', function(){
 	    return {
 	        require: 'ngModel',
+	        restrict: 'A',
 	        link: function($scope, elem, attrs, ngModel){
 	            ngModel.$formatters.push(function(val){
-						// $scope.data.portal_data.ChargebackAmt = val
-						return $scope.data.portal_data.ChargebackAmt.toFixed(2);
+					return parseFloat(val).toFixed(2);
 				});
 	            ngModel.$parsers.push(function(val){
-	            	// $scope.data.portal_data.ChargebackAmt = val
-	                return $scope.data.portal_data.ChargebackAmt(val); 
+	                return val; 
 	            });
 	        }
 	    };
